@@ -14,7 +14,12 @@ use Kdyby\Doctrine\Entities\BaseEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
-class AdministratorFacade extends BaseFacade {
+class AdministratorFacade extends EntityFacade {
+
+    protected function getEntityClass() {
+        return AdministratorEntity::class;
+    }
+
 
     /**
      * Najde administrátora podle id
@@ -22,9 +27,6 @@ class AdministratorFacade extends BaseFacade {
      * @return AdministratorEntity|NULL
      */
     public function getAdministrator($id){
-        if(!isset($id)){
-            return NULL;
-        }
-        return $this->getEntityManager()->find(AdministratorEntity::class, $id);
+        return $this->get($id);
     }
 }

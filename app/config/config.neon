@@ -34,8 +34,9 @@ translation:
         whitelist: [cs]
 
 doctrine:
+    host: %database.host%
+    dbname: %database.dbname%
     user: %database.user%
     password: %database.password%
-    dbname: %database.dbname%
     metadata:
         App: %appDir%

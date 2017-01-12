@@ -16,13 +16,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
 
-    /**
-     * Id administrátora
-     * @var int
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
-    protected $id;
-
 }
