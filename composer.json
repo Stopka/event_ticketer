@@ -1,17 +1,13 @@
 {
 	"name": "ldtpardubice_cz/application",
-	"description": "Application form fo ldtpardubice.cz",
-	"homepage": "https://nette.org",
+	"description": "Application form for ldtpardubice.cz",
+	"homepage": "https://ldtpardubice.cz",
 	"type": "project",
 	"license": ["proprietary"],
 	"authors": [
 		{
-			"name": "David Grudl",
-			"homepage": "https://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "https://nette.org/contributors"
+			"name": "Štěpán Škorpil",
+			"homepage": "https://skorpils.cz"
 		}
 	],
 	"require": {
