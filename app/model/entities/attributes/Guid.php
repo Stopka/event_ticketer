@@ -10,27 +10,19 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Name {
+trait Guid {
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      * @var string
      */
-    private $name;
+    private $guid;
 
     /**
      * @return string
      */
-    public function getName() {
-        return $this->name;
+    public function getGuid() {
+        return $this->guid;
     }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name) {
-        $this->name = $name;
-    }
-
-
 }

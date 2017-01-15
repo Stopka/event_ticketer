@@ -8,6 +8,7 @@
 
 namespace App\Model\Entities\Attributes;
 
+use Doctrine\ORM\Mapping as ORM;
 
 trait Phone {
 

@@ -8,11 +8,12 @@
 
 namespace App\Model\Entities\Attributes;
 
+use Doctrine\ORM\Mapping as ORM;
 
 trait Capacity {
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @var integer
      */
     private $capacity;

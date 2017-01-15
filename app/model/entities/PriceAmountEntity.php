@@ -8,10 +8,6 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Address;
-use App\Model\Entities\Attributes\Email;
-use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\Phone;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -54,4 +50,40 @@ class PriceAmountEntity extends BaseEntity {
     public function setAmount($amount) {
         $this->amount = $amount;
     }
+
+    /**
+     * @return PriceEntity
+     */
+    public function getPrice() {
+        return $this->price;
+    }
+
+    /**
+     * @param PriceEntity|NULL $price
+     */
+    public function setPrice($price) {
+        if($this->price){
+            $this->price->removeInversedPriceAmount($this);
+        }
+        $this->price = $price;
+        if($price) {
+            $price->addInversedPriceAmount($this);
+        }
+    }
+
+    /**
+     * @return CurrencyEntity
+     */
+    public function getCurrency() {
+        return $this->currency;
+    }
+
+    /**
+     * @param CurrencyEntity $currency
+     */
+    public function setCurrency($currency) {
+        $this->currency = $currency;
+    }
+
+
 }

@@ -8,11 +8,8 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Address;
 use App\Model\Entities\Attributes\BirthDate;
-use App\Model\Entities\Attributes\Email;
 use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\Phone;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -29,4 +26,24 @@ class ChildEntity extends BaseEntity {
      * @var OrderEntity
      */
     private $parent;
+
+    /**
+     * @return OrderEntity
+     */
+    public function getParent() {
+        return $this->parent;
+    }
+
+    /**
+     * @param OrderEntity $parent
+     */
+    public function setParent($parent) {
+        if($this->parent){
+            $this->parent->removeInversedChild($this);
+        }
+        $this->parent = $parent;
+        if($parent) {
+            $parent->addInversedChild($this);
+        }
+    }
 }

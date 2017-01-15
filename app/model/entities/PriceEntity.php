@@ -8,10 +8,6 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Address;
-use App\Model\Entities\Attributes\Email;
-use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -28,10 +24,45 @@ class PriceEntity extends BaseEntity {
         $this->priceAmounts = new ArrayCollection();
     }
 
-
     /**
      * @ORM\OneToMany(targetEntity="PriceAmountEntity",mappedBy="price")
      * @var PriceAmountEntity[]
      */
     private $priceAmounts;
+
+    /**
+     * @return PriceAmountEntity[]
+     */
+    public function getPriceAmounts() {
+        return $this->priceAmounts;
+    }
+
+    /**
+     * @param PriceAmountEntity $priceAmount
+     */
+    public function addPriceAmount($priceAmount) {
+        $priceAmount->setPrice($this);
+    }
+
+    /**
+     * @param PriceAmountEntity $priceAmount
+     */
+    public function removePriceAmount($priceAmount) {
+        $priceAmount->setPrice(NULL);
+    }
+
+    /**
+     * @param PriceAmountEntity $priceAmount
+     */
+    public function addInversedPriceAmount($priceAmount) {
+        $this->priceAmounts->add($priceAmount);
+    }
+
+    /**
+     * @param PriceAmountEntity $priceAmount
+     */
+    public function removeInversedPriceAmount($priceAmount) {
+        $this->priceAmounts->removeElement($priceAmount);
+    }
+
 }

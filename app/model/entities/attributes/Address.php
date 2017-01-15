@@ -8,6 +8,7 @@
 
 namespace App\Model\Entities\Attributes;
 
+use Doctrine\ORM\Mapping as ORM;
 
 trait Address {
 
@@ -47,6 +48,7 @@ trait Address {
      */
     public function setAddress($address) {
         $this->address = $address;
+        return $this;
     }
 
     /**
@@ -61,6 +63,7 @@ trait Address {
      */
     public function setCity($city) {
         $this->city = $city;
+        return $this;
     }
 
     /**
@@ -75,6 +78,7 @@ trait Address {
      */
     public function setZip($zip) {
         $this->zip = $zip;
+        return $this;
     }
 
     /**
@@ -89,5 +93,6 @@ trait Address {
      */
     public function setCountry($country) {
         $this->country = $country;
+        return $this;
     }
 }
