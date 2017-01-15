@@ -31,15 +31,15 @@
 		"nette/utils": "^2.4",
 		"latte/latte": "^2.4",
 		"tracy/tracy": "^2.4",
-		"doctrine/orm": "^2.4",
-		"kdyby/annotations": "^2.2",
-		"kdyby/console": "^2.4",
-		"kdyby/events": "^2.4",
-		"kdyby/doctrine-cache": "^2.4",
-		"kdyby/doctrine": "~2.3.1",
-		"symfony/config": "~2.7",
-		"symfony/translation": "~2.7",
-		"kdyby/translation": "~2.2"
+		"doctrine/orm": "^2.5",
+		"kdyby/annotations": "^2.3",
+		"kdyby/console": "^2.6",
+		"kdyby/events": "^3.0",
+		"kdyby/doctrine-cache": "^2.5",
+		"kdyby/doctrine": "~3.1",
+		"symfony/config": "~2.5",
+		"symfony/translation": "~2.5",
+		"kdyby/translation": "@dev"
 	},
 	"require-dev": {
 		"nette/tester": "^1.6"

@@ -1,17 +1,23 @@
 <?php
 
-namespace App\Presenters;
+namespace App\AdminModule\Presenters;
 
+use App\AdminModule\Controls\Forms\SignInFormFactory;
 use Nette;
-use App\Forms;
 
 
 class SignPresenter extends BasePresenter
 {
-	/** @var Forms\SignInFormFactory @inject */
+	/**
+     * @var SignInFormFactory
+     * @inject
+     */
 	public $signInFactory;
 
-	/** @var Forms\SignUpFormFactory @inject */
+	/**
+     * @var SignInFormFactory
+     * @inject
+     */
 	public $signUpFactory;
 
 

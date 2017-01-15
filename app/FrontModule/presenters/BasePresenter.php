@@ -1,8 +1,7 @@
 <?php
 
-namespace FrontModule;
+namespace App\FrontModule\Presenters;
 
-use Nette;
 use App\Model;
 
 

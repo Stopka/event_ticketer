@@ -1,8 +1,7 @@
 <?php
 
-namespace AdminModule;
+namespace App\AdminModule\Presenters;
 
-use Nette;
 use App\Model;
 
 

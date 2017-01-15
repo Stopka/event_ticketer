@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Forms;
+namespace App\Controls\Forms;
 
 use Nette;
 use Nette\Application\UI\Form;
 
 
-class FormFactory
+abstract class FormFactory
 {
 	use Nette\SmartObject;
 
 	/**
 	 * @return Form
 	 */
-	public function create()
+	public function create($callback)
 	{
 		$form = new Form;
 		return $form;

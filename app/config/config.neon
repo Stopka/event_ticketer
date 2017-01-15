@@ -16,8 +16,7 @@ session:
     expiration: 14 days
 
 services:
-    - App\Model\UserManager
-    - App\Forms\FormFactory
+    - App\AdminModule\Controls\Forms\SignInFormFactory
     - App\Model\Facades\AdministratorFacade
     router: App\RouterFactory::createRouter
 
