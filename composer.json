@@ -39,7 +39,13 @@
 		"kdyby/doctrine": "~3.1",
 		"symfony/config": "~2.5",
 		"symfony/translation": "~2.5",
-		"kdyby/translation": "@dev"
+		"kdyby/translation": "@dev",
+		"voda/date-input": "^1.1",
+		"kdyby/forms-replicator": "@dev",
+		"jkuchar/pdfresponse": "@dev",
+		"setasign/fpdi-tcpdf": "^1.6",
+		"minetro/recaptcha": "^1.6",
+		"o5/grido": "^2.1"
 	},
 	"require-dev": {
 		"nette/tester": "^1.6"

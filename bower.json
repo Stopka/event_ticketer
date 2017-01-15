@@ -1,0 +1,22 @@
+{
+  "name": "ldtpardubice_application",
+  "description": "Application form system",
+  "main": "",
+  "license": "proprietary",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "www/vendor/"
+  ],
+  "dependencies": {
+    "jquery": "^1.12",
+    "font-awesome": "fontawesome#^4.6.3",
+    "jquery-ui": "^1.12.1",
+    "normalize-css": "normalize.css#^5.0.0",
+    "nette-live-form-validation": "^1.8.1",
+    "nette.ajax.js": "^2.1.0",
+    "bootstrap": "^3.3.7",
+    "grido": "^2.1.2"
+  }
+}

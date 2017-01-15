@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dca7064b40058c41ca00c5a8b415a4be",
+    "content-hash": "38f68d2bf13ddbf51cd2794a7e3c20c9",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -606,6 +606,46 @@
             "time": "2016-12-18T15:42:34+00:00"
         },
         {
+            "name": "jkuchar/pdfresponse",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jkuchar/PdfResponse.git",
+                "reference": "9540166d7bce1eca840f57e8ce2f9c923896dd14"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jkuchar/PdfResponse/zipball/9540166d7bce1eca840f57e8ce2f9c923896dd14",
+                "reference": "9540166d7bce1eca840f57e8ce2f9c923896dd14",
+                "shasum": ""
+            },
+            "require": {
+                "mpdf/mpdf": ">= 5.0",
+                "nette/application": ">= 2.2",
+                "nette/http": ">= 2.2",
+                "nette/utils": ">= 2.2",
+                "php": ">= 5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Kuchař",
+                    "homepage": "http://www.jankuchar.cz"
+                }
+            ],
+            "description": "PdfResponse is wrapper of mPDF for Nette.",
+            "time": "2016-12-01 13:02:03"
+        },
+        {
             "name": "kdyby/annotations",
             "version": "v2.3.1",
             "source": {
@@ -1032,6 +1072,83 @@
             "time": "2016-07-07T20:48:31+00:00"
         },
         {
+            "name": "kdyby/forms-replicator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Kdyby/FormsReplicator.git",
+                "reference": "eff6ba120310970021e974857e9d5d6920a26b0a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Kdyby/FormsReplicator/zipball/eff6ba120310970021e974857e9d5d6920a26b0a",
+                "reference": "eff6ba120310970021e974857e9d5d6920a26b0a",
+                "shasum": ""
+            },
+            "require": {
+                "nette/forms": "~2.4@dev"
+            },
+            "require-dev": {
+                "latte/latte": "~2.4@dev",
+                "nette/application": "~2.4@dev",
+                "nette/bootstrap": "~2.4@dev",
+                "nette/caching": "~2.4@dev",
+                "nette/component-model": "~2.2@dev",
+                "nette/database": "~2.4@dev",
+                "nette/deprecated": "~2.4@dev",
+                "nette/di": "~2.4@dev",
+                "nette/finder": "~2.4@dev",
+                "nette/forms": "~2.4@dev",
+                "nette/http": "~2.4@dev",
+                "nette/mail": "~2.4@dev",
+                "nette/neon": "~2.4@dev",
+                "nette/php-generator": "~2.4@dev",
+                "nette/reflection": "~2.4@dev",
+                "nette/robot-loader": "~2.4@dev",
+                "nette/safe-stream": "~2.3@dev",
+                "nette/security": "~2.4@dev",
+                "nette/tester": "~1.7",
+                "nette/tokenizer": "~2.2@dev",
+                "nette/utils": "~2.4@dev",
+                "php": ">=5.6",
+                "tracy/tracy": "~2.4@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Kdyby\\Replicator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Filip Procházka",
+                    "email": "filip@prochazka.su",
+                    "homepage": "http://filip-prochazka.com"
+                }
+            ],
+            "description": "Nette forms container replicator aka addDynamic",
+            "homepage": "http://kdyby.org",
+            "keywords": [
+                "Forms",
+                "addDynamic",
+                "kdyby",
+                "nette",
+                "replicator"
+            ],
+            "time": "2016-08-27 16:56:29"
+        },
+        {
             "name": "kdyby/translation",
             "version": "dev-master",
             "source": {
@@ -1194,6 +1311,138 @@
                 "twig"
             ],
             "time": "2016-09-27T13:10:19+00:00"
+        },
+        {
+            "name": "minetro/recaptcha",
+            "version": "1.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/minetro/reCAPTCHA.git",
+                "reference": "a3f8146d2d0b2a8b86eda6cea50017f424f026cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/minetro/reCAPTCHA/zipball/a3f8146d2d0b2a8b86eda6cea50017f424f026cb",
+                "reference": "a3f8146d2d0b2a8b86eda6cea50017f424f026cb",
+                "shasum": ""
+            },
+            "require": {
+                "nette/di": "~2.4.0",
+                "nette/forms": "~2.4.0",
+                "nette/utils": "~2.4.0",
+                "php": ">= 5.6"
+            },
+            "require-dev": {
+                "nette/tester": "~1.7.0",
+                "ninjify/qa": "^0.2"
+            },
+            "suggest": {
+                "ext-openssl": "To make requests via https"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.7.x-dev"
+                },
+                "ninjify": {
+                    "qa": {
+                        "codesniffer": {
+                            "folders": [
+                                "src",
+                                "tests"
+                            ]
+                        },
+                        "codefixer": {
+                            "folders": [
+                                "src",
+                                "tests"
+                            ]
+                        },
+                        "linter": {
+                            "folders": [
+                                "src",
+                                "tests"
+                            ]
+                        }
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Minetro\\Forms\\reCAPTCHA\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Milan Felix Sulc",
+                    "homepage": "https://jfx.cz"
+                }
+            ],
+            "description": "Google reCAPTCHA for Nette - Forms",
+            "homepage": "https://github.com/minetro/reCAPTCHA",
+            "keywords": [
+                "Forms",
+                "captcha",
+                "google",
+                "nette",
+                "recaptcha"
+            ],
+            "time": "2016-11-07T19:53:05+00:00"
+        },
+        {
+            "name": "mpdf/mpdf",
+            "version": "v6.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mpdf/mpdf.git",
+                "reference": "7f138bf7508eac895ac2c13d2509b056ac7e7e97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/7f138bf7508eac895ac2c13d2509b056ac7e7e97",
+                "reference": "7f138bf7508eac895ac2c13d2509b056ac7e7e97",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.4.0",
+                "setasign/fpdi": "1.6.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.7"
+            },
+            "suggest": {
+                "ext-zlib": "Needed for compression of embedded resources, such as fonts"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "mpdf.php",
+                    "classes"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Ian Back",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP class to generate PDF files from HTML with Unicode/UTF-8 and CJK support",
+            "homepage": "http://mpdf.github.io",
+            "keywords": [
+                "pdf",
+                "php",
+                "utf-8"
+            ],
+            "time": "2016-12-12T10:42:18+00:00"
         },
         {
             "name": "nette/application",
@@ -1519,6 +1768,63 @@
             "description": "Nette Database Component",
             "homepage": "https://nette.org",
             "time": "2016-10-18T13:27:34+00:00"
+        },
+        {
+            "name": "nette/deprecated",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/deprecated.git",
+                "reference": "fde8fea8e3f1960ea6bcca03a996300b0ca41762"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/deprecated/zipball/fde8fea8e3f1960ea6bcca03a996300b0ca41762",
+                "reference": "fde8fea8e3f1960ea6bcca03a996300b0ca41762",
+                "shasum": ""
+            },
+            "require-dev": {
+                "latte/latte": "^2.2",
+                "nette/application": "^2.2",
+                "nette/bootstrap": "^2.2.1",
+                "nette/caching": "^2.2",
+                "nette/forms": "^2.2",
+                "nette/mail": "^2.2",
+                "nette/robot-loader": "^2.2",
+                "nette/safe-stream": "^2.2",
+                "nette/security": "^2.2",
+                "nette/tester": "^1.1",
+                "nette/utils": "^2.2",
+                "tracy/tracy": "^2.2"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ],
+                "files": [
+                    "src/loader.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "APIs and features removed from Nette Framework",
+            "homepage": "https://nette.org",
+            "time": "2016-07-15T13:19:27+00:00"
         },
         {
             "name": "nette/di",
@@ -1872,6 +2178,83 @@
             "time": "2017-01-13T08:00:19+00:00"
         },
         {
+            "name": "nette/nette",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/nette.git",
+                "reference": "25381e4ec7902734e49924c1ffd07017830c5f31"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/nette/zipball/25381e4ec7902734e49924c1ffd07017830c5f31",
+                "reference": "25381e4ec7902734e49924c1ffd07017830c5f31",
+                "shasum": ""
+            },
+            "require": {
+                "latte/latte": "^2.4",
+                "nette/application": "^2.4",
+                "nette/bootstrap": "^2.4",
+                "nette/caching": "^2.5",
+                "nette/component-model": "^2.3",
+                "nette/database": "^2.4",
+                "nette/deprecated": "^2.3",
+                "nette/di": "^2.4",
+                "nette/finder": "^2.4",
+                "nette/forms": "^2.4",
+                "nette/http": "^2.4",
+                "nette/mail": "^2.4",
+                "nette/neon": "^2.4",
+                "nette/php-generator": "^2.4",
+                "nette/reflection": "^2.4",
+                "nette/robot-loader": "^2.4",
+                "nette/safe-stream": "^2.3",
+                "nette/security": "^2.4",
+                "nette/tokenizer": "^2.2",
+                "nette/utils": "^2.4",
+                "tracy/tracy": "^2.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "Nette/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
+            "homepage": "https://nette.org",
+            "keywords": [
+                "Forms",
+                "database",
+                "debugging",
+                "framework",
+                "mailing",
+                "mvc",
+                "templating"
+            ],
+            "time": "2016-05-03T15:59:52+00:00"
+        },
+        {
             "name": "nette/php-generator",
             "version": "v2.5.0",
             "source": {
@@ -2159,6 +2542,56 @@
             "time": "2016-12-19T10:53:40+00:00"
         },
         {
+            "name": "nette/tokenizer",
+            "version": "v2.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/tokenizer.git",
+                "reference": "0fec1255bd2d062229e81cad3bfba806a8ea6096"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/tokenizer/zipball/0fec1255bd2d062229e81cad3bfba806a8ea6096",
+                "reference": "0fec1255bd2d062229e81cad3bfba806a8ea6096",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.1"
+            },
+            "conflict": {
+                "nette/nette": "<2.2"
+            },
+            "require-dev": {
+                "nette/tester": "~1.7",
+                "tracy/tracy": "^2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "Nette Tokenizer",
+            "homepage": "https://nette.org",
+            "time": "2016-04-21T13:06:32+00:00"
+        },
+        {
             "name": "nette/utils",
             "version": "v2.4.3",
             "source": {
@@ -2222,6 +2655,64 @@
             "time": "2017-01-09T20:22:19+00:00"
         },
         {
+            "name": "o5/grido",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/o5/grido.git",
+                "reference": "e243cef128591067ee1e5315f14e1cac119271ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/o5/grido/zipball/e243cef128591067ee1e5315f14e1cac119271ff",
+                "reference": "e243cef128591067ee1e5315f14e1cac119271ff",
+                "shasum": ""
+            },
+            "require": {
+                "nette/nette": "~2.0",
+                "php": ">=5.3",
+                "symfony/property-access": "~2.6"
+            },
+            "require-dev": {
+                "dibi/dibi": "~2.3.1",
+                "kdyby/doctrine": "~2.3.0",
+                "mockery/mockery": "~0.9.3",
+                "nette/nette": "~2.2.0",
+                "nette/tester": "~1.4.0",
+                "squizlabs/php_codesniffer": "~2.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grido\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Petr Bugyík",
+                    "homepage": "http://petr.bugyik.cz/"
+                }
+            ],
+            "description": "Grido - DataGrid for Nette Framework",
+            "homepage": "http://o5.github.io/grido-examples/",
+            "keywords": [
+                "datagrid",
+                "datalist",
+                "grid",
+                "list",
+                "nette",
+                "table",
+                "tablegrid"
+            ],
+            "time": "2016-01-11T10:41:43+00:00"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.2",
             "source": {
@@ -2267,6 +2758,102 @@
                 "psr-3"
             ],
             "time": "2016-10-10T12:19:37+00:00"
+        },
+        {
+            "name": "setasign/fpdi",
+            "version": "1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setasign/FPDI.git",
+                "reference": "5b899b2b41463bf261aa69840fd30b50950a500c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/5b899b2b41463bf261aa69840fd30b50950a500c",
+                "reference": "5b899b2b41463bf261aa69840fd30b50950a500c",
+                "shasum": ""
+            },
+            "suggest": {
+                "setasign/fpdf": "FPDI will extend this class but as it is also possible to use \"tecnickcom/tcpdf\" as an alternative there's no fixed dependency configured.",
+                "setasign/fpdi-fpdf": "Use this package to automatically evaluate dependencies to FPDF.",
+                "setasign/fpdi-tcpdf": "Use this package to automatically evaluate dependencies to TCPDF."
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "filters/",
+                    "fpdi.php",
+                    "fpdf_tpl.php",
+                    "fpdi_pdf_parser.php",
+                    "pdf_context.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Slabon",
+                    "email": "jan.slabon@setasign.com",
+                    "homepage": "https://www.setasign.com"
+                }
+            ],
+            "description": "FPDI is a collection of PHP classes facilitating developers to read pages from existing PDF documents and use them as templates in FPDF. Because it is also possible to use FPDI with TCPDF, there are no fixed dependencies defined. Please see suggestions for packages which evaluates the dependencies automatically.",
+            "homepage": "https://www.setasign.com/fpdi",
+            "keywords": [
+                "fpdf",
+                "fpdi",
+                "pdf"
+            ],
+            "time": "2015-11-30T10:53:14+00:00"
+        },
+        {
+            "name": "setasign/fpdi-tcpdf",
+            "version": "1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Setasign/FPDI-TCPDF.git",
+                "reference": "871699d429fcbad6dc809d57c7c8026fd7f41e93"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Setasign/FPDI-TCPDF/zipball/871699d429fcbad6dc809d57c7c8026fd7f41e93",
+                "reference": "871699d429fcbad6dc809d57c7c8026fd7f41e93",
+                "shasum": ""
+            },
+            "require": {
+                "setasign/fpdi": "1.6.*",
+                "tecnickcom/tcpdf": "6.2.*"
+            },
+            "conflict": {
+                "setasign/fpdf": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fpdi_bridge.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Slabon",
+                    "email": "jan.slabon@setasign.com",
+                    "homepage": "https://www.setasign.com"
+                }
+            ],
+            "description": "Kind of metadata package for dependencies of the latest versions of FPDI and TCPDF.",
+            "homepage": "https://www.setasign.com/fpdi",
+            "keywords": [
+                "TCPDF",
+                "fpdi",
+                "pdf"
+            ],
+            "time": "2015-11-30T11:09:50+00:00"
         },
         {
             "name": "symfony/config",
@@ -2553,6 +3140,66 @@
             "time": "2016-11-14T01:06:16+00:00"
         },
         {
+            "name": "symfony/property-access",
+            "version": "v2.8.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/property-access.git",
+                "reference": "23f7fc66a1dd2e8fa9514343e995a8e0902d7493"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/property-access/zipball/23f7fc66a1dd2e8fa9514343e995a8e0902d7493",
+                "reference": "23f7fc66a1dd2e8fa9514343e995a8e0902d7493",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\PropertyAccess\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony PropertyAccess Component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "access",
+                "array",
+                "extraction",
+                "index",
+                "injection",
+                "object",
+                "property",
+                "property path",
+                "reflection"
+            ],
+            "time": "2017-01-02T20:30:24+00:00"
+        },
+        {
             "name": "symfony/translation",
             "version": "v2.8.16",
             "source": {
@@ -2617,6 +3264,69 @@
             "time": "2017-01-02T20:30:24+00:00"
         },
         {
+            "name": "tecnickcom/tcpdf",
+            "version": "6.2.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tecnickcom/TCPDF.git",
+                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/2f732eaa91b5665274689b1d40b285a7bacdc37f",
+                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fonts",
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_parser.php",
+                    "tcpdf_import.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                }
+            ],
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
+            "homepage": "http://www.tcpdf.org/",
+            "keywords": [
+                "PDFD32000-2008",
+                "TCPDF",
+                "barcodes",
+                "datamatrix",
+                "pdf",
+                "pdf417",
+                "qrcode"
+            ],
+            "time": "2015-09-12T10:08:34+00:00"
+        },
+        {
             "name": "tracy/tracy",
             "version": "v2.4.5",
             "source": {
@@ -2677,6 +3387,53 @@
                 "nette"
             ],
             "time": "2017-01-15T13:26:45+00:00"
+        },
+        {
+            "name": "voda/date-input",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/voda/DateInput.git",
+                "reference": "b3e238b58a2da6fefb506d6b9d15830ca0e361a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/voda/DateInput/zipball/b3e238b58a2da6fefb506d6b9d15830ca0e361a1",
+                "reference": "b3e238b58a2da6fefb506d6b9d15830ca0e361a1",
+                "shasum": ""
+            },
+            "require": {
+                "nette/forms": "~2.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "nette/tester": "~1.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vodacek\\Forms\\Controls\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Vodáček",
+                    "email": "ondrej.vodacek@gmail.com"
+                }
+            ],
+            "description": "HTML 5 compatible date / time input field for Nette.",
+            "keywords": [
+                "calendar",
+                "date",
+                "form",
+                "input",
+                "nette"
+            ],
+            "time": "2016-06-12T19:57:31+00:00"
         }
     ],
     "packages-dev": [
@@ -2740,7 +3497,9 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "kdyby/translation": 20
+        "kdyby/translation": 20,
+        "kdyby/forms-replicator": 20,
+        "jkuchar/pdfresponse": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
