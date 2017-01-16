@@ -1,0 +1,13 @@
+{block flashes}
+    <div n:snippet="flashes">
+        <div n:if="count($flashes)" id="flashes">
+            <div n:foreach="$flashes as $flash" n:class="alert, 'alert-'.$flash->type">
+                <i n:if="$flash->type!='error' && $flash->type!='warning' && $flash->type!='success'" class="fa fa-info-circle"></i>
+                <i n:if="$flash->type=='success'" class="fa fa-check-circle"></i>
+                <i n:if="$flash->type=='warning'" class="fa fa-exclamation-circle"></i>
+                <i n:if="$flash->type=='error'" class="fa fa-exclamation-triangle"></i>
+                <span>{$flash->message}</span>
+            </div>
+        </div>
+    </div>
+{/block}
