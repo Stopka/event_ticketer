@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait Email {
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $email;

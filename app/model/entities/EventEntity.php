@@ -10,6 +10,7 @@ namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\Capacity;
 use App\Model\Entities\Attributes\Name;
+use App\Model\Entities\Attributes\StartDate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -20,7 +21,10 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class EventEntity extends BaseEntity {
-    use Identifier, Name, Capacity;
+    use Identifier, Name, Capacity, StartDate;
+
+    const STATE_INACTIVE=false;
+    const STATE_ACTIVE=true;
 
     public function __construct() {
         $this->earlyWaves = new ArrayCollection();

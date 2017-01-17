@@ -14,7 +14,6 @@ use App\Model\Entities\Attributes\Guid;
 use App\Model\Entities\Attributes\Identifier;
 use App\Model\Entities\Attributes\PersonName;
 use App\Model\Entities\Attributes\Phone;
-use App\Model\Entities\Attributes\StartDate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class EarlyEntity extends BaseEntity {
-    use Identifier, Guid, PersonName, Email, Phone, Address, StartDate;
+    use Identifier, Guid, PersonName, Email, Phone, Address;
 
     public function __construct() {
         $this->orders = new ArrayCollection();

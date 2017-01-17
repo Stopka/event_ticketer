@@ -13,13 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
 trait PersonName {
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $lastName;

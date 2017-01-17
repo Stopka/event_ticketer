@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait Phone {
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $phone;
