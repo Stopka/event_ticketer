@@ -10,7 +10,6 @@ namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\Capacity;
 use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\Price;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -21,7 +20,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class EventEntity extends BaseEntity {
-    use Identifier, Name, Capacity, Price;
+    use Identifier, Name, Capacity;
 
     public function __construct() {
         $this->earlies = new ArrayCollection();
@@ -35,12 +34,6 @@ class EventEntity extends BaseEntity {
      * @var integer
      */
     private $state;
-
-    /**
-     * @ORM\OneToOne(targetEntity="PriceEntity")
-     * @var PriceEntity
-     */
-    private $price;
 
     /**
      * @ORM\OneToMany(targetEntity="EarlyEntity", mappedBy="event")
@@ -72,20 +65,6 @@ class EventEntity extends BaseEntity {
      */
     public function setState($state) {
         $this->state = $state;
-    }
-
-    /**
-     * @return PriceEntity
-     */
-    public function getPrice() {
-        return $this->price;
-    }
-
-    /**
-     * @param PriceEntity $price
-     */
-    public function setPrice($price) {
-        $this->price = $price;
     }
 
     /**

@@ -10,6 +10,7 @@ namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\BirthDate;
 use App\Model\Entities\Attributes\Name;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -21,11 +22,42 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
 class ChildEntity extends BaseEntity {
     use Identifier,Name,BirthDate;
 
+    public function __construct() {
+        $this->options = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OptionEntity"))
+     * @var OptionEntity[]
+     */
+    private $options;
+
     /**
      * @ORM\ManyToOne(targetEntity="OrderEntity", inversedBy="children")
      * @var OrderEntity
      */
     private $parent;
+
+    /**
+     * @return OptionEntity[]
+     */
+    public function getOptions() {
+        return $this->options;
+    }
+
+    /**
+     * @param OptionEntity $option
+     */
+    public function addOption($option) {
+        $this->options->add($option);
+    }
+
+    /**
+     * @param OptionEntity $option
+     */
+    public function removeOption($option) {
+        $this->options->removeElement($option);
+    }
 
     /**
      * @return OrderEntity

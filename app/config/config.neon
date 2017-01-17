@@ -39,3 +39,18 @@ doctrine:
     password: %database.password%
     metadata:
         App: %appDir%
+
+forms:
+    messages:
+        EQUAL: 'Zadejte prosím %s.'
+        FILLED: 'Vyplnte prosím %label.'
+        NOT_EQUAL: '%label nesbýt %s.'
+        INTEGER: '%label musí být celé číslo.'
+        FLOAT: '%label musí být číslo.'
+        MIN: '%label musí být větší nebo rovno %d.'
+        MAX: '%label musí být menší nebo rovno %d.'
+        RANGE: '%label musí být v rozsahu %d - %d.'
+        LENGTH: '%label musí mít délku %d znaků.'
+        MIN_LENGTH: '%label musí mít minimální %d znaků.'
+        MAX_LENGTH: '%label může mít maximálně %d znaků.'
+        EMAIL: '%label musí být platná emailová adresa'

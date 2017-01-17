@@ -38,6 +38,12 @@ class AdditionEntity extends BaseEntity {
     private $maximum = 1;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @var boolean
+     */
+    private $forChild = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="additions")
      * @var EventEntity
      */

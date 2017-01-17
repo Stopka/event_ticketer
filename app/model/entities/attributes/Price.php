@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait Price {
 
     /**
-     * @ORM\OneToOne(targetEntity="PriceEntity")
+     * @ORM\ManyToOne(targetEntity="PriceEntity")
      * @var PriceEntity
      */
     private $price;
