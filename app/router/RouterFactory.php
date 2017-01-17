@@ -3,8 +3,8 @@
 namespace App;
 
 use Nette;
-use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
+use Nette\Application\Routers\RouteList;
 
 
 class RouterFactory {
@@ -17,6 +17,12 @@ class RouterFactory {
         $router = new RouteList;
         $router[] = new Route("admin/<presenter>/<action>[/<id>]", [
             'module' => 'Admin',
+            'presenter' => 'Homepage',
+            'action' => 'default',
+            'locale' => 'cs'
+        ]);
+        $router[] = new Route("api/<presenter>/<action>[/<id>]", [
+            'module' => 'Api',
             'presenter' => 'Homepage',
             'action' => 'default',
             'locale' => 'cs'

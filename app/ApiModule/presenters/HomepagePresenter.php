@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AdminModule\Presenters;
+namespace App\ApiModule\Presenters;
 
 use App\Model;
 

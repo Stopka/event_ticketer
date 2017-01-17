@@ -17,4 +17,11 @@ class EarlyFacade extends EntityFacade {
         return EarlyEntity::class;
     }
 
+    public function sendEmails($wave_id){
+        $dao = $this->getRepository();
+        /** @var EarlyEntity[] $earlies */
+        $earlies = $dao->findAll();
+
+    }
+
 }
