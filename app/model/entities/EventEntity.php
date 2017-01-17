@@ -23,11 +23,10 @@ class EventEntity extends BaseEntity {
     use Identifier, Name, Capacity;
 
     public function __construct() {
-        $this->earlies = new ArrayCollection();
+        $this->earlyWaves = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->additions = new ArrayCollection();
     }
-
 
     /**
      * @ORM\Column(type="integer")
@@ -36,10 +35,10 @@ class EventEntity extends BaseEntity {
     private $state;
 
     /**
-     * @ORM\OneToMany(targetEntity="EarlyEntity", mappedBy="event")
-     * @var EarlyEntity[]
+     * @ORM\OneToMany(targetEntity="EarlyWaveEntity", mappedBy="event")
+     * @var EarlyWaveEntity[]
      */
-    private $earlies;
+    private $earlyWaves;
 
     /**
      * @ORM\OneToMany(targetEntity="OrderEntity", mappedBy="event")
@@ -68,38 +67,40 @@ class EventEntity extends BaseEntity {
     }
 
     /**
-     * @return EarlyEntity[]
+     * @return EarlyWaveEntity[]
      */
-    public function getEarlies() {
-        return $this->earlies;
+    public function getEarlyWaves() {
+        return $this->earlyWaves;
     }
 
     /**
-     * @param EarlyEntity $early
+     * @param EarlyWaveEntity $earlyWave
      */
-    public function addEarly($early) {
-        $early->setEvent($this);
+    public function addEarlyWave($earlyWave) {
+        $earlyWave->setEvent($this);
     }
 
     /**
-     * @param EarlyEntity $early
+     * @param EarlyWaveEntity $earlyWave
+     * @internal
      */
-    public function addInversedEarly($early) {
-        $this->earlies->add($early);
+    public function addInversedEarlyWave($earlyWave) {
+        $this->earlyWaves->add($earlyWave);
     }
 
     /**
-     * @param EarlyEntity $early
+     * @param EarlyWaveEntity $earlyWave
      */
-    public function removeEarly($early) {
-        $early->setEvent(NULL);
+    public function removeEarlyWave($earlyWave) {
+        $earlyWave->setEvent(NULL);
     }
 
     /**
-     * @param EarlyEntity $early
+     * @param EarlyWaveEntity $earlyWave
+     * @internal
      */
-    public function removeInversedEarly($early) {
-        $this->earlies->removeElement($early);
+    public function removeInversedEarlyWave($earlyWave) {
+        $this->earlyWaves->removeElement($earlyWave);
     }
 
     /**
@@ -147,6 +148,7 @@ class EventEntity extends BaseEntity {
 
     /**
      * @param AdditionEntity $additions
+     * @internal
      */
     public function addInversedAddition($addition) {
         $this->additions->add($addition);
@@ -154,6 +156,7 @@ class EventEntity extends BaseEntity {
 
     /**
      * @param AdditionEntity $additions
+     * @internal
      */
     public function removeInversedAddition($addition) {
         $this->additions->removeElement($addition);

@@ -100,6 +100,7 @@ class AdditionEntity extends BaseEntity {
 
     /**
      * @param OptionEntity $option
+     * @internal
      */
     public function addInversedOption($option) {
         $this->options->add($option);
@@ -107,6 +108,7 @@ class AdditionEntity extends BaseEntity {
 
     /**
      * @param OptionEntity $option
+     * @internal
      */
     public function removeInversedOption($option) {
         $this->options->removeElement($option);

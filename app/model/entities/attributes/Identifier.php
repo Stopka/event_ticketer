@@ -13,4 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait Identifier {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
+    protected function resetId(){
+        $this->id = null;
+    }
 }

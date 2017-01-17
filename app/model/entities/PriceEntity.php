@@ -53,6 +53,7 @@ class PriceEntity extends BaseEntity {
 
     /**
      * @param PriceAmountEntity $priceAmount
+     * @internal
      */
     public function addInversedPriceAmount($priceAmount) {
         $this->priceAmounts->add($priceAmount);
@@ -60,6 +61,7 @@ class PriceEntity extends BaseEntity {
 
     /**
      * @param PriceAmountEntity $priceAmount
+     * @internal
      */
     public function removeInversedPriceAmount($priceAmount) {
         $this->priceAmounts->removeElement($priceAmount);

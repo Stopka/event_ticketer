@@ -10,12 +10,13 @@ namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\Address;
 use App\Model\Entities\Attributes\Email;
-use App\Model\Entities\Attributes\Name;
+use App\Model\Entities\Attributes\Guid;
+use App\Model\Entities\Attributes\Identifier;
+use App\Model\Entities\Attributes\PersonName;
 use App\Model\Entities\Attributes\Phone;
 use App\Model\Entities\Attributes\StartDate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -23,18 +24,19 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class EarlyEntity extends BaseEntity {
-    use Identifier, Name, Email, Phone, Address, StartDate;
+    use Identifier, Guid, PersonName, Email, Phone, Address, StartDate;
 
     public function __construct() {
         $this->orders = new ArrayCollection();
+        $this->generateGuid();
     }
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="earlies")
-     * @var EventEntity
+     * @ORM\ManyToOne(targetEntity="EarlyWaveEntity", inversedBy="earlies")
+     * @var EarlyWaveEntity
      */
-    private $event;
+    private $earlyWave;
 
     /**
      * @ORM\OneToMany(targetEntity="OrderEntity", mappedBy="early")
@@ -43,22 +45,22 @@ class EarlyEntity extends BaseEntity {
     private $orders;
 
     /**
-     * @return EventEntity
+     * @return EarlyWaveEntity
      */
-    public function getEvent() {
-        return $this->event;
+    public function getEarlyWave() {
+        return $this->earlyWave;
     }
 
     /**
-     * @param EventEntity $event
+     * @param EarlyWaveEntity $earlyWave
      */
-    public function setEvent($event) {
-        if($this->event){
-            $this->event->removeInversedEarly($this);
+    public function setEarlyWave($earlyWave) {
+        if($this->earlyWave){
+            $this->earlyWave->removeInversedEarly($this);
         }
-        $this->event = $event;
-        if($event) {
-            $event->addInversedEarly($this);
+        $this->earlyWave = $earlyWave;
+        if($earlyWave) {
+            $earlyWave->addInversedEarly($this);
         }
     }
 
@@ -78,6 +80,7 @@ class EarlyEntity extends BaseEntity {
 
     /**
      * @param OrderEntity $order
+     * @internal
      */
     public function addIversedOrder($order) {
         $this->orders->add($order);
@@ -92,8 +95,16 @@ class EarlyEntity extends BaseEntity {
 
     /**
      * @param OrderEntity $order
+     * @internal
      */
     public function removeIversedOrder($order) {
         $this->orders->removeElement($order);
     }
+
+    public function __clone() {
+        $this->resetId();
+        $this->generateGuid();
+    }
+
+
 }

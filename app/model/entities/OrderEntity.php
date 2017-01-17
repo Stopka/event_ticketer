@@ -11,11 +11,11 @@ namespace App\Model\Entities;
 use App\Model\Entities\Attributes\Address;
 use App\Model\Entities\Attributes\Email;
 use App\Model\Entities\Attributes\Guid;
-use App\Model\Entities\Attributes\Name;
+use App\Model\Entities\Attributes\Identifier;
+use App\Model\Entities\Attributes\PersonName;
 use App\Model\Entities\Attributes\Phone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -23,12 +23,12 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class OrderEntity extends BaseEntity {
-    use Identifier, Guid, Name, Email, Phone, Address;
+    use Identifier, Guid, PersonName, Email, Phone, Address;
 
     public function __construct() {
         $this->children = new ArrayCollection();
-        $this->options = new ArrayCollection();
         $this->created = new \DateTime();
+        $this->generateGuid();
     }
 
     /**
@@ -48,12 +48,6 @@ class OrderEntity extends BaseEntity {
      * @var EarlyEntity
      */
     private $early;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="OptionEntity"))
-     * @var OptionEntity[]
-     */
-    private $options;
 
     /**
      * @var \DateTime
@@ -83,6 +77,7 @@ class OrderEntity extends BaseEntity {
 
     /**
      * @param ChildEntity $child
+     * @internal
      */
     public function addInversedChild($child) {
         $this->children->add($child);
@@ -90,6 +85,7 @@ class OrderEntity extends BaseEntity {
 
     /**
      * @param ChildEntity $child
+     * @internal
      */
     public function removeInversedChild($child) {
         $this->children->removeElement($child);
@@ -127,27 +123,6 @@ class OrderEntity extends BaseEntity {
      */
     public function setEarly($early) {
         $this->early = $early;
-    }
-
-    /**
-     * @return OptionEntity[]
-     */
-    public function getOptions() {
-        return $this->options;
-    }
-
-    /**
-     * @param OptionEntity $option
-     */
-    public function addOption($option) {
-        $this->options->add($option);
-    }
-
-    /**
-     * @param OptionEntity $option
-     */
-    public function removeOption($option) {
-        $this->options->removeElement($option);
     }
 
     /**

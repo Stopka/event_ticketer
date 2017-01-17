@@ -10,24 +10,26 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Guid {
+trait BirthCode {
 
     /**
      * @ORM\Column(type="string")
      * @var string
      */
-    private $guid;
-
-    protected function generateGuid(){
-        $this->guid = uniqid();
-    }
+    private $birthCode;
 
     /**
      * @return string
      */
-    public function getGuid() {
-        return $this->guid;
+    public function getBirthCode() {
+        return $this->birthCode;
     }
 
+    /**
+     * @param string $birthCode
+     */
+    public function setBirthCode($birthCode) {
+        $this->birthCode = $birthCode;
+    }
 
 }

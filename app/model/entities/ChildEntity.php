@@ -9,7 +9,7 @@
 namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\BirthDate;
-use App\Model\Entities\Attributes\Name;
+use App\Model\Entities\Attributes\PersonName;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -20,7 +20,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class ChildEntity extends BaseEntity {
-    use Identifier,Name,BirthDate;
+    use Identifier,PersonName,BirthDate;
 
     public function __construct() {
         $this->options = new ArrayCollection();
