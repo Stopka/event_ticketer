@@ -166,5 +166,20 @@ class EventEntity extends BaseEntity {
         $this->additions->removeElement($addition);
     }
 
+    /**
+     * @return bool
+     */
+    public function isActive(){
+        return $this->getState()==self::STATE_ACTIVE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStarted(){
+        $now = new \DateTime();
+        return $this->getStartDate()->getTimestamp()<=$now->getTimestamp();
+    }
+
 
 }

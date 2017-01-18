@@ -11,6 +11,8 @@ namespace App\Model\Facades;
 use Kdyby\Doctrine\EntityManager;
 
 class DoctrineFacade extends BaseFacade {
+    const ORDER_ASC='ASC';
+    const ORDER_DESC='DESC';
 
     /** @var  EntityManager */
     private $entityManager;

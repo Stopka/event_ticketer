@@ -18,6 +18,7 @@ session:
 services:
     - App\AdminModule\Controls\Forms\SignInFormFactory
     - App\Model\Facades\AdministratorFacade
+    - App\Model\Facades\EventFacade
     - App\Model\Facades\EarlyWaveFacade
     router: App\RouterFactory::createRouter
 

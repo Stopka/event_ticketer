@@ -1,2 +1,18 @@
+{**
+ * @param EventEntity[] $events
+ *}
 {block content}
-<h1>Registrace</h1>
+<h1>Události na které lze získat přihlášku</h1>
+
+<ul n:if="$events">
+    <li n:foreach="$events as $event">
+        <a n:href="Event:,$event->getId()">
+            <i class="fa fa-calendar-o"></i>
+            <span>{$event->getName()}</span>
+        </a>
+    </li>
+</ul>
+
+<p n:if="!$events">
+    Aktuálně nejsou žádné aktivní události, do kterých by se dalo registrovat
+</p>

@@ -7,8 +7,18 @@ use App\Model;
 
 class HomepagePresenter extends BasePresenter {
 
-    public function renderDefault() {
+    /**
+     * @var Model\Facades\EventFacade
+     * @inject
+     */
+    public $eventFacade;
 
+    public function renderDefault() {
+        $events = $this->eventFacade->getStartedEvents();
+        if(count($events)==1){
+            $this->redirect('Event:',$events[0]->getId());
+        }
+        $this->template->events = $events;
     }
 
 }
