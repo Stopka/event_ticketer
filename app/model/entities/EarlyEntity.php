@@ -105,5 +105,15 @@ class EarlyEntity extends BaseEntity {
         $this->generateGuid();
     }
 
+    /**
+     * @return bool
+     */
+    public function isReadyToRegister(){
+        $wave = $this->getEarlyWave();
+        if(!$wave){
+            return false;
+        }
+        return $wave->isReadyToRegister();
+    }
 
 }

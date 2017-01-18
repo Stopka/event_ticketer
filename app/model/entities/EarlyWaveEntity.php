@@ -93,4 +93,15 @@ class EarlyWaveEntity extends BaseEntity {
     public function removeInversedEarly($early) {
         $this->earlies->removeElement($early);
     }
+
+    /**
+     * @return bool
+     */
+    public function isReadyToRegister(){
+        $event = $this->getEvent();
+        if(!$event){
+            return false;
+        }
+        return $event->isActive()&&$this->isStarted();
+    }
 }

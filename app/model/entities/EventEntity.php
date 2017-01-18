@@ -174,12 +174,11 @@ class EventEntity extends BaseEntity {
     }
 
     /**
+     * @param \DateTime|null $date
      * @return bool
      */
-    public function isStarted(){
-        $now = new \DateTime();
-        return $this->getStartDate()->getTimestamp()<=$now->getTimestamp();
+    public function isPublicAvailible(\DateTime $date = null){
+        return $this->isActive()&&$this->isStarted($date);
     }
-
 
 }

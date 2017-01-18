@@ -32,4 +32,15 @@ trait StartDate {
         $this->startDate = $startDate;
     }
 
+    /**
+     * @param $date \DateTime|null
+     * @return bool
+     */
+    public function isStarted(\DateTime $date = null){
+        if(!$date){
+            $date = new \DateTime();
+        }
+        return $this->getStartDate()->getTimestamp()<=$date->getTimestamp();
+    }
+
 }

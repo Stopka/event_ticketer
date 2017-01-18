@@ -4,6 +4,7 @@ namespace App\Controls\Forms;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Stopka\NetteFormRenderer\FormRenderer;
 
 
 abstract class FormFactory {
@@ -12,8 +13,9 @@ abstract class FormFactory {
     /**
      * @return Form
      */
-    public function create($callback) {
+    public function create() {
         $form = new Form;
+        $form->setRenderer(new FormRenderer());
         return $form;
     }
 

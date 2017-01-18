@@ -27,9 +27,8 @@ class EarlyWaveFacade extends EntityFacade {
     public function sendEmails($wave_id){
         /** @var EarlyWaveEntity $wave */
         $wave = $this->get($wave_id);
-        $now = new \DateTime();
-        if($wave->getStartDate()->getTimestamp()>$now->getTimestamp()){
-            throw new ApplicationException('EarlyWave not started yet!');
+        if($wave->isReadyToRegister()){
+            throw new ApplicationException('EarlyWave is not ready to start!');
         }
         foreach ($wave->getEarlies() as $early){
             if(!$early->getEmail()){

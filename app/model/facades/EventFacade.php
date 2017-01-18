@@ -21,7 +21,7 @@ class EventFacade extends EntityFacade {
      * Started end active events
      * @return EventEntity[]
      */
-    public function getStartedEvents() {
+    public function getPublicAvailibleEvents() {
         return $this->getRepository()->findBy([
             'state' => EventEntity::STATE_ACTIVE,
             'startDate <=' => new \DateTime()
@@ -33,12 +33,13 @@ class EventFacade extends EntityFacade {
      * @param $id
      * @return null|EventEntity
      */
-    public function getStartedEvent($id){
+    public function getPublicAvailibleEvent($id){
         if(!$id){
             return NULL;
         }
+        /** @var EventEntity $event */
         $event = $this->get($id);
-        if($event&&$event->isActive()&&$event->isStarted()){
+        if($event&&$event->isPublicAvailible()){
             return $event;
         }
         return NULL;

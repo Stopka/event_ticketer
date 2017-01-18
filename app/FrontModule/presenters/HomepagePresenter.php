@@ -14,7 +14,7 @@ class HomepagePresenter extends BasePresenter {
     public $eventFacade;
 
     public function renderDefault() {
-        $events = $this->eventFacade->getStartedEvents();
+        $events = $this->eventFacade->getPublicAvailibleEvents();
         if(count($events)==1){
             $this->redirect('Event:',$events[0]->getId());
         }

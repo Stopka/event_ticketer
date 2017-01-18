@@ -19,7 +19,9 @@ services:
     - App\AdminModule\Controls\Forms\SignInFormFactory
     - App\Model\Facades\AdministratorFacade
     - App\Model\Facades\EventFacade
+    - App\Model\Facades\EarlyFacade
     - App\Model\Facades\EarlyWaveFacade
+    - App\Controls\Forms\OrderFormFactory
     router: App\RouterFactory::createRouter
 
 extensions:
@@ -28,6 +30,7 @@ extensions:
     annotations: Kdyby\Annotations\DI\AnnotationsExtension
     doctrine: Kdyby\Doctrine\DI\OrmExtension
     translation: Kdyby\Translation\DI\TranslationExtension
+    replicator: Kdyby\Replicator\DI\ReplicatorExtension
 
 translation:
         default: cs
