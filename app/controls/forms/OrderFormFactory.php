@@ -9,6 +9,8 @@ use App\Model\Entities\OptionEntity;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\Html;
+use Stopka\NetteFormRenderer\HtmlFormComponent;
 
 
 class OrderFormFactory extends FormFactory {
@@ -43,19 +45,24 @@ class OrderFormFactory extends FormFactory {
      */
     public function create() {
         $form = parent::create();
-        $this->createParentControls($form);
-        $this->createCommonControls($form);
-        $this->createChildrenControls($form);
-        $this->createSubmitControls($form);
+        $this->appendParentControls($form);
+        $this->appendCommonControls($form);
+        $this->appendChildrenControls($form);
+        $this->appendSubmitControls($form);
         return $form;
     }
 
-    protected function createSubmitControls(Form $form) {
+    protected function createFinalControls(Form $form){
+        $form->setCurrentGroup();
+        $form['total'] = new HtmlFormComponent('Celková cena',Html::el('div',['class'=>'child_total']));
+    }
+
+    protected function appendSubmitControls(Form $form) {
         $form->setCurrentGroup();
         $form->addSubmit('submit', 'Rezervovat');
     }
 
-    protected function createParentControls(Form $form) {
+    protected function appendParentControls(Form $form) {
         $form->addGroup('Rodič');
         $form->addText('firstName', 'Jméno', NULL, 255)
             ->setRequired()
@@ -72,7 +79,7 @@ class OrderFormFactory extends FormFactory {
             ->addRule($form::EMAIL);
     }
 
-    protected function createCommonControls(Form $form) {
+    protected function appendCommonControls(Form $form) {
         $form->addGroup('Bydliště dětí');
         $form->addText('address', 'Adresa', NULL, 255)
             ->setOption('description', 'Ulice a číslo popisné')
@@ -86,7 +93,7 @@ class OrderFormFactory extends FormFactory {
             ->addRule($form::MAX_LENGTH, NULL, 255);
     }
 
-    protected function createChildrenControls(Form $form) {
+    protected function appendChildrenControls(Form $form) {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
         $add_button = $form->addSubmit('add', 'Přidat přihlášku')
@@ -95,14 +102,13 @@ class OrderFormFactory extends FormFactory {
         $add_button->onClick[] = [$this, 'addChild'];
         $children = $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
             $group = $form->addGroup();
-            $group->setOption('embedNext', 2);
             $parent_group = $form->getGroup('Přihlášky');
             $count = $parent_group->getOption('embedNext');
             $parent_group->setOption('embedNext', $count ? $count + 1 : 1);
             $child->setCurrentGroup($group);
 
-            $this->createChildControls($form, $child);
-            $this->createAdditionsControls($form, $child);
+            $this->appendChildControls($form, $child);
+            $this->appendAdditionsControls($form, $child);
 
 
             $remove_button = $child->addSubmit('remove', 'Zrušit přihlášku')
@@ -112,7 +118,7 @@ class OrderFormFactory extends FormFactory {
         }, 0);
     }
 
-    protected function createChildControls(Form $form, Container $container) {
+    protected function appendChildControls(Form $form, Container $container) {
         $child = $container->addContainer('child');
         $child->addText('firstName', 'Jméno', NULL, 255)
             ->setRequired()
@@ -128,14 +134,15 @@ class OrderFormFactory extends FormFactory {
             ->addRule($form::PATTERN, '%label musí být ve formátu čtyřmístného čísla', '[0-9]{4}');
     }
 
-    protected function createAdditionsControls(Form $form, Container $container) {
+    protected function appendAdditionsControls(Form $form, Container $container) {
         $subcontainer = $container->addContainer('addittions');
         foreach ($this->event->getAdditions() as $addition) {
-            $this->createAdditionContols($subcontainer, $addition);
+            $this->appendAdditionContols($subcontainer, $addition);
         }
+        $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',Html::el('div',['class'=>'child_total']));
     }
 
-    protected function createAdditionContols(Container $container, AdditionEntity $addition) {
+    protected function appendAdditionContols(Container $container, AdditionEntity $addition) {
         $options = $this->createAdditionOptions($addition);
         if(!count($options)){
             return;

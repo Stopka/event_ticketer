@@ -9,3 +9,229 @@ footer{
 	text-align: center;
 	color: gray;
 }
+
+/*******************************************************************************
+ * Formuláře
+ *******************************************************************************/
+.control-group>.control-label{
+	color: #3498db;
+	padding: 8px 3px;
+	padding-right: 10px;
+	flex-basis: 35%;
+	width: 100%;
+	box-sizing: border-box;
+	line-height: 15px;
+	align-self: flex-start;
+}
+.control-group>img.control-label{
+	max-width: 35%;
+}
+
+label.required::after{
+	content: '*';
+	font-weight: normal;
+	color: #a1a1a1;
+}
+
+.control-group{
+	display: flex;
+	margin-bottom: 6px;
+	padding: 4px;
+	max-width: 700px;
+	justify-content: flex-end;
+}
+
+.control-pair:hover{
+	background-color: rgba(161, 161, 161, 0.06);
+}
+
+input,textarea,button,select{
+	border-radius: 2px;
+	border: 1px solid #a1a1a1;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 3px;
+	color: #2c3e50;
+	background: #FFFFFF;
+	height: 30px;
+	cursor: pointer;
+}
+label{
+	cursor: pointer;
+}
+
+textarea{
+	height: 90px;
+	resize:vertical;
+}
+
+input.form-control-error,textarea.form-control-error,button.form-control-error,select.form-control-error,
+.control-group.error input,.control-group.error textarea,.control-group.error button,.control-group.error select{
+	border-color: #c11d02;
+}
+
+a:focus,input:focus,textarea:focus,button:focus,select:focus{
+	outline: 2px solid #9B59B6;
+	outline-offset: -2px;
+}
+a:focus{
+	outline-offset: 0;
+}
+
+form .controls{
+	flex-basis: 65%;
+	width: 100%;
+	align-self:center;
+	box-sizing: border-box;
+}
+
+form  .controls *{
+	vertical-align: middle;
+}
+
+form .controls table{
+	width: 100%;
+	padding: 0;
+}
+form .controls table,form .controls tr,form .controls td,form .controls th{
+	border: none;
+	margin: 0;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+form .controls td,form .controls th{
+	border: 1px solid #939496;
+	text-align: center;
+	padding: 5px;
+	box-sizing: content-box;
+}
+form .controls thead,form .controls tfoot{
+	background-color: #3598dc;
+	color: #FFFFFF;
+}
+form .controls>ul{
+	margin: 0;
+	margin-top: 7px;
+	padding-left: 25px;
+}
+
+label.radio, label.checkbox{
+	margin-right: 12px;
+	line-height: 25px;
+	font-weight: normal;
+	display: block;
+	padding-left: 25px;
+	padding-left: 30px;
+	text-indent: -30px;
+}
+
+.input-prepend .add-on,.input-apend .add-on{
+	display: none;
+}
+
+input[type=submit]{
+	min-width: inherit;
+	width: auto;
+}
+
+input[type=checkbox],input[type=radio]{
+	width: 20px;
+	height: 20px;
+	margin: 5px 10px 5px 0;
+}
+input[type=file]{
+	font-size: 90%;
+}
+
+.form-error-message,.help-inline{
+	color: #c11d02;
+	display: block;
+}
+
+.form-actions > .control-label{
+	display: none;
+}
+.form-actions > .controls{
+	flex-basis: 100%;
+}
+
+.form-actions{
+	max-width: none;
+	background-color: #ecf0f1;
+	position: relative;
+	padding: 20px;
+	border-top: 1px lightgrey solid;
+	border-bottom: 1px lightgrey solid;
+}
+
+input[type=image]{
+	height: inherit;
+	width: initial;
+	max-width: 100%;
+}
+
+input[type=submit],input[type=button],button{
+	background-color: #3498db;
+	border-bottom: 4px solid #2a77ae;
+	color: white;
+	text-transform: uppercase;
+	font-weight: bold;
+	padding: 5px 20px;
+}
+
+input[type=submit]:hover,input[type=button]:hover,button:hover{
+	background-color: #5bbef0;;
+}
+
+input[type=submit].btn-primary,input[type=button].btn-primary,button.btn-primary{
+	background-color: #2ecc71;
+	border-bottom: 4px solid #27ae60;
+	color: white;
+	text-transform: uppercase;
+	font-weight: bold;
+	padding: 5px 20px;
+}
+
+input[type=submit].btn-primary:hover,input[type=button].btn-primary:hover,button.btn-primary:hover{
+	background-color: #30dd7e;;
+}
+
+input[type=file]{
+	padding: 0;
+	height: auto;
+	height: initial;
+}
+
+select[multiple]{
+	height: 100px;
+	overflow-y: scroll;
+}
+
+.control-description {
+	display: block;
+	margin: 0;
+	color: #a1a1a1;
+}
+
+legend{
+	padding: 10px;
+	font-weight: bolder;
+}
+
+fieldset{
+	border: 1px solid #2c3e50;
+	margin-bottom: 10px;
+	max-width: 710px;
+}
+
+/* Schování fieldsetů */
+/*
+fieldset{ border: none; padding: 0; }
+legend{ display: none;}
+*/
+*[disabled],.disabled{
+	opacity: 0.5;
+}
+.form-html-control {
+	padding: 3px;
+}
