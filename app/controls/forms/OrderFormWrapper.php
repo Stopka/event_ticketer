@@ -68,7 +68,10 @@ class OrderFormWrapper extends FormWrapper {
         $form->addHtml('total', 'Celková cena',
             Html::el('div', ['class' => 'price_total'])
                 ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
-                ->addHtml(Html::el('span', ['class' => 'price_curreny']))
+                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml(
+                    Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title'=> 'Přepočítat'])
+                        ->addHtml(Html::el('i',['class'=>'fa fa-calculator']))
+                )
         );
     }
 
@@ -153,7 +156,10 @@ class OrderFormWrapper extends FormWrapper {
         $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',
             Html::el('div', ['class' => 'price_subtotal'])
                 ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
-                ->addHtml(Html::el('span', ['class' => 'price_curreny']))
+                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml(
+                    Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title'=> 'Přepočítat'])
+                        ->addHtml(Html::el('i',['class'=>'fa fa-calculator']))
+                    )
         );
     }
 
@@ -174,6 +180,7 @@ class OrderFormWrapper extends FormWrapper {
             if (count($options) == 1) {
                 $keys = array_keys($options);
                 $key = array_pop($keys);
+                $control->getControlPrototype()->setAttribute('data-price-precheck',$key);
                 $control->setDefaultValue($key);
             }
         }

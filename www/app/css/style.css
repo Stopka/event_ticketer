@@ -245,3 +245,7 @@ label span.description{
 label span.description.inline{
 	display: inline;
 }
+#ajax-spinner,.spinner{
+	z-index: 50;
+	color: #9B59B6;
+}

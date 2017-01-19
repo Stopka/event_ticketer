@@ -19,13 +19,13 @@ class HtmlFormComponent extends BaseControl{
      */
     public function __construct($label = NULL, Html $html){
         parent::__construct($label);
-        $this->setHtml($html);
+        $this->setHtml(Html::el('div')->addHtml($html));
         $this->setOmitted();
     }
 
     public function setHtml(Html $html){
         $this->control->setName($html->getName());
         $this->control->addHtml($html->getHtml());
-        $this->control->addAttributes(["class"=>"form-html-control"]);
+        $this->control->addClass("form-html-control");
     }
 }
