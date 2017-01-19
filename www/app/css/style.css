@@ -249,3 +249,9 @@ label span.description.inline{
 	z-index: 50;
 	color: #9B59B6;
 }
+
+a.price_recalculate{
+	font-size: 80%;
+	margin-left: 10px;
+}
+
