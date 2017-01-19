@@ -21,7 +21,8 @@ services:
     - App\Model\Facades\EventFacade
     - App\Model\Facades\EarlyFacade
     - App\Model\Facades\EarlyWaveFacade
-    - App\Controls\Forms\OrderFormFactory
+    - App\Model\Facades\CurrencyFacade
+    - App\Controls\Forms\IOrderFormWrapperFactory
     router: App\RouterFactory::createRouter
 
 extensions:

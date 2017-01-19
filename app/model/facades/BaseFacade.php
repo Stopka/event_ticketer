@@ -9,10 +9,9 @@
 namespace App\Model\Facades;
 
 
-use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
-class BaseFacade extends Object {
+abstract class BaseFacade extends Object {
 
 
 }

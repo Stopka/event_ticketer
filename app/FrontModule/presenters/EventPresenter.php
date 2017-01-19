@@ -2,7 +2,8 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Controls\Forms\OrderFormFactory;
+use App\Controls\Forms\IOrderFormWrapperFactory;
+use App\Controls\Forms\OrderFormWrapper;
 use App\Model;
 
 
@@ -15,10 +16,10 @@ class EventPresenter extends BasePresenter {
     public $eventFacade;
 
     /**
-     * @var OrderFormFactory
+     * @var IOrderFormWrapperFactory
      * @inject
      */
-    public $orderFormFactory;
+    public $orderFormWrapperFactory;
 
     public function actionDefault($id = null){
         $this->redirect('register',$id);
@@ -30,6 +31,17 @@ class EventPresenter extends BasePresenter {
             $this->flashMessage('Událost nebyla nalezena','warning');
             $this->redirect('Homepage:');
         }
+        /** @var OrderFormWrapper $orderForm */
+        $orderForm = $this->getComponent('orderForm');
+        $orderForm->setEvent($event);
+        $this->template->event = $event;
+    }
+
+    /**
+     * @return OrderFormWrapper
+     */
+    protected function createComponentOrderForm(){
+        return $this->orderFormWrapperFactory->create();
     }
 
 }

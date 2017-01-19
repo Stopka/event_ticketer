@@ -9,6 +9,14 @@
 namespace App\AdminModule\Controls\Forms;
 
 
-class SignInFormFactory extends FormFactory {
+use App\Controls\Forms\Form;
 
+class SignInFormFactory extends FormWrapper {
+
+    /**
+     * @param Form $form
+     */
+    protected function appendFormControls(Form $form) {
+        // TODO: Implement appendFormControls() method.
+    }
 }

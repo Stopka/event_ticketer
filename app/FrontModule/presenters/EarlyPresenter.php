@@ -2,17 +2,18 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Controls\Forms\OrderFormFactory;
+use App\Controls\Forms\IOrderFormWrapperFactory;
+use App\Controls\Forms\OrderFormWrapper;
 use App\Model;
 
 
 class EarlyPresenter extends BasePresenter {
 
     /**
-     * @var OrderFormFactory
+     * @var IOrderFormWrapperFactory
      * @inject
      */
-    public $orderFormFactory;
+    public $orderFormWrapperFactory;
 
     /**
      * @var Model\Facades\EarlyFacade
@@ -30,13 +31,18 @@ class EarlyPresenter extends BasePresenter {
             $this->flashMessage('Přístup k registraci nebyl povolen','warning');
             $this->redirect('Homepage:');
         }
-        $this->orderFormFactory->setEarly($early);
+        /** @var OrderFormWrapper $orderFormWrapper */
+        $orderFormWrapper = $this->getComponent('orderForm');
+        $orderFormWrapper->setEarly($early);
         $event = $early->getEarlyWave()->getEvent();
         $this->template->event = $event;
     }
 
+    /**
+     * @return OrderFormWrapper
+     */
     protected function createComponentOrderForm() {
-        return $this->orderFormFactory->create();
+        return $this->orderFormWrapperFactory->create();
     }
 
 }

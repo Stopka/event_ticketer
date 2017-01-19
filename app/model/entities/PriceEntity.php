@@ -40,14 +40,14 @@ class PriceEntity extends BaseEntity {
     /**
      * @param PriceAmountEntity $priceAmount
      */
-    public function addPriceAmount($priceAmount) {
+    public function addPriceAmount(PriceAmountEntity $priceAmount) {
         $priceAmount->setPrice($this);
     }
 
     /**
      * @param PriceAmountEntity $priceAmount
      */
-    public function removePriceAmount($priceAmount) {
+    public function removePriceAmount(PriceAmountEntity $priceAmount) {
         $priceAmount->setPrice(NULL);
     }
 
@@ -55,7 +55,7 @@ class PriceEntity extends BaseEntity {
      * @param PriceAmountEntity $priceAmount
      * @internal
      */
-    public function addInversedPriceAmount($priceAmount) {
+    public function addInversedPriceAmount(PriceAmountEntity $priceAmount) {
         $this->priceAmounts->add($priceAmount);
     }
 
@@ -63,8 +63,24 @@ class PriceEntity extends BaseEntity {
      * @param PriceAmountEntity $priceAmount
      * @internal
      */
-    public function removeInversedPriceAmount($priceAmount) {
+    public function removeInversedPriceAmount(PriceAmountEntity $priceAmount) {
         $this->priceAmounts->removeElement($priceAmount);
+    }
+
+    /**
+     * @param CurrencyEntity $currency
+     * @return PriceAmountEntity|null
+     */
+    public function getPriceAmountByCurrency(CurrencyEntity $currency){
+        if(!$currency){
+            return NULL;
+        }
+        foreach ($this->getPriceAmounts() as $priceAmount){
+            if($priceAmount->getCurrency()->getId()==$currency->getId()){
+                return $priceAmount;
+            }
+        }
+        return NULL;
     }
 
 }

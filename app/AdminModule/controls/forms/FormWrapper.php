@@ -9,6 +9,6 @@
 namespace App\AdminModule\Controls\Forms;
 
 
-class FormFactory extends \App\Controls\Forms\FormFactory {
+abstract class FormWrapper extends \App\Controls\Forms\FormWrapper {
 
 }

@@ -3,17 +3,24 @@
 namespace App\Controls\Forms;
 
 use App\Model\Entities\AdditionEntity;
+use App\Model\Entities\CurrencyEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
-use Nette\Application\UI\Form;
+use App\Model\Facades\CurrencyFacade;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Stopka\NetteFormRenderer\HtmlFormComponent;
 
 
-class OrderFormFactory extends FormFactory {
+class OrderFormWrapper extends FormWrapper {
+
+    /** @var  CurrencyFacade */
+    private $currencyFacade;
+
+    /** @var  CurrencyEntity */
+    protected $currency;
 
     /** @var  EarlyEntity */
     private $early;
@@ -21,10 +28,17 @@ class OrderFormFactory extends FormFactory {
     /** @var  EventEntity */
     private $event;
 
+    public function __construct(CurrencyFacade $currencyFacade) {
+        parent::__construct();
+        $this->currencyFacade = $currencyFacade;
+        $this->currency = $currencyFacade->getDefaultCurrency();
+        $this->setTemplate(__DIR__.'/OrderFormWrapper.latte');
+    }
+
     /**
      * @param EarlyEntity $early
      */
-    public function setEarly($early) {
+    public function setEarly(EarlyEntity $early) {
         $this->early = $early;
         $wave = $early->getEarlyWave();
         if (!$wave)
@@ -35,31 +49,27 @@ class OrderFormFactory extends FormFactory {
     /**
      * @param EventEntity $event
      */
-    public function setEvent($event) {
+    public function setEvent(EventEntity $event) {
         $this->early = null;
         $this->event = $event;
     }
 
-    /**
-     * @return Form
-     */
-    public function create() {
-        $form = parent::create();
+    protected function appendFormControls(Form $form) {
+        $form->elementPrototype->setAttribute('data-price-currency',$this->currency->getSymbol());
         $this->appendParentControls($form);
         $this->appendCommonControls($form);
         $this->appendChildrenControls($form);
-        $this->appendSubmitControls($form);
-        return $form;
+        $this->appendFinalControls($form);
+        $this->appendSubmitControls($form, 'Rezervovat');
     }
 
-    protected function createFinalControls(Form $form){
+    protected function appendFinalControls(Form $form) {
         $form->setCurrentGroup();
-        $form['total'] = new HtmlFormComponent('Celková cena',Html::el('div',['class'=>'child_total']));
-    }
-
-    protected function appendSubmitControls(Form $form) {
-        $form->setCurrentGroup();
-        $form->addSubmit('submit', 'Rezervovat');
+        $form->addHtml('total','Celková cena',
+            Html::el('div', ['class' => 'price_total'])
+                ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
+                ->addHtml(Html::el('span', ['class' => 'price_curreny']))
+        );
     }
 
     protected function appendParentControls(Form $form) {
@@ -139,21 +149,25 @@ class OrderFormFactory extends FormFactory {
         foreach ($this->event->getAdditions() as $addition) {
             $this->appendAdditionContols($subcontainer, $addition);
         }
-        $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',Html::el('div',['class'=>'child_total']));
+        $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',
+            Html::el('div', ['class' => 'price_subtotal'])
+                ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
+                ->addHtml(Html::el('span', ['class' => 'price_curreny']))
+        );
     }
 
     protected function appendAdditionContols(Container $container, AdditionEntity $addition) {
         $options = $this->createAdditionOptions($addition);
-        if(!count($options)){
+        if (!count($options)) {
             return;
         }
-        if($addition->getMaximum()>1&&count($options)>1){
+        if ($addition->getMaximum() > 1 && count($options) > 1) {
             $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
-                ->setRequired($addition->getMinimum()==0);
-        }else{
+                ->setRequired($addition->getMinimum() == 0);
+        } else {
             $control = $container->addRadioList($addition->getId(), $addition->getName(), $options)
                 ->setRequired();
-            if(count($options)==1) {
+            if (count($options) == 1) {
                 $keys = array_keys($options);
                 $key = array_pop($keys);
                 $control->setDefaultValue($key);
@@ -165,30 +179,34 @@ class OrderFormFactory extends FormFactory {
      * @param AdditionEntity $addition
      * @return array
      */
-    protected function createAdditionOptions(AdditionEntity $addition){
+    protected function createAdditionOptions(AdditionEntity $addition) {
         $result = [];
-        foreach ($addition->getOptions() as $option){
-            $result[$option->getId()]=$this->createOptionLabel($option);
+        foreach ($addition->getOptions() as $option) {
+            $result[$option->getId()] = $this->createOptionLabel($option);
         }
         return $result;
     }
 
-    protected function createOptionLabel(OptionEntity $option){
+    protected function createOptionLabel(OptionEntity $option) {
         $price = $option->getPrice();
-        //TODO výběr ceny v měně
-        $amount = $price->getPriceAmounts()[0];
-        return $option->getName().' '.$amount->getAmount().$amount->getCurrency()->getSymbol();
+        $amount = $price->getPriceAmountByCurrency($this->currency);
+        if (!$amount) {
+            return $option->getName();
+        }
+        return $option->getName() . ' ' . $amount->getAmount() . $amount->getCurrency()->getSymbol();
     }
 
     public function addChild(SubmitButton $button) {
         $form = $button->getForm();
         $form['children']->createOne();
+        $this->redrawControl('form');
     }
 
     public function removeChild(SubmitButton $button) {
         $child = $button->getParent();
         $children = $child->getParent();
         $children->remove($child, TRUE);
+        $this->redrawControl('form');
     }
 
 }

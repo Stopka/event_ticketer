@@ -8,10 +8,7 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Address;
-use App\Model\Entities\Attributes\Email;
 use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\Phone;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -34,6 +31,12 @@ class CurrencyEntity extends BaseEntity {
      * @var string
      */
     private $code;
+
+    /**
+     * @ORM\Column(type="boolean", name="`default`")
+     * @var boolean
+     */
+    private $default=false;
 
     /**
      * @return string
@@ -61,5 +64,21 @@ class CurrencyEntity extends BaseEntity {
      */
     public function setCode($code) {
         $this->code = $code;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault() {
+        return $this->default;
+    }
+
+    /**
+     * @param bool $default
+     * @return $this
+     */
+    public function setDefault($default = true) {
+        $this->default = $default;
+        return $this;
     }
 }
