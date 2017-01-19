@@ -32,7 +32,7 @@ class OrderFormWrapper extends FormWrapper {
         parent::__construct();
         $this->currencyFacade = $currencyFacade;
         $this->currency = $currencyFacade->getDefaultCurrency();
-        $this->setTemplate(__DIR__.'/OrderFormWrapper.latte');
+        $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
 
     /**
@@ -55,7 +55,7 @@ class OrderFormWrapper extends FormWrapper {
     }
 
     protected function appendFormControls(Form $form) {
-        $form->elementPrototype->setAttribute('data-price-currency',$this->currency->getSymbol());
+        $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
         $this->appendParentControls($form);
         $this->appendCommonControls($form);
         $this->appendChildrenControls($form);
@@ -65,7 +65,7 @@ class OrderFormWrapper extends FormWrapper {
 
     protected function appendFinalControls(Form $form) {
         $form->setCurrentGroup();
-        $form->addHtml('total','Celková cena',
+        $form->addHtml('total', 'Celková cena',
             Html::el('div', ['class' => 'price_total'])
                 ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
                 ->addHtml(Html::el('span', ['class' => 'price_curreny']))
@@ -111,7 +111,8 @@ class OrderFormWrapper extends FormWrapper {
         $add_button->getControlPrototype()->class = 'ajax';
         $add_button->onClick[] = [$this, 'addChild'];
         $children = $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
-            $group = $form->addGroup();
+            $group = $form->addGroup()
+                ->setOption('class', 'price_subspace');
             $parent_group = $form->getGroup('Přihlášky');
             $count = $parent_group->getOption('embedNext');
             $parent_group->setOption('embedNext', $count ? $count + 1 : 1);
@@ -157,43 +158,80 @@ class OrderFormWrapper extends FormWrapper {
     }
 
     protected function appendAdditionContols(Container $container, AdditionEntity $addition) {
-        $options = $this->createAdditionOptions($addition);
+        $prices = $this->createAdditionPrices($addition);
+        $options = $this->createAdditionOptions($addition, $prices);
         if (!count($options)) {
             return;
         }
         if ($addition->getMaximum() > 1 && count($options) > 1) {
             $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
-                ->setRequired($addition->getMinimum() == 0);
+                ->setRequired($addition->getMinimum() == 0)
+                ->setTranslator();
         } else {
             $control = $container->addRadioList($addition->getId(), $addition->getName(), $options)
-                ->setRequired();
+                ->setRequired()
+                ->setTranslator();
             if (count($options) == 1) {
                 $keys = array_keys($options);
                 $key = array_pop($keys);
                 $control->setDefaultValue($key);
             }
         }
+        $control->getControlPrototype()
+            ->addClass('price_item')
+            ->setAttribute('data-price-value', json_encode($prices));
     }
 
     /**
      * @param AdditionEntity $addition
      * @return array
      */
-    protected function createAdditionOptions(AdditionEntity $addition) {
+    protected function createAdditionPrices(AdditionEntity $addition) {
         $result = [];
         foreach ($addition->getOptions() as $option) {
-            $result[$option->getId()] = $this->createOptionLabel($option);
+            $amount = $option->getPrice()->getPriceAmountByCurrency($this->currency);
+            $result[$option->getId()] = [
+                'amount' => $amount->getAmount(),
+                'currency' => $amount->getCurrency()->getSymbol()
+            ];
         }
         return $result;
     }
 
-    protected function createOptionLabel(OptionEntity $option) {
-        $price = $option->getPrice();
-        $amount = $price->getPriceAmountByCurrency($this->currency);
-        if (!$amount) {
-            return $option->getName();
+    /**
+     * @param AdditionEntity $addition
+     * @param $prices array
+     * @return array id=>Html
+     */
+    protected function createAdditionOptions(AdditionEntity $addition, $prices) {
+        $result = [];
+        foreach ($addition->getOptions() as $option) {
+            $result[$option->getId()] = $this->createOptionLabel($option, $prices);
         }
-        return $option->getName() . ' ' . $amount->getAmount() . $amount->getCurrency()->getSymbol();
+        return $result;
+    }
+
+    /**
+     * @param OptionEntity $option
+     * @param $prices array
+     * @return string
+     */
+    protected function createOptionLabel(OptionEntity $option, $prices) {
+        $result = Html::el();
+        if($option->getName()) {
+            $result->addHtml(
+                Html::el('span', ['class' => 'name'])
+                    ->setText($option->getName())
+            );
+        }
+        if (isset($prices[$option->getId()])) {
+            $price = $prices[$option->getId()];
+            $result->addHtml(
+                Html::el('span', ['class' => 'description inline'])
+                    ->setText($price['amount'] . $price['currency'])
+            );
+        }
+        return $result;
     }
 
     public function addChild(SubmitButton $button) {

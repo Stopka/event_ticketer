@@ -235,3 +235,13 @@ legend{ display: none;}
 .form-html-control {
 	padding: 3px;
 }
+label span.name{
+	margin-right: 10px;
+}
+label span.description{
+	display: block;
+	color: #a1a1a1;
+}
+label span.description.inline{
+	display: inline;
+}
