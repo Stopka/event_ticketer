@@ -83,10 +83,7 @@ class OrderFormWrapper extends FormWrapper {
         $form->addHtml('total', 'Celková cena',
             Html::el('div', ['class' => 'price_total'])
                 ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
-                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml(
-                    Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title'=> 'Přepočítat'])
-                        ->addHtml(Html::el('i',['class'=>'fa fa-calculator']))
-                )
+                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
         );
     }
 
@@ -166,6 +163,13 @@ class OrderFormWrapper extends FormWrapper {
             ->addRule($form::PATTERN, '%label musí být ve formátu čtyřmístného čísla', '[0-9]{4}');
     }
 
+    protected function createRecalculateHtml(){
+        return Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title'=> 'Přepočítat'])
+            ->addHtml(Html::el('i',['class'=>'fa fa-calculator']))
+            ->addHtml(Html::el('span')->addText('Přepočítat'));
+
+    }
+
     protected function appendAdditionsControls(Form $form, Container $container) {
         $subcontainer = $container->addContainer('addittions');
         foreach ($this->event->getAdditions() as $addition) {
@@ -174,10 +178,7 @@ class OrderFormWrapper extends FormWrapper {
         $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',
             Html::el('div', ['class' => 'price_subtotal'])
                 ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
-                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml(
-                    Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title'=> 'Přepočítat'])
-                        ->addHtml(Html::el('i',['class'=>'fa fa-calculator']))
-                    )
+                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
         );
     }
 
