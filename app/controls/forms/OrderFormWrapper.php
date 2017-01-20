@@ -75,7 +75,7 @@ class OrderFormWrapper extends FormWrapper {
     protected function registerClicked(SubmitButton $button){
         $form = $button->getForm();
         $values = $form->getValues(true);
-
+        $this->orderFacade->createOrderFromOrderForm($values,$this->event,$this->early);
     }
 
     protected function appendFinalControls(Form $form) {
@@ -109,14 +109,15 @@ class OrderFormWrapper extends FormWrapper {
 
     protected function appendCommonControls(Form $form) {
         $form->addGroup('Bydliště dětí');
-        $form->addText('address', 'Adresa', NULL, 255)
+        $comons = $form->addContainer('commons');
+        $comons->addText('address', 'Adresa', NULL, 255)
             ->setOption('description', 'Ulice a číslo popisné')
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $form->addText('city', 'Město', NULL, 255)
+        $comons->addText('city', 'Město', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $form->addText('zip', 'PSČ', NULL, 255)
+        $comons->addText('zip', 'PSČ', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
     }
@@ -155,7 +156,7 @@ class OrderFormWrapper extends FormWrapper {
         $child->addText('lastName', 'Příjmení', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $form->addDate('birthDate', 'Datum narození',DateInput::TYPE_DATE)
+        $child->addDate('birthDate', 'Datum narození',DateInput::TYPE_DATE)
             ->setOption("help", ["Your birthdate.",'users birth date'])
             ->setRequired()
             ->addRule(form::VALID, 'Entered date is not valid!');

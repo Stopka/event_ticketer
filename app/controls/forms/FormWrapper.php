@@ -47,6 +47,7 @@ abstract class FormWrapper extends Nette\Application\UI\Control {
      * @param Form $form
      * @param string $label
      * @param callable $callback
+     * @return Nette\Forms\Controls\SubmitButton
      */
     protected function appendSubmitControls(Form $form, $label, $callback = NULL) {
         $form->setCurrentGroup();
@@ -54,6 +55,7 @@ abstract class FormWrapper extends Nette\Application\UI\Control {
         if ($callback) {
             $submit->onClick[] = $this->getButtonClickCallback($callback);
         }
+        return $submit;
     }
 
     /**
