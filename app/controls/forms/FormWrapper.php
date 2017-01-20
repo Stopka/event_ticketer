@@ -2,6 +2,7 @@
 
 namespace App\Controls\Forms;
 
+use App\Model\Exceptions\Exception;
 use Nette;
 use Stopka\NetteFormRenderer\FormRenderer;
 
@@ -42,11 +43,36 @@ abstract class FormWrapper extends Nette\Application\UI\Control {
      */
     abstract protected function appendFormControls(Form $form);
 
-    protected function appendSubmitControls(Form $form, $label) {
+    /**
+     * @param Form $form
+     * @param string $label
+     * @param callable $callback
+     */
+    protected function appendSubmitControls(Form $form, $label, $callback = NULL) {
         $form->setCurrentGroup();
-        $form->addSubmit('submit', $label);
+        $submit = $form->addPrimarySubmit('submit', $label);
+        if ($callback) {
+            $submit->onClick[] = $this->getButtonClickCallback($callback);
+        }
     }
 
+    /**
+     * @param callable $callback
+     * @return \Closure
+     */
+    private function getButtonClickCallback($callback) {
+        return function (Nette\Forms\Controls\SubmitButton $button) use ($callback) {
+            try{
+                call_user_func($callback,$button);
+            }catch (Exception $e){
+                $button->getForm()->addError($e->getMessage());
+            }
+        };
+    }
+
+    /**
+     * @param array ...$args
+     */
     public function render(...$args) {
         if (!$this->template_path) {
             /** @var Form $form */

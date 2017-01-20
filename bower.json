@@ -17,6 +17,7 @@
     "nette-live-form-validation": "^1.8.1",
     "nette.ajax.js": "^2.1.0",
     "bootstrap": "^3.3.7",
-    "grido": "^2.1.2"
+    "grido": "^2.1.2",
+    "voda-date-input": "^1.1.0"
   }
 }

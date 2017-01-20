@@ -8,13 +8,18 @@ use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
 use App\Model\Facades\CurrencyFacade;
+use App\Model\Facades\OrderFacade;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Stopka\NetteFormRenderer\HtmlFormComponent;
+use Vodacek\Forms\Controls\DateInput;
 
 
 class OrderFormWrapper extends FormWrapper {
+
+    /** @var  Order */
+    private $orderFacade;
 
     /** @var  CurrencyFacade */
     private $currencyFacade;
@@ -28,10 +33,11 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(CurrencyFacade $currencyFacade) {
+    public function __construct(CurrencyFacade $currencyFacade, OrderFacade $orderFacade) {
         parent::__construct();
         $this->currencyFacade = $currencyFacade;
         $this->currency = $currencyFacade->getDefaultCurrency();
+        $this->orderFacade = $orderFacade;
         $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
 
@@ -60,7 +66,16 @@ class OrderFormWrapper extends FormWrapper {
         $this->appendCommonControls($form);
         $this->appendChildrenControls($form);
         $this->appendFinalControls($form);
-        $this->appendSubmitControls($form, 'Rezervovat');
+        $this->appendSubmitControls($form, 'Rezervovat',[$this,'registerClicked']);
+    }
+
+    /**
+     * @param SubmitButton $button
+     */
+    protected function registerClicked(SubmitButton $button){
+        $form = $button->getForm();
+        $values = $form->getValues(true);
+
     }
 
     protected function appendFinalControls(Form $form) {
@@ -140,8 +155,10 @@ class OrderFormWrapper extends FormWrapper {
         $child->addText('lastName', 'Příjmení', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $child->addText('birthDate', 'Datum narození', NULL, 255)
-            ->setRequired();
+        $form->addDate('birthDate', 'Datum narození',DateInput::TYPE_DATE)
+            ->setOption("help", ["Your birthdate.",'users birth date'])
+            ->setRequired()
+            ->addRule(form::VALID, 'Entered date is not valid!');
         $child->addText('birthCode', 'Kód rodného čísla', NULL, 255)
             ->setOption('description', 'Část rodného čísla za lomítkem')
             ->setRequired()

@@ -18,6 +18,9 @@ $configurator->createRobotLoader()
 $configurator->addConfig(__DIR__ . '/config/config.neon');
 $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
+//TODO přesunout do configu
+Vodacek\Forms\Controls\DateInput::register();
+
 $container = $configurator->createContainer();
 
 return $container;

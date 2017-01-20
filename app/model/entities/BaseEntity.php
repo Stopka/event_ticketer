@@ -9,6 +9,7 @@
 namespace App\Model\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Nette\Utils\Strings;
 
 /**
  * Administrátor systému
@@ -16,4 +17,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
 
+    /**
+     * @param array $values
+     */
+    public function setByValueArray($values) {
+        foreach ($values as $name => $value) {
+            $setterName = 'set'.Strings::capitalize($name);
+            if (method_exists($this, $setterName)){
+                call_user_func([$this,$setterName],$value);
+            }
+        }
+    }
 }
