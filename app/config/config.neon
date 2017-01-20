@@ -3,6 +3,19 @@
 # https://nette.org/security-warning
 #
 parameters:
+    database:
+        driver: mysql
+        host: localhost
+        dbname:
+        user:
+        password:
+    email:
+        from:
+            address: system@ldtpardubice.cz
+            name: Přihlašovací systém LDT Pardubice z. s.
+        reply:
+            address: ldtmpp@email.cz
+            name: Radek Vančura
 
 php:
     date.timezone: Europe/Prague
@@ -17,6 +30,8 @@ session:
 
 services:
     - App\AdminModule\Controls\Forms\SignInFormFactory
+    - App\Model\SystemConfigurations
+    - App\Model\EmailMessageFactory
     - App\Model\Facades\AdministratorFacade
     - App\Model\Facades\EventFacade
     - App\Model\Facades\EarlyFacade

@@ -52,4 +52,11 @@ trait PersonName {
         $this->lastName = $lastName;
     }
 
+    /**
+     * @return string
+     */
+    public function getFullName(){
+        return $this->getFirstName().' '.$this->getLastName();
+    }
+
 }

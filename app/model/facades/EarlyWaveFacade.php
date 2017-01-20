@@ -9,13 +9,23 @@
 namespace App\Model\Facades;
 
 
+use App\Model\EmailMessageFactory;
 use App\Model\Entities\EarlyWaveEntity;
+use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ApplicationException;
-use Nette\Mail\Message;
 use Nette\Mail\SmtpMailer;
 use Tracy\Debugger;
 
 class EarlyWaveFacade extends EntityFacade {
+
+    /** @var EmailMessageFactory */
+    private $emailMessageFactory;
+
+    public function __construct(EntityManager $entityManager, EmailMessageFactory $emailMessageFactory) {
+        parent::__construct($entityManager);
+        $this->emailMessageFactory = $emailMessageFactory;
+    }
+
 
     protected function getEntityClass() {
         return EarlyWaveEntity::class;
@@ -34,8 +44,8 @@ class EarlyWaveFacade extends EntityFacade {
             if(!$early->getEmail()){
                 continue;
             }
-            $mail = new Message();
-            $mail->setFrom('Přihlášky LDTPardubice <system@application.ldtpardubice.cz>')
+            $mail = $this->emailMessageFactory->create();
+            $mail->setFrom('system@ldtpardubice.cz','Přihlášky LDTPardubice')
                 ->addReplyTo('ldtmpp@email.cz')
                 ->addTo($early->getEmail())
                 ->setSubject('Přednostní výdej přihlášek')
