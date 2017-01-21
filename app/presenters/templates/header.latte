@@ -1,12 +1,10 @@
-{block header}
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="http://ldtpardubice.cz">
-                    <img alt="Logo" src="/app/images/logo.svg">
-                    <span>Letní dětský tábor Pardubice z.s.</span>
-                </a>
-            </div>
+<header n:block="header" class="header" n:snippet="layout_header">
+    <div class="layout_row">
+        <div class="layout_row_content">
+            <a class="brand" href="http://ldtpardubice.cz">
+                <div class="logo"><img alt="Logo" src="/app/images/logo.svg"></div>
+                <div class="name">Letní dětský tábor Pardubice z.s.</div>
+            </a>
         </div>
-    </nav>
-{/block}
+    </div>
+</header>

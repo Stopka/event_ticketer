@@ -1,6 +1,6 @@
-{block flashes}
-    <div n:snippet="flashes">
-        <div n:if="count($flashes)" id="flashes">
+<div n:block="flashes" class="flashes" n:snippet="layout_flashes">
+    <div class="layout_row" n:if="count($flashes)">
+        <div class="layout_row_content">
             <div n:foreach="$flashes as $flash" n:class="alert, 'alert-'.$flash->type">
                 <i n:if="$flash->type!='error' && $flash->type!='warning' && $flash->type!='success'" class="fa fa-info-circle"></i>
                 <i n:if="$flash->type=='success'" class="fa fa-check-circle"></i>
@@ -10,4 +10,4 @@
             </div>
         </div>
     </div>
-{/block}
+</div>

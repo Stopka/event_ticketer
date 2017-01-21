@@ -12,26 +12,19 @@
         <link rel="shortcut icon" href="{$basePath}/app/images/logo.ico">
         <meta name="viewport" content="width=device-width">
     </head>
-    <body>
-        <div class="container">
-            <div class="row">
-                <header>
-                    {include header.latte}
-                </header>
-            </div>
-            <div class="row">
-                <div id="content">
-                    {include flashes.latte}
-                    {include content}
+    <body n:block="body">
+        <div n:block="subbody" class="subbody">
+            {include header.latte}
+            {include flashes.latte}
+            <div n:block="container" class="container" n:snippet="layout_container">
+                <div class="layout_row">
+                    <div class="layout_row_content">
+                        {include #content}
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <footer>
-                    {include footer.latte}
-                </footer>
-            </div>
+            {include footer.latte}
+            {include scripts.latte}
         </div>
-
-        {include scripts.latte}
     </body>
 </html>
