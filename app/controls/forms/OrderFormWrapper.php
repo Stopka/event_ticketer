@@ -67,6 +67,13 @@ class OrderFormWrapper extends FormWrapper {
         $this->appendChildrenControls($form);
         $this->appendFinalControls($form);
         $this->appendSubmitControls($form, 'Rezervovat',[$this,'registerClicked']);
+        $this->loadData($form);
+    }
+
+    protected function loadData(Form $form){
+        if($this->early) {
+            $form->setDefaults($this->early->getValueArray());
+        }
     }
 
     /**
