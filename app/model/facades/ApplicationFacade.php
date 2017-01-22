@@ -78,4 +78,29 @@ class ApplicationFacade extends EntityFacade {
             );
     }
 
+    /**
+     * @param $key string
+     * @param $id integer
+     * @return null|ApplicationEntity
+     */
+    public function inverseValue($key, $id){
+        /** @var ApplicationEntity $application */
+        $application = $this->get($id);
+        switch ($key){
+            case 'deposited':
+                $application->setDeposited(!$application->isDeposited());
+                break;
+            case 'payed':
+                $application->setPayed(!$application->isPayed());
+                break;
+            case 'signed':
+                $application->setSigned(!$application->isSigned());
+                break;
+            case 'invoiced':
+                $application->setInvoiced(!$application->isInvoiced());
+                break;
+        }
+        $this->getEntityManager()->flush();
+    }
+
 }

@@ -199,15 +199,21 @@ class ApplicationEntity extends BaseEntity {
         $this->state = self::STATE_CANCELLED;
     }
     
-    protected function updateState() {
+    public function updateState() {
         if($this->state == self::STATE_CANCELLED){
             return;
         }
-        if(!$this->isPayed()&&$this->isSigned()&&$this->isDeposited()||$this->isInvoiced()){
+        if(!$this->isPayed()&&(
+            ($this->isSigned()&&$this->isDeposited()&&!$this->isInvoiced())||
+            $this->isInvoiced()
+        )){
             $this->state = self::STATE_RESERVED;
+            return;
         }
-        if(($this->isInvoiced()&&$this->isPayed())||($this->isSigned()&&$this->isDeposited()&&$this->isPayed())){
+        if(($this->isSigned()&&$this->isDeposited()&&$this->isPayed())||
+            ($this->isInvoiced()&&$this->isPayed())){
             $this->state = self::STATE_FULFILLED;
+            return;
         }
         $this->state = self::STATE_WAITING;
     }
