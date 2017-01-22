@@ -3,10 +3,10 @@
 namespace App\AdminModule\Presenters;
 
 
-class HomepagePresenter extends BasePresenter {
+class ApplicationPresenter extends BasePresenter {
 
     public function renderDefault() {
-        $this->redirect('Application:');
+
     }
 
 }
