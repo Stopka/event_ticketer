@@ -442,3 +442,17 @@ a.price_recalculate{
 .alert button:hover{
 	color: rgba(0, 0, 0, 1);
 }
+
+/*************
+ * Grido
+ *************/
+
+.grido th.column span {
+	width: auto;
+	height: auto;
+	vertical-align: baseline;
+	content: normal;
+	float: left;
+	margin-top: 0;
+	border: none;
+}

@@ -8,7 +8,10 @@
 
 namespace App\Model\Entities;
 
+use App\Model\Entities\Attributes\AddressAttribute;
+use App\Model\Entities\Attributes\BirthCode;
 use App\Model\Entities\Attributes\BirthDateAttribute;
+use App\Model\Entities\Attributes\GenderAttribute;
 use App\Model\Entities\Attributes\PersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,12 +23,15 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use Identifier, PersonNameAttribute, BirthDateAttribute;
+    use Identifier, PersonNameAttribute, BirthDateAttribute, BirthCode, AddressAttribute, GenderAttribute;
 
     const STATE_WAITING = 0;
     const STATE_RESERVED = 1;
     const STATE_FULFILLED = 2;
     const STATE_CANCELLED = 3;
+
+    const GENDER_MALE = 0;
+    const GENDER_FEMALE = 1;
 
     /**
      * @ORM\ManyToMany(targetEntity="OptionEntity"))

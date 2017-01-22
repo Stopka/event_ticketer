@@ -12,6 +12,7 @@ namespace App\Model\Facades;
 use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
+use Grido\DataSources\Doctrine;
 
 class ApplicationFacade extends EntityFacade {
 
@@ -65,6 +66,16 @@ class ApplicationFacade extends EntityFacade {
             'options.id'=>$option->getId(),
             'state !='=>$states
         ]);
+    }
+
+    /**
+     * @return Doctrine
+     */
+    public function getAllApplicationsGridModel(){
+        return new Doctrine(
+                $this->getRepository()->createQueryBuilder('a')
+                    ->addSelect('a')
+            );
     }
 
 }

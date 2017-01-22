@@ -41,7 +41,7 @@
 		"jkuchar/pdfresponse": "@dev",
 		"setasign/fpdi-tcpdf": "^1.6",
 		"minetro/recaptcha": "^1.6",
-		"o5/grido": "^2.1"
+		"o5/grido": "@dev"
 	},
 	"require-dev": {
 		"nette/tester": "^1.6"

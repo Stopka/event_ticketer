@@ -3,6 +3,7 @@
 namespace App\Controls\Forms;
 
 use App\Model\Entities\AdditionEntity;
+use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\CurrencyEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
@@ -66,12 +67,12 @@ class OrderFormWrapper extends FormWrapper {
         $this->appendCommonControls($form);
         $this->appendChildrenControls($form);
         $this->appendFinalControls($form);
-        $this->appendSubmitControls($form, 'Rezervovat',[$this,'registerClicked']);
+        $this->appendSubmitControls($form, 'Rezervovat', [$this, 'registerClicked']);
         $this->loadData($form);
     }
 
-    protected function loadData(Form $form){
-        if($this->early) {
+    protected function loadData(Form $form) {
+        if ($this->early) {
             $form->setDefaults($this->early->getValueArray());
         }
     }
@@ -79,11 +80,11 @@ class OrderFormWrapper extends FormWrapper {
     /**
      * @param SubmitButton $button
      */
-    protected function registerClicked(SubmitButton $button){
+    protected function registerClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->orderFacade->createOrderFromOrderForm($values,$this->event,$this->early);
-        $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.','success');
+        $this->orderFacade->createOrderFromOrderForm($values, $this->event, $this->early);
+        $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.', 'success');
         $this->getPresenter()->redirect('this');
     }
 
@@ -162,8 +163,12 @@ class OrderFormWrapper extends FormWrapper {
         $child->addText('lastName', 'Příjmení', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $child->addDate('birthDate', 'Datum narození',DateInput::TYPE_DATE)
-            ->setOption("help", ["Your birthdate.",'users birth date'])
+        $child->addRadioList('gender', 'Pohlaví', [
+                ApplicationEntity::GENDER_MALE => 'Muž',
+                ApplicationEntity::GENDER_FEMALE => 'Žena',
+            ])
+            ->setRequired();
+        $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
             ->addRule(form::VALID, 'Entered date is not valid!');
         $child->addText('birthCode', 'Kód rodného čísla', NULL, 255)
@@ -172,9 +177,9 @@ class OrderFormWrapper extends FormWrapper {
             ->addRule($form::PATTERN, '%label musí být ve formátu čtyřmístného čísla', '[0-9]{4}');
     }
 
-    protected function createRecalculateHtml(){
-        return Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title'=> 'Přepočítat'])
-            ->addHtml(Html::el('i',['class'=>'fa fa-calculator']))
+    protected function createRecalculateHtml() {
+        return Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title' => 'Přepočítat'])
+            ->addHtml(Html::el('i', ['class' => 'fa fa-calculator']))
             ->addHtml(Html::el('span')->addText('Přepočítat'));
 
     }
@@ -208,7 +213,7 @@ class OrderFormWrapper extends FormWrapper {
             if (count($options) == 1) {
                 $keys = array_keys($options);
                 $key = array_pop($keys);
-                $control->getControlPrototype()->setAttribute('data-price-precheck',$key);
+                $control->getControlPrototype()->setAttribute('data-price-precheck', $key);
                 $control->setDefaultValue($key);
             }
         }
@@ -253,7 +258,7 @@ class OrderFormWrapper extends FormWrapper {
      */
     protected function createOptionLabel(OptionEntity $option, $prices) {
         $result = Html::el();
-        if($option->getName()) {
+        if ($option->getName()) {
             $result->addHtml(
                 Html::el('span', ['class' => 'name'])
                     ->setText($option->getName())
