@@ -8,10 +8,10 @@
 
 namespace App\Model\Entities;
 
+use App\Model\Entities\Attributes\IdentifierAttribute;
 use App\Model\Entities\Attributes\NameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -19,11 +19,17 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class AdditionEntity extends BaseEntity {
-    use Identifier, NameAttribute;
+    use IdentifierAttribute, NameAttribute;
 
     public function __construct() {
         $this->options = new ArrayCollection();
     }
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @var integer
+     */
+    private $requiredForState;
 
     /**
      * @ORM\Column(type="integer")
@@ -41,7 +47,7 @@ class AdditionEntity extends BaseEntity {
      * @ORM\Column(type="boolean")
      * @var boolean
      */
-    private $forChild = false;
+    private $visible = true;
 
     /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="additions")
@@ -142,6 +148,32 @@ class AdditionEntity extends BaseEntity {
         $this->maximum = $maximum;
     }
 
+    /**
+     * @return int
+     */
+    public function getRequiredForState() {
+        return $this->requiredForState;
+    }
 
+    /**
+     * @param int $requiredForState
+     */
+    public function setRequiredForState($requiredForState) {
+        $this->requiredForState = $requiredForState;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisible() {
+        return $this->visible;
+    }
+
+    /**
+     * @param bool $visible
+     */
+    public function setVisible($visible) {
+        $this->visible = $visible;
+    }
 
 }

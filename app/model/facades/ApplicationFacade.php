@@ -51,7 +51,7 @@ class ApplicationFacade extends EntityFacade {
     public function countReservedApplicationsWithOption(OptionEntity $option){
         $states = ApplicationEntity::getStatesReserved();
         return $this->getRepository()->countBy([
-            'options.id'=>$option->getId(),
+            'choices.option.id'=>$option->getId(),
             'state'=>$states
         ]);
     }
@@ -63,7 +63,7 @@ class ApplicationFacade extends EntityFacade {
     public function countIssuedApplicationsWithOption(OptionEntity $option){
         $states = ApplicationEntity::getStatesNotIssued();
         return $this->getRepository()->countBy([
-            'options.id'=>$option->getId(),
+            'choices.option.id'=>$option->getId(),
             'state !='=>$states
         ]);
     }

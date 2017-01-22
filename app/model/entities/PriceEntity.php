@@ -8,9 +8,9 @@
 
 namespace App\Model\Entities;
 
+use App\Model\Entities\Attributes\IdentifierAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -18,7 +18,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class PriceEntity extends BaseEntity {
-    use Identifier;
+    use IdentifierAttribute;
 
     public function __construct() {
         $this->priceAmounts = new ArrayCollection();

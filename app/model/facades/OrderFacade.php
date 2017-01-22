@@ -11,6 +11,7 @@ namespace App\Model\Facades;
 
 use App\Model\EmailMessageFactory;
 use App\Model\Entities\ApplicationEntity;
+use App\Model\Entities\ChoiceEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
@@ -49,14 +50,18 @@ class OrderFacade extends EntityFacade {
         $commonValues = $values['commons'];
         $optionRepository = $entityManager->getRepository(OptionEntity::class);
         foreach ($values['children'] as $childValues) {
-            $child = new ApplicationEntity();
-            $child->setByValueArray($commonValues);
-            $child->setByValueArray($childValues['child']);
-            $child->setOrder($order);
-            $entityManager->persist($child);
+            $application = new ApplicationEntity();
+            $application->setByValueArray($commonValues);
+            $application->setByValueArray($childValues['child']);
+            $application->setOrder($order);
+            $entityManager->persist($application);
             foreach ($childValues['addittions'] as $additionId => $optionId) {
+                /** @var OptionEntity $option */
                 $option = $optionRepository->find($optionId);
-                $child->addOption($option);
+                $choice = new ChoiceEntity();
+                $choice->setOption($option);
+                $choice->setApplication($application);
+                $entityManager->persist($choice);
             }
         }
         $entityManager->flush();

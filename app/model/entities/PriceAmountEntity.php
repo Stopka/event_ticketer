@@ -8,8 +8,8 @@
 
 namespace App\Model\Entities;
 
+use App\Model\Entities\Attributes\IdentifierAttribute;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -17,7 +17,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class PriceAmountEntity extends BaseEntity {
-    use Identifier;
+    use IdentifierAttribute;
 
     /**
      * @ORM\ManyToOne(targetEntity="PriceEntity", inversedBy="priceAmounts")

@@ -12,10 +12,10 @@ use App\Model\Entities\Attributes\AddressAttribute;
 use App\Model\Entities\Attributes\BirthCode;
 use App\Model\Entities\Attributes\BirthDateAttribute;
 use App\Model\Entities\Attributes\GenderAttribute;
+use App\Model\Entities\Attributes\IdentifierAttribute;
 use App\Model\Entities\Attributes\PersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -23,7 +23,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use Identifier, PersonNameAttribute, BirthDateAttribute, BirthCode, AddressAttribute, GenderAttribute;
+    use IdentifierAttribute, PersonNameAttribute, BirthDateAttribute, BirthCode, AddressAttribute, GenderAttribute;
 
     const STATE_WAITING = 0;
     const STATE_RESERVED = 1;
@@ -35,10 +35,10 @@ class ApplicationEntity extends BaseEntity {
     const GENDER_FEMALE = 1;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OptionEntity"))
-     * @var OptionEntity[]
+     * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="application"))
+     * @var ChoiceEntity[]
      */
-    private $options;
+    private $choices;
 
     /**
      * @ORM\ManyToOne(targetEntity="OrderEntity", inversedBy="applications")
@@ -77,31 +77,47 @@ class ApplicationEntity extends BaseEntity {
     private $state = self::STATE_WAITING;
 
     public function __construct($substitute = false) {
-        $this->options = new ArrayCollection();
+        $this->choices = new ArrayCollection();
         if($substitute){
             $this->state = self::STATE_SUBSTITUTE;
         }
     }
 
     /**
-     * @return OptionEntity[]
+     * @return ChoiceEntity[]
      */
-    public function getOptions() {
-        return $this->options;
+    public function getChoices() {
+        return $this->choices;
     }
 
     /**
-     * @param OptionEntity $option
+     * @param ChoiceEntity $choice
      */
-    public function addOption($option) {
-        $this->options->add($option);
+    public function addChoice($choice) {
+        $choice->setApplication($this);
     }
 
     /**
-     * @param OptionEntity $option
+     * @param ChoiceEntity $choice
      */
-    public function removeOption($option) {
-        $this->options->removeElement($option);
+    public function removeChoice($choice) {
+        $choice->setApplication(NULL);
+    }
+
+    /**
+     * @param ChoiceEntity $choice
+     * @internal
+     */
+    public function addInversedChoice($choice) {
+        $this->choices->add($choice);
+    }
+
+    /**
+     * @param ChoiceEntity $choice
+     * @internal
+     */
+    public function removeInversedChoice($choice) {
+        $this->choices->removeElement($choice);
     }
 
     /**

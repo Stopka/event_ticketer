@@ -9,10 +9,11 @@
 namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\CapacityAttribute;
+use App\Model\Entities\Attributes\IdentifierAttribute;
 use App\Model\Entities\Attributes\NameAttribute;
 use App\Model\Entities\Attributes\PriceAttribute;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -20,13 +21,24 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class OptionEntity extends BaseEntity {
-    use Identifier, NameAttribute, CapacityAttribute, PriceAttribute;
+    use IdentifierAttribute, NameAttribute, CapacityAttribute, PriceAttribute;
+
+    public function __construct() {
+        $this->choices = new ArrayCollection();
+    }
+
 
     /**
      * @ORM\ManyToOne(targetEntity="AdditionEntity", inversedBy="additionItems")
      * @var AdditionEntity
      */
     private $addition;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="option")
+     * @var ChoiceEntity[]
+     */
+    private $choices;
 
     /**
      * @return AdditionEntity
@@ -50,4 +62,40 @@ class OptionEntity extends BaseEntity {
         return $this;
     }
 
+    /**
+     * @return ChoiceEntity
+     */
+    public function getChoices() {
+        return $this->choices;
+    }
+
+    /**
+     * @param ChoiceEntity $choice
+     */
+    public function addChoice($choice) {
+        $choice->setOption($this);
+    }
+
+    /**
+     * @param ChoiceEntity $choice
+     */
+    public function removeChoice($choice) {
+        $choice->setOption(NULL);
+    }
+
+    /**
+     * @param ChoiceEntity $choice
+     * @internal
+     */
+    public function addInversedChoice($choice) {
+        $this->choices->add($choice);
+    }
+
+    /**
+     * @param ChoiceEntity $choices
+     * @internal
+     */
+    public function removeInversedChoice($choices) {
+        $this->choices->removeElement($choices);
+    }
 }

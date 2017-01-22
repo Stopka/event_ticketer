@@ -224,9 +224,11 @@ class OrderFormWrapper extends FormWrapper {
                 $control->setDefaultValue($key);
             }
         }
-        $control->getControlPrototype()
-            ->addClass('price_item')
-            ->setAttribute('data-price-value', json_encode($prices));
+        if($prices) {
+            $control->getControlPrototype()
+                ->addClass('price_item')
+                ->setAttribute('data-price-value', json_encode($prices));
+        }
     }
 
     /**
@@ -236,6 +238,10 @@ class OrderFormWrapper extends FormWrapper {
     protected function createAdditionPrices(AdditionEntity $addition) {
         $result = [];
         foreach ($addition->getOptions() as $option) {
+            $price = $option->getPrice();
+            if(!$price){
+                continue;
+            }
             $amount = $option->getPrice()->getPriceAmountByCurrency($this->currency);
             $result[$option->getId()] = [
                 'amount' => $amount->getAmount(),
