@@ -10,6 +10,7 @@ namespace App\Model\Facades;
 
 
 use App\Model\EmailMessageFactory;
+use App\Model\Entities\AdditionEntity;
 use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\ChoiceEntity;
 use App\Model\Entities\EarlyEntity;
@@ -58,6 +59,19 @@ class OrderFacade extends EntityFacade {
             foreach ($childValues['addittions'] as $additionId => $optionId) {
                 /** @var OptionEntity $option */
                 $option = $optionRepository->find($optionId);
+                $choice = new ChoiceEntity();
+                $choice->setOption($option);
+                $choice->setApplication($application);
+                $entityManager->persist($choice);
+            }
+        }
+        $additionRepository = $entityManager->getRepository(AdditionEntity::class);
+        /** @var AdditionEntity[] $additions */
+        $additions = $additionRepository->findBy(['visible'=>false,'event.id'=>$event->getId()]);
+        foreach ($additions as $addition){
+            $options = $addition->getOptions();
+            for ($i=0;$i<count($options)&&$i<$addition->getMinimum();$i++){
+                $option = $options[$i];
                 $choice = new ChoiceEntity();
                 $choice->setOption($option);
                 $choice->setApplication($application);

@@ -137,9 +137,9 @@ class OrderFormWrapper extends FormWrapper {
     protected function appendChildrenControls(Form $form) {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
-        $count_left = max($this->event->getCapacity()-$this->applicationFacade->countIssuedApplications($this->event),0);
+        $count_left = max($this->event->getCapacity() - $this->applicationFacade->countIssuedApplications($this->event), 0);
         $add_button = $form->addSubmit('add', 'Přidat přihlášku')
-            ->setOption('description',"Zbývá $count_left volných přihlášek")
+            ->setOption('description', "Zbývá $count_left přihlášek")
             ->setValidationScope(FALSE);
         $add_button->getControlPrototype()->class = 'ajax';
         $add_button->onClick[] = [$this, 'addChild'];
@@ -171,9 +171,9 @@ class OrderFormWrapper extends FormWrapper {
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $child->addRadioList('gender', 'Pohlaví', [
-                ApplicationEntity::GENDER_MALE => 'Muž',
-                ApplicationEntity::GENDER_FEMALE => 'Žena',
-            ])
+            ApplicationEntity::GENDER_MALE => 'Muž',
+            ApplicationEntity::GENDER_FEMALE => 'Žena',
+        ])
             ->setRequired();
         $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
@@ -194,6 +194,9 @@ class OrderFormWrapper extends FormWrapper {
     protected function appendAdditionsControls(Form $form, Container $container) {
         $subcontainer = $container->addContainer('addittions');
         foreach ($this->event->getAdditions() as $addition) {
+            if (!$addition->isVisible()) {
+                continue;
+            }
             $this->appendAdditionContols($subcontainer, $addition);
         }
         $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',
@@ -224,7 +227,7 @@ class OrderFormWrapper extends FormWrapper {
                 $control->setDefaultValue($key);
             }
         }
-        if($prices) {
+        if ($prices) {
             $control->getControlPrototype()
                 ->addClass('price_item')
                 ->setAttribute('data-price-value', json_encode($prices));
@@ -239,14 +242,14 @@ class OrderFormWrapper extends FormWrapper {
         $result = [];
         foreach ($addition->getOptions() as $option) {
             $price = $option->getPrice();
-            if(!$price){
+            if (!$price) {
                 continue;
             }
             $amount = $option->getPrice()->getPriceAmountByCurrency($this->currency);
             $result[$option->getId()] = [
                 'amount' => $amount->getAmount(),
                 'currency' => $amount->getCurrency()->getSymbol(),
-                'countLeft' => $option->getCapacity()!==NULL?max($option->getCapacity()-$this->applicationFacade->countIssuedApplicationsWithOption($option),0):NULL
+                'countLeft' => $option->getCapacity() !== NULL ? max($option->getCapacity() - $this->applicationFacade->countIssuedApplicationsWithOption($option), 0) : NULL
             ];
         }
         return $result;
@@ -278,17 +281,17 @@ class OrderFormWrapper extends FormWrapper {
                     ->setText($option->getName())
             );
         }
-        if (isset($prices[$option->getId()])&&isset($prices[$option->getId()]['amount'])&&isset($prices[$option->getId()]['currency'])) {
+        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['amount']) && isset($prices[$option->getId()]['currency'])) {
             $price = $prices[$option->getId()];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline'])
                     ->setText($price['amount'] . $price['currency'])
             );
         }
-        if (isset($prices[$option->getId()])&&isset($prices[$option->getId()]['countLeft'])) {
+        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['countLeft'])) {
             $left = $prices[$option->getId()]['countLeft'];
             $result->addHtml(
-                Html::el('span', ['class' => 'description inline','data-price-predisable'=>$left==0])
+                Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0])
                     ->setText("Zbývá $left míst")
             );
         }
