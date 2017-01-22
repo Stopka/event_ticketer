@@ -181,8 +181,12 @@ class ApplicationEntity extends BaseEntity {
         return $this->state;
     }
     
-    public static function getReservedStates(){
+    public static function getStatesReserved(){
         return [self::STATE_RESERVED,self::STATE_FULFILLED];
+    }
+
+    public static function getStatesNotIssued(){
+        return [self::STATE_CANCELLED];
     }
     
     public function cancelApplication(){

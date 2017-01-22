@@ -38,6 +38,8 @@ services:
     - App\Model\Facades\EarlyWaveFacade
     - App\Model\Facades\CurrencyFacade
     - App\Model\Facades\OrderFacade
+    - App\Model\Facades\ApplicationFacade
+    - App\Model\Facades\OptionFacade
     - App\Controls\Forms\IOrderFormWrapperFactory
     router: App\RouterFactory::createRouter
 

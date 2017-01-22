@@ -1,0 +1,39 @@
+{**
+ * @param EventEntity $event
+ * @param int $event_issued
+ * @param int $event_reserved
+ * @param OptionEntity[] $options
+ *}
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <meta charset="utf-8">
+
+        <title>Obsazenost {$event->getName()}</title>
+        <link rel="shortcut icon" href="{$basePath}/app/images/logo.ico">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" type="text/css" href="{$basePath}/vendor/normalize-css/normalize.css"/>
+        <link rel="stylesheet" type="text/css" href="{$basePath}/app/css/occupancy.css"/>
+    </head>
+    <body>
+        <h1>{$event->getName()}</h1>
+        <h2>Obsazenost</h2>
+        <hr class="clear" />
+        <p>Bylo vydáno {$event_issued} přihlášek</p>
+        <fieldset>
+            <legend>Rezervováno {$event_reserved} z {$event->getCapacity()} míst</legend>
+            <div class="occupancy_visual">
+                <div n:for="$i=0; $i<$event_reserved; $i++" class="item reserved"></div>
+                <div n:for="$i=$event_reserved; $i<$event->getCapacity(); $i++" class="item free"></div>
+            </div>
+        </fieldset>
+        <fieldset n:foreach="$options as $option" n:class="'option_'.$option->getId()">
+            {var $reserved = $control->countOptionsReserved($option)}
+            <legend>{$option->getAddition()->getName()}: {$option->getName()} obsazeno {$event_reserved} z {$option->getCapacity()} míst</legend>
+            <div class="occupancy_visual">
+                <div n:for="$i=0; $i<$event_reserved; $i++" class="item reserved"></div>
+                <div n:for="$i=$event_reserved; $i<$option->getCapacity(); $i++" class="item free"></div>
+            </div>
+        </fieldset>
+    </body>
+</html>

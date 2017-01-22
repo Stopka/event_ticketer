@@ -1,0 +1,109 @@
+body{
+	padding: 5px;
+}
+h1{
+	margin: 0 5px 0 0;
+	padding: 0;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+h2 {
+	vertical-align: middle;
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+}
+hr{
+	border: 1px solid lightgrey;
+	border-width: 1px 0 0 0;
+}
+.clear{
+	clear: both;
+}
+
+h3{
+	margin: 0;
+	padding: 0;
+}
+
+p{
+	margin: 0;
+}
+
+::-webkit-scrollbar {
+	width: 12px;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar{
+	background-color: rgba(0, 0, 0, 0.04);
+	width: 10px;
+	height: 10px;
+}
+::-webkit-scrollbar-button{
+	display: none;
+}
+::-webkit-scrollbar-track{
+	background: none;
+}
+::-webkit-scrollbar-track-piece{
+	background: none;
+}
+::-webkit-scrollbar-thumb{
+	background-color: rgba(0, 0, 0, 0.16);
+	border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover{
+	background-color: rgba(42, 128, 185, 0.3);
+	border-radius: 3px;
+}
+::-webkit-scrollbar-corner{
+	background-color: rgba(0, 0, 0, 0.16);
+}
+::-webkit-resizer{
+	background: none;
+}
+a{
+	color: #2a80b9;
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: underline;
+}
+a[href^=error] {
+	color: red !important;
+	background: yellow;
+	border: yellow;
+}
+
+legend{
+	padding: 5px;
+	font-weight: bolder;
+}
+
+fieldset{
+	border: 1px solid #2c3e50;
+	margin-bottom: 5px;
+	padding: 0 5px 5px 5px;
+}
+.occupancy_visual .item{
+	width: 16px;
+	height: 16px;
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+.occupancy_visual .item.free{
+	background-image: url("../images/occupancy/bed_0.jpg");
+}
+.occupancy_visual .item.reserved{
+	background-image: url("../images/occupancy/bed_1.jpg");
+}
+.option_12 .occupancy_visual .item.free{
+	background-image: url("../images/occupancy/bus_0.jpg");
+}
+.option_12 .occupancy_visual .item.reserved{
+	background-image: url("../images/occupancy/bus_1.jpg");
+}

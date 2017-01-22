@@ -25,7 +25,7 @@ class EventFacade extends EntityFacade {
         return $this->getRepository()->findBy([
             'state' => EventEntity::STATE_ACTIVE,
             'startDate <=' => new \DateTime()
-        ],['startDate'=>self::ORDER_ASC]);
+        ], ['startDate' => self::ORDER_ASC]);
     }
 
     /**
@@ -33,15 +33,27 @@ class EventFacade extends EntityFacade {
      * @param $id
      * @return null|EventEntity
      */
-    public function getPublicAvailibleEvent($id){
-        if(!$id){
+    public function getPublicAvailibleEvent($id) {
+        if (!$id) {
             return NULL;
         }
         /** @var EventEntity $event */
         $event = $this->get($id);
-        if($event&&$event->isPublicAvailible()){
+        if ($event && $event->isPublicAvailible()) {
             return $event;
         }
         return NULL;
+    }
+
+    /**
+     * Finds one
+     * @param $id
+     * @return null|EventEntity
+     */
+    public function getEvent($id) {
+        if (!$id) {
+            return NULL;
+        }
+        return $this->get($id);
     }
 }

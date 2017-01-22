@@ -16,6 +16,18 @@ class EventPresenter extends BasePresenter {
     public $eventFacade;
 
     /**
+     * @var Model\Facades\ApplicationFacade
+     * @inject
+     */
+    public $applicationFacade;
+
+    /**
+     * @var Model\Facades\OptionFacade
+     * @inject
+     */
+    public $optionFacade;
+
+    /**
      * @var IOrderFormWrapperFactory
      * @inject
      */
@@ -42,6 +54,26 @@ class EventPresenter extends BasePresenter {
      */
     protected function createComponentOrderForm(){
         return $this->orderFormWrapperFactory->create();
+    }
+
+    public function renderOccupancy($id = null){
+        $event = $this->eventFacade->getEvent($id);
+        if(!$event){
+            $this->flashMessage('Událost nebyla nalezena','warning');
+            $this->redirect('Homepage:');
+        }
+        $this->template->event = $event;
+        $this->template->event_issued = $this->applicationFacade->countIssuedApplications($event);
+        $this->template->event_reserved = $this->applicationFacade->countReservedApplications($event);
+        $this->template->options = $this->optionFacade->getOptionsWithLimitedCapacity($event);
+    }
+
+    /**
+     * @param Model\Entities\OptionEntity $option
+     * @return integer
+     */
+    public function countOptionsReserved(Model\Entities\OptionEntity $option){
+        return $this->applicationFacade->countReservedApplicationsWithOption($option);
     }
 
 }
