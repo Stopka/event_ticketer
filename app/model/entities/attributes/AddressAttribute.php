@@ -10,7 +10,7 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Address {
+trait AddressAttribute {
 
     /**
      * @ORM\Column(type="string", nullable=true)

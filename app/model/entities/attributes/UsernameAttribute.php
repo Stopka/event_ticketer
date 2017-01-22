@@ -10,7 +10,7 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Username {
+trait UsernameAttribute {
 
     /**
      * @ORM\Column(type="string")

@@ -8,7 +8,7 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Name;
+use App\Model\Entities\Attributes\NameAttribute;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -18,7 +18,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class CurrencyEntity extends BaseEntity {
-    use Identifier,Name;
+    use Identifier,NameAttribute;
 
     /**
      * @ORM\Column(type="string")

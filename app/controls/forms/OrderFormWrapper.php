@@ -83,6 +83,8 @@ class OrderFormWrapper extends FormWrapper {
         $form = $button->getForm();
         $values = $form->getValues(true);
         $this->orderFacade->createOrderFromOrderForm($values,$this->event,$this->early);
+        $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.','success');
+        $this->getPresenter()->redirect('this');
     }
 
     protected function appendFinalControls(Form $form) {
@@ -106,7 +108,7 @@ class OrderFormWrapper extends FormWrapper {
             ->setOption('description', 'Ve formátu +420123456789')
             ->setRequired()
             ->addRule($form::PATTERN, '%label musí být ve formátu +420123456789', '[+]([0-9]){6,20}');
-        $form->addText('email', 'Email')
+        $form->addText('email', 'EmailAttribute')
             ->setRequired()
             ->addRule($form::EMAIL);
     }

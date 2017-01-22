@@ -10,26 +10,26 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Email {
+trait PhoneAttribute {
 
     /**
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
-    private $email;
+    private $phone;
 
     /**
      * @return string
      */
-    public function getEmail() {
-        return $this->email;
+    public function getPhone() {
+        return $this->phone;
     }
 
     /**
-     * @param string $email
+     * @param string $phone
      */
-    public function setEmail($email) {
-        $this->email = $email;
+    public function setPhone($phone) {
+        $this->phone = $phone;
     }
 
 }

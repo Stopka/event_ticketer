@@ -8,9 +8,9 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Capacity;
-use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\StartDate;
+use App\Model\Entities\Attributes\CapacityAttribute;
+use App\Model\Entities\Attributes\NameAttribute;
+use App\Model\Entities\Attributes\StartDateAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -21,7 +21,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class EventEntity extends BaseEntity {
-    use Identifier, Name, Capacity, StartDate;
+    use Identifier, NameAttribute, CapacityAttribute, StartDateAttribute;
 
     const STATE_INACTIVE=false;
     const STATE_ACTIVE=true;

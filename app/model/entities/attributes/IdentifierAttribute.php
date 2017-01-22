@@ -10,7 +10,7 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Identifier {
+trait IdentifierAttribute {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier;
 
     protected function resetId(){

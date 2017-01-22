@@ -8,8 +8,8 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Identifier;
-use App\Model\Entities\Attributes\StartDate;
+use App\Model\Entities\Attributes\IdentifierAttribute;
+use App\Model\Entities\Attributes\StartDateAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class EarlyWaveEntity extends BaseEntity {
-    use Identifier, StartDate;
+    use IdentifierAttribute, StartDateAttribute;
 
     public function __construct() {
         $this->earlies = new ArrayCollection();

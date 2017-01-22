@@ -8,8 +8,8 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\BirthDate;
-use App\Model\Entities\Attributes\PersonName;
+use App\Model\Entities\Attributes\BirthDateAttribute;
+use App\Model\Entities\Attributes\PersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
@@ -20,7 +20,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use Identifier, PersonName, BirthDate;
+    use Identifier, PersonNameAttribute, BirthDateAttribute;
 
     const STATE_WAITING = 0;
     const STATE_RESERVED = 1;

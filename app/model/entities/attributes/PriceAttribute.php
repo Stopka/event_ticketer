@@ -11,7 +11,7 @@ namespace App\Model\Entities\Attributes;
 use App\Model\Entities\PriceEntity;
 use Doctrine\ORM\Mapping as ORM;
 
-trait Price {
+trait PriceAttribute {
 
     /**
      * @ORM\ManyToOne(targetEntity="PriceEntity")

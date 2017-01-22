@@ -6,7 +6,7 @@ namespace App\Model\Exceptions;
  *
  * @author stopka
  */
-class ApplicationException extends Exception {
+class AuthenticationException extends Exception {
 
 }
 

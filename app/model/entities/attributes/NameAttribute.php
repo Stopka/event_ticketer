@@ -10,26 +10,27 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Phone {
+trait NameAttribute {
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      * @var string
      */
-    private $phone;
+    private $name;
 
     /**
      * @return string
      */
-    public function getPhone() {
-        return $this->phone;
+    public function getName() {
+        return $this->name;
     }
 
     /**
-     * @param string $phone
+     * @param string $name
      */
-    public function setPhone($phone) {
-        $this->phone = $phone;
+    public function setName($name) {
+        $this->name = $name;
     }
+
 
 }

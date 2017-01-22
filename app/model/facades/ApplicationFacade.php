@@ -55,4 +55,16 @@ class ApplicationFacade extends EntityFacade {
         ]);
     }
 
+    /**
+     * @param OptionEntity $option
+     * @return integer
+     */
+    public function countIssuedApplicationsWithOption(OptionEntity $option){
+        $states = ApplicationEntity::getStatesNotIssued();
+        return $this->getRepository()->countBy([
+            'options.id'=>$option->getId(),
+            'state !='=>$states
+        ]);
+    }
+
 }

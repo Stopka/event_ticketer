@@ -8,9 +8,9 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Capacity;
-use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\Price;
+use App\Model\Entities\Attributes\CapacityAttribute;
+use App\Model\Entities\Attributes\NameAttribute;
+use App\Model\Entities\Attributes\PriceAttribute;
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
@@ -20,7 +20,7 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class OptionEntity extends BaseEntity {
-    use Identifier, Name, Capacity, Price;
+    use Identifier, NameAttribute, CapacityAttribute, PriceAttribute;
 
     /**
      * @ORM\ManyToOne(targetEntity="AdditionEntity", inversedBy="additionItems")

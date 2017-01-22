@@ -10,10 +10,10 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Password {
+trait PasswordAttribute {
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $password;
@@ -30,13 +30,17 @@ trait Password {
      * @return bool
      */
     public function verifyPassword($password) {
-        return password_verify($password, $this->password);
+        $valid = password_verify($password, $this->password);
+        if($valid && $this->isPasswordRehashNeeded()){
+            $this->setPassword($password);
+        }
+        return $valid;
     }
 
     /**
      * @return bool
      */
-    public function isPasswordRehashNeeded() {
+    protected function isPasswordRehashNeeded() {
         return password_needs_rehash($this->password, PASSWORD_DEFAULT);
     }
 

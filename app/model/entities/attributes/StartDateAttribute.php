@@ -10,7 +10,7 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait StartDate {
+trait StartDateAttribute {
 
     /**
      * @ORM\Column(type="datetime")

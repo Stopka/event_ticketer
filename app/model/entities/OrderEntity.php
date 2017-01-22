@@ -8,12 +8,12 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Address;
-use App\Model\Entities\Attributes\Email;
-use App\Model\Entities\Attributes\Guid;
-use App\Model\Entities\Attributes\Identifier;
-use App\Model\Entities\Attributes\PersonName;
-use App\Model\Entities\Attributes\Phone;
+use App\Model\Entities\Attributes\AddressAttribute;
+use App\Model\Entities\Attributes\EmailAttribute;
+use App\Model\Entities\Attributes\GuidAttribute;
+use App\Model\Entities\Attributes\IdentifierAttribute;
+use App\Model\Entities\Attributes\PersonNameAttribute;
+use App\Model\Entities\Attributes\PhoneAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class OrderEntity extends BaseEntity {
-    use Identifier, Guid, PersonName, Email, Phone, Address;
+    use IdentifierAttribute, GuidAttribute, PersonNameAttribute, EmailAttribute, PhoneAttribute, AddressAttribute;
 
     public function __construct() {
         $this->applications = new ArrayCollection();

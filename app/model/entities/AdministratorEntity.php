@@ -8,12 +8,12 @@
 
 namespace App\Model\Entities;
 
-use App\Model\Entities\Attributes\Email;
-use App\Model\Entities\Attributes\Name;
-use App\Model\Entities\Attributes\Password;
-use App\Model\Entities\Attributes\Username;
+use App\Model\Entities\Attributes\EmailAttribute;
+use App\Model\Entities\Attributes\IdentifierAttribute;
+use App\Model\Entities\Attributes\PasswordAttribute;
+use App\Model\Entities\Attributes\PersonNameAttribute;
+use App\Model\Entities\Attributes\UsernameAttribute;
 use Doctrine\ORM\Mapping as ORM;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
 
 /**
  * Administrátor systému
@@ -21,6 +21,6 @@ use Kdyby\Doctrine\Entities\Attributes\Identifier;
  * @ORM\Entity
  */
 class AdministratorEntity extends BaseEntity {
-    use Identifier,Username,Password, Name,Email;
+    use IdentifierAttribute,UsernameAttribute,PasswordAttribute, PersonNameAttribute,EmailAttribute;
 
 }

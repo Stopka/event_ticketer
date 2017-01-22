@@ -10,7 +10,7 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Capacity {
+trait CapacityAttribute {
 
     /**
      * @ORM\Column(type="integer", nullable=true)

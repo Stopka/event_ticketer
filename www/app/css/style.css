@@ -1,3 +1,32 @@
+html {
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+body{
+	min-height:100%;
+	width:100%;
+	float:left;
+	position:relative;
+	margin:0;
+	padding:0;
+	font-family: 'Roboto Condensed',sans-serif;
+	font-weight:400;
+	font-size:16px;
+	color:#2c3e50;
+	background: #FFFFFF;
+}
+
+@media only screen and (max-width: 800px){
+	body{
+		font-size: 80%;
+	}
+	input[type=file]{
+		font-size: 100% !important;
+	}
+}
+
 h1{
 	border-bottom: 1px solid #2c3e50;
 	margin-bottom: 10px;
@@ -86,29 +115,30 @@ a[href^=error] {
 .container .layout_row_content {
 	min-height: 300px;
 }
-
-header {
+header{
+	margin-bottom: 15px;
+}
+#header {
 	height: 88px;
 	background-color: #2980B9;
 	color: white;
-	margin-bottom: 15px;
 	font-size: 110%;
 	font-weight: bolder;
 }
-header a{
+#header a{
 	color: white;
 	text-decoration: none;
 }
-header .brand{
+#header .brand{
 	display: block;
 }
-header .name,
-header .logo{
+#header .name,
+#header .logo{
 	display: inline-block;
 	line-height: 30px;
 	vertical-align: middle;
 }
-header .logo img{
+#header .logo img{
 	height: 78px;
 }
 #content{
@@ -119,6 +149,13 @@ footer{
 	color: white;
 	background-color: lightgrey;
 	line-height: 30px;
+}
+#user_block{
+	background-color: lightgrey;
+}
+
+#user_block .layout_row_content{
+	text-align: right;
 }
 
 /*******************************************************************************
@@ -366,3 +403,42 @@ a.price_recalculate{
 	margin-left: 10px;
 }
 
+/********************************
+ * Flashes
+ ********************************/
+.alert{
+	width: 100%;
+	border: 2px solid #4e6ab5;
+	background-color: #cfe0ff;
+	color: #4e6ab5;
+	padding: 8px;
+	box-sizing: border-box;
+}
+.alert.alert-success{
+	background-color: #d4ffc0;
+	border-color: #48a137;
+	color: #48a137;
+}
+.alert.alert-warning{
+	background-color: #fcffbe;
+	border-color: #dbba42;
+	color: #dbba42;
+}
+.alert.alert-error{
+	background-color: #ffdada;
+	border-color: #c11d02;
+	color: #c11d02;
+}
+.alert button{
+	background: none;
+	border: none;
+	float: right;
+	color: rgba(0, 0, 0, 0.36);
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+	padding: 0;
+}
+.alert button:hover{
+	color: rgba(0, 0, 0, 1);
+}

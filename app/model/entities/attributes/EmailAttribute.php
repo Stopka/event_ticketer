@@ -10,27 +10,26 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Name {
+trait EmailAttribute {
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
-    private $name;
+    private $email;
 
     /**
      * @return string
      */
-    public function getName() {
-        return $this->name;
+    public function getEmail() {
+        return $this->email;
     }
 
     /**
-     * @param string $name
+     * @param string $email
      */
-    public function setName($name) {
-        $this->name = $name;
+    public function setEmail($email) {
+        $this->email = $email;
     }
-
 
 }

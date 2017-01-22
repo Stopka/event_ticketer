@@ -29,10 +29,8 @@ session:
     expiration: 14 days
 
 services:
-    - App\AdminModule\Controls\Forms\SignInFormFactory
     - App\Model\SystemConfigurations
     - App\Model\EmailMessageFactory
-    - App\Model\Facades\AdministratorFacade
     - App\Model\Facades\EventFacade
     - App\Model\Facades\EarlyFacade
     - App\Model\Facades\EarlyWaveFacade
@@ -40,7 +38,10 @@ services:
     - App\Model\Facades\OrderFacade
     - App\Model\Facades\ApplicationFacade
     - App\Model\Facades\OptionFacade
+    - App\Model\Facades\AdministratorFacade
+    - App\Model\AdminAuthenticator
     - App\Controls\Forms\IOrderFormWrapperFactory
+    - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     router: App\RouterFactory::createRouter
 
 extensions:

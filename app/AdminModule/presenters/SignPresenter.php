@@ -2,52 +2,45 @@
 
 namespace App\AdminModule\Presenters;
 
-use App\AdminModule\Controls\Forms\SignInFormFactory;
+use App\AdminModule\Controls\Forms\ISignInFormWrapperFactory;
 use Nette;
 
 
-class SignPresenter extends BasePresenter
-{
-	/**
-     * @var SignInFormFactory
+class SignPresenter extends BasePresenter {
+    /**
+     * @var ISignInFormWrapperFactory
      * @inject
      */
-	public $signInFactory;
+    public $signInFromWrapperFactory;
 
-	/**
-     * @var SignInFormFactory
-     * @inject
+    /**
+     * @var string
+     * @persistent
      */
-	public $signUpFactory;
+    public $backlink;
+
+    protected function checkUser() {
+
+    }
+
+    public function actionIn(){
+        if($this->getUser()->isLoggedIn()){
+            $this->redirect('Homepage:');
+        }
+    }
 
 
-	/**
-	 * Sign-in form factory.
-	 * @return Nette\Application\UI\Form
-	 */
-	protected function createComponentSignInForm()
-	{
-		return $this->signInFactory->create(function () {
-			$this->redirect('Homepage:');
-		});
-	}
+    public function actionOut() {
+        $this->getUser()->logout();
+        $this->redirect('Homepage:');
+    }
 
-
-	/**
-	 * Sign-up form factory.
-	 * @return Nette\Application\UI\Form
-	 */
-	protected function createComponentSignUpForm()
-	{
-		return $this->signUpFactory->create(function () {
-			$this->redirect('Homepage:');
-		});
-	}
-
-
-	public function actionOut()
-	{
-		$this->getUser()->logout();
-	}
+    /**
+     * Sign-in form factory.
+     * @return Nette\Application\UI\Form
+     */
+    protected function createComponentSignInForm() {
+        return $this->signInFromWrapperFactory->create();
+    }
 
 }
