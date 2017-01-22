@@ -10,7 +10,7 @@ namespace App\Model\Facades;
 
 
 use App\Model\EmailMessageFactory;
-use App\Model\Entities\ChildEntity;
+use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
@@ -49,10 +49,10 @@ class OrderFacade extends EntityFacade {
         $commonValues = $values['commons'];
         $optionRepository = $entityManager->getRepository(OptionEntity::class);
         foreach ($values['children'] as $childValues) {
-            $child = new ChildEntity();
+            $child = new ApplicationEntity();
             $child->setByValueArray($commonValues);
             $child->setByValueArray($childValues['child']);
-            $child->setParent($order);
+            $child->setOrder($order);
             $entityManager->persist($child);
             foreach ($childValues['addittions'] as $additionId => $optionId) {
                 $option = $optionRepository->find($optionId);

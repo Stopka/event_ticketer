@@ -26,16 +26,16 @@ class OrderEntity extends BaseEntity {
     use Identifier, Guid, PersonName, Email, Phone, Address;
 
     public function __construct() {
-        $this->children = new ArrayCollection();
+        $this->applications = new ArrayCollection();
         $this->created = new \DateTime();
         $this->generateGuid();
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="ChildEntity", mappedBy="parent"))
-     * @var ChildEntity[]
+     * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="order"))
+     * @var ApplicationEntity[]
      */
-    private $children;
+    private $applications;
 
     /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="orders")
@@ -55,40 +55,40 @@ class OrderEntity extends BaseEntity {
     private $created;
 
     /**
-     * @return ChildEntity[]
+     * @return ApplicationEntity[]
      */
-    public function getChildren() {
-        return $this->children;
+    public function getApplications() {
+        return $this->applications;
     }
 
     /**
-     * @param ChildEntity $child
+     * @param ApplicationEntity $application
      */
-    public function addChild($child) {
-        $child->setParent($this);
+    public function addApplication($application) {
+        $application->setOrder($this);
     }
 
     /**
-     * @param ChildEntity $child
+     * @param ApplicationEntity $application
      */
-    public function removeChild($child) {
-        $child->setParent(NULL);
+    public function removeApplication($application) {
+        $application->setOrder(NULL);
     }
 
     /**
-     * @param ChildEntity $child
+     * @param ApplicationEntity $application
      * @internal
      */
-    public function addInversedChild($child) {
-        $this->children->add($child);
+    public function addInversedApplication($application) {
+        $this->applications->add($application);
     }
 
     /**
-     * @param ChildEntity $child
+     * @param ApplicationEntity $application
      * @internal
      */
-    public function removeInversedChild($child) {
-        $this->children->removeElement($child);
+    public function removeInversedApplication($application) {
+        $this->applications->removeElement($application);
     }
 
     /**
