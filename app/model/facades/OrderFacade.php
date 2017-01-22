@@ -64,6 +64,22 @@ class OrderFacade extends EntityFacade {
         return $order;
     }
 
+    public function createSubtituteFromOrderForm($values, EventEntity $event, EarlyEntity $early){
+        $entityManager = $this->getEntityManager();
+        $order = new OrderEntity(true);
+        $order->setByValueArray($values);
+        $order->setEarly($early);
+        $order->setEvent($event);
+        $entityManager->persist($order);
+        for ($i=0; $i<$values['count']; $i++) {
+            $application = new ApplicationEntity(true);
+            $application->setOrder($order);
+            $entityManager->persist($application);
+        }
+        $entityManager->flush();
+        return $order;
+    }
+
     /**
      * @param OrderEntity $order
      */

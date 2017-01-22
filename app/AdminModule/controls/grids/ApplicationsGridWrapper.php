@@ -41,6 +41,7 @@ class ApplicationsGridWrapper extends GridWrapper {
             ])
             ->setSortable()
             ->setFilterSelect([
+                NULL => '',
                 ApplicationEntity::STATE_WAITING => 'Nové',
                 ApplicationEntity::STATE_RESERVED => 'Rezervováno',
                 ApplicationEntity::STATE_FULFILLED => 'Doplaceno',

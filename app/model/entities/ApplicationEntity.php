@@ -29,6 +29,7 @@ class ApplicationEntity extends BaseEntity {
     const STATE_RESERVED = 1;
     const STATE_FULFILLED = 2;
     const STATE_CANCELLED = 3;
+    const STATE_SUBSTITUTE = 4;
 
     const GENDER_MALE = 0;
     const GENDER_FEMALE = 1;
@@ -75,8 +76,11 @@ class ApplicationEntity extends BaseEntity {
      */
     private $state = self::STATE_WAITING;
 
-    public function __construct() {
+    public function __construct($substitute = false) {
         $this->options = new ArrayCollection();
+        if($substitute){
+            $this->state = self::STATE_SUBSTITUTE;
+        }
     }
 
     /**
@@ -192,7 +196,7 @@ class ApplicationEntity extends BaseEntity {
     }
 
     public static function getStatesNotIssued(){
-        return [self::STATE_CANCELLED];
+        return [self::STATE_CANCELLED,self::STATE_SUBSTITUTE];
     }
     
     public function cancelApplication(){
@@ -200,7 +204,7 @@ class ApplicationEntity extends BaseEntity {
     }
     
     public function updateState() {
-        if($this->state == self::STATE_CANCELLED){
+        if(in_array($this->state,self::getStatesNotIssued())){
             return;
         }
         if(!$this->isPayed()&&(

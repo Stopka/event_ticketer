@@ -8,6 +8,7 @@ use App\Model\Entities\CurrencyEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
+use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\CurrencyFacade;
 use App\Model\Facades\OrderFacade;
 use Nette\Forms\Container;
@@ -19,11 +20,14 @@ use Vodacek\Forms\Controls\DateInput;
 
 class OrderFormWrapper extends FormWrapper {
 
-    /** @var  Order */
+    /** @var  OrderFacade */
     private $orderFacade;
 
     /** @var  CurrencyFacade */
     private $currencyFacade;
+
+    /** @var  ApplicationFacade */
+    private $applicationFacade;
 
     /** @var  CurrencyEntity */
     protected $currency;
@@ -34,11 +38,12 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(CurrencyFacade $currencyFacade, OrderFacade $orderFacade) {
+    public function __construct(CurrencyFacade $currencyFacade, OrderFacade $orderFacade, ApplicationFacade $applicationFacade) {
         parent::__construct();
         $this->currencyFacade = $currencyFacade;
         $this->currency = $currencyFacade->getDefaultCurrency();
         $this->orderFacade = $orderFacade;
+        $this->applicationFacade = $applicationFacade;
         $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
 
@@ -132,7 +137,9 @@ class OrderFormWrapper extends FormWrapper {
     protected function appendChildrenControls(Form $form) {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
+        $count_left = max($this->event->getCapacity()-$this->applicationFacade->countIssuedApplications($this->event),0);
         $add_button = $form->addSubmit('add', 'Přidat přihlášku')
+            ->setOption('description',"Zbývá $count_left volných přihlášek")
             ->setValidationScope(FALSE);
         $add_button->getControlPrototype()->class = 'ajax';
         $add_button->onClick[] = [$this, 'addChild'];
@@ -152,7 +159,7 @@ class OrderFormWrapper extends FormWrapper {
                 ->setValidationScope(FALSE); # disables validation
             $remove_button->onClick[] = $removeEvent;
             $remove_button->getControlPrototype()->class = 'ajax';
-        }, 0);
+        }, 1, true);
     }
 
     protected function appendChildControls(Form $form, Container $container) {
@@ -232,7 +239,8 @@ class OrderFormWrapper extends FormWrapper {
             $amount = $option->getPrice()->getPriceAmountByCurrency($this->currency);
             $result[$option->getId()] = [
                 'amount' => $amount->getAmount(),
-                'currency' => $amount->getCurrency()->getSymbol()
+                'currency' => $amount->getCurrency()->getSymbol(),
+                'countLeft' => $option->getCapacity()!==NULL?max($option->getCapacity()-$this->applicationFacade->countIssuedApplicationsWithOption($option),0):NULL
             ];
         }
         return $result;
@@ -264,11 +272,18 @@ class OrderFormWrapper extends FormWrapper {
                     ->setText($option->getName())
             );
         }
-        if (isset($prices[$option->getId()])) {
+        if (isset($prices[$option->getId()])&&isset($prices[$option->getId()]['amount'])&&isset($prices[$option->getId()]['currency'])) {
             $price = $prices[$option->getId()];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline'])
                     ->setText($price['amount'] . $price['currency'])
+            );
+        }
+        if (isset($prices[$option->getId()])&&isset($prices[$option->getId()]['countLeft'])) {
+            $left = $prices[$option->getId()]['countLeft'];
+            $result->addHtml(
+                Html::el('span', ['class' => 'description inline','data-price-predisable'=>$left==0])
+                    ->setText("Zbývá $left míst")
             );
         }
         return $result;

@@ -45,6 +45,7 @@ services:
     - App\Model\Facades\AdministratorFacade
     - App\Model\AdminAuthenticator
     - App\Controls\Forms\IOrderFormWrapperFactory
+    - App\CompanyModule\Controls\Forms\ISubstituteFormWrapperFactory
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     router: App\RouterFactory::createRouter

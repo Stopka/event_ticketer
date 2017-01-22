@@ -24,11 +24,27 @@ use Doctrine\ORM\Mapping as ORM;
 class OrderEntity extends BaseEntity {
     use IdentifierAttribute, GuidAttribute, PersonNameAttribute, EmailAttribute, PhoneAttribute;
 
-    public function __construct() {
+    const STATE_ORDER = 0;
+    const STATE_SUBSTITUTE = 1;
+
+    /**
+     * OrderEntity constructor.
+     * @param bool $substitute
+     */
+    public function __construct($substitute = false) {
         $this->applications = new ArrayCollection();
         $this->created = new \DateTime();
+        if($substitute){
+            $this->setState(self::STATE_SUBSTITUTE);
+        }
         $this->generateGuid();
     }
+
+    /**
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    private $state = self::STATE_ORDER;
 
     /**
      * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="order"))
@@ -130,6 +146,20 @@ class OrderEntity extends BaseEntity {
      */
     public function getCreated() {
         return $this->created;
+    }
+
+    /**
+     * @return int
+     */
+    public function getState() {
+        return $this->state;
+    }
+
+    /**
+     * @param int $state
+     */
+    public function setState($state) {
+        $this->state = $state;
     }
 
 }

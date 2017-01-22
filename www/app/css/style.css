@@ -392,6 +392,7 @@ label span.description{
 }
 label span.description.inline{
 	display: inline;
+	margin-right: 10px;
 }
 #ajax-spinner,.spinner{
 	z-index: 50;

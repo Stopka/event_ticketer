@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait BirthDateAttribute {
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @var \DateTime
      */
     private $birthDate;

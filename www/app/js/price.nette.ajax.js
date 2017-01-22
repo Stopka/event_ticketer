@@ -11,10 +11,12 @@
             $(document).on('click', this.selectors.recalculate, $.proxy(this.onRecalculateClicked,this))
             this.onLoaded();
             this.restorePrechecked();
+            this.restorePredisabled();
         },
         complete: function (jqXHR, status, settings) {
             this.onComplete(jqXHR);
             this.restorePrechecked();
+            this.restorePredisabled();
         }
     }, {
         selectors: {
@@ -35,6 +37,10 @@
                 }
                 elem.checked = true;
             })
+        },
+        restorePredisabled: function(){
+            input = $('[data-price-predisable]').parent().find('input');
+            input.attr('disabled',true);
         },
         onComplete: function (event) {
             this.planRecalcucation();

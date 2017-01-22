@@ -72,10 +72,10 @@ class ApplicationFacade extends EntityFacade {
      * @return Doctrine
      */
     public function getAllApplicationsGridModel(){
-        return new Doctrine(
-                $this->getRepository()->createQueryBuilder('a')
-                    ->addSelect('a')
-            );
+        $qb = $this->getRepository()->createQueryBuilder('a');
+        $qb->addSelect('a')
+            ->where($qb->expr()->notIn('a.state',ApplicationEntity::getStatesNotIssued()));
+        return new Doctrine($qb);
     }
 
     /**
