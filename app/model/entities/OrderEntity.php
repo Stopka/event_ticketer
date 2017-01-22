@@ -49,6 +49,7 @@ class OrderEntity extends BaseEntity {
     private $early;
 
     /**
+     * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     private $created;

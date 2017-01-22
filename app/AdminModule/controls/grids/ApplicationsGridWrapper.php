@@ -4,6 +4,8 @@ namespace App\AdminModule\Controls\Grids;
 
 use App\Model\Entities\ApplicationEntity;
 use App\Model\Facades\ApplicationFacade;
+use Nette\Localization\ITranslator;
+use Tracy\Debugger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,8 +18,8 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var  ApplicationFacade */
     private $applicationFacade;
 
-    public function __construct(ApplicationFacade $applicationFacade) {
-        parent::__construct();
+    public function __construct(ITranslator $translator,ApplicationFacade $applicationFacade) {
+        parent::__construct($translator);
         $this->applicationFacade = $applicationFacade;
     }
 
@@ -33,7 +35,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('order.lastName','Příjmení rodiče')
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnText('order.phone','Telefon rodiče')
+        /*$grid->addColumnText('order.phone','Telefon rodiče')
             ->setFilterText()
             ->setSuggestion();
         $grid->addColumnEmail('order.email','Email rodiče')
@@ -47,7 +49,7 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setSuggestion();
         $grid->addColumnText('zip','PSČ')
             ->setFilterText()
-            ->setSuggestion();
+            ->setSuggestion();*/
         $grid->addColumnText('firstName','Jméno')
             ->setSortable()
             ->setFilterText()
@@ -58,11 +60,28 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setSuggestion();
         $grid->addColumnText('gender','Pohlaví')
             ->setReplacement([ApplicationEntity::GENDER_MALE=>'Muž',ApplicationEntity::GENDER_FEMALE=>'Žena'])
-            ->setFilterSelect([ApplicationEntity::GENDER_MALE=>'Muž',ApplicationEntity::GENDER_FEMALE=>'Žena']);
+            ->setFilterSelect([null=>'',ApplicationEntity::GENDER_MALE=>'Muž',ApplicationEntity::GENDER_FEMALE=>'Žena']);
         $grid->addColumnDate('birthDate','Datum narození')
             ->setSortable()
             ->setFilterDateRange();
-        $grid->addColumnText('birthCode','Kod r. č.')
+        $grid->addColumnText('birthCode','Kod rodného čísla')
             ->setFilterText();
+        $grid->addColumnDate('order.created','Vytvořeno')
+            ->setFilterDateRange();
+        $grid->addColumnText('deposited','Záloha')
+            ->setReplacement([true=>'Ano',false=>'Ne'])
+            ->setFilterSelect([null=>'',true=>'Ano',false=>'Ne']);
+        $grid->addColumnText('payed','Doplatek')
+            ->setReplacement([true=>'Ano',false=>'Ne'])
+            ->setFilterSelect([null=>'',true=>'Ano',false=>'Ne']);
+        $grid->addColumnText('signed','Přihláška')
+            ->setReplacement([true=>'Ano',false=>'Ne'])
+            ->setFilterSelect([null=>'',true=>'Ano',false=>'Ne']);
+        $grid->addColumnText('invoiced','Faktura')
+            ->setReplacement([true=>'Ano',false=>'Ne'])
+            ->setFilterSelect([null=>'',true=>'Ano',false=>'Ne']);
+        $grid->addActionEvent('test','Test',function(...$args){
+            Debugger::barDump($args);
+        });
     }
 }
