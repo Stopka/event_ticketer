@@ -157,6 +157,13 @@ class OrderEntity extends BaseEntity {
     }
 
     /**
+     * @return integer[]
+     */
+    public static function getSubstituteStates(){
+        return [self::STATE_SUBSTITUTE,self::STATE_WAITING];
+    }
+
+    /**
      * @param int $state
      */
     public function setState($state) {

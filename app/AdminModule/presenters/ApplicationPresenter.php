@@ -29,6 +29,7 @@ class ApplicationPresenter extends BasePresenter {
         /** @var ApplicationsGridWrapper $applicationGrid */
         $applicationGrid = $this->getComponent('applicationsGrid');
         $applicationGrid->setEvent($event);
+        $this->template->event = $event;
     }
 
     protected function createComponentApplicationsGrid(){

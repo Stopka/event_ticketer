@@ -50,6 +50,7 @@ services:
     - App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
+    - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     router: App\RouterFactory::createRouter
 
 extensions:
