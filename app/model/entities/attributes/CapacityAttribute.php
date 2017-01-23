@@ -19,6 +19,12 @@ trait CapacityAttribute {
     private $capacity;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @var boolean
+     */
+    private $capacityFull = false;
+
+    /**
      * @return int
      */
     public function getCapacity() {
@@ -26,18 +32,32 @@ trait CapacityAttribute {
     }
 
     /**
-     * @param $issued_count integer
+     * @param $issued_count integer|null
      * @return boolean
      */
-    public function isCapacityFull($issued_count){
-        return $issued_count >= $this->getCapacity();
+    public function isCapacityFull($issued_count = null) {
+        if ($issued_count === NULL) {
+            return $this->capacityFull;
+        }
+        return $this->capacityFull || ($this->getCapacity()!==NULL && $issued_count >= $this->getCapacity());
     }
 
     /**
      * @param int $capacity
+     * @return $this
      */
     public function setCapacity($capacity) {
         $this->capacity = $capacity;
+        return $this;
+    }
+
+    /**
+     * @param bool $capacityFull
+     * @return $this
+     */
+    public function setCapacityFull($capacityFull = true) {
+        $this->capacityFull = $capacityFull;
+        return $this;
     }
 
 }

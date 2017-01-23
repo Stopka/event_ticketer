@@ -25,9 +25,13 @@ class OrderFacade extends EntityFacade {
     /** @var EmailMessageFactory */
     private $emailMessageFactory;
 
-    public function __construct(EntityManager $entityManager, EmailMessageFactory $emailMessageFactory) {
+    /** @var ApplicationFacade */
+    private $applicationFacade;
+
+    public function __construct(EntityManager $entityManager, EmailMessageFactory $emailMessageFactory, ApplicationFacade $applicationFacade) {
         parent::__construct($entityManager);
         $this->emailMessageFactory = $emailMessageFactory;
+        $this->applicationFacade = $applicationFacade;
     }
 
 
@@ -77,6 +81,10 @@ class OrderFacade extends EntityFacade {
                     $entityManager->persist($choice);
                 }
             }
+        }
+        $entityManager->flush();
+        if($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))){
+            $event->setCapacityFull();
         }
         $entityManager->flush();
         $this->sendRegistrationEmail($order);

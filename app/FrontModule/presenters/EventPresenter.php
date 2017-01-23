@@ -51,7 +51,7 @@ class EventPresenter extends BasePresenter {
             $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
         }
-        if ($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
+        if ($event->isCapacityFull()) {
             $this->flashMessage('Již nejsou žádné volné přihlášky.', 'warning');
             $this->redirect('substitute', $id);
         }
@@ -67,7 +67,7 @@ class EventPresenter extends BasePresenter {
             $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
         }
-        if (!$event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
+        if (!$event->isCapacityFull()) {
             $this->redirect('register', $id);
         }
         /** @var SubstituteFormWrapper $substituteFormWrapper */

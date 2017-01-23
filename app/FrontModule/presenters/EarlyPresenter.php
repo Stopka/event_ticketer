@@ -49,7 +49,7 @@ class EarlyPresenter extends BasePresenter {
         $orderFormWrapper = $this->getComponent('orderForm');
         $orderFormWrapper->setEarly($early);
         $event = $early->getEarlyWave()->getEvent();
-        if ($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
+        if ($event->isCapacityFull()) {
             $this->flashMessage('Již nejsou žádné volné přihlášky.', 'warning');
             $this->redirect('substitute', $id);
         }
@@ -66,7 +66,7 @@ class EarlyPresenter extends BasePresenter {
         $substituteFormWrapper = $this->getComponent('substituteForm');
         $substituteFormWrapper->setEarly($early);
         $event = $early->getEarlyWave()->getEvent();
-        if (!$event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
+        if (!$event->isCapacityFull()) {
             $this->redirect('register', $id);
         }
         $this->template->event = $event;
