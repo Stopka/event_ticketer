@@ -56,6 +56,12 @@ class AdditionEntity extends BaseEntity {
     private $visible = true;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @var boolean
+     */
+    private $hidden = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="additions")
      * @var EventEntity
      */
@@ -194,6 +200,20 @@ class AdditionEntity extends BaseEntity {
      */
     public function setEnoughForState($enoughForState) {
         $this->enoughForState = $enoughForState;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden() {
+        return $this->hidden;
+    }
+
+    /**
+     * @param bool $hidden
+     */
+    public function setHidden($hidden) {
+        $this->hidden = $hidden;
     }
 
 }

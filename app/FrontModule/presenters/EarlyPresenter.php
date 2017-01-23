@@ -2,10 +2,10 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\CompanyModule\Controls\Forms\ISubstituteFormWrapperFactory;
-use App\CompanyModule\Controls\Forms\SubstituteFormWrapper;
 use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
+use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
+use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use App\Model;
 
 

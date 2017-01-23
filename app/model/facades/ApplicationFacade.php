@@ -12,12 +12,21 @@ namespace App\Model\Facades;
 use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
+use App\Model\Entities\OrderEntity;
 use Grido\DataSources\Doctrine;
 
 class ApplicationFacade extends EntityFacade {
 
     protected function getEntityClass() {
         return ApplicationEntity::class;
+    }
+
+    public function getOrderApplicationsGridModel(OrderEntity $order){
+        $qb = $this->getRepository()->createQueryBuilder('a');
+        $qb->addSelect('a')
+            ->where($qb->expr()->eq('a.order',$order->getId()
+            ));
+        return new Doctrine($qb);
     }
 
     /**

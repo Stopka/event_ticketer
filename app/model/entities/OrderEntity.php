@@ -25,7 +25,8 @@ class OrderEntity extends BaseEntity {
     use IdentifierAttribute, GuidAttribute, PersonNameAttribute, EmailAttribute, PhoneAttribute;
 
     const STATE_ORDER = 0;
-    const STATE_SUBSTITUTE = 1;
+    const STATE_WAITING = 1;
+    const STATE_SUBSTITUTE = 2;
 
     /**
      * OrderEntity constructor.

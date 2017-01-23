@@ -6,7 +6,7 @@
  * Time: 15:06
  */
 
-namespace App\CompanyModule\Controls\Forms;
+namespace App\FrontModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;

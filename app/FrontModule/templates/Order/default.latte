@@ -1,2 +1,16 @@
 {block content}
-<h1>Registrace</h1>
+<h1>Objednávka #{$order->getId()}</h1>
+<ul>
+    <li>Událost: <strong>{$order->getEvent()->getName()}</strong></li>
+    <li>Jméno: <strong>{$order->getFirstName()}</strong></li>
+    <li>Příjmení: <strong>{$order->getLastName()}</strong></li>
+    <li>Telefon: <strong>{$order->getPhone()}</strong></li>
+    <li>Email: <strong>{$order->getEmail()}</strong></li>
+    <li n:if="$order->getEarly()">
+        Přednostně na jméno:
+        <strong>{$order->getEarly()->getFirstName()} {$order->getEarly()->getLastName()}</strong>
+    </li>
+</ul>
+
+<h2>Přihlášky</h2>
+{control applicationsGrid}

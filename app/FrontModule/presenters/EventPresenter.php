@@ -2,10 +2,10 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\CompanyModule\Controls\Forms\ISubstituteFormWrapperFactory;
-use App\CompanyModule\Controls\Forms\SubstituteFormWrapper;
 use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
+use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
+use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use App\Model;
 
 
@@ -48,7 +48,7 @@ class EventPresenter extends BasePresenter {
     public function actionRegister($id = null) {
         $event = $this->eventFacade->getPublicAvailibleEvent($id);
         if(!$event){
-            $this->flashMessage('Událost nebyla nalezena','warning');
+            $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
         }
         if ($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
@@ -64,7 +64,7 @@ class EventPresenter extends BasePresenter {
     public function actionSubstitute($id = null) {
         $event = $this->eventFacade->getPublicAvailibleEvent($id);
         if(!$event){
-            $this->flashMessage('Událost nebyla nalezena','warning');
+            $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
         }
         if (!$event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
@@ -93,7 +93,7 @@ class EventPresenter extends BasePresenter {
     public function renderOccupancy($id = null){
         $event = $this->eventFacade->getEvent($id);
         if(!$event){
-            $this->flashMessage('Událost nebyla nalezena','warning');
+            $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
         }
         $this->template->event = $event;

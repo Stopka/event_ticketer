@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CompanyModule\Controls\Forms;
+namespace App\FrontModule\Controls\Forms;
 
 interface ISubstituteFormWrapperFactory{
 

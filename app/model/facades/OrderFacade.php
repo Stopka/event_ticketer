@@ -118,4 +118,19 @@ class OrderFacade extends EntityFacade {
         $mailer = new SendmailMailer();
         $mailer->send($message);
     }
+
+    /**
+     * @param $hash string
+     * @return OrderEntity|null
+     */
+    public function getViewableOrderByHash($hash) {
+        list($id, $guid) = explode('_', $hash . '_');
+        if (!$id || !$guid)
+            return NULL;
+        /** @var OrderEntity $order */
+        $order = $this->get($id);
+        if($order&&$order->getGuid()==$guid&&$order->getState()==OrderEntity::STATE_ORDER)
+            return $order;
+        return NULL;
+    }
 }

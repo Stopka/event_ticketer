@@ -457,3 +457,17 @@ a.price_recalculate{
 	margin-top: 0;
 	border: none;
 }
+
+.grido{
+	margin-bottom: 20px;
+}
+
+.grido .grido-no-paginator tfoot .count{
+	display: none;
+}
+.grido .grido-no-reset tfoot .reset{
+	display: none;
+}
+.grido .grido-no-filter tfoot .search{
+	display: none;
+}
