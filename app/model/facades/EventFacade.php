@@ -18,6 +18,13 @@ class EventFacade extends EntityFacade {
     }
 
     /**
+     * @return EventEntity[]
+     */
+    public function getAllEvents(){
+        return $this->getRepository()->findAll();
+    }
+
+    /**
      * Started end active events
      * @return EventEntity[]
      */

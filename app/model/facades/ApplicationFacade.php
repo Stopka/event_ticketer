@@ -71,10 +71,14 @@ class ApplicationFacade extends EntityFacade {
     /**
      * @return Doctrine
      */
-    public function getAllApplicationsGridModel(){
+    public function getAllApplicationsGridModel(EventEntity $event){
         $qb = $this->getRepository()->createQueryBuilder('a');
         $qb->addSelect('a')
-            ->where($qb->expr()->notIn('a.state',ApplicationEntity::getStatesNotIssued()));
+            ->where($qb->expr()->andX(
+                $qb->expr()->notIn('a.state',ApplicationEntity::getStatesNotIssued())/*,
+                $qb->expr()->eq('a.order.event.id',$event->getId())*/
+            ));
+        //TODO filtr podle eventu
         return new Doctrine($qb);
     }
 

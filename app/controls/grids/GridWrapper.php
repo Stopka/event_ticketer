@@ -46,7 +46,7 @@ abstract class GridWrapper extends Control {
         return $grid;
     }
 
-    abstract function configure(Grid $grid);
+    abstract protected function configure(Grid $grid);
 
     /**
      * @param array ...$args

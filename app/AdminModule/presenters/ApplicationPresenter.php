@@ -3,7 +3,9 @@
 namespace App\AdminModule\Presenters;
 
 
+use App\AdminModule\Controls\Grids\ApplicationsGridWrapper;
 use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
+use App\Model\Facades\EventFacade;
 
 class ApplicationPresenter extends BasePresenter {
 
@@ -13,8 +15,20 @@ class ApplicationPresenter extends BasePresenter {
      */
     public $applicationsGridWrapperFactory;
 
-    public function renderDefault() {
+    /**
+     * @var EventFacade
+     * @inject
+     */
+    public $eventFacade;
 
+    public function renderDefault($id) {
+        $event = $this->eventFacade->getEvent($id);
+        if(!$event){
+            $this->redirect('Homepage:');
+        }
+        /** @var ApplicationsGridWrapper $applicationGrid */
+        $applicationGrid = $this->getComponent('applicationsGrid');
+        $applicationGrid->setEvent($event);
     }
 
     protected function createComponentApplicationsGrid(){

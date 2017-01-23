@@ -2,7 +2,9 @@
 
 namespace App\AdminModule\Controls\Grids;
 
+use App\Grids\Grid;
 use App\Model\Entities\ApplicationEntity;
+use App\Model\Entities\EventEntity;
 use App\Model\Facades\ApplicationFacade;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
@@ -19,14 +21,43 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var  ApplicationFacade */
     private $applicationFacade;
 
+    /** @var  EventEntity */
+    private $event;
+
     public function __construct(ITranslator $translator, ApplicationFacade $applicationFacade) {
         parent::__construct($translator);
         $this->applicationFacade = $applicationFacade;
     }
 
+    /**
+     * @param EventEntity $entity
+     * @return $this
+     */
+    public function setEvent(EventEntity $event){
+        $this->event = $event;
+        return $this;
+    }
 
-    function configure(\App\Grids\Grid $grid) {
-        $grid->setModel($this->applicationFacade->getAllApplicationsGridModel());
+    protected function loadModel(Grid $grid) {
+        $grid->setModel($this->applicationFacade->getAllApplicationsGridModel($this->event));
+    }
+
+    protected function configure(\App\Grids\Grid $grid) {
+        $this->loadModel($grid);
+        $this->appendOrderColumns($grid);
+        $this->appendApplicationColumns($grid);
+        $this->appendAdditionsColumns($grid);
+        $this->appendActions($grid);
+    }
+
+    protected function appendActions(Grid $grid){
+        $grid->addActionEvent('detail', 'Detail', function (...$args) {
+            Debugger::barDump($args);
+        })
+            ->setIcon('fa fa-eye');
+    }
+
+    protected function appendApplicationColumns(Grid $grid){
         $grid->addColumnNumber('id', 'ID')
             ->setSortable()
             ->setDefaultSort('ASC')
@@ -47,21 +78,8 @@ class ApplicationsGridWrapper extends GridWrapper {
                 ApplicationEntity::STATE_FULFILLED => 'Doplaceno',
                 ApplicationEntity::STATE_CANCELLED => 'Zrušeno'
             ]);
-        $grid->addColumnText('order.firstName', 'Jméno rodiče')
-            ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
-        $grid->addColumnText('order.lastName', 'Příjmení rodiče')
-            ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
-        /*$grid->addColumnText('order.phone','Telefon rodiče')
-            ->setFilterText()
-            ->setSuggestion();
-        $grid->addColumnEmail('order.email','Email rodiče')
-            ->setFilterText()
-            ->setSuggestion();
-        $grid->addColumnText('address','Adresa')
+
+        /*$grid->addColumnText('address','Adresa')
             ->setFilterText()
             ->setSuggestion();
         $grid->addColumnText('city','Město')
@@ -91,7 +109,40 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnDate('order.created', 'Vytvořeno')
             ->setSortable()
             ->setFilterDateRange();
-        $grid->addColumnText('deposited', 'Záloha')
+        $grid->addColumnText('invoiced', 'Faktura')
+            ->setCustomRender(function (ApplicationEntity $application) {
+                return Html::el('a', [
+                    'href' => $this->link('inverseValue!', 'invoiced', $application->getId()),
+                    'title' => 'Přepnout'
+                ])
+                    ->setText($application->isInvoiced() ? 'Ano' : 'Ne');
+            })
+            ->setSortable()
+            ->setReplacement([true => 'Ano', false => 'Ne'])
+            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);
+    }
+
+    protected function appendOrderColumns(Grid $grid){
+        $grid->addColumnText('order.firstName', 'Jméno rodiče')
+            ->setSortable()
+            ->setFilterText()
+            ->setSuggestion();
+        $grid->addColumnText('order.lastName', 'Příjmení rodiče')
+            ->setSortable()
+            ->setFilterText()
+            ->setSuggestion();
+        /*
+        $grid->addColumnText('order.phone','Telefon rodiče')
+            ->setFilterText()
+            ->setSuggestion();
+        $grid->addColumnEmail('order.email','Email rodiče')
+            ->setFilterText()
+            ->setSuggestion();
+        */
+    }
+
+    protected function appendAdditionsColumns(Grid $grid){
+        /*$grid->addColumnText('deposited', 'Záloha')
             ->setSortable()
             ->setCustomRender(function (ApplicationEntity $application) {
                 return Html::el('a', [
@@ -123,22 +174,7 @@ class ApplicationsGridWrapper extends GridWrapper {
             })
             ->setSortable()
             ->setReplacement([true => 'Ano', false => 'Ne'])
-            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);
-        $grid->addColumnText('invoiced', 'Faktura')
-            ->setCustomRender(function (ApplicationEntity $application) {
-                return Html::el('a', [
-                    'href' => $this->link('inverseValue!', 'invoiced', $application->getId()),
-                    'title' => 'Přepnout'
-                ])
-                    ->setText($application->isInvoiced() ? 'Ano' : 'Ne');
-            })
-            ->setSortable()
-            ->setReplacement([true => 'Ano', false => 'Ne'])
-            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);
-        $grid->addActionEvent('detail', 'Detail', function (...$args) {
-            Debugger::barDump($args);
-        })
-            ->setIcon('fa fa-eye');
+            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);*/
     }
 
     public function handleInverseValue($key, $applicationId) {
