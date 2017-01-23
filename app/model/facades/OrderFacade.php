@@ -50,6 +50,9 @@ class OrderFacade extends EntityFacade {
         $entityManager->persist($order);
         $commonValues = $values['commons'];
         $optionRepository = $entityManager->getRepository(OptionEntity::class);
+        $additionRepository = $entityManager->getRepository(AdditionEntity::class);
+        /** @var AdditionEntity[] $additions */
+        $additions = $additionRepository->findBy(['visible'=>false,'event.id'=>$event->getId()]);
         foreach ($values['children'] as $childValues) {
             $application = new ApplicationEntity();
             $application->setByValueArray($commonValues);
@@ -64,18 +67,15 @@ class OrderFacade extends EntityFacade {
                 $choice->setApplication($application);
                 $entityManager->persist($choice);
             }
-        }
-        $additionRepository = $entityManager->getRepository(AdditionEntity::class);
-        /** @var AdditionEntity[] $additions */
-        $additions = $additionRepository->findBy(['visible'=>false,'event.id'=>$event->getId()]);
-        foreach ($additions as $addition){
-            $options = $addition->getOptions();
-            for ($i=0;$i<count($options)&&$i<$addition->getMinimum();$i++){
-                $option = $options[$i];
-                $choice = new ChoiceEntity();
-                $choice->setOption($option);
-                $choice->setApplication($application);
-                $entityManager->persist($choice);
+            foreach ($additions as $addition){
+                $options = $addition->getOptions();
+                for ($i=0;$i<count($options)&&$i<$addition->getMinimum();$i++){
+                    $option = $options[$i];
+                    $choice = new ChoiceEntity();
+                    $choice->setOption($option);
+                    $choice->setApplication($application);
+                    $entityManager->persist($choice);
+                }
             }
         }
         $entityManager->flush();

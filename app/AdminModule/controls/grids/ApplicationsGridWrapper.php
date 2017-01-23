@@ -6,6 +6,7 @@ use App\Grids\Grid;
 use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Facades\ApplicationFacade;
+use App\Model\Facades\ChoiceFacade;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use Tracy\Debugger;
@@ -21,19 +22,23 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var  ApplicationFacade */
     private $applicationFacade;
 
+    /** @var  ChoiceFacade */
+    private $choiceFacade;
+
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(ITranslator $translator, ApplicationFacade $applicationFacade) {
+    public function __construct(ITranslator $translator, ApplicationFacade $applicationFacade, ChoiceFacade $choiceFacade) {
         parent::__construct($translator);
         $this->applicationFacade = $applicationFacade;
+        $this->choiceFacade = $choiceFacade;
     }
 
     /**
      * @param EventEntity $entity
      * @return $this
      */
-    public function setEvent(EventEntity $event){
+    public function setEvent(EventEntity $event) {
         $this->event = $event;
         return $this;
     }
@@ -50,14 +55,14 @@ class ApplicationsGridWrapper extends GridWrapper {
         $this->appendActions($grid);
     }
 
-    protected function appendActions(Grid $grid){
+    protected function appendActions(Grid $grid) {
         $grid->addActionEvent('detail', 'Detail', function (...$args) {
             Debugger::barDump($args);
         })
             ->setIcon('fa fa-eye');
     }
 
-    protected function appendApplicationColumns(Grid $grid){
+    protected function appendApplicationColumns(Grid $grid) {
         $grid->addColumnNumber('id', 'ID')
             ->setSortable()
             ->setDefaultSort('ASC')
@@ -109,20 +114,17 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnDate('order.created', 'Vytvořeno')
             ->setSortable()
             ->setFilterDateRange();
-        $grid->addColumnText('invoiced', 'Faktura')
+        /*$grid->addColumnText('invoiced', 'Faktura')
             ->setCustomRender(function (ApplicationEntity $application) {
-                return Html::el('a', [
-                    'href' => $this->link('inverseValue!', 'invoiced', $application->getId()),
-                    'title' => 'Přepnout'
-                ])
-                    ->setText($application->isInvoiced() ? 'Ano' : 'Ne');
+                return $isPayedLink = Html::el('a', ['title' => 'Přepnout','href' => $this->link('inverseValue!', 'invoiced', $application->getId()),])
+                    ->addHtml(Html::el('i',['class'=>'fa '.($application->isInvoiced()?'fa-check-square-o':'fa-square-o')]));;
             })
             ->setSortable()
             ->setReplacement([true => 'Ano', false => 'Ne'])
-            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);
+            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);*/
     }
 
-    protected function appendOrderColumns(Grid $grid){
+    protected function appendOrderColumns(Grid $grid) {
         $grid->addColumnText('order.firstName', 'Jméno rodiče')
             ->setSortable()
             ->setFilterText()
@@ -141,44 +143,31 @@ class ApplicationsGridWrapper extends GridWrapper {
         */
     }
 
-    protected function appendAdditionsColumns(Grid $grid){
-        /*$grid->addColumnText('deposited', 'Záloha')
-            ->setSortable()
-            ->setCustomRender(function (ApplicationEntity $application) {
-                return Html::el('a', [
-                    'href' => $this->link('inverseValue!', 'deposited', $application->getId()),
-                    'title' => 'Přepnout'
-                ])
-                    ->setText($application->isDeposited() ? 'Ano' : 'Ne');
-            })
-            ->setReplacement([true => 'Ano', false => 'Ne'])
-            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);
-        $grid->addColumnText('payed', 'Doplatek')
-            ->setSortable()
-            ->setCustomRender(function (ApplicationEntity $application) {
-                return Html::el('a', [
-                    'href' => $this->link('inverseValue!', 'payed', $application->getId()),
-                    'title' => 'Přepnout'
-                ])
-                    ->setText($application->isPayed() ? 'Ano' : 'Ne');
-            })
-            ->setReplacement([true => 'Ano', false => 'Ne'])
-            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);
-        $grid->addColumnText('signed', 'Přihláška')
-            ->setCustomRender(function (ApplicationEntity $application) {
-                return Html::el('a', [
-                    'href' => $this->link('inverseValue!', 'signed', $application->getId()),
-                    'title' => 'Přepnout'
-                ])
-                    ->setText($application->isSigned() ? 'Ano' : 'Ne');
-            })
-            ->setSortable()
-            ->setReplacement([true => 'Ano', false => 'Ne'])
-            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);*/
+    protected function appendAdditionsColumns(Grid $grid) {
+        foreach ($this->event->getAdditions() as $addition) {
+            $grid->addColumnText('addition' . $addition->getId(), $addition->getName())
+                ->setCustomRender(function (ApplicationEntity $application) use ($addition) {
+                    $result = Html::el();
+                    foreach ($application->getChoices() as $choice){
+                        if($choice->getOption()->getAddition()->getId()!=$addition->getId()){
+                            continue;
+                        }
+                        $isPayedLink = Html::el('a', ['title' => 'Přepnout','href' => $this->link('inverseChoicePayed!', $choice->getId()),])
+                            ->addHtml(Html::el('i',['class'=>'fa '.($choice->isPayed()?'fa-check-square-o':'fa-square-o')]));
+                        $name = Html::el('span')->setText($choice->getOption()->getName());
+                        $result->addHtml(
+                            Html::el('div')
+                                ->addHtml($isPayedLink)
+                                ->addHtml($name)
+                            );
+                    }
+                    return $result;
+                });
+        }
     }
 
-    public function handleInverseValue($key, $applicationId) {
-        $this->applicationFacade->inverseValue($key,$applicationId);
+    public function handleInverseChoicePayed($choiceId) {
+        $this->choiceFacade->inversePayed($choiceId);
         $this->redirect('this');
     }
 }

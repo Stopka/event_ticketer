@@ -43,6 +43,7 @@ services:
     - App\Model\Facades\ApplicationFacade
     - App\Model\Facades\OptionFacade
     - App\Model\Facades\AdministratorFacade
+    - App\Model\Facades\ChoiceFacade
     - App\Model\AdminAuthenticator
     - App\Controls\Forms\IOrderFormWrapperFactory
     - App\CompanyModule\Controls\Forms\ISubstituteFormWrapperFactory

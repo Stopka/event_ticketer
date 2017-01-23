@@ -92,6 +92,7 @@ class ChoiceEntity extends BaseEntity {
      */
     public function setPayed($payed = true) {
         $this->payed = $payed;
+        $this->application->updateState();
     }
 
     public function inversePayed() {

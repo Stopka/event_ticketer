@@ -32,6 +32,12 @@ class AdditionEntity extends BaseEntity {
     private $requiredForState;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @var integer
+     */
+    private $enoughForState;
+
+    /**
      * @ORM\Column(type="integer")
      * @var integer
      */
@@ -174,6 +180,20 @@ class AdditionEntity extends BaseEntity {
      */
     public function setVisible($visible) {
         $this->visible = $visible;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEnoughForState() {
+        return $this->enoughForState;
+    }
+
+    /**
+     * @param int $enoughForState
+     */
+    public function setEnoughForState($enoughForState) {
+        $this->enoughForState = $enoughForState;
     }
 
 }
