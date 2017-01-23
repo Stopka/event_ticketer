@@ -114,7 +114,7 @@ class OrderFormWrapper extends FormWrapper {
             ->setOption('description', 'Ve formátu +420123456789')
             ->setRequired()
             ->addRule($form::PATTERN, '%label musí být ve formátu +420123456789', '[+]([0-9]){6,20}');
-        $form->addText('email', 'EmailAttribute')
+        $form->addText('email', 'Email')
             ->setRequired()
             ->addRule($form::EMAIL);
     }
@@ -138,7 +138,7 @@ class OrderFormWrapper extends FormWrapper {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
         $count_left = max($this->event->getCapacity() - $this->applicationFacade->countIssuedApplications($this->event), 0);
-        $add_button = $form->addSubmit('add', 'Přidat přihlášku')
+        $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
             ->setOption('description', "Zbývá $count_left přihlášek")
             ->setValidationScope(FALSE);
         $add_button->getControlPrototype()->class = 'ajax';
@@ -155,7 +155,7 @@ class OrderFormWrapper extends FormWrapper {
             $this->appendAdditionsControls($form, $child);
 
 
-            $remove_button = $child->addSubmit('remove', 'Zrušit přihlášku')
+            $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')
                 ->setValidationScope(FALSE); # disables validation
             $remove_button->onClick[] = $removeEvent;
             $remove_button->getControlPrototype()->class = 'ajax';

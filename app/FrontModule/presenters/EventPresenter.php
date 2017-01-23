@@ -2,6 +2,8 @@
 
 namespace App\FrontModule\Presenters;
 
+use App\CompanyModule\Controls\Forms\ISubstituteFormWrapperFactory;
+use App\CompanyModule\Controls\Forms\SubstituteFormWrapper;
 use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
 use App\Model;
@@ -33,19 +35,44 @@ class EventPresenter extends BasePresenter {
      */
     public $orderFormWrapperFactory;
 
+    /**
+     * @var ISubstituteFormWrapperFactory
+     * @inject
+     */
+    public $substituteFormWrapperFactory;
+
     public function actionDefault($id = null){
         $this->redirect('register',$id);
     }
 
-    public function renderRegister($id = null) {
+    public function actionRegister($id = null) {
         $event = $this->eventFacade->getPublicAvailibleEvent($id);
         if(!$event){
             $this->flashMessage('Událost nebyla nalezena','warning');
             $this->redirect('Homepage:');
         }
+        if ($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
+            $this->flashMessage('Již nejsou žádné volné přihlášky.', 'warning');
+            $this->redirect('substitute', $id);
+        }
         /** @var OrderFormWrapper $orderForm */
         $orderForm = $this->getComponent('orderForm');
         $orderForm->setEvent($event);
+        $this->template->event = $event;
+    }
+
+    public function actionSubstitute($id = null) {
+        $event = $this->eventFacade->getPublicAvailibleEvent($id);
+        if(!$event){
+            $this->flashMessage('Událost nebyla nalezena','warning');
+            $this->redirect('Homepage:');
+        }
+        if (!$event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
+            $this->redirect('register', $id);
+        }
+        /** @var SubstituteFormWrapper $substituteFormWrapper */
+        $substituteFormWrapper = $this->getComponent('substituteForm');
+        $substituteFormWrapper->setEvent($event);
         $this->template->event = $event;
     }
 
@@ -54,6 +81,13 @@ class EventPresenter extends BasePresenter {
      */
     protected function createComponentOrderForm(){
         return $this->orderFormWrapperFactory->create();
+    }
+
+    /**
+     * @return SubstituteFormWrapper
+     */
+    protected function createComponentSubstituteForm() {
+        return $this->substituteFormWrapperFactory->create();
     }
 
     public function renderOccupancy($id = null){

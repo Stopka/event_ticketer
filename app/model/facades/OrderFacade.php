@@ -83,7 +83,7 @@ class OrderFacade extends EntityFacade {
         return $order;
     }
 
-    public function createSubtituteFromOrderForm($values, EventEntity $event, EarlyEntity $early){
+    public function createSubtituteFromOrderForm($values, EventEntity $event, EarlyEntity $early = null){
         $entityManager = $this->getEntityManager();
         $order = new OrderEntity(true);
         $order->setByValueArray($values);

@@ -26,6 +26,14 @@ trait CapacityAttribute {
     }
 
     /**
+     * @param $issued_count integer
+     * @return boolean
+     */
+    public function isCapacityFull($issued_count){
+        return $issued_count >= $this->getCapacity();
+    }
+
+    /**
      * @param int $capacity
      */
     public function setCapacity($capacity) {
