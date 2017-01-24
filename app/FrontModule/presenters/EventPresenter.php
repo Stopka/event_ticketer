@@ -91,6 +91,18 @@ class EventPresenter extends BasePresenter {
     }
 
     public function renderOccupancy($id = null){
+        if(!$id){
+            $events = $this->eventFacade->getPublicAvailibleEvents();
+            if($events){
+                $this->redirect('this',$events[0]->getId());
+                return;
+            }
+            $events = $this->eventFacade->getPublicFutureEvents();
+            if($events){
+                $this->redirect('this',$events[0]->getId());
+                return;
+            }
+        }
         $event = $this->eventFacade->getEvent($id);
         if(!$event){
             $this->flashMessage('Událost nebyla nalezena','error');
