@@ -121,6 +121,10 @@ class SubstituteEntity extends BaseEntity {
         return $this->state;
     }
 
+    public function isOrdered(){
+        return $this->getState()==self::STATE_ORDERED;
+    }
+
     public function isActive(){
         return $this->getState()==self::STATE_ACTIVE && !$this->isEnded();
     }

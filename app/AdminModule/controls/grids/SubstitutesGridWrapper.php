@@ -7,7 +7,6 @@ use App\Model\Entities\EventEntity;
 use App\Model\Entities\SubstituteEntity;
 use App\Model\Facades\SubstituteFacade;
 use Nette\Localization\ITranslator;
-use Tracy\Debugger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,13 +44,6 @@ class SubstitutesGridWrapper extends GridWrapper {
         $this->loadModel($grid);
         $this->appendOrderColumns($grid);
         $this->appendActions($grid);
-    }
-
-    protected function appendActions(Grid $grid) {
-        $grid->addActionEvent('detail', 'Přijmout', function (...$args) {
-            Debugger::barDump($args);
-        })
-            ->setIcon('fa fa-eye');
     }
 
     protected function appendOrderColumns(Grid $grid) {
@@ -96,5 +88,18 @@ class SubstitutesGridWrapper extends GridWrapper {
                 }
                 return $early->getFullName();
             });
+    }
+
+
+    protected function appendActions(Grid $grid) {
+        $grid->addActionEvent('activate', 'Přijmout',[$this,'onActivate'])
+            ->setDisable(function(SubstituteEntity $substitute){
+                return $substitute->isOrdered()||$substitute->isActive();
+            })
+            ->setIcon('fa fa-check-square');
+    }
+
+    public function onActivate($substituteId){
+        $this->substituteFacade->activate($substituteId);
     }
 }

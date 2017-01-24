@@ -12,8 +12,8 @@ namespace App\Model\Facades;
 use App\Model\EmailMessageFactory;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
-use App\Model\Entities\OrderEntity;
 use App\Model\Entities\SubstituteEntity;
+use App\Model\Exceptions\ApplicationException;
 use Grido\DataSources\Doctrine;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Mail\SendmailMailer;
@@ -45,27 +45,6 @@ class SubstituteFacade extends EntityFacade {
     }
 
     /**
-     * @param OrderEntity $order
-     */
-    public function sendRegistrationEmail(OrderEntity $order){
-        if(!$order->getEmail()){
-            return;
-        }
-        $link = $this->emailMessageFactory->link('Front:Order:',['id'=>$order->getHashId()]);
-        $message = $this->emailMessageFactory->create();
-        $message->addTo($order->getEmail(),$order->getFullName());
-        $message->setSubject('Přihláška na '.$order->getEvent()->getName());
-        $message->setHtmlBody("<p>Dobrý den,</p>
-<p> Děkujeme, že jste projevili zájem o přihlášku na <strong>".$order->getEvent()->getName()."</strong>. V příloze zasíláme přihlášku, bezinfekčnost a lékařské potvrzení. Bezinfekčnost, lékařské potvrzení a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
-<p>Nyní je potřeba přihlášku vytisknout pro každé rezervované místo, dovyplnit, odeslat a ke každé přihlášce zaplatit rezervační poplatek. Další informace jsou uvedeny přímo v přihlášce.</p>
-<p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na adrese <a href='$link'>$link</a></p>
-<p>V případě nějakého dotazu pište na ldtmpp@email.cz.</p>
-<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>");
-        $mailer = new SendmailMailer();
-        $mailer->send($message);
-    }
-
-    /**
      * @return Doctrine
      */
     public function getAllSubstitutesGridModel(EventEntity $event){
@@ -91,5 +70,45 @@ class SubstituteFacade extends EntityFacade {
             return NULL;
         }
         return $substitute;
+    }
+
+    /**
+     * @param $substituteId integer
+     */
+    public function activate($substituteId){
+        /** @var SubstituteEntity $substitute */
+        $substitute = $this->get($substituteId);
+        if(!$substitute||in_array($substitute->getState(),[SubstituteEntity::STATE_ACTIVE,SubstituteEntity::STATE_ORDERED])){
+            return;
+        }
+        $substitute->setState(SubstituteEntity::STATE_ACTIVE);
+        $this->getEntityManager()->flush();
+        $this->sendActivationEmail($substitute);
+    }
+
+    /**
+     * @param SubstituteEntity $substitute
+     */
+    public function sendActivationEmail(SubstituteEntity $substitute){
+        if(!$substitute->getEmail()){
+            return;
+        }
+        if(!$substitute->isActive()){
+            throw new ApplicationException('Náhradník není aktivní.');
+        }
+        $link = $this->emailMessageFactory->link('Front:Substitute:',['id'=>$substitute->getHashId()]);
+        $message = $this->emailMessageFactory->create();
+        $message->addTo($substitute->getEmail(),$substitute->getFullName());
+        $message->setSubject('Uvolněné místo na '.$substitute->getEvent()->getName());
+
+        $message_body="<p>Dobrý den,</p>
+<p>S potěšením oznamujeme, že se pro Vás uvolnilo místo na <strong>".$substitute->getEvent()->getName()."</strong>. Přihlášku získáte po registraci na následující adrese: <a href='$link'>$link</a>";
+        $endDate = $substitute->getEndDate()?$substitute->getEndDate()->format('d.m.Y H:i:s'):null;
+        $message_endDate = ($endDate?"<p>Místo pro vás držíme do $endDate, poté dáme šanci dalšímu náhradníkovi v pořadí.</p>":"");
+        $message_foot = "<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa náhradníka.</em></p>";
+
+        $message->setHtmlBody($message_body.$message_endDate.$message_foot);
+        $mailer = new SendmailMailer();
+        $mailer->send($message);
     }
 }
