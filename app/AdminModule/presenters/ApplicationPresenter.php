@@ -7,6 +7,8 @@ use App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory;
 use App\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use App\AdminModule\Controls\Grids\ApplicationsGridWrapper;
 use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
+use App\AdminModule\Controls\Responses\ApplicationsExportResponse;
+use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\EventFacade;
 
 class ApplicationPresenter extends BasePresenter {
@@ -29,6 +31,12 @@ class ApplicationPresenter extends BasePresenter {
      */
     public $eventFacade;
 
+    /**
+     * @var ApplicationFacade
+     * @inject
+     */
+    public $applicationFacade;
+
     public function actionDefault($id) {
         $event = $this->eventFacade->getEvent($id);
         if(!$event){
@@ -49,6 +57,15 @@ class ApplicationPresenter extends BasePresenter {
         $reserveForm = $this->getComponent('reserveForm');
         $reserveForm->setEvent($event);
         $this->template->event = $event;
+    }
+
+    public function renderExport($id) {
+        $event = $this->eventFacade->getEvent($id);
+        if(!$event){
+            $this->redirect('Homepage:');
+        }
+        $response = new ApplicationsExportResponse($event,$this->applicationFacade->getAllEventApplications($event));
+        $this->sendResponse($response);
     }
 
     protected function createComponentApplicationsGrid(){

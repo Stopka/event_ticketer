@@ -92,6 +92,15 @@ class ApplicationFacade extends EntityFacade {
     }
 
     /**
+     * @return ApplicationEntity[]
+     */
+    public function getAllEventApplications(EventEntity $event){
+
+        //TODO filtr podle eventu
+        return $this->getRepository()->findAll();
+    }
+
+    /**
      * @param $key string
      * @param $id integer
      * @return null|ApplicationEntity

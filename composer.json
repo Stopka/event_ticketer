@@ -41,7 +41,8 @@
 		"jkuchar/pdfresponse": "@dev",
 		"setasign/fpdi-tcpdf": "^1.6",
 		"minetro/recaptcha": "^1.6",
-		"o5/grido": "@dev"
+		"o5/grido": "@dev",
+		"phpoffice/phpexcel": "1.8.0"
 	},
 	"require-dev": {
 		"nette/tester": "^1.6"

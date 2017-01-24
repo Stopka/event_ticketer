@@ -2,6 +2,7 @@
 {block subcontent}
 <h2>Přihlášky</h2>
 <p>
-    <a n:href="reserve,$event->getId()"><i class="fa fa-address-book-o"></i> Rezervovat přihlášky</a>
+    <a n:href="Application:reserve,$event->getId()"><i class="fa fa-address-book-o"></i> Rezervovat přihlášky</a>
+    <a n:href="Application:export,$event->getId()"><i class="fa fa-download"></i> Exportovat seznam</a>
 </p>
 {control applicationsGrid}
