@@ -58,7 +58,7 @@ class OrderFacade extends EntityFacade {
         $optionRepository = $entityManager->getRepository(OptionEntity::class);
         $additionRepository = $entityManager->getRepository(AdditionEntity::class);
         /** @var AdditionEntity[] $additions */
-        $additions = $additionRepository->findBy(['visible'=>false,'event.id'=>$event->getId()]);
+        $additions = $additionRepository->findBy(['visible' => false, 'event.id' => $event->getId()]);
         foreach ($values['children'] as $childValues) {
             $application = new ApplicationEntity();
             $application->setByValueArray($commonValues);
@@ -73,9 +73,9 @@ class OrderFacade extends EntityFacade {
                 $choice->setApplication($application);
                 $entityManager->persist($choice);
             }
-            foreach ($additions as $addition){
+            foreach ($additions as $addition) {
                 $options = $addition->getOptions();
-                for ($i=0;$i<count($options)&&$i<$addition->getMinimum();$i++){
+                for ($i = 0; $i < count($options) && $i < $addition->getMinimum(); $i++) {
                     $option = $options[$i];
                     $choice = new ChoiceEntity();
                     $choice->setOption($option);
@@ -85,7 +85,7 @@ class OrderFacade extends EntityFacade {
             }
         }
         $entityManager->flush();
-        if($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))){
+        if ($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
             $event->setCapacityFull();
         }
         $entityManager->flush();
@@ -96,16 +96,16 @@ class OrderFacade extends EntityFacade {
     /**
      * @param OrderEntity $order
      */
-    public function sendRegistrationEmail(OrderEntity $order){
-        if(!$order->getEmail()){
+    public function sendRegistrationEmail(OrderEntity $order) {
+        if (!$order->getEmail()) {
             return;
         }
-        $link = $this->emailMessageFactory->link('Front:Order:',['id'=>$order->getHashId()]);
+        $link = $this->emailMessageFactory->link('Front:Order:', ['id' => $order->getHashId()]);
         $message = $this->emailMessageFactory->create();
-        $message->addTo($order->getEmail(),$order->getFullName());
-        $message->setSubject('Přihláška na '.$order->getEvent()->getName());
+        $message->addTo($order->getEmail(), $order->getFullName());
+        $message->setSubject('Přihláška na ' . $order->getEvent()->getName());
         $message->setHtmlBody("<p>Dobrý den,</p>
-<p> Děkujeme, že jste projevili zájem o přihlášku na <strong>".$order->getEvent()->getName()."</strong>. V příloze zasíláme přihlášku, bezinfekčnost a lékařské potvrzení. Bezinfekčnost, lékařské potvrzení a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
+<p> Děkujeme, že jste projevili zájem o přihlášku na <strong>" . $order->getEvent()->getName() . "</strong>. V příloze zasíláme přihlášku, bezinfekčnost a lékařské potvrzení. Bezinfekčnost, lékařské potvrzení a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
 <p>Nyní je potřeba přihlášku vytisknout pro každé rezervované místo, dovyplnit, odeslat a ke každé přihlášce zaplatit rezervační poplatek. Další informace jsou uvedeny přímo v přihlášce.</p>
 <p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na adrese <a href='$link'>$link</a></p>
 <p>V případě nějakého dotazu pište na ldtmpp@email.cz.</p>
@@ -124,8 +124,47 @@ class OrderFacade extends EntityFacade {
             return NULL;
         /** @var OrderEntity $order */
         $order = $this->get($id);
-        if($order&&$order->getGuid()==$guid&&$order->getState()==OrderEntity::STATE_ORDER)
+        if ($order && $order->getGuid() == $guid && $order->getState() == OrderEntity::STATE_ORDER)
             return $order;
         return NULL;
+    }
+
+    /**
+     * @param array $values
+     * @param EventEntity $event
+     */
+    public function createOrdersFromReserveForm($values, EventEntity $event) {
+        $entityManager = $this->getEntityManager();
+        $optionRepository = $entityManager->getRepository(OptionEntity::class);
+        $additionRepository = $entityManager->getRepository(AdditionEntity::class);
+        /** @var AdditionEntity[] $additions */
+        $additions = $additionRepository->findBy(['visible' => false, 'event.id' => $event->getId()]);
+        for ($j = 0; $j < $values['count']; $j++) {
+            $order = new OrderEntity();
+            $order->setEvent($event);
+            $entityManager->persist($order);
+            $application = new ApplicationEntity();
+            $application->setOrder($order);
+            $entityManager->persist($application);
+            foreach ($values['addittions'] as $additionId => $optionId) {
+                /** @var OptionEntity $option */
+                $option = $optionRepository->find($optionId);
+                $choice = new ChoiceEntity();
+                $choice->setOption($option);
+                $choice->setApplication($application);
+                $entityManager->persist($choice);
+            }
+            foreach ($additions as $addition) {
+                $options = $addition->getOptions();
+                for ($i = 0; $i < count($options) && $i < $addition->getMinimum(); $i++) {
+                    $option = $options[$i];
+                    $choice = new ChoiceEntity();
+                    $choice->setOption($option);
+                    $choice->setApplication($application);
+                    $entityManager->persist($choice);
+                }
+            }
+        }
+        $this->getEntityManager()->flush();
     }
 }

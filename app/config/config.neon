@@ -53,6 +53,7 @@ services:
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
     - App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
+    - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     router: App\RouterFactory::createRouter

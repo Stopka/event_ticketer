@@ -2,12 +2,10 @@
 
 namespace App\Controls\Forms;
 
-use App\Model\Entities\AdditionEntity;
 use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\CurrencyEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
-use App\Model\Entities\OptionEntity;
 use App\Model\Entities\SubstituteEntity;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\CurrencyFacade;
@@ -15,11 +13,11 @@ use App\Model\Facades\OrderFacade;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
-use Stopka\NetteFormRenderer\HtmlFormComponent;
 use Vodacek\Forms\Controls\DateInput;
 
 
 class OrderFormWrapper extends FormWrapper {
+    use AppendAdditionsControls;
 
     /** @var  OrderFacade */
     private $orderFacade;
@@ -50,6 +48,19 @@ class OrderFormWrapper extends FormWrapper {
         $this->applicationFacade = $applicationFacade;
         $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
+
+    protected function getEvent() {
+        return $this->event;
+    }
+
+    protected function getCurrency() {
+        return $this->currency;
+    }
+
+    protected function getApplicationFacade() {
+        return $this->applicationFacade;
+    }
+
 
     /**
      * @param EarlyEntity $early
@@ -204,119 +215,7 @@ class OrderFormWrapper extends FormWrapper {
             ->addRule($form::PATTERN, '%label musí být ve formátu čtyřmístného čísla', '[0-9]{4}');
     }
 
-    protected function createRecalculateHtml() {
-        return Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title' => 'Přepočítat'])
-            ->addHtml(Html::el('i', ['class' => 'fa fa-calculator']))
-            ->addHtml(Html::el('span')->addText('Přepočítat'));
 
-    }
-
-    protected function appendAdditionsControls(Form $form, Container $container) {
-        $subcontainer = $container->addContainer('addittions');
-        foreach ($this->event->getAdditions() as $addition) {
-            if (!$addition->isVisible()) {
-                continue;
-            }
-            $this->appendAdditionContols($subcontainer, $addition);
-        }
-        $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',
-            Html::el('div', ['class' => 'price_subtotal'])
-                ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
-                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
-        );
-    }
-
-    protected function appendAdditionContols(Container $container, AdditionEntity $addition) {
-        $prices = $this->createAdditionPrices($addition);
-        $options = $this->createAdditionOptions($addition, $prices);
-        if (!count($options)) {
-            return;
-        }
-        if ($addition->getMaximum() > 1 && count($options) > 1) {
-            $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
-                ->setRequired($addition->getMinimum() == 0)
-                ->setTranslator();
-        } else {
-            $control = $container->addRadioList($addition->getId(), $addition->getName(), $options)
-                ->setRequired()
-                ->setTranslator();
-            if (count($options) == 1) {
-                $keys = array_keys($options);
-                $key = array_pop($keys);
-                $control->getControlPrototype()->setAttribute('data-price-precheck', $key);
-                $control->setDefaultValue($key);
-            }
-        }
-        if ($prices) {
-            $control->getControlPrototype()
-                ->addClass('price_item')
-                ->setAttribute('data-price-value', json_encode($prices));
-        }
-    }
-
-    /**
-     * @param AdditionEntity $addition
-     * @return array
-     */
-    protected function createAdditionPrices(AdditionEntity $addition) {
-        $result = [];
-        foreach ($addition->getOptions() as $option) {
-            $price = $option->getPrice();
-            if (!$price) {
-                continue;
-            }
-            $amount = $option->getPrice()->getPriceAmountByCurrency($this->currency);
-            $result[$option->getId()] = [
-                'amount' => $amount->getAmount(),
-                'currency' => $amount->getCurrency()->getSymbol(),
-                'countLeft' => $option->getCapacityLeft($this->applicationFacade->countIssuedApplicationsWithOption($option))
-            ];
-        }
-        return $result;
-    }
-
-    /**
-     * @param AdditionEntity $addition
-     * @param $prices array
-     * @return array id=>Html
-     */
-    protected function createAdditionOptions(AdditionEntity $addition, $prices) {
-        $result = [];
-        foreach ($addition->getOptions() as $option) {
-            $result[$option->getId()] = $this->createOptionLabel($option, $prices);
-        }
-        return $result;
-    }
-
-    /**
-     * @param OptionEntity $option
-     * @param $prices array
-     * @return string
-     */
-    protected function createOptionLabel(OptionEntity $option, $prices) {
-        $result = Html::el();
-        if ($option->getName()) {
-            $result->addHtml(
-                Html::el('span', ['class' => 'name'])
-                    ->setText($option->getName())
-            );
-        }
-        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['amount']) && isset($prices[$option->getId()]['currency'])) {
-            $price = $prices[$option->getId()];
-            $result->addHtml(
-                Html::el('span', ['class' => 'description inline'])
-                    ->setText($price['amount'] . $price['currency'])
-            );
-        }
-        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['countLeft'])) {
-            $left = $prices[$option->getId()]['countLeft'];
-            $result->addHtml(
-                Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0])
-                    ->setText("Zbývá $left míst")
-            );
-        }
-        return $result;
-    }
 
     public function addChild(SubmitButton $button) {
         $form = $button->getForm();
