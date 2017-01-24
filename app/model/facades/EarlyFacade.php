@@ -22,7 +22,7 @@ class EarlyFacade extends EntityFacade {
      * @return EarlyEntity|null
      */
     public function getReadyEarlyByHash($hash) {
-        list($id, $guid) = explode('_', $hash . '_');
+        list($id, $guid) = EarlyEntity::parseHashIdToArray($hash);
         if (!$id || !$guid)
             return NULL;
         /** @var EarlyEntity $early */

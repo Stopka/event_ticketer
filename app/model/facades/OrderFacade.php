@@ -134,7 +134,7 @@ class OrderFacade extends EntityFacade {
      * @return OrderEntity|null
      */
     public function getViewableOrderByHash($hash) {
-        list($id, $guid) = explode('_', $hash . '_');
+        list($id, $guid) = OrderEntity::parseHashIdToArray($hash);
         if (!$id || !$guid)
             return NULL;
         /** @var OrderEntity $order */

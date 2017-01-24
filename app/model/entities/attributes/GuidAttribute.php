@@ -43,11 +43,15 @@ trait GuidAttribute {
      * @return array
      */
     public static function parseHashId($hashId){
-        list($id,$hash) = explode('_',$hashId.'_');
+        list($id,$guid) = self::parseHashIdToArray($hashId);
         return[
             'id' => $id,
-            'hash' => $hash
+            'guid' => $guid
         ];
+    }
+
+    public static function parseHashIdToArray($hashId){
+        return explode('_',$hashId.'_');
     }
 
 
