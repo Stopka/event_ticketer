@@ -9,6 +9,7 @@
 namespace App\Model;
 
 
+use Nette\Application\LinkGenerator;
 use Nette\Mail\Message;
 use Nette\Object;
 
@@ -23,8 +24,12 @@ class EmailMessageFactory extends Object {
     /** @var $systemConfigurations SystemConfigurations */
     private $systemConfigurations;
 
-    public function __construct(SystemConfigurations $systemConfigurations) {
+    /** @var  LinkGenerator */
+    private $linkGenerator;
+
+    public function __construct(SystemConfigurations $systemConfigurations, LinkGenerator $linkGenerator) {
         $this->systemConfigurations = $systemConfigurations;
+        $this->linkGenerator = $linkGenerator;
     }
 
     public function create() {
@@ -64,6 +69,29 @@ class EmailMessageFactory extends Object {
             ];
         }
         return [$param, NULL];
+    }
+
+    /**
+     * @return string
+     */
+    public function getSystemHost(){
+        $this->systemConfigurations->getParameters('host')['domain'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getSystemName(){
+        $this->systemConfigurations->getParameters('host')['name'];
+    }
+
+    /**
+     * @param $dest
+     * @param array $params
+     * @return string
+     */
+    public function link($dest,$params = []){
+        return $this->linkGenerator->link($dest,$params);
     }
 
 }

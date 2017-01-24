@@ -38,6 +38,12 @@ class EarlyWaveEntity extends BaseEntity {
     private $earlies;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @var boolean
+     */
+    private $inviteSent = false;
+
+    /**
      * @return EventEntity
      */
     public function getEvent() {
@@ -104,4 +110,20 @@ class EarlyWaveEntity extends BaseEntity {
         }
         return $event->isActive()&&$this->isStarted();
     }
+
+    /**
+     * @return bool
+     */
+    public function isInviteSent() {
+        return $this->inviteSent;
+    }
+
+    /**
+     * @param bool $inviteSent
+     */
+    public function setInviteSent($inviteSent = true) {
+        $this->inviteSent = $inviteSent;
+    }
+
+
 }

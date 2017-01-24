@@ -11,6 +11,7 @@ namespace App\Model\Facades;
 
 use App\Model\EmailMessageFactory;
 use App\Model\Entities\EarlyWaveEntity;
+use App\Model\Entities\EventEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ApplicationException;
 use Nette\Mail\SmtpMailer;
@@ -31,33 +32,49 @@ class EarlyWaveFacade extends EntityFacade {
         return EarlyWaveEntity::class;
     }
 
+    public function sendUnsentInvites() {
+        /** @var EarlyWaveEntity[] $waves */
+        $waves = $this->getRepository()->findBy([
+            'event.state' => EventEntity::STATE_ACTIVE,
+            'startDate <=' => new \DateTime(),
+            'inviteSent' => false
+        ]);
+        foreach ($waves as $wave){
+            $this->sendEmails($wave->getId());
+        }
+    }
+
     /**
-     * @param integer $wave_id
+     * @param integer $waveId
      */
-    public function sendEmails($wave_id){
+    public function sendEmails($waveId) {
         /** @var EarlyWaveEntity $wave */
-        $wave = $this->get($wave_id);
-        if($wave->isReadyToRegister()){
+        $wave = $this->get($waveId);
+        if ($wave->isInviteSent()) {
+            throw new ApplicationException('EarlyWave invite already sent!');
+        }
+        if (!$wave->isReadyToRegister()) {
             throw new ApplicationException('EarlyWave is not ready to start!');
         }
-        foreach ($wave->getEarlies() as $early){
-            if(!$early->getEmail()){
+        foreach ($wave->getEarlies() as $early) {
+            if (!$early->getEmail()) {
                 continue;
             }
+            $link = $this->emailMessageFactory->link('Front:Early:',['id'=>$early->getHashId()]);
             $mail = $this->emailMessageFactory->create();
-            $mail->setFrom('system@ldtpardubice.cz','Přihlášky LDTPardubice')
-                ->addReplyTo('ldtmpp@email.cz')
-                ->addTo($early->getEmail())
+            $mail->addTo($early->getEmail())
                 ->setSubject('Přednostní výdej přihlášek')
                 ->setBody("Dobrý den,
-Velice si vážíme Vaší podpory v minulém roce, a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek. Běžný výdej přihlášek započne ".$wave->getEvent()->getStartDate()->format('d. m. Y').", pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu, kde standardním způsobem vyplníte rezervační formulář.
-http://application.ldtpardubice.cz/early/".$early->getId()."_".$early->getGuid()."
+Velice si vážíme Vaší podpory v minulém roce, a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek. Běžný výdej přihlášek započne " . $wave->getEvent()->getStartDate()->format('d. m. Y') . ", pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu, kde standardním způsobem vyplníte rezervační formulář.
+$link
 Tým LDTPardubice");
             $mailer = new SmtpMailer();
             Debugger::barDump($mail);
             //TODO odkomentovat
             //$mailer->send($mail);
         }
+        $wave->setInviteSent();
+        $this->getEntityManager()->flush();
     }
 
 }

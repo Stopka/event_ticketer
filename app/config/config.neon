@@ -9,10 +9,13 @@ parameters:
         dbname:
         user:
         password:
+    host:
+        name: Přihlašovací systém LDT Pardubice z. s.
+        domain: application.ldtpardubice.cz
     email:
         from:
-            address: system@ldtpardubice.cz
-            name: Přihlašovací systém LDT Pardubice z. s.
+            address: system@%host.domain%
+            name: %host.name%
         reply:
             address: ldtmpp@email.cz
             name: Radek Vančura

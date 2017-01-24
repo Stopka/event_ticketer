@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" serverName="new.ldtpardubice.cz">
     <serverData>
+      <paths name="ldtpardubice.cz">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/www/subdom/application" local="$PROJECT_DIR$" web="http://application.ldtpardubice.cz/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="new.ldtpardubice.cz">
         <serverdata>
           <mappings>

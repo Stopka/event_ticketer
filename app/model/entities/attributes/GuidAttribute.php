@@ -29,5 +29,26 @@ trait GuidAttribute {
         return $this->guid;
     }
 
+    abstract protected function getId();
+
+    /**
+     * @return string
+     */
+    public function getHashId(){
+        return $this->getId().'_'.$this->getGuid();
+    }
+
+    /**
+     * @param $hashId string
+     * @return array
+     */
+    public static function parseHashId($hashId){
+        list($id,$hash) = explode('_',$hashId.'_');
+        return[
+            'id' => $id,
+            'hash' => $hash
+        ];
+    }
+
 
 }
