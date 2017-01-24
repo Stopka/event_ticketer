@@ -3,7 +3,6 @@
 namespace App\FrontModule\Presenters;
 
 use App\Model;
-use Tracy\Debugger;
 
 
 class HomepagePresenter extends BasePresenter {
@@ -23,7 +22,6 @@ class HomepagePresenter extends BasePresenter {
     public function renderDefault() {
         $events = $this->eventFacade->getPublicAvailibleEvents();
         $future_events = $this->eventFacade->getPublicFutureEvents();
-        Debugger::barDump($future_events);
         if(count($events)==1 && !$future_events){
             $this->redirect('Event:',$events[0]->getId());
         }

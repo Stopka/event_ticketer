@@ -8,6 +8,7 @@ use App\Model\Entities\CurrencyEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
+use App\Model\Entities\SubstituteEntity;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\CurrencyFacade;
 use App\Model\Facades\OrderFacade;
@@ -38,6 +39,9 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  EventEntity */
     private $event;
 
+    /** @var  SubstituteEntity */
+    private $substitute;
+
     public function __construct(CurrencyFacade $currencyFacade, OrderFacade $orderFacade, ApplicationFacade $applicationFacade) {
         parent::__construct();
         $this->currencyFacade = $currencyFacade;
@@ -56,6 +60,7 @@ class OrderFormWrapper extends FormWrapper {
         if (!$wave)
             return;
         $this->event = $wave->getEvent();
+        $this->substitute = NULL;
     }
 
     /**
@@ -64,6 +69,16 @@ class OrderFormWrapper extends FormWrapper {
     public function setEvent(EventEntity $event) {
         $this->early = null;
         $this->event = $event;
+        $this->substitute = NULL;
+    }
+
+    /**
+     * @param SubstituteEntity $substitute
+     */
+    public function setSubstitute(SubstituteEntity $substitute) {
+        $this->event = $substitute->getEvent();
+        $this->early = $substitute->getEarly();
+        $this->substitute = $substitute;
     }
 
     protected function appendFormControls(Form $form) {

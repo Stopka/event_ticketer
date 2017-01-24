@@ -40,7 +40,8 @@ trait StartDateAttribute {
         if(!$date){
             $date = new \DateTime();
         }
-        return $this->getStartDate()->getTimestamp()<=$date->getTimestamp();
+        $startDate = $this->getStartDate();
+        return !$startDate||$startDate->getTimestamp()<=$date->getTimestamp();
     }
 
 }

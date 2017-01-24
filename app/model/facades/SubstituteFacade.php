@@ -76,4 +76,20 @@ class SubstituteFacade extends EntityFacade {
             ));
         return new Doctrine($qb);
     }
+
+    /**
+     * @param string $hashId
+     * @return SubstituteEntity|null
+     */
+    public function getReadySubstituteByHash($hashId){
+        list($id,$guid) = SubstituteEntity::parseHashIdToArray($hashId);
+        if(!$id||!$guid)
+            return NULL;
+        /** @var SubstituteEntity $substitute */
+        $substitute = $this->get($id);
+        if($substitute->getGuid()!=$guid||!$substitute->isActive()){
+            return NULL;
+        }
+        return $substitute;
+    }
 }

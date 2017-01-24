@@ -9,6 +9,7 @@
 namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\EmailAttribute;
+use App\Model\Entities\Attributes\EndDateAttribute;
 use App\Model\Entities\Attributes\GuidAttribute;
 use App\Model\Entities\Attributes\IdentifierAttribute;
 use App\Model\Entities\Attributes\PersonNameAttribute;
@@ -20,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class SubstituteEntity extends BaseEntity {
-    use IdentifierAttribute, GuidAttribute, PersonNameAttribute, EmailAttribute;
+    use IdentifierAttribute, GuidAttribute, PersonNameAttribute, EmailAttribute, EndDateAttribute;
 
     const STATE_WAITING = 0;
     const STATE_ACTIVE = 1;
@@ -110,6 +111,10 @@ class SubstituteEntity extends BaseEntity {
      */
     public function getState() {
         return $this->state;
+    }
+
+    public function isActive(){
+        return $this->getState()==self::STATE_ACTIVE && !$this->isEnded();
     }
 
     /**

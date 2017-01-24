@@ -40,7 +40,8 @@ trait EndDateAttribute {
         if(!$date){
             $date = new \DateTime();
         }
-        return $this->getEndDate()->getTimestamp()<=$date->getTimestamp();
+        $endDate = $this->getEndDate();
+        return $endDate&&$endDate->getTimestamp()<=$date->getTimestamp();
     }
 
 }
