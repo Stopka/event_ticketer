@@ -36,6 +36,17 @@ class EventFacade extends EntityFacade {
     }
 
     /**
+     * Started end future events
+     * @return EventEntity[]
+     */
+    public function getPublicFutureEvents() {
+        return $this->getRepository()->findBy([
+            'state' => EventEntity::STATE_ACTIVE,
+            'startDate >' => new \DateTime()
+        ], ['startDate' => self::ORDER_ASC]);
+    }
+
+    /**
      * Finds one active and started event if exists
      * @param $id
      * @return null|EventEntity

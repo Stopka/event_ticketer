@@ -137,7 +137,7 @@ class OrderFormWrapper extends FormWrapper {
     protected function appendChildrenControls(Form $form) {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
-        $count_left = max($this->event->getCapacity() - $this->applicationFacade->countIssuedApplications($this->event), 0);
+        $count_left = $this->event->getCapacityLeft($this->applicationFacade->countIssuedApplications($this->event));
         $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
             ->setOption('description', "Zbývá $count_left přihlášek")
             ->setValidationScope(FALSE);
@@ -249,7 +249,7 @@ class OrderFormWrapper extends FormWrapper {
             $result[$option->getId()] = [
                 'amount' => $amount->getAmount(),
                 'currency' => $amount->getCurrency()->getSymbol(),
-                'countLeft' => $option->getCapacity() !== NULL ? max($option->getCapacity() - $this->applicationFacade->countIssuedApplicationsWithOption($option), 0) : NULL
+                'countLeft' => $option->getCapacityLeft($this->applicationFacade->countIssuedApplicationsWithOption($option))
             ];
         }
         return $result;

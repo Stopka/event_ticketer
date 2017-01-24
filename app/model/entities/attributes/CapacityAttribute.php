@@ -39,7 +39,36 @@ trait CapacityAttribute {
         if ($issued_count === NULL) {
             return $this->capacityFull;
         }
-        return $this->capacityFull || ($this->getCapacity()!==NULL && $issued_count >= $this->getCapacity());
+        return $this->capacityFull || ($this->isCapacitySet() && !$this->getCapacityLeft($issued_count));
+    }
+
+    public function isCapacitySet(){
+        return $this->getCapacity()!==NULL;
+    }
+
+    /**
+     * @param $issued_count integer
+     * @return integer|null
+     */
+    public function getRealCapacityLeft($issued_count){
+        if(!$this->isCapacitySet()){
+            return NULL;
+        }
+        return $this->getCapacity()-$issued_count;
+    }
+
+    /**
+     * @param $issued_count integer
+     * @return integer|null
+     */
+    public function getCapacityLeft($issued_count){
+        if(!$this->isCapacitySet()){
+            return NULL;
+        }
+        if($this->isCapacityFull()){
+            return 0;
+        }
+        return max($this->getCapacity()-$issued_count,0);
     }
 
     /**

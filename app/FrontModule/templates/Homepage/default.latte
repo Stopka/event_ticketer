@@ -6,13 +6,33 @@
 
 <ul n:if="$events">
     <li n:foreach="$events as $event">
-        <a n:href="Event:,$event->getId()">
-            <i class="fa fa-calendar-o"></i>
-            <span>{$event->getName()}</span>
-        </a>
+        <div>
+            <a n:href="Event:,$event->getId()">
+                <i class="fa fa-calendar-o"></i>
+                <span>{$event->getName()}</span>
+            </a>
+        </div>
+        <div n:if="$event->isCapacitySet()">
+            <em>Zbývá {$event->getCapacityLeft($control->countApplications($event))} volných přihlášek</em>
+        </div>
     </li>
 </ul>
 
 <p n:if="!$events">
     Aktuálně nejsou žádné aktivní události, do kterých by se dalo registrovat
 </p>
+
+<h2 n:if="$future_events">Události, které budou teprve zpřístupněny</h2>
+<ul n:if="$future_events">
+    <li n:foreach="$future_events as $event">
+        <div>
+            <strong>
+                <i class="fa fa-calendar-o"></i>
+                <span>{$event->getName()}</span>
+            </strong>
+        </div>
+        <div>
+            <em>K dispozici od {$event->getStartDate()|date:'%d.%m.%Y'}</em>
+        </div>
+    </li>
+</ul>
