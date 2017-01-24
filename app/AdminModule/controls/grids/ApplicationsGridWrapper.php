@@ -111,7 +111,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('birthCode', 'Kod rodného čísla')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDate('order.created', 'Vytvořeno')
+        $grid->addColumnDate('order.created', 'Vytvořeno','d.m.Y H:i:s')
             ->setSortable()
             ->setFilterDateRange();
         /*$grid->addColumnText('invoiced', 'Faktura')

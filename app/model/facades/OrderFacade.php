@@ -17,6 +17,7 @@ use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
 use App\Model\Entities\OrderEntity;
+use App\Model\Entities\SubstituteEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Mail\SendmailMailer;
 
@@ -45,12 +46,13 @@ class OrderFacade extends EntityFacade {
      * @param EarlyEntity|null $early
      * @return OrderEntity
      */
-    public function createOrderFromOrderForm($values, EventEntity $event = null, EarlyEntity $early = null) {
+    public function createOrderFromOrderForm($values, EventEntity $event = null, EarlyEntity $early = null, SubstituteEntity $substitute = null) {
         $entityManager = $this->getEntityManager();
         $order = new OrderEntity();
         $order->setByValueArray($values);
         $order->setEarly($early);
         $order->setEvent($event);
+        $order->setSubstitute($substitute);
         $entityManager->persist($order);
         $commonValues = $values['commons'];
         $optionRepository = $entityManager->getRepository(OptionEntity::class);

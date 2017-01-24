@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait StartDateAttribute {
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     private $startDate;

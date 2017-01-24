@@ -84,6 +84,6 @@ class SubstituteFormWrapper extends FormWrapper {
         $values = $form->getValues(true);
         $this->substituteFacade->createSubtituteFromForm($values, $this->event, $this->early);
         $this->getPresenter()->flashMessage('Byl(a) jste úspěšně zapsán(a) mezi náhradníky', 'success');
-        $this->getPresenter()->redirect('this');
+        $this->getPresenter()->redirect('Homepage:');
     }
 }

@@ -95,6 +95,9 @@ class OrderFormWrapper extends FormWrapper {
         if ($this->early) {
             $form->setDefaults($this->early->getValueArray());
         }
+        if ($this->substitute) {
+            $form->setDefaults($this->substitute->getValueArray());
+        }
     }
 
     /**
@@ -103,9 +106,9 @@ class OrderFormWrapper extends FormWrapper {
     protected function registerClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->orderFacade->createOrderFromOrderForm($values, $this->event, $this->early);
+        $this->orderFacade->createOrderFromOrderForm($values, $this->event, $this->early, $this->substitute);
         $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.', 'success');
-        $this->getPresenter()->redirect('this');
+        $this->getPresenter()->redirect('Homepage:');
     }
 
     protected function appendFinalControls(Form $form) {
@@ -153,11 +156,13 @@ class OrderFormWrapper extends FormWrapper {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
         $count_left = $this->event->getCapacityLeft($this->applicationFacade->countIssuedApplications($this->event));
-        $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
-            ->setOption('description', "Zbývá $count_left přihlášek")
-            ->setValidationScope(FALSE);
-        $add_button->getControlPrototype()->class = 'ajax';
-        $add_button->onClick[] = [$this, 'addChild'];
+        if(!$this->substitute) {
+            $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
+                ->setOption('description', "Zbývá $count_left přihlášek")
+                ->setValidationScope(FALSE);
+            $add_button->getControlPrototype()->class = 'ajax';
+            $add_button->onClick[] = [$this, 'addChild'];
+        }
         $children = $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
             $group = $form->addGroup()
                 ->setOption('class', 'price_subspace');
@@ -174,7 +179,7 @@ class OrderFormWrapper extends FormWrapper {
                 ->setValidationScope(FALSE); # disables validation
             $remove_button->onClick[] = $removeEvent;
             $remove_button->getControlPrototype()->class = 'ajax';
-        }, 1, true);
+        }, $this->substitute?$this->substitute->getCount():1, $this->substitute?false:true);
     }
 
     protected function appendChildControls(Form $form, Container $container) {

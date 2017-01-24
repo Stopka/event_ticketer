@@ -58,13 +58,17 @@ class SubstitutesGridWrapper extends GridWrapper {
         $grid->addColumnText('state', 'Stav')
             ->setSortable()
             ->setReplacement([
-                SubstituteEntity::STATE_WAITING => 'Čekající',
-                SubstituteEntity::STATE_ACTIVE => 'Přijatý'
+                SubstituteEntity::STATE_WAITING => 'Ve frontě',
+                SubstituteEntity::STATE_ACTIVE => 'Přijatý',
+                SubstituteEntity::STATE_OVERDUE => 'Prošlý',
+                SubstituteEntity::STATE_ORDERED => 'Registrovaný'
             ])
             ->setFilterSelect([
                 NULL => '',
-                SubstituteEntity::STATE_WAITING => 'Čekající',
-                SubstituteEntity::STATE_ACTIVE => 'Přijatý'
+                SubstituteEntity::STATE_WAITING => 'Ve frontě',
+                SubstituteEntity::STATE_ACTIVE => 'Přijatý',
+                SubstituteEntity::STATE_OVERDUE => 'Prošlý',
+                SubstituteEntity::STATE_ORDERED => 'Registrovaný'
             ]);
         $grid->addColumnText('firstName', 'Jméno')
             ->setSortable()

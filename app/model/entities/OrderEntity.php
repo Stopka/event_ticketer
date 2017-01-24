@@ -61,6 +61,12 @@ class OrderEntity extends BaseEntity {
     private $early;
 
     /**
+     * @ORM\OneToOne(targetEntity="SubstituteEntity", inversedBy="order")
+     * @var SubstituteEntity
+     */
+    private $substitute;
+
+    /**
      * @ORM\Column(type="datetime")
      * @var \DateTime
      */
@@ -156,6 +162,26 @@ class OrderEntity extends BaseEntity {
      */
     public function setState($state) {
         $this->state = $state;
+    }
+
+    /**
+     * @return SubstituteEntity
+     */
+    public function getSubstitute() {
+        return $this->substitute;
+    }
+
+    /**
+     * @param SubstituteEntity $substitute
+     */
+    public function setSubstitute($substitute) {
+        if($this->substitute){
+            $this->substitute->setInversedOrder(NULL);
+        }
+        $this->substitute = $substitute;
+        if($this->substitute){
+            $this->substitute->setInversedOrder($this);
+        }
     }
 
 }

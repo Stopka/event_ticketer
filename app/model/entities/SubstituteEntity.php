@@ -25,6 +25,8 @@ class SubstituteEntity extends BaseEntity {
 
     const STATE_WAITING = 0;
     const STATE_ACTIVE = 1;
+    const STATE_ORDERED = 2;
+    const STATE_OVERDUE = 4;
 
     /**
      * OrderEntity constructor.
@@ -64,6 +66,12 @@ class SubstituteEntity extends BaseEntity {
      * @var integer
      */
     private $count;
+
+    /**
+     * @ORM\OneToOne(targetEntity="OrderEntity", mappedBy="substitute")
+     * @var OrderEntity
+     */
+    private $order;
 
     /**
      * @return EventEntity
@@ -136,6 +144,32 @@ class SubstituteEntity extends BaseEntity {
      */
     public function setCount($count) {
         $this->count = $count;
+    }
+
+    /**
+     * @return OrderEntity
+     */
+    public function getOrder() {
+        return $this->order;
+    }
+
+    /**
+     * @param OrderEntity $order
+     */
+    public function setOrder($order) {
+        $order->setSubstitute($this);
+    }
+
+    /**
+     * @param OrderEntity $order
+     */
+    public function setInversedOrder($order) {
+        $this->order = $order;
+        if($this->order){
+            $this->setState(self::STATE_ORDERED);
+        }else{
+            $this->setState(self::STATE_WAITING);
+        }
     }
 
 
