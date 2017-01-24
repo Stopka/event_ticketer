@@ -115,15 +115,16 @@ class OrderFacade extends EntityFacade {
         if(!$order->getEmail()){
             return;
         }
+        $link = $this->emailMessageFactory->link('Front:Order:',['id'=>$order->getHashId()]);
         $message = $this->emailMessageFactory->create();
         $message->addTo($order->getEmail(),$order->getFullName());
         $message->setSubject('Přihláška na '.$order->getEvent()->getName());
-        $message->setBody("<p>Dobrý den,</p>
-<p> Děkujeme, že jste projevili zájem o přihlášku na náš tábor. V příloze zasíláme přihlášku, bezinfekčnost a lékařské potvrzení. Bezinfekčnost, lékařské potvrzení a list s informacemi můžete v případě ztráty získat na našich stránkách, konkrétně zde: <a href=\"http://www.ldtpardubice.cz/formulare/\">http://www.ldtmpp.cz/formulare/</a>.</p>
+        $message->setHtmlBody("<p>Dobrý den,</p>
+<p> Děkujeme, že jste projevili zájem o přihlášku na <strong>".$order->getEvent()->getName()."</strong>. V příloze zasíláme přihlášku, bezinfekčnost a lékařské potvrzení. Bezinfekčnost, lékařské potvrzení a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
 <p>Nyní je potřeba přihlášku vytisknout pro každé rezervované místo, dovyplnit, odeslat a ke každé přihlášce zaplatit rezervační poplatek. Další informace jsou uvedeny přímo v přihlášce.</p>
-<p>Aktuální stav přihlášek můžete průběžně sledovat na adrese <a href=\"http://www.ldtmpp.cz/system/application/list/".$order->getGuid()."/\">http://www.ldtmpp.cz/system/application/list/".$order->getGuid()."/</a></p>
+<p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na adrese <a href='$link'>$link</a></p>
 <p>V případě nějakého dotazu pište na ldtmpp@email.cz.</p>
-<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>\n");
+<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>");
         $mailer = new SendmailMailer();
         $mailer->send($message);
     }
