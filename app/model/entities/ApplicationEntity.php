@@ -25,8 +25,6 @@ use Doctrine\ORM\Mapping as ORM;
 class ApplicationEntity extends BaseEntity {
     use IdentifierAttribute, PersonNameAttribute, BirthDateAttribute, BirthCode, AddressAttribute, GenderAttribute;
 
-
-    const STATE_SUBSTITUTE = 0;
     const STATE_WAITING = 1;
     const STATE_RESERVED = 2;
     const STATE_FULFILLED = 3;
@@ -53,11 +51,8 @@ class ApplicationEntity extends BaseEntity {
      */
     private $state = self::STATE_WAITING;
 
-    public function __construct($substitute = false) {
+    public function __construct() {
         $this->choices = new ArrayCollection();
-        if ($substitute) {
-            $this->state = self::STATE_SUBSTITUTE;
-        }
     }
 
     /**
@@ -129,7 +124,7 @@ class ApplicationEntity extends BaseEntity {
     }
 
     public static function getStatesNotIssued() {
-        return [self::STATE_CANCELLED, self::STATE_SUBSTITUTE];
+        return [self::STATE_CANCELLED];
     }
 
     public function cancelApplication() {

@@ -12,13 +12,13 @@ namespace App\FrontModule\Controls\Forms;
 use App\Controls\Forms\Form;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
-use App\Model\Facades\OrderFacade;
+use App\Model\Facades\SubstituteFacade;
 use Nette\Forms\Controls\SubmitButton;
 
 class SubstituteFormWrapper extends FormWrapper {
 
-    /** @var  OrderFacade */
-    private $orderFacade;
+    /** @var  SubstituteFacade */
+    private $substituteFacade;
 
     /** @var  EarlyEntity */
     private $early;
@@ -26,9 +26,9 @@ class SubstituteFormWrapper extends FormWrapper {
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(OrderFacade $orderFacade) {
+    public function __construct(SubstituteFacade $substituteFacade) {
         parent::__construct();
-        $this->orderFacade = $orderFacade;
+        $this->substituteFacade = $substituteFacade;
     }
 
     /**
@@ -82,7 +82,7 @@ class SubstituteFormWrapper extends FormWrapper {
     public function saveClicked(SubmitButton $button){
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->orderFacade->createSubtituteFromOrderForm($values, $this->event, $this->early);
+        $this->substituteFacade->createSubtituteFromForm($values, $this->event, $this->early);
         $this->getPresenter()->flashMessage('Byl(a) jste úspěšně zapsán(a) mezi náhradníky', 'success');
         $this->getPresenter()->redirect('this');
     }

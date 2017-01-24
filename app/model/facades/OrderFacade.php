@@ -17,7 +17,6 @@ use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\Entities\OptionEntity;
 use App\Model\Entities\OrderEntity;
-use Grido\DataSources\Doctrine;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Mail\SendmailMailer;
 
@@ -92,22 +91,6 @@ class OrderFacade extends EntityFacade {
         return $order;
     }
 
-    public function createSubtituteFromOrderForm($values, EventEntity $event, EarlyEntity $early = null){
-        $entityManager = $this->getEntityManager();
-        $order = new OrderEntity(true);
-        $order->setByValueArray($values);
-        $order->setEarly($early);
-        $order->setEvent($event);
-        $entityManager->persist($order);
-        for ($i=0; $i<$values['count']; $i++) {
-            $application = new ApplicationEntity(true);
-            $application->setOrder($order);
-            $entityManager->persist($application);
-        }
-        $entityManager->flush();
-        return $order;
-    }
-
     /**
      * @param OrderEntity $order
      */
@@ -142,18 +125,5 @@ class OrderFacade extends EntityFacade {
         if($order&&$order->getGuid()==$guid&&$order->getState()==OrderEntity::STATE_ORDER)
             return $order;
         return NULL;
-    }
-
-    /**
-     * @return Doctrine
-     */
-    public function getAllSubstitutesGridModel(EventEntity $event){
-        $qb = $this->getRepository()->createQueryBuilder('s');
-        $qb->addSelect('s')
-            ->where($qb->expr()->andX(
-                $qb->expr()->in('s.state',OrderEntity::getSubstituteStates()),
-                $qb->expr()->eq('s.event',$event->getId())
-            ));
-        return new Doctrine($qb);
     }
 }

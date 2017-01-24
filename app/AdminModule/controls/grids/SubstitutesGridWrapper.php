@@ -4,8 +4,8 @@ namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
 use App\Model\Entities\EventEntity;
-use App\Model\Entities\OrderEntity;
-use App\Model\Facades\OrderFacade;
+use App\Model\Entities\SubstituteEntity;
+use App\Model\Facades\SubstituteFacade;
 use Nette\Localization\ITranslator;
 use Tracy\Debugger;
 
@@ -17,15 +17,15 @@ use Tracy\Debugger;
  */
 class SubstitutesGridWrapper extends GridWrapper {
 
-    /** @var  OrderFacade */
-    private $orderFacade;
+    /** @var  SubstituteFacade */
+    private $substituteFacade;
 
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(ITranslator $translator, OrderFacade $orderFacade) {
+    public function __construct(ITranslator $translator, SubstituteFacade $substituteFacade) {
         parent::__construct($translator);
-        $this->orderFacade = $orderFacade;
+        $this->substituteFacade = $substituteFacade;
     }
 
     /**
@@ -38,7 +38,7 @@ class SubstitutesGridWrapper extends GridWrapper {
     }
 
     protected function loadModel(Grid $grid) {
-        $grid->setModel($this->orderFacade->getAllSubstitutesGridModel($this->event));
+        $grid->setModel($this->substituteFacade->getAllSubstitutesGridModel($this->event));
     }
 
     protected function configure(\App\Grids\Grid $grid) {
@@ -58,13 +58,13 @@ class SubstitutesGridWrapper extends GridWrapper {
         $grid->addColumnText('state', 'Stav')
             ->setSortable()
             ->setReplacement([
-                OrderEntity::STATE_SUBSTITUTE => 'Čekající',
-                OrderEntity::STATE_WAITING => 'Přijatý'
+                SubstituteEntity::STATE_WAITING => 'Čekající',
+                SubstituteEntity::STATE_ACTIVE => 'Přijatý'
             ])
             ->setFilterSelect([
                 NULL => '',
-                OrderEntity::STATE_SUBSTITUTE => 'Čekající',
-                OrderEntity::STATE_WAITING => 'Přijatý'
+                SubstituteEntity::STATE_WAITING => 'Čekající',
+                SubstituteEntity::STATE_ACTIVE => 'Přijatý'
             ]);
         $grid->addColumnText('firstName', 'Jméno')
             ->setSortable()
@@ -74,16 +74,23 @@ class SubstitutesGridWrapper extends GridWrapper {
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnEmail('email','Email')
+        $grid->addColumnEmail('email', 'Email')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnDate('created','Vytvořeno','d.m.Y H:i:s')
+        $grid->addColumnDate('created', 'Vytvořeno', 'd.m.Y H:i:s')
             ->setDefaultSort('ASC')
             ->setFilterDateRange();
-        $grid->addColumnText('applications','Přihlášek')
-            ->setCustomRender(function ($array){
-                return count($array);
+        $grid->addColumnText('count', 'Přihlášek')
+            ->setSortable()
+            ->setFilterNumber();
+        $grid->addColumnText('early.lastName', 'Přednostní')
+            ->setCustomRender(function (SubstituteEntity $susbstitute) {
+                $early = $susbstitute->getEarly();
+                if (!$early) {
+                    return '';
+                }
+                return $early->getFullName();
             });
     }
 }

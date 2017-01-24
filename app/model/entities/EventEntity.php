@@ -30,6 +30,7 @@ class EventEntity extends BaseEntity {
         $this->earlyWaves = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->additions = new ArrayCollection();
+        $this->substitutes = new ArrayCollection();
     }
 
     /**
@@ -49,6 +50,12 @@ class EventEntity extends BaseEntity {
      * @var OrderEntity[]
      */
     private $orders;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SubstituteEntity", mappedBy="event")
+     * @var SubstituteEntity[]
+     */
+    private $substitutes;
 
     /**
      * @ORM\OneToMany(targetEntity="AdditionEntity", mappedBy="event")
@@ -142,6 +149,41 @@ class EventEntity extends BaseEntity {
         $this->orders->removeElement($order);
     }
 
+
+    /**
+     * @return SubstituteEntity[]
+     */
+    public function getSubstitute() {
+        return $this->substitutes;
+    }
+
+    /**
+     * @param SubstituteEntity $substitute
+     */
+    public function addSubstitute($substitute) {
+        $substitute->setEvent($this);
+    }
+
+    /**
+     * @param SubstituteEntity $substitute
+     */
+    public function addIversedSubstitute($substitute) {
+        $this->substitutes->add($substitute);
+    }
+
+    /**
+     * @param SubstituteEntity $substitute
+     */
+    public function removeSubstitute($substitute) {
+        $substitute->setEvent(NULL);
+    }
+
+    /**
+     * @param SubstituteEntity $substitute
+     */
+    public function removeIversedSubstitute($substitute) {
+        $this->substitutes->removeElement($substitute);
+    }
 
     /**
      * @return AdditionEntity[]
