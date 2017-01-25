@@ -10,7 +10,7 @@ namespace App\Model\Entities\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait BirthCode {
+trait BirthCodeAttribute {
 
     /**
      * @ORM\Column(type="string", nullable=true)

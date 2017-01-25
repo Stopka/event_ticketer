@@ -16,10 +16,14 @@ use PHPExcel_Shared_Font;
  */
 class ExportResponse extends \Nette\Object implements \Nette\Application\IResponse {
     
-    public static $EXPORT_FORMAT_CSV = 'csv';
-    public static $EXPORT_FORMAT_XLS = 'xls';
-    public static $EXPORT_FORMAT_XLSX = 'xlsx';
-    public static $formats=['csv','xls','xlsx'];
+    const EXPORT_FORMAT_CSV = 'csv';
+    const EXPORT_FORMAT_XLS = 'xls';
+    const EXPORT_FORMAT_XLSX = 'xlsx';
+    const formats=[
+        self::EXPORT_FORMAT_CSV,
+        self::EXPORT_FORMAT_XLS,
+        self::EXPORT_FORMAT_XLSX
+    ];
     
     /** @var PHPExcel **/
     protected $phpe;
@@ -42,7 +46,7 @@ class ExportResponse extends \Nette\Object implements \Nette\Application\IRespon
     /** @var  \String */
     protected $delimiter = ',';
     
-    /** @var boolean */
+    /** @var string */
     protected $format;
     
     /**************************************/
@@ -57,10 +61,10 @@ class ExportResponse extends \Nette\Object implements \Nette\Application\IRespon
      */
     public function __construct($data_source, $format = NULL) {
         if(!$format){
-            $format = self::$EXPORT_FORMAT_CSV;
+            $format = self::EXPORT_FORMAT_CSV;
         }
         $this->data_source = $data_source;
-        if(!in_array($format,self::$formats)){
+        if(!in_array($format,self::formats)){
             throw new ApplicationException(["Unsupported export format (%format%)",["format"=>$format]]);
         }
         $this->format = $format;
@@ -190,9 +194,9 @@ class ExportResponse extends \Nette\Object implements \Nette\Application\IRespon
     private function setResponseHeaders(\Nette\Http\IResponse $httpResponse){
         switch($this->format){
             default:
-            case self::$EXPORT_FORMAT_CSV : $httpResponse->setContentType('text/csv', $this->charset->getName()); break;
-            case self::$EXPORT_FORMAT_XLS :
-            case self::$EXPORT_FORMAT_XLSX: $httpResponse->setContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $this->charset->getName()); break;
+            case self::EXPORT_FORMAT_CSV : $httpResponse->setContentType('text/csv', $this->charset->getName()); break;
+            case self::EXPORT_FORMAT_XLS :
+            case self::EXPORT_FORMAT_XLSX: $httpResponse->setContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', $this->charset->getName()); break;
         }
         
         $httpResponse->setHeader('Content-Description', 'File Transfer');

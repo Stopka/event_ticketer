@@ -34,7 +34,7 @@ class ApplicationsExportResponse implements IResponse {
     }
 
     function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) {
-        $response = new ExportResponse($this->applications);
+        $response = new ExportResponse($this->applications,ExportResponse::EXPORT_FORMAT_CSV);
         $response->setFilenameWithDate('přihlášky-');
         $response->addColumn('order_id','Číslo objednávky')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
@@ -85,7 +85,11 @@ class ApplicationsExportResponse implements IResponse {
         $response->addColumn('birthDate','Datum narození')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
                 $date = $applicaiton->getBirthDate();
-                return $date?$date->format('Y-m-d H:i:s'):'';
+                return $date?$date->format('Y-m-d'):'';
+            });
+        $response->addColumn('birthIdDate','Datum narození r. č.')
+            ->setCustomRenderer(function(ApplicationEntity $applicaiton){
+                return $applicaiton->getBirthIdDate();
             });
         $response->addColumn('birthCode','Kod rodného čísla')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
@@ -117,7 +121,7 @@ class ApplicationsExportResponse implements IResponse {
                     $choices = $application->getChoices();
                     foreach ($choices as $choice){
                         if($choice->getOption()->getAddition()->getId() == $addition->getId()){
-                            $result.=$choice->getOption()->getName().($choice->isPayed()?'':' (!!)').';';
+                            $result.=$choice->getOption()->getName().($choice->isPayed()?' (OK)':' (!!)').';';
                         }
                     }
                     return $result;

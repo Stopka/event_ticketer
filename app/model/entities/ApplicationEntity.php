@@ -10,8 +10,7 @@ namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\AddressAttribute;
 use App\Model\Entities\Attributes\BirthCode;
-use App\Model\Entities\Attributes\BirthDateAttribute;
-use App\Model\Entities\Attributes\GenderAttribute;
+use App\Model\Entities\Attributes\BirthIdAttribute;
 use App\Model\Entities\Attributes\IdentifierAttribute;
 use App\Model\Entities\Attributes\PersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use IdentifierAttribute, PersonNameAttribute, BirthDateAttribute, BirthCode, AddressAttribute, GenderAttribute;
+    use IdentifierAttribute, PersonNameAttribute, AddressAttribute, BirthIdAttribute;
 
     const STATE_WAITING = 1;
     const STATE_RESERVED = 2;
