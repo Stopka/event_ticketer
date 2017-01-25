@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f5ba3c4aa30a0ad5c1817042aef0d679",
+    "content-hash": "1eb52d6756848ce89954d4def1ef5784",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -607,44 +607,64 @@
             "time": "2016-12-18T15:42:34+00:00"
         },
         {
-            "name": "jkuchar/pdfresponse",
-            "version": "dev-master",
+            "name": "joseki/pdf-response",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jkuchar/PdfResponse.git",
-                "reference": "9540166d7bce1eca840f57e8ce2f9c923896dd14"
+                "url": "https://github.com/Joseki/PdfResponse.git",
+                "reference": "af8bf15e940c6764d89265da352a523c5a25c252"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jkuchar/PdfResponse/zipball/9540166d7bce1eca840f57e8ce2f9c923896dd14",
-                "reference": "9540166d7bce1eca840f57e8ce2f9c923896dd14",
+                "url": "https://api.github.com/repos/Joseki/PdfResponse/zipball/af8bf15e940c6764d89265da352a523c5a25c252",
+                "reference": "af8bf15e940c6764d89265da352a523c5a25c252",
                 "shasum": ""
             },
             "require": {
-                "mpdf/mpdf": ">= 5.0",
-                "nette/application": ">= 2.2",
-                "nette/http": ">= 2.2",
-                "nette/utils": ">= 2.2",
-                "php": ">= 5.3.0"
+                "mpdf/mpdf": "^6.0",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "latte/latte": "~2.2",
+                "nette/application": "~2.2",
+                "nette/tester": "~1.0",
+                "symfony/css-selector": "~2.5",
+                "symfony/dom-crawler": "~2.5"
+            },
+            "suggest": {
+                "nette/nette": "PHP framework to which this extension belongs to.",
+                "symfony/dom-crawler": "Allows filtering html tags."
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
-                    "./"
+                    "src"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL"
+                "LGPL-3.0"
             ],
             "authors": [
                 {
-                    "name": "Jan Kuchař",
-                    "homepage": "http://www.jankuchar.cz"
+                    "name": "Jan Kuchař"
+                },
+                {
+                    "name": "Tomáš Votruba",
+                    "email": "tomas.vot@gmail.com"
+                },
+                {
+                    "name": "Miroslav Paulík",
+                    "email": "miras.paulik@seznam.cz"
                 }
             ],
-            "description": "PdfResponse is wrapper of mPDF for Nette.",
-            "time": "2016-12-01 13:02:03"
+            "description": "Pdf response extension for Nette Framework",
+            "time": "2016-10-09T11:05:03+00:00"
         },
         {
             "name": "kdyby/annotations",
@@ -3549,7 +3569,6 @@
     "stability-flags": {
         "kdyby/translation": 20,
         "kdyby/forms-replicator": 20,
-        "jkuchar/pdfresponse": 20,
         "o5/grido": 20
     },
     "prefer-stable": false,

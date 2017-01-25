@@ -1,0 +1,32 @@
+{**
+ * @param ApplicationEntity $application
+ *}
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <meta charset="utf-8">
+        <title>Přihláška - Letní dětský tábor Pardubice z.s.</title>
+        <link type="text/css" rel="stylesheet" href="/app/pdf/application/style.css" />
+    </head>
+    <body>
+        <header>
+            <div class="logo" id="logo_ldt"></div>
+            <div class="logo" id="logo_jojo"></div>
+            <div id="a_id">{$application->getId()}</div>
+        </header>
+        <h1>
+            <small>Závazná přihláška na</small><br>
+            <span>Letní dětský tábor Pardubice, z.s.</span>
+        </h1>{$application->getFullName()}
+        <pagebreak>
+        <div>
+            <input type="text" value="Nějakej text">
+            <input type="radio" checked>
+            <input type="checkbox" checked>
+            <input type="radio">
+            <input type="checkbox">
+
+            <img src="/app/images/occupancy/bed_0.jpg">
+        </div>
+    </body>
+</html>

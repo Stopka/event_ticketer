@@ -7,7 +7,7 @@ use App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory;
 use App\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use App\AdminModule\Controls\Grids\ApplicationsGridWrapper;
 use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
-use App\AdminModule\Controls\Responses\ApplicationsExportResponse;
+use App\AdminModule\Responses\ApplicationsExportResponse;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\EventFacade;
 

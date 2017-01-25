@@ -6,7 +6,7 @@
  * Time: 23:32
  */
 
-namespace App\AdminModule\Controls\Responses;
+namespace App\AdminModule\Responses;
 
 
 use App\Model\Entities\ApplicationEntity;

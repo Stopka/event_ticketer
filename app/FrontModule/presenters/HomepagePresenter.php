@@ -2,6 +2,7 @@
 
 namespace App\FrontModule\Presenters;
 
+use App\FrontModule\Responses\ApplicationPdfRenderer;
 use App\Model;
 
 
@@ -35,6 +36,16 @@ class HomepagePresenter extends BasePresenter {
      */
     public function countApplications(Model\Entities\EventEntity $event){
         return $this->applicationFacade->countIssuedApplications($event);
+    }
+
+    /** @var  ApplicationPdfRenderer @inject */
+    public $renderer;
+
+    public function renderTest(){
+        $event = $this->eventFacade->getEvent(1);
+        $apps = $this->applicationFacade->getAllEventApplications($event);
+        $this->renderer->setApplication($apps[0]);
+        $this->sendResponse($this->renderer->getResponse());
     }
 
 }

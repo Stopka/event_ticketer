@@ -1,0 +1,40 @@
+html {
+	margin:0;
+	padding:0;
+}
+
+body{
+	font-size:14px;
+	color:#000000;
+	background: #FFFFFF;
+}
+h1{
+	font-size: 16px;
+	text-align: center;
+	font-weight: bold;
+}
+h1 span{
+	display: block;
+}
+h1 small{
+	font-size: 14px;
+	display: block;
+}
+header div{
+	display: inline-block;
+	height: 4cm;
+	width: 33%;
+	text-align: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+#logo_ldt{
+	background-image: url("logo.png");
+}
+#logo_jojo{
+	background-image: url("cirkus_jojo.png");
+}
+#a_id{
+	border-radius: 50%;
+	border: 1px solid black;
+}
