@@ -60,6 +60,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/tecnickcom/tcpdf" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/tracy/tracy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/voda/date-input" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-memory" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-stdlib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zendpdf" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -134,6 +137,9 @@
           <root url="file://$MODULE_DIR$/vendor/tecnickcom/tcpdf" />
           <root url="file://$MODULE_DIR$/vendor/tracy/tracy" />
           <root url="file://$MODULE_DIR$/vendor/voda/date-input" />
+          <root url="file://$MODULE_DIR$/vendor/zendframework/zend-memory" />
+          <root url="file://$MODULE_DIR$/vendor/zendframework/zend-stdlib" />
+          <root url="file://$MODULE_DIR$/vendor/zendframework/zendpdf" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
@@ -194,6 +200,9 @@
           <root url="file://$MODULE_DIR$/vendor/tecnickcom/tcpdf" />
           <root url="file://$MODULE_DIR$/vendor/tracy/tracy" />
           <root url="file://$MODULE_DIR$/vendor/voda/date-input" />
+          <root url="file://$MODULE_DIR$/vendor/zendframework/zend-memory" />
+          <root url="file://$MODULE_DIR$/vendor/zendframework/zend-stdlib" />
+          <root url="file://$MODULE_DIR$/vendor/zendframework/zendpdf" />
         </SOURCES>
       </library>
     </orderEntry>

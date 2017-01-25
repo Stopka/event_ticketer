@@ -9,24 +9,68 @@
         <link type="text/css" rel="stylesheet" href="/app/pdf/application/style.css" />
     </head>
     <body>
-        <header>
-            <div class="logo" id="logo_ldt"></div>
-            <div class="logo" id="logo_jojo"></div>
-            <div id="a_id">{$application->getId()}</div>
-        </header>
+        <table>
+            <tr style="height: 4cm">
+                <td style="width: 25%; text-align: center;">
+                    <img src="/app/pdf/application/logo.png" style="max-height: 4cm; max-width: 100%;">
+                </td>
+                <td  style="width: 25%; text-align: center;">
+                    <img src="/app/pdf/application/cirkus_jojo.png" style="max-height: 3cm; max-width: 4cm;">
+                </td>
+                <td  style="width: 25%; text-align: center;">
+                    <img src="/app/pdf/application/landa.jpg" style="max-height: 2cm; max-width: 100%;">
+                </td>
+                <td  style="width: 25%; text-align: center;">
+                    <div style="text-align: center; font-size: 30px; color: #9f4600; font-weight: bold; border: 2px solid black; width: 4cm; height: 2cm; border-radius: 2cm;">
+                        {$application->getId()}
+                    </div>
+                </td>
+            </tr>
+        </table>
         <h1>
             <small>Závazná přihláška na</small><br>
             <span>Letní dětský tábor Pardubice, z.s.</span>
-        </h1>{$application->getFullName()}
-        <pagebreak>
-        <div>
-            <input type="text" value="Nějakej text">
-            <input type="radio" checked>
-            <input type="checkbox" checked>
-            <input type="radio">
-            <input type="checkbox">
+        </h1>
+        <table width="100%">
+            <tr>
+                <td>Místo: <strong>JINDŘICHOVICE (Havlišův mlýn)</strong></td>
+                <td style="text-align: right">Termín: <strong>23. 7. – 6. 8. 2017</strong></td>
+            </tr>
+        </table>
 
-            <img src="/app/images/occupancy/bed_0.jpg">
-        </div>
+        <p>Příjmení a jméno dítěte: <span class="input" style="width: 4cm"> </span>  Rod. č.:<div class="input"></div>/<div class="input"></div>.</p>
+
+        <!--        Bydliště:
+                Ulice:………………………..………Č.p.:………Okres:………..…………….............PSČ:……………..
+
+                Příjm. a jm.matky:………………………..…….   Příjm. a jm.otce:…………….…………………………
+
+                Zaměstnavatel:………………………….…….…  Zaměstnavatel:.….…………………………………….
+
+                Zájmy dítěte:……………………..…………………..Vychází z……třídy Zdrav.poj.(č.kód)……………
+
+                E-mail(na této adrese budete informováni  o LDT-závazné):…………………….….............................
+
+                Dítě        má  /  nemá  úrazové pojištění u:……………………………………………………………
+
+                Mobil.tel. pro případ onemocnění dítěte a poskytnutí informací:………………………….………………..
+                (pokud rodiče v době konání LDT pobývají v zahraničí, uveďte prosím, kdo dítě v naléhavém případě převezme do své péče – jméno, mobil)
+
+                Žádost o příspěvek zaměstnavatele bude podán u:………………………………………………………….
+                (pokud ANO, pošlete žádost na mail:  ldtmpp@email.cz s fakturační adresou, IČO(DIČ), adresu pro zaslání dokladu, případný text)
+
+                Mám zájem o umístění dítěte do oddílu společně s (max. jedno jméno):…………….…………………
+                (Můžeme garantovat vždy pouze u té dvojice dětí, jejíchž jména budou vzájemně uvedena na obou přihláškách. Vzhledem ke snaze o sestavení vyrovnaných oddílů nemůžeme zaručit společné umístění většího počtu dětí.)
+
+                Další závazné informace pro provozovatele tábora (fobie, strav. návyky atd.)…….……………………….
+                Způsob dopravy (zakroužkuj a nehodící škrtni)
+                *individuální                       **autobus +300,-Kč. (jediné nástupní místo Pardubice TIPSPORT ARENA – parkoviště)
+
+                Při předčasném odjezdu z tábora může být dítě vydáno těmto osobám (uveďte jméno, příjmení:
+
+                ……………………………………………………………..Dítě je:   plavec /  částečný plavec /  neplavec
+                Cena 4.000,-Kč (1000,-Kč nevratný rezervační poplatek-po uhrazení rez. poplatku se jedná o  záv. registraci ! 3.000,-Kč (v případě autobusové dopravy  3.300,-Kč,)splatnost nejpozději do 1.6.2017, pokud nebude předem domluveno jinak  s provozovatelem tábora)!v případě, že bude nutné ošetření u lékaře (případná hospitalizace v nemocnici), souhlasí zákonný zástupce s dodatečnou úhradou lékař. poplatků!
+                Stornovací poplatek: 1000,-Kč rezervační poplatek + 2500,-Kč do 14 dnů před zahájením tábora, 3000,-Kč v termínu kratším než 14 dnů před zahájením tábora. Při zajištění náhradníka se storno poplatek neúčtuje a vrací se rezervační poplatek (zrušení se provádí pouze písemnou formou). Při předčasném či pozdním odjezdu/příjezdu dítěte z/na tábora pouze z důvodu nemoci (lékař. potvrzení nutné) má plátce nárok na proplac. poměrné části strav. limitu (100 Kč/den – pouze celé dny, na základě písemné žádosti, která bude doruč. nejpozději do 15. 09. 2017). Organizátor dětem nesjednává na dobu pobytu na táboře (včetně dopravy) úrazové ani žádné jiné pojištění.
+                --><pagebreak>
     </body>
 </html>
