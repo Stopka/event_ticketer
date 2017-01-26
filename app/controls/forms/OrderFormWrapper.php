@@ -151,8 +151,10 @@ class OrderFormWrapper extends FormWrapper {
     protected function appendCommonControls(Form $form) {
         $form->addGroup('Bydliště dětí');
         $comons = $form->addContainer('commons');
-        $comons->addText('address', 'Adresa', NULL, 255)
-            ->setOption('description', 'Ulice a číslo popisné')
+        $comons->addText('street', 'Ulice', NULL, 255)
+            ->setRequired()
+            ->addRule($form::MAX_LENGTH, NULL, 255);
+        $comons->addText('address', 'Číslo popisné', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $comons->addText('city', 'Město', NULL, 255)

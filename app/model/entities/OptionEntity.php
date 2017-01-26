@@ -41,6 +41,12 @@ class OptionEntity extends BaseEntity {
     private $choices;
 
     /**
+     * @ORM\Column(type="text",nullable=true)
+     * @var string
+     */
+    private $internalInfo;
+
+    /**
      * @return AdditionEntity
      */
     public function getAddition() {
@@ -98,4 +104,20 @@ class OptionEntity extends BaseEntity {
     public function removeInversedChoice($choices) {
         $this->choices->removeElement($choices);
     }
+
+    /**
+     * @return array
+     */
+    public function getInternalInfo() {
+        return json_decode($this->internalInfo,true);
+    }
+
+    /**
+     * @param array $internalInfo
+     */
+    public function setInternalInfo($internalInfo) {
+        $this->internalInfo = json_encode($internalInfo);
+    }
+
+
 }

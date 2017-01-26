@@ -16,6 +16,12 @@ trait AddressAttribute {
      * @ORM\Column(type="string", nullable=true)
      * @var string
      */
+    private $street;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
     private $address;
 
     /**
@@ -94,5 +100,19 @@ trait AddressAttribute {
     public function setCountry($country) {
         $this->country = $country;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreet() {
+        return $this->street;
+    }
+
+    /**
+     * @param string $street
+     */
+    public function setStreet($street) {
+        $this->street = $street;
     }
 }

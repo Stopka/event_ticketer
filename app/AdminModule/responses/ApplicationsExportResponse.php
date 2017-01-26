@@ -95,7 +95,11 @@ class ApplicationsExportResponse implements IResponse {
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
                 return $applicaiton->getBirthCode();
             });
-        $response->addColumn('address','Adresa')
+        $response->addColumn('street','Ulice')
+            ->setCustomRenderer(function(ApplicationEntity $applicaiton){
+                return $applicaiton->getStreet();
+            });
+        $response->addColumn('address','Číslo popisné')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
                 return $applicaiton->getAddress();
             });

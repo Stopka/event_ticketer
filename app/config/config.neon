@@ -57,6 +57,7 @@ services:
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     - App\FrontModule\Responses\ApplicationPdfRenderer
+    - App\Model\Facades\PdfApplicationFacade(%appDir%/files)
     router: App\RouterFactory::createRouter
 
 extensions:

@@ -29,10 +29,14 @@ class OrderFacade extends EntityFacade {
     /** @var ApplicationFacade */
     private $applicationFacade;
 
-    public function __construct(EntityManager $entityManager, EmailMessageFactory $emailMessageFactory, ApplicationFacade $applicationFacade) {
+    /** @var  PdfApplicationFacade */
+    private $pdfApplicationFacade;
+
+    public function __construct(EntityManager $entityManager, EmailMessageFactory $emailMessageFactory, ApplicationFacade $applicationFacade, PdfApplicationFacade $pdfApplicationFacade) {
         parent::__construct($entityManager);
         $this->emailMessageFactory = $emailMessageFactory;
         $this->applicationFacade = $applicationFacade;
+        $this->pdfApplicationFacade = $pdfApplicationFacade;
     }
 
 
@@ -110,6 +114,10 @@ class OrderFacade extends EntityFacade {
 <p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na adrese <a href='$link'>$link</a></p>
 <p>V případě nějakého dotazu pište na ldtmpp@email.cz.</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>");
+        foreach ($order->getApplications() as $application){
+            $file_path = $this->pdfApplicationFacade->getPdfPath($application);
+            $message->addAttachment('přihláška_'.$application->getId().'.pdf',@file_get_contents($file_path));
+        }
         $mailer = new SendmailMailer();
         $mailer->send($message);
     }

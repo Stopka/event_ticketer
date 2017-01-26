@@ -76,7 +76,8 @@ class OrderApplicationsGridWrapper extends GridWrapper {
                 ApplicationEntity::STATE_CANCELLED => 'Zrušeno'
             ]);
 
-        $grid->addColumnText('address','Adresa');
+        $grid->addColumnText('street','Ulice');
+        $grid->addColumnText('address','Číslo popisné');
         $grid->addColumnText('city','Město');
         $grid->addColumnText('zip','PSČ');
         $grid->addColumnText('firstName', 'Jméno');
