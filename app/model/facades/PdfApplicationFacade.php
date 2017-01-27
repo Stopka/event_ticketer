@@ -10,16 +10,19 @@ namespace App\Model\Facades;
 
 
 use App\Model\Entities\ApplicationEntity;
+use App\Model\FileStorage;
 
 class PdfApplicationFacade extends BaseFacade {
 
-    /**
-     * @var string
-     */
-    private $dir;
+    const PATH_BASE = '/pdf_applications';
+    const PATH_SOURCES = '/sources';
+    const PATH_DESTINATIONS = '/destinations';
 
-    public function __construct($dir) {
-        $this->dir = $dir;
+    /** @var  FileStorage */
+    private $fileStorage;
+
+    public function __construct(FileStorage $fileStorage) {
+        $this->fileStorage = $fileStorage;
         $this->createDirs();
     }
 
@@ -29,37 +32,30 @@ class PdfApplicationFacade extends BaseFacade {
     }
 
     private function createDirs(){
-        $this->createDir($this->getBasePath());
-        $this->createDir($this->getSourcePath());
-        $this->createDir($this->getDestinationPath());
-    }
-
-    private function createDir($dir){
-        if (!is_dir($dir)) {
-            umask(0);
-            mkdir($dir, 0777);
-        }
+        $this->fileStorage->createDir(self::PATH_BASE);
+        $this->fileStorage->createDir(self::PATH_BASE.self::PATH_SOURCES);
+        $this->fileStorage->createDir(self::PATH_BASE.self::PATH_DESTINATIONS);
     }
 
     /**
      * @return string
      */
     private function getBasePath(){
-        return $this->dir.'/pdf_applications';
+        return $this->fileStorage->getFullPath(self::PATH_BASE);
     }
 
     /**
      * @return string
      */
     private function getSourcePath(){
-        return $this->getBasePath().'/sources';
+        return $this->getBasePath().self::PATH_SOURCES;
     }
 
     /**
      * @return string
      */
     private function getDestinationPath(){
-        return $this->getBasePath().'/destinations';
+        return $this->getBasePath().self::PATH_DESTINATIONS;
     }
 
     /**

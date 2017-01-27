@@ -10,6 +10,7 @@ namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\CapacityAttribute;
 use App\Model\Entities\Attributes\IdentifierAttribute;
+use App\Model\Entities\Attributes\InternalInfoAttribute;
 use App\Model\Entities\Attributes\NameAttribute;
 use App\Model\Entities\Attributes\StartDateAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class EventEntity extends BaseEntity {
-    use IdentifierAttribute, NameAttribute, CapacityAttribute, StartDateAttribute;
+    use IdentifierAttribute, NameAttribute, CapacityAttribute, StartDateAttribute, InternalInfoAttribute;
 
     const STATE_INACTIVE=false;
     const STATE_ACTIVE=true;
