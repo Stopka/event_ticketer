@@ -60,6 +60,11 @@ class ApplicationsGridWrapper extends GridWrapper {
             Debugger::barDump($args);
         })
             ->setIcon('fa fa-eye');
+        $grid->addActionEvent('upravit', 'Upravit', function ($id) {
+            return $this->getPresenter()->redirect('Order:edit',$id);
+        })
+            ->setPrimaryKey('order.id')
+            ->setIcon('fa fa-pencil');
     }
 
     protected function appendApplicationColumns(Grid $grid) {

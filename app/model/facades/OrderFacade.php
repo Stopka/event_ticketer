@@ -98,6 +98,47 @@ class OrderFacade extends EntityFacade {
     }
 
     /**
+     * @param $values array
+     * @param EventEntity|null $event
+     * @param EarlyEntity|null $early
+     * @return OrderEntity
+     */
+    public function editOrderFromOrderForm($values, EventEntity $event = null, EarlyEntity $early = null, SubstituteEntity $substitute = null, OrderEntity $order = null) {
+        $entityManager = $this->getEntityManager();
+        //$order = new OrderEntity();
+        $order->setByValueArray($values);
+        $entityManager->persist($order);
+        $commonValues = $values['commons'];
+        $optionRepository = $entityManager->getRepository(OptionEntity::class);
+        $additionRepository = $entityManager->getRepository(AdditionEntity::class);
+        /** @var AdditionEntity[] $additions */
+        $additions = $additionRepository->findBy(['visible' => false, 'event.id' => $event->getId()]);
+        foreach ($values['children'] as $id => $childValues) {
+            foreach ($order->getApplications() as $application){
+                if($application->getId()!=$id){
+                    continue;
+                }
+                $application->setByValueArray($commonValues);
+                $application->setByValueArray($childValues['child']);
+                //$entityManager->persist($application);
+                foreach ($childValues['addittions'] as $additionId => $optionId) {
+                    foreach ($application->getChoices() as $choice) {
+                        if($choice->getOption()->getAddition()->getId()!=$additionId){
+                            continue;
+                        }
+                        /** @var OptionEntity $option */
+                        $option = $optionRepository->find($optionId);
+                        $choice->setOption($option);
+                        //$entityManager->persist($choice);
+                    }
+                }
+            }
+        }
+        $entityManager->flush();
+        return $order;
+    }
+
+    /**
      * @param OrderEntity $order
      */
     public function sendRegistrationEmail(OrderEntity $order) {
@@ -176,6 +217,17 @@ class OrderFacade extends EntityFacade {
                 }
             }
         }
+        if ($event->isCapacityFull($this->applicationFacade->countIssuedApplications($event))) {
+            $event->setCapacityFull();
+        }
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param $id
+     * @return null|OrderEntity
+     */
+    public function getOrder($id){
+        return $this->get($id);
     }
 }

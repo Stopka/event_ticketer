@@ -49,6 +49,10 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         $this->event = $event;
     }
 
+    public function isAdmin() {
+        return true;
+    }
+
 
     protected function getEvent() {
         return $this->event;

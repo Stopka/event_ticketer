@@ -6,6 +6,7 @@ use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\CurrencyEntity;
 use App\Model\Entities\EarlyEntity;
 use App\Model\Entities\EventEntity;
+use App\Model\Entities\OrderEntity;
 use App\Model\Entities\SubstituteEntity;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\CurrencyFacade;
@@ -40,6 +41,9 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  SubstituteEntity */
     private $substitute;
 
+    /** @var  OrderEntity */
+    private $order;
+
     public function __construct(CurrencyFacade $currencyFacade, OrderFacade $orderFacade, ApplicationFacade $applicationFacade) {
         parent::__construct();
         $this->currencyFacade = $currencyFacade;
@@ -59,6 +63,17 @@ class OrderFormWrapper extends FormWrapper {
 
     protected function getApplicationFacade() {
         return $this->applicationFacade;
+    }
+
+    public function setOrder(OrderEntity $order){
+        $this->order = $order;
+        $this->event = $order->getEvent();
+        $this->early = $order->getEarly();
+        $this->substitute = $order->getSubstitute();
+    }
+
+    public function isAdmin() {
+        return $this->order?true:false;
     }
 
 
@@ -98,7 +113,7 @@ class OrderFormWrapper extends FormWrapper {
         $this->appendCommonControls($form);
         $this->appendChildrenControls($form);
         $this->appendFinalControls($form);
-        $this->appendSubmitControls($form, 'Rezervovat', [$this, 'registerClicked']);
+        $this->appendSubmitControls($form, $this->order?'Uložit':'Rezervovat', [$this, 'registerClicked']);
         $this->loadData($form);
     }
 
@@ -109,6 +124,18 @@ class OrderFormWrapper extends FormWrapper {
         if ($this->substitute) {
             $form->setDefaults($this->substitute->getValueArray());
         }
+        if($this->order){
+            $form->setDefaults($this->order->getValueArray());
+            foreach ($this->order->getApplications() as $application){
+                $form['children'][$application->getId()]['child']->setDefaults($application->getValueArray());
+                $form['commons']->setDefaults($application->getValueArray());
+                foreach ($application->getChoices() as $choice){
+                    $form['children'][$application->getId()]['addittions']->setDefaults([
+                        $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
+                    ]);
+                }
+            }
+        }
     }
 
     /**
@@ -117,9 +144,15 @@ class OrderFormWrapper extends FormWrapper {
     protected function registerClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->orderFacade->createOrderFromOrderForm($values, $this->event, $this->early, $this->substitute);
-        $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.', 'success');
-        $this->getPresenter()->redirect('Homepage:');
+        if($this->order) {
+            $this->orderFacade->editOrderFromOrderForm($values, $this->event, $this->early, $this->substitute, $this->order);
+            $this->getPresenter()->flashMessage('Objednávka byla uložena.', 'success');
+            $this->getPresenter()->redirect('Application:',$this->event->getId());
+        }else{
+            $this->orderFacade->createOrderFromOrderForm($values, $this->event, $this->early, $this->substitute);
+            $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.', 'success');
+            $this->getPresenter()->redirect('Homepage:');
+        }
     }
 
     protected function appendFinalControls(Form $form) {
@@ -169,7 +202,7 @@ class OrderFormWrapper extends FormWrapper {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
         $count_left = $this->event->getCapacityLeft($this->applicationFacade->countIssuedApplications($this->event));
-        if(!$this->substitute) {
+        if(!$this->substitute&&!$this->order) {
             $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
                 ->setOption('description', "Zbývá $count_left přihlášek")
                 ->setValidationScope(FALSE);
@@ -187,12 +220,33 @@ class OrderFormWrapper extends FormWrapper {
             $this->appendChildControls($form, $child);
             $this->appendAdditionsControls($form, $child);
 
+            if(!$this->order) {
+                $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')
+                    ->setValidationScope(FALSE); # disables validation
+                $remove_button->onClick[] = $removeEvent;
+                $remove_button->getControlPrototype()->class = 'ajax';
+            }
+        }, $this->getApplicationCount(), $this->isApplicationCountFixed());
+    }
 
-            $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')
-                ->setValidationScope(FALSE); # disables validation
-            $remove_button->onClick[] = $removeEvent;
-            $remove_button->getControlPrototype()->class = 'ajax';
-        }, $this->substitute?$this->substitute->getCount():1, $this->substitute?false:true);
+    private function getApplicationCount(){
+        if($this->order){
+            return 0;
+        }
+        if($this->substitute){
+            return $this->substitute->getCount();
+        }
+        return 1;
+    }
+
+    private function isApplicationCountFixed(){
+        if($this->order){
+            return false;
+        }
+        if($this->substitute){
+            return false;
+        }
+        return true;
     }
 
     protected function appendChildControls(Form $form, Container $container) {

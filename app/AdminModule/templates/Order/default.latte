@@ -1,0 +1,24 @@
+{**
+ * @param EventEntity[] $events
+ *}
+{block content}
+<h1>{$order->getEvent()->getName()}</h1>
+<h2>Objednávka #{$order->getId()}</h2>
+<ul>
+    <li>Událost: <strong>{$order->getEvent()->getName()}</strong></li>
+    <li>Jméno: <strong>{$order->getFirstName()}</strong></li>
+    <li>Příjmení: <strong>{$order->getLastName()}</strong></li>
+    <li>Telefon: <strong>{$order->getPhone()}</strong></li>
+    <li>Email: <strong>{$order->getEmail()}</strong></li>
+    <li n:if="$order->getEarly()">
+        Přednostní výdej pro:
+        <strong>{$order->getEarly()->getFirstName()} {$order->getEarly()->getLastName()}</strong>
+    </li>
+    <li n:if="$order->getSubstitute()">
+        Náhradník:
+        <strong>{$order->getSubstitute()->getFirstName()} {$order->getSubstitute()->getLastName()}</strong>
+    </li>
+</ul>
+
+<h2>Přihlášky</h2>
+{control applicationsGrid}

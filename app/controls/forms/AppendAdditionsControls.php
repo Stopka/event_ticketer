@@ -113,6 +113,8 @@ trait AppendAdditionsControls {
         return $result;
     }
 
+    abstract protected function isAdmin();
+
     /**
      * @param OptionEntity $option
      * @param $prices array
@@ -136,7 +138,7 @@ trait AppendAdditionsControls {
         if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['countLeft'])) {
             $left = $prices[$option->getId()]['countLeft'];
             $result->addHtml(
-                Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0])
+                Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0&&!$this->isAdmin()])
                     ->setText("Zbývá $left míst")
             );
         }
