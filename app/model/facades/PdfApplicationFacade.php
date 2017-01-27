@@ -119,7 +119,7 @@ class PdfApplicationFacade extends BaseFacade {
     }
 
     public function createPdf(ApplicationEntity $application) {
-        $source = file_get_contents($this->getSourcePath());
+        $source = file_get_contents($this->getSourcePdfFilePath($application));
         $dest = str_replace('(888)', '(' . $application->getId() . ')', $source);
         file_put_contents($this->getDestinationPdfFilePath($application), $dest);
     }
