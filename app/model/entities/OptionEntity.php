@@ -10,6 +10,7 @@ namespace App\Model\Entities;
 
 use App\Model\Entities\Attributes\CapacityAttribute;
 use App\Model\Entities\Attributes\IdentifierAttribute;
+use App\Model\Entities\Attributes\InternalInfoAttribute;
 use App\Model\Entities\Attributes\NameAttribute;
 use App\Model\Entities\Attributes\PriceAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class OptionEntity extends BaseEntity {
-    use IdentifierAttribute, NameAttribute, CapacityAttribute, PriceAttribute;
+    use IdentifierAttribute, NameAttribute, CapacityAttribute, PriceAttribute, InternalInfoAttribute;
 
     public function __construct() {
         $this->choices = new ArrayCollection();

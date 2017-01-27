@@ -10,6 +10,7 @@ namespace App\Model\Facades;
 
 
 use App\Model\Entities\ApplicationEntity;
+use App\Model\Entities\EventEntity;
 use App\Model\FileStorage;
 
 class PdfApplicationFacade extends BaseFacade {
@@ -17,6 +18,9 @@ class PdfApplicationFacade extends BaseFacade {
     const PATH_BASE = '/pdf_applications';
     const PATH_SOURCES = '/sources';
     const PATH_DESTINATIONS = '/destinations';
+    const PATH_OTHERS = '/others';
+    const INFO_PDF_ITEM = 'pdfPathExtension';
+    const INFO_FILES_ITEM = 'files';
 
     /** @var  FileStorage */
     private $fileStorage;
@@ -26,15 +30,41 @@ class PdfApplicationFacade extends BaseFacade {
         $this->createDirs();
     }
 
+    /**
+     * @param EventEntity $event
+     * @return string[]
+     */
+    public function getFilePaths(EventEntity $event){
+        $files = $event->getInternalInfoItem(self::INFO_FILES_ITEM);
+        if(!$files){
+            $files = [];
+        }
+        $result = [];
+        foreach ($files as $file){
+            $result[] = $this->getFilePath($file);
+        }
+        return $result;
+    }
+
+    /**
+     * @param $file string
+     * @return string
+     */
+    protected function getFilePath($file){
+        return $this->getOthersPath().$file;
+    }
+
 
     public function getPdfPath(ApplicationEntity $application) {
-
+        $this->createPdf($application);
+        return $this->getDestinationPdfFilePath($application);
     }
 
     private function createDirs(){
         $this->fileStorage->createDir(self::PATH_BASE);
         $this->fileStorage->createDir(self::PATH_BASE.self::PATH_SOURCES);
         $this->fileStorage->createDir(self::PATH_BASE.self::PATH_DESTINATIONS);
+        $this->fileStorage->createDir(self::PATH_BASE.self::PATH_OTHERS);
     }
 
     /**
@@ -59,14 +89,21 @@ class PdfApplicationFacade extends BaseFacade {
     }
 
     /**
+     * @return string
+     */
+    private function getOthersPath(){
+        return $this->getBasePath().self::PATH_OTHERS;
+    }
+
+    /**
      * @param ApplicationEntity $applicationEntity
      * @return string
      */
     protected function getSourcePdfFilePath(ApplicationEntity $applicationEntity) {
         $path_extension = '';
         foreach ($applicationEntity->getChoices() as $choice){
-            $info = $choice->getOption()->getInternalInfo();
-            if($info&&isset($info['pdf'])){
+            $info = $choice->getOption()->getInternalInfoItem(self::INFO_PDF_ITEM);
+            if($info){
                 $path_extension .= $info['pdf'];
             }
         }

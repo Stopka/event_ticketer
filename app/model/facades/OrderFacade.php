@@ -118,6 +118,9 @@ class OrderFacade extends EntityFacade {
             $file_path = $this->pdfApplicationFacade->getPdfPath($application);
             $message->addAttachment('přihláška_'.$application->getId().'.pdf',@file_get_contents($file_path));
         }
+        foreach ($this->pdfApplicationFacade->getFilePaths($order->getEvent()) as $file){
+            $message->addAttachment($file);
+        }
         $mailer = new SendmailMailer();
         $mailer->send($message);
     }
