@@ -46,9 +46,13 @@ class EventPresenter extends BasePresenter {
     }
 
     public function actionRegister($id = null) {
-        $event = $this->eventFacade->getPublicAvailibleEvent($id);
-        if(!$event){
+        $event = $this->eventFacade->getEvent($id);
+        if(!$event||!$event->isActive()){
             $this->flashMessage('Událost nebyla nalezena','error');
+            $this->redirect('Homepage:');
+        }
+        if(!$event->isStarted()){
+            $this->flashMessage('Událost ještě nebyla zpřístupněna veřejnosti.', 'warning');
             $this->redirect('Homepage:');
         }
         if ($event->isCapacityFull()) {

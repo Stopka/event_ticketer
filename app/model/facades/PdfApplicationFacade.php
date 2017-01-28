@@ -104,7 +104,7 @@ class PdfApplicationFacade extends BaseFacade {
         foreach ($applicationEntity->getChoices() as $choice){
             $info = $choice->getOption()->getInternalInfoItem(self::INFO_PDF_ITEM);
             if($info){
-                $path_extension .= $info['pdf'];
+                $path_extension .= $info;
             }
         }
         return $this->getSourcePath().'/'.$applicationEntity->getOrder()->getEvent()->getId().$path_extension.'.pdf';

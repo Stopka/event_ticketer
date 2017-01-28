@@ -4,6 +4,7 @@ namespace App\ApiModule\Presenters;
 
 use App\Model;
 use Nette\Application\Responses\TextResponse;
+use Tracy\Debugger;
 
 
 class EarlyPresenter extends BasePresenter {
@@ -15,7 +16,9 @@ class EarlyPresenter extends BasePresenter {
     public $earlyWaveFacede;
 
     public function renderSendEmails() {
-        $this->earlyWaveFacede->sendEmails(1);
+        if(!Debugger::$productionMode){
+            $this->earlyWaveFacede->sendEmails(1);
+        }
         $this->sendResponse(new TextResponse('OK'));
     }
 
