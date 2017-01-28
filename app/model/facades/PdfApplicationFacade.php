@@ -12,6 +12,7 @@ namespace App\Model\Facades;
 use App\Model\Entities\ApplicationEntity;
 use App\Model\Entities\EventEntity;
 use App\Model\FileStorage;
+use Nette\Utils\Strings;
 
 class PdfApplicationFacade extends BaseFacade {
 
@@ -120,7 +121,7 @@ class PdfApplicationFacade extends BaseFacade {
 
     public function createPdf(ApplicationEntity $application) {
         $source = file_get_contents($this->getSourcePdfFilePath($application));
-        $dest = str_replace('(888)', '(' . $application->getId() . ')', $source);
+        $dest = str_replace('(888)', '(' . Strings::padLeft($application->getId(),3,'0') . ')', $source);
         file_put_contents($this->getDestinationPdfFilePath($application), $dest);
     }
 
