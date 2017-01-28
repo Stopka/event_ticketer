@@ -43,6 +43,8 @@ abstract class GridWrapper extends Control {
         //$grid->setTranslator($this->translator);
         $grid->setTranslator(new FileTranslator('cs'));
         $this->configure($grid);
+        $grid->setDefaultPerPage(300);
+        $grid->setPerPageList([300]);
         return $grid;
     }
 
