@@ -14,7 +14,7 @@ use App\Model\Entities\EarlyWaveEntity;
 use App\Model\Entities\EventEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\ApplicationException;
-use Nette\Mail\SmtpMailer;
+use Nette\Mail\SendmailMailer;
 use Tracy\Debugger;
 
 class EarlyWaveFacade extends EntityFacade {
@@ -64,14 +64,13 @@ class EarlyWaveFacade extends EntityFacade {
             $mail = $this->emailMessageFactory->create();
             $mail->addTo($early->getEmail())
                 ->setSubject('Přednostní výdej přihlášek')
-                ->setBody("Dobrý den,
-Velice si vážíme Vaší podpory v minulém roce, a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek. Běžný výdej přihlášek započne " . $wave->getEvent()->getEndDate()->format('d. m. Y') . ", pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu, kde standardním způsobem vyplníte rezervační formulář.
-$link
-Tým LDTPardubice");
-            $mailer = new SmtpMailer();
+                ->setHtmlBody("<p>Dobrý den,<br/>
+Velice si vážíme Vaší podpory v minulém roce, a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek. Běžný výdej přihlášek započne " . $wave->getEvent()->getStartDate()->format('d. m. Y') . ", pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu, kde standardním způsobem vyplníte rezervační formulář.<br/>
+$link</p>
+<p>Tým LDTPardubice</p>");
+            $mailer = new SendmailMailer();
             Debugger::barDump($mail);
-            //TODO odkomentovat
-            //$mailer->send($mail);
+            $mailer->send($mail);
         }
         $wave->setInviteSent();
         $this->getEntityManager()->flush();

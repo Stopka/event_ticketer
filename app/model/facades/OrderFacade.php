@@ -152,8 +152,9 @@ class OrderFacade extends EntityFacade {
         $message->setHtmlBody("<p>Dobrý den,</p>
 <p> Děkujeme, že jste projevili zájem o přihlášku na <strong>" . $order->getEvent()->getName() . "</strong>. V příloze zasíláme přihlášku, bezinfekčnost a lékařské potvrzení. Bezinfekčnost, lékařské potvrzení a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
 <p>Nyní je potřeba přihlášku vytisknout pro každé rezervované místo, dovyplnit, odeslat a ke každé přihlášce zaplatit rezervační poplatek. Další informace jsou uvedeny přímo v přihlášce.</p>
-<p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na adrese <a href='$link'>$link</a></p>
-<p>V případě nějakého dotazu pište na ldtmpp@email.cz.</p>
+<p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na následující adrese: <br />
+ <a href='$link'>$link</a></p>
+<p>V případě dotazu pište na ldtmpp@email.cz.</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>");
         foreach ($order->getApplications() as $application){
             $file_path = $this->pdfApplicationFacade->getPdfPath($application);

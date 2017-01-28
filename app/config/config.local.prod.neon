@@ -1,0 +1,6 @@
+parameters:
+    database:
+        host: wm136.wedos.net
+        dbname: d4241_app
+        user: w4241_app
+        password: P7xvwUJL

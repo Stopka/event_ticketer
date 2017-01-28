@@ -96,3 +96,6 @@ forms:
         MIN_LENGTH: 'Pole %label musí mít minimální %d znaků.'
         MAX_LENGTH: 'Pole %label může mít maximálně %d znaků.'
         EMAIL: 'Pole %label musí být platná emailová adresa'
+
+tracy:
+    email: stopka@ldtpardubice.cz
