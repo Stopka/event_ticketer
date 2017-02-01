@@ -34,8 +34,10 @@ class ApplicationsExportResponse implements IResponse {
     }
 
     function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) {
-        $response = new ExportResponse($this->applications,ExportResponse::EXPORT_FORMAT_CSV);
+        $response = new ExportResponse($this->applications,ExportResponse::EXPORT_FORMAT_XLSX);
         $response->setFilenameWithDate('přihlášky-');
+        $response->setColumnDelimiter(';');
+        //$response->setCharset('windows-1250');
         $response->addColumn('order_id','Číslo objednávky')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
                 return $applicaiton->getOrder()->getId();
