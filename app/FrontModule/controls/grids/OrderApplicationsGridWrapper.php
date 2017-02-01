@@ -10,7 +10,6 @@ use App\Model\Facades\ChoiceFacade;
 use Grido\Components\Filters\Filter;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -60,9 +59,9 @@ class OrderApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionEvent('detail', '', function (...$args) {
+        /*$grid->addActionEvent('detail', '', function (...$args) {
             Debugger::barDump($args);
-        });
+        });*/
     }
 
     protected function appendApplicationColumns(Grid $grid) {

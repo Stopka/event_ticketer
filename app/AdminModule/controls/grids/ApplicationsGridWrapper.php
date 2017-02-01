@@ -9,7 +9,6 @@ use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\ChoiceFacade;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -56,10 +55,11 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionEvent('detail', 'Detail', function (...$args) {
-            Debugger::barDump($args);
+        $grid->addActionEvent('detail', 'Detail', function ($id) {
+            return $this->getPresenter()->redirect('Order:default',$id);
         })
-            ->setIcon('fa fa-eye');
+            ->setIcon('fa fa-eye')
+            ->setPrimaryKey('order.id');
         $grid->addActionEvent('upravit', 'Upravit', function ($id) {
             return $this->getPresenter()->redirect('Order:edit',$id);
         })

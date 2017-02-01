@@ -56,6 +56,7 @@ services:
     - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
+    - App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
     - App\FrontModule\Responses\ApplicationPdfRenderer
     - App\Model\FileStorage(%appDir%/files)
     - App\Model\Facades\PdfApplicationFacade
