@@ -53,6 +53,7 @@
             if(!Modernizr.inputtypes.date){
                 $("input[type=date]").each(function(){
                     this.type='text';
+                    this.placeholder='rrrr-mm-dd';
                     $(this).dateRangePicker({
                         language: 'cz',
                         autoClose: true,
