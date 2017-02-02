@@ -54,7 +54,7 @@
                 $("input[type=date]").each(function(){
                     this.type='text';
                     $(this).dateRangePicker({
-                        language: 'custom',
+                        language: 'cz',
                         autoClose: true,
                         singleDate : true,
                         showShortcuts: false,
