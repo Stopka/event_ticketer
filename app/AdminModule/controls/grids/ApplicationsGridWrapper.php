@@ -157,7 +157,11 @@ class ApplicationsGridWrapper extends GridWrapper {
                         if($choice->getOption()->getAddition()->getId()!=$addition->getId()){
                             continue;
                         }
-                        $isPayedLink = Html::el('a', ['title' => 'Přepnout','href' => $this->link('inverseChoicePayed!', $choice->getId()),])
+                        $isPayedLink = Html::el('a', [
+                            'id'=>'choice_'.$choice->getId(),
+                            //'class'=>'ajax',
+                            'title' => 'Přepnout',
+                            'href' => $this->link('inverseChoicePayed!#choice_'.$choice->getId(), $choice->getId()),])
                             ->addHtml(Html::el('i',['class'=>'fa '.($choice->isPayed()?'fa-check-square-o':'fa-square-o')]));
                         $name = Html::el('span')->setText($choice->getOption()->getName());
                         $result->addHtml(
@@ -173,6 +177,10 @@ class ApplicationsGridWrapper extends GridWrapper {
 
     public function handleInverseChoicePayed($choiceId) {
         $this->choiceFacade->inversePayed($choiceId);
+        if($this->getPresenter()->isAjax()){
+            $this->redrawControl();
+            return;
+        }
         $this->redirect('this');
     }
 }

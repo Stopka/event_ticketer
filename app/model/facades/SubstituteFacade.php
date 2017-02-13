@@ -66,7 +66,7 @@ class SubstituteFacade extends EntityFacade {
             return NULL;
         /** @var SubstituteEntity $substitute */
         $substitute = $this->get($id);
-        if($substitute->getGuid()!=$guid||!$substitute->isActive()){
+        if(!$substitute||$substitute->getGuid()!=$guid||!$substitute->isActive()){
             return NULL;
         }
         return $substitute;

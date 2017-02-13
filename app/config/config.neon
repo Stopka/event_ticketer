@@ -34,6 +34,7 @@ session:
     expiration: '+ 30 days'
     #cookieDomain: '.%host%'
     name: 'APPSESSID'
+    autoStart: true
 
 services:
     - App\Model\SystemConfigurations
