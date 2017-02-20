@@ -54,13 +54,11 @@ abstract class GridWrapper extends Control {
      * @param array ...$args
      */
     public function render(...$args) {
-        if (!$this->template_path) {
-            /** @var Grid $grid */
-            $grid = $this->getComponent('grid');
-            $grid->render(...$args);
-            return;
+        $template_path = $this->template_path;
+        if (!$template_path) {
+            $template_path = __DIR__.'/GridWrapper.latte';
         }
-        $this->template->setFile($this->template_path);
+        $this->template->setFile($template_path);
         $this->template->render();
     }
 

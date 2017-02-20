@@ -159,7 +159,8 @@ class ApplicationsGridWrapper extends GridWrapper {
                         }
                         $isPayedLink = Html::el('a', [
                             'id'=>'choice_'.$choice->getId(),
-                            //'class'=>'ajax',
+                            'class'=>'ajax',
+                            'data-ajax-off'=>'unique',
                             'title' => 'Přepnout',
                             'href' => $this->link('inverseChoicePayed!#choice_'.$choice->getId(), $choice->getId()),])
                             ->addHtml(Html::el('i',['class'=>'fa '.($choice->isPayed()?'fa-check-square-o':'fa-square-o')]));
