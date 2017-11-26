@@ -28,9 +28,9 @@ class OrderApplicationsGridWrapper extends GridWrapper {
     /** @var  OrderEntity */
     private $order;
 
-    public function __construct(ITranslator $translator, ApplicationDao $applicationFacade, ChoiceDao $choiceFacade) {
+    public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceDao $choiceFacade) {
         parent::__construct($translator);
-        $this->applicationFacade = $applicationFacade;
+        $this->applicationFacade = $applicationDao;
         $this->choiceFacade = $choiceFacade;
     }
 

@@ -6,14 +6,11 @@
  * Time: 20:18
  */
 
-namespace App\Model\Facades;
+namespace App\Model\Persistence\Dao;
 
-
-use App\Model\Entities\AdditionEntity;
-use App\Model\Persistence\Dao\DoctrineDao;
 use App\Model\Persistence\Entity\OrderEntity;
 
-class OrderDao extends DoctrineDao {
+class OrderDao extends EntityDao {
 
     protected function getEntityClass(): string {
         return OrderEntity::class;

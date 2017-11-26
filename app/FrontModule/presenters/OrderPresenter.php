@@ -4,25 +4,26 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory;
 use App\FrontModule\Controls\Grids\OrderApplicationsGridWrapper;
-use App\Model;
+use App\Model\Persistence\Dao\OrderDao;
 
 
 class OrderPresenter extends BasePresenter {
 
-    /**
-     * @var Model\Facades\OrderDao
-     * @inject
-     */
-    public $orderFacade;
+    /** @var OrderDao */
+    public $orderDao;
 
-    /**
-     * @var IOrderApplicationsGridWrapperFactory
-     * @inject
-     */
+    /** @var IOrderApplicationsGridWrapperFactory */
     public $orderApplicationsGridWrapperFactory;
 
+    public function __construct(OrderDao $orderDao, IOrderApplicationsGridWrapperFactory $orderApplicationsGridWrapperFactory) {
+        parent::__construct();
+        $this->orderDao = $orderDao;
+        $this->orderApplicationsGridWrapperFactory = $orderApplicationsGridWrapperFactory;
+    }
+
+
     public function actionDefault($id = null) {
-        $order = $this->orderFacade->getViewableOrder($id);
+        $order = $this->orderDao->getViewableOrder($id);
         if(!$order){
             $this->flashMessage('Objednávka nebyla nalezena','error');
             $this->redirect('Homepage:');

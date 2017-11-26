@@ -7,30 +7,35 @@ use App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory;
 use App\AdminModule\Controls\Grids\OrderApplicationsGridWrapper;
 use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
-use App\Model\Facades\OrderDao;
+use App\Model\Persistence\Dao\OrderDao;
 
 class OrderPresenter extends BasePresenter {
 
-    /**
-     * @var  OrderDao
-     * @inject
-     */
-    public $orderFacade;
+    /** @var OrderDao  */
+    private $orderDao;
 
-    /**
-     * @var IOrderFormWrapperFactory
-     * @inject
-     */
+    /** @var IOrderFormWrapperFactory  */
     public $orderFormFactory;
 
-    /**
-     * @var IOrderApplicationsGridWrapperFactory
-     * @inject
-     */
+    /** @var IOrderApplicationsGridWrapperFactory  */
     public $orderApplicationsGridFactory;
 
+    /**
+     * OrderPresenter constructor.
+     * @param OrderDao $orderDao
+     * @param IOrderFormWrapperFactory $orderFormWrapperFactory
+     * @param IOrderApplicationsGridWrapperFactory $orderApplicationsGridWrapperFactory
+     */
+    public function __construct(OrderDao $orderDao, IOrderFormWrapperFactory $orderFormWrapperFactory, IOrderApplicationsGridWrapperFactory $orderApplicationsGridWrapperFactory) {
+        parent::__construct();
+        $this->orderDao = $orderDao;
+        $this->orderFormFactory = $orderFormWrapperFactory;
+        $this->orderApplicationsGridFactory = $orderApplicationsGridWrapperFactory;
+    }
+
+
     public function actionDefault($id) {
-        $order = $this->orderFacade->getOrder($id);
+        $order = $this->orderDao->getOrder($id);
         if(!$order){
             $this->flashMessage('Objednávka nebyla nalezena','error');
             $this->redirect('Homepage:');
@@ -42,7 +47,7 @@ class OrderPresenter extends BasePresenter {
     }
 
     public function actionEdit($id) {
-        $order = $this->orderFacade->getOrder($id);
+        $order = $this->orderDao->getOrder($id);
         if(!$order){
             $this->flashMessage('Objednávka nebyla nalezena','error');
             $this->redirect('Homepage:');

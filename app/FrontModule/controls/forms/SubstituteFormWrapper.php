@@ -10,14 +10,14 @@ namespace App\FrontModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
-use App\Model\Facades\SubstituteDao;
+use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use Nette\Forms\Controls\SubmitButton;
 
 class SubstituteFormWrapper extends FormWrapper {
 
-    /** @var  SubstituteDao */
+    /** @var  \App\Model\Persistence\Dao\SubstituteDao */
     private $substituteFacade;
 
     /** @var  EarlyEntity */

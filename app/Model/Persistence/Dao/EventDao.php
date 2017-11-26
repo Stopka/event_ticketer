@@ -9,7 +9,6 @@
 namespace App\Model\Persistence\Dao;
 
 use App\Model\Persistence\Entity\EventEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class EventDao extends EntityDao {
 
@@ -20,7 +19,7 @@ class EventDao extends EntityDao {
     /**
      * @return EventEntity[]
      */
-    public function getAllEvents(): ArrayCollection {
+    public function getAllEvents(): array {
         return $this->getRepository()->findAll();
     }
 
@@ -28,7 +27,7 @@ class EventDao extends EntityDao {
      * Started and active events
      * @return EventEntity[]
      */
-    public function getPublicAvailibleEvents(): ArrayCollection {
+    public function getPublicAvailibleEvents(): array {
         return $this->getRepository()->findBy([
             'state' => EventEntity::STATE_ACTIVE,
             'startDate <=' => new \DateTime()
@@ -41,7 +40,7 @@ class EventDao extends EntityDao {
      * Started and future events
      * @return EventEntity[]
      */
-    public function getPublicFutureEvents(): ArrayCollection {
+    public function getPublicFutureEvents(): array {
         return $this->getRepository()->findBy([
             'state' => EventEntity::STATE_ACTIVE,
             'startDate >' => new \DateTime()

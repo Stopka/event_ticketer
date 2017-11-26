@@ -6,47 +6,53 @@ use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
 use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
-use App\Model;
+use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Dao\OptionDao;
+use App\Model\Persistence\Entity\OptionEntity;
 
 
 class EventPresenter extends BasePresenter {
 
-    /**
-     * @var \App\Model\Persistence\Dao\EventDao
-     * @inject
-     */
-    public $eventFacade;
+    /** @var EventDao */
+    public $eventDao;
 
-    /**
-     * @var \App\Model\Persistence\Dao\ApplicationDao
-     * @inject
-     */
-    public $applicationFacade;
+    /** @var ApplicationDao */
+    public $applicationDao;
 
-    /**
-     * @var \App\Model\Persistence\Dao\OptionDao
-     * @inject
-     */
-    public $optionFacade;
+    /** @var OptionDao */
+    public $optionDao;
 
-    /**
-     * @var IOrderFormWrapperFactory
-     * @inject
-     */
+    /** @var IOrderFormWrapperFactory */
     public $orderFormWrapperFactory;
 
-    /**
-     * @var ISubstituteFormWrapperFactory
-     * @inject
-     */
+    /** @var ISubstituteFormWrapperFactory */
     public $substituteFormWrapperFactory;
+
+    /**
+     * EventPresenter constructor.
+     * @param EventDao $eventDao
+     * @param ApplicationDao $applicationDao
+     * @param OptionDao $optionDao
+     * @param IOrderFormWrapperFactory $orderFormWrapperFactory
+     * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
+     */
+    public function __construct(EventDao $eventDao, ApplicationDao $applicationDao, OptionDao $optionDao, IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory) {
+        parent::__construct();
+        $this->eventDao = $eventDao;
+        $this->applicationDao = $applicationDao;
+        $this->optionDao = $optionDao;
+        $this->orderFormWrapperFactory = $orderFormWrapperFactory;
+        $this->substituteFormWrapperFactory = $substituteFormWrapperFactory;
+    }
+
 
     public function actionDefault($id = null){
         $this->redirect('register',$id);
     }
 
     public function actionRegister($id = null) {
-        $event = $this->eventFacade->getEvent($id);
+        $event = $this->eventDao->getEvent($id);
         if(!$event||!$event->isActive()){
             $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
@@ -66,7 +72,7 @@ class EventPresenter extends BasePresenter {
     }
 
     public function actionSubstitute($id = null) {
-        $event = $this->eventFacade->getPublicAvailibleEvent($id);
+        $event = $this->eventDao->getPublicAvailibleEvent($id);
         if(!$event){
             $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
@@ -96,34 +102,34 @@ class EventPresenter extends BasePresenter {
 
     public function renderOccupancy($id = null){
         if(!$id){
-            $events = $this->eventFacade->getPublicAvailibleEvents();
+            $events = $this->eventDao->getPublicAvailibleEvents();
             if($events){
                 $this->redirect('this',$events[0]->getId());
                 return;
             }
-            $events = $this->eventFacade->getPublicFutureEvents();
+            $events = $this->eventDao->getPublicFutureEvents();
             if($events){
                 $this->redirect('this',$events[0]->getId());
                 return;
             }
         }
-        $event = $this->eventFacade->getEvent($id);
+        $event = $this->eventDao->getEvent($id);
         if(!$event){
             $this->flashMessage('Událost nebyla nalezena','error');
             $this->redirect('Homepage:');
         }
         $this->template->event = $event;
-        $this->template->event_issued = $this->applicationFacade->countIssuedApplications($event);
-        $this->template->event_reserved = $this->applicationFacade->countReservedApplications($event);
-        $this->template->options = $this->optionFacade->getOptionsWithLimitedCapacity($event);
+        $this->template->event_issued = $this->applicationDao->countIssuedApplications($event);
+        $this->template->event_reserved = $this->applicationDao->countReservedApplications($event);
+        $this->template->options = $this->optionDao->getOptionsWithLimitedCapacity($event);
     }
 
     /**
-     * @param \App\Model\Persistence\Entity\OptionEntity $option
-     * @return integer
+     * @param OptionEntity $option
+     * @return int
      */
-    public function countOptionsReserved(Model\Persistence\Entity\OptionEntity $option){
-        return $this->applicationFacade->countReservedApplicationsWithOption($option);
+    public function countOptionsReserved(OptionEntity $option): int {
+        return $this->applicationDao->countReservedApplicationsWithOption($option);
     }
 
 }

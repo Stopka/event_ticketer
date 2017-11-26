@@ -12,7 +12,6 @@ use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OptionEntity;
 use App\Model\Persistence\Entity\OrderEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 use Grido\DataSources\Doctrine;
 use Grido\DataSources\IDataSource;
 
@@ -99,7 +98,7 @@ class ApplicationDao extends EntityDao {
     /**
      * @return ApplicationEntity[]
      */
-    public function getAllEventApplications(EventEntity $event): ArrayCollection {
+    public function getAllEventApplications(EventEntity $event): array {
 
         //TODO filtr podle eventu
         return $this->getRepository()->findAll();

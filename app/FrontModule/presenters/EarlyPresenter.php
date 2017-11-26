@@ -6,40 +6,46 @@ use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
 use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
+use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Dao\EarlyDao;
 
 
 class EarlyPresenter extends BasePresenter {
 
-    /**
-     * @var IOrderFormWrapperFactory
-     * @inject
-     */
+    /** @var IOrderFormWrapperFactory */
     public $orderFormWrapperFactory;
 
-    /**
-     * @var ISubstituteFormWrapperFactory
-     * @inject
-     */
+    /** @var ISubstituteFormWrapperFactory */
     public $substituteFormWrapperFactory;
 
-    /**
-     * @var \App\Model\Persistence\Dao\ApplicationDao
-     * @inject
-     */
-    public $applicationFacade;
+    /** @var ApplicationDao */
+    public $applicationDao;
+
+    /** @var EarlyDao */
+    public $earlyDao;
 
     /**
-     * @var \App\Model\Persistence\Dao\EarlyDao
-     * @inject
+     * EarlyPresenter constructor.
+     * @param IOrderFormWrapperFactory $orderFormWrapperFactory
+     * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
+     * @param ApplicationDao $applicationDao
+     * @param EarlyDao $earlyDao
      */
-    public $earlyFacade;
+    public function __construct(IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, ApplicationDao $applicationDao, EarlyDao $earlyDao) {
+        parent::__construct();
+        $this->orderFormWrapperFactory = $orderFormWrapperFactory;
+        $this->substituteFormWrapperFactory = $substituteFormWrapperFactory;
+        $this->applicationDao = $applicationDao;
+        $this->earlyDao = $earlyDao;
+    }
+
 
     public function actionDefault($id = null) {
         $this->redirect('register', $id);
     }
 
     public function actionRegister($id = null) {
-        $early = $this->earlyFacade->getReadyEarlyByHash($id);
+        $early = $this->earlyDao->getReadyEarlyByHash($id);
         if (!$early) {
             $this->flashMessage('Přístup k registraci nebyl povolen', 'warning');
             $this->redirect('Homepage:');
@@ -56,7 +62,7 @@ class EarlyPresenter extends BasePresenter {
     }
 
     public function actionSubstitute($id = null) {
-        $early = $this->earlyFacade->getReadyEarlyByHash($id);
+        $early = $this->earlyDao->getReadyEarlyByHash($id);
         if (!$early) {
             $this->flashMessage('Přístup k registraci nebyl povolen', 'warning');
             $this->redirect('Homepage:');

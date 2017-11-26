@@ -19,10 +19,10 @@ use Nette\Security\IIdentity;
 class AdminAuthenticator extends Object implements IAuthenticator {
 
     /** @var  \App\Model\Persistence\Dao\AdministratorDao */
-    private $administratorFacade;
+    private $administratorDao;
 
-    public function __construct(AdministratorDao $administratorFacade) {
-        $this->administratorFacade = $administratorFacade;
+    public function __construct(AdministratorDao $administratorDao) {
+        $this->administratorDao = $administratorDao;
     }
 
 
@@ -34,7 +34,7 @@ class AdminAuthenticator extends Object implements IAuthenticator {
      */
     public function authenticate(array $credentials) {
         list($username,$password) = $credentials;
-        $admin = $this->administratorFacade->getAdministratorByUsername($username);
+        $admin = $this->administratorDao->getAdministratorByUsername($username);
         if(!$admin||!$admin->verifyPassword($password)){
             throw new AuthenticationException('Neplatné přihlašovací údaje');
         }

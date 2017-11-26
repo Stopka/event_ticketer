@@ -14,12 +14,13 @@ use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
+use Doctrine\ORM\EntityManager;
 use Kdyby\Events\Subscriber;
 use Nette\Mail\SendException;
 use Nette\Object;
 
 class EarlyWaveInviteNotifier extends Object implements Subscriber {
-    use TDoctrineEntityManager, TEmailNotifier;
+    use TDoctrineEntityManager, TEmailService;
 
     /** @var  EarlyWaveDao */
     private $earlyWaveDao;
@@ -28,12 +29,20 @@ class EarlyWaveInviteNotifier extends Object implements Subscriber {
     public $onEarlyWaveInvitesSent= Array();
 
     /**
+     * EarlyWaveInviteNotifier constructor.
+     * @param EmailService $emailService
      * @param EarlyWaveDao $earlyWaveDao
+     * @param EntityManager $entityManager
      */
-    public function injectEarlyWaveDao(EarlyWaveDao $earlyWaveDao): void {
+    public function __construct(EmailService $emailService, EarlyWaveDao $earlyWaveDao, EntityManager $entityManager) {
         $this->earlyWaveDao = $earlyWaveDao;
+        $this->injectEmailService($emailService);
+        $this->injectEntityManager($entityManager);
     }
 
+    /**
+     * event callback
+     */
     public function onCronRun(){
         $this->sendUnsentInvites();
     }

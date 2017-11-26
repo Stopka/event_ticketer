@@ -7,14 +7,21 @@ use App\Model\Persistence\Dao\EventDao;
 
 class HomepagePresenter extends BasePresenter {
 
+    /** @var EventDao */
+    public $eventDao;
+
     /**
-     * @var \App\Model\Persistence\Dao\EventDao
-     * @inject
+     * HomepagePresenter constructor.
+     * @param EventDao $eventDao
      */
-    public $eventFacade;
+    public function __construct(EventDao $eventDao) {
+        parent::__construct();
+        $this->eventDao = $eventDao;
+    }
+
 
     public function renderDefault() {
-        $events = $this->eventFacade->getAllEvents();
+        $events = $this->eventDao->getAllEvents();
         if(count($events)==1){
             $this->redirect('Application:',$events[0]->getId());
         }

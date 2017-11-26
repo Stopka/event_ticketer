@@ -20,7 +20,7 @@ trait TDoctrineEntityManager {
      * Dao constructor.
      * @param EntityManager $entityManager
      */
-    public function injectEntityManager(EntityManager $entityManager): void {
+    protected function injectEntityManager(EntityManager $entityManager): void {
         $this->entityManager = $entityManager;
     }
 

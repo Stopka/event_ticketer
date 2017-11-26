@@ -2,21 +2,30 @@
 
 namespace App\ApiModule\Presenters;
 
+use App\Model\Notifier\EarlyWaveInviteNotifier;
 use Nette\Application\Responses\TextResponse;
 use Tracy\Debugger;
 
 
 class EarlyPresenter extends BasePresenter {
 
+    /** @var EarlyWaveInviteNotifier */
+    public $earlyWaveInviteNotifier;
+
     /**
-     * @var \App\Model\Persistence\Dao\EarlyWaveDao
-     * @inject
+     * EarlyPresenter constructor.
+     * @param EarlyWaveInviteNotifier $earlyWaveInviteNotifier
      */
-    public $earlyWaveFacede;
+    public function __construct(EarlyWaveInviteNotifier $earlyWaveInviteNotifier) {
+        parent::__construct();
+        $this->earlyWaveInviteNotifier = $earlyWaveInviteNotifier;
+
+    }
+
 
     public function renderSendEmails() {
         if(!Debugger::$productionMode){
-            $this->earlyWaveFacede->sendEmails(1);
+            $this->earlyWaveInviteNotifier->sendUnsentInvites();
         }
         $this->sendResponse(new TextResponse('OK'));
     }

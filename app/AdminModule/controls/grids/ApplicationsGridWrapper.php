@@ -5,9 +5,9 @@ namespace App\AdminModule\Controls\Grids;
 use App\Grids\Grid;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
-use App\Model\Persistence\Dao\ChoiceDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Manager\ChoiceManager;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
@@ -20,18 +20,18 @@ use Nette\Utils\Html;
 class ApplicationsGridWrapper extends GridWrapper {
 
     /** @var  ApplicationDao */
-    private $applicationFacade;
+    private $applicationDao;
 
-    /** @var  \App\Model\Persistence\Dao\ChoiceDao */
-    private $choiceFacade;
+    /** @var  ChoiceManager */
+    private $choiceManager;
 
     /** @var  \App\Model\Persistence\Entity\EventEntity */
     private $event;
 
-    public function __construct(ITranslator $translator, ApplicationDao $applicationFacade, ChoiceDao $choiceFacade) {
+    public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceManager $choiceManager) {
         parent::__construct($translator);
-        $this->applicationFacade = $applicationFacade;
-        $this->choiceFacade = $choiceFacade;
+        $this->applicationDao = $applicationDao;
+        $this->choiceManager = $choiceManager;
     }
 
     /**
@@ -44,7 +44,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function loadModel(Grid $grid) {
-        $grid->setModel($this->applicationFacade->getAllApplicationsGridModel($this->event));
+        $grid->setModel($this->applicationDao->getAllApplicationsGridModel($this->event));
     }
 
     protected function configure(\App\Grids\Grid $grid) {
@@ -178,7 +178,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     public function handleInverseChoicePayed($choiceId) {
-        $this->choiceFacade->inversePayed($choiceId);
+        $this->choiceManager->inverseChoicePayed($choiceId);
         if($this->getPresenter()->isAjax()){
             $this->redrawControl();
             return;

@@ -2,27 +2,34 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\FrontModule\Responses\ApplicationPdfRenderer;
-use App\Model;
+use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\EventEntity;
 
 
 class HomepagePresenter extends BasePresenter {
 
-    /**
-     * @var \App\Model\Persistence\Dao\EventDao
-     * @inject
-     */
-    public $eventFacade;
+    /** @var EventDao */
+    public $eventDao;
+
+    /** @var ApplicationDao */
+    public $applicationDao;
 
     /**
-     * @var \App\Model\Persistence\Dao\ApplicationDao
-     * @inject
+     * HomepagePresenter constructor.
+     * @param EventDao $eventDao
+     * @param ApplicationDao $applicationDao
      */
-    public $applicationFacade;
+    public function __construct(EventDao $eventDao, ApplicationDao $applicationDao) {
+        parent::__construct();
+        $this->eventDao = $eventDao;
+        $this->applicationDao = $applicationDao;
+    }
+
 
     public function renderDefault() {
-        $events = $this->eventFacade->getPublicAvailibleEvents();
-        $future_events = $this->eventFacade->getPublicFutureEvents();
+        $events = $this->eventDao->getPublicAvailibleEvents();
+        $future_events = $this->eventDao->getPublicFutureEvents();
         if(count($events)==1 && !$future_events){
             $this->redirect('Event:',$events[0]->getId());
         }
@@ -34,18 +41,8 @@ class HomepagePresenter extends BasePresenter {
      * @param $event
      * @return integer
      */
-    public function countApplications(Model\Persistence\Entity\EventEntity $event){
-        return $this->applicationFacade->countIssuedApplications($event);
-    }
-
-    /** @var  ApplicationPdfRenderer @inject */
-    public $renderer;
-
-    public function renderTest(){
-        $event = $this->eventFacade->getEvent(1);
-        $apps = $this->applicationFacade->getAllEventApplications($event);
-        $this->renderer->setApplication($apps[0]);
-        $this->sendResponse($this->renderer->getResponse());
+    public function countApplications(EventEntity $event){
+        return $this->applicationDao->countIssuedApplications($event);
     }
 
 }

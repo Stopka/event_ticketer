@@ -7,17 +7,21 @@ use Nette;
 
 
 class SignPresenter extends BasePresenter {
-    /**
-     * @var ISignInFormWrapperFactory
-     * @inject
-     */
+    /** @var ISignInFormWrapperFactory */
     public $signInFromWrapperFactory;
 
-    /**
-     * @var string
-     * @persistent
-     */
+    /** @var string */
     public $backlink;
+
+    /**
+     * SignPresenter constructor.
+     * @param ISignInFormWrapperFactory $signInFormWrapperFactory
+     */
+    public function __construct(ISignInFormWrapperFactory $signInFormWrapperFactory) {
+        parent::__construct();
+        $this->signInFromWrapperFactory = $signInFormWrapperFactory;
+    }
+
 
     protected function checkUser() {
 

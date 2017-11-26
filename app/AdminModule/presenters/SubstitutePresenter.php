@@ -9,20 +9,26 @@ use App\Model\Persistence\Dao\EventDao;
 
 class SubstitutePresenter extends BasePresenter {
 
-    /**
-     * @var  ISubstitutesGridWrapperFactory
-     * @inject
-     */
+    /** @var  ISubstitutesGridWrapperFactory */
     public $substitutesGridWrapperFactory;
 
+    /** @var EventDao */
+    public $eventDao;
+
     /**
-     * @var EventDao
-     * @inject
+     * SubstitutePresenter constructor.
+     * @param ISubstitutesGridWrapperFactory $substitutesGridWrapperFactory
+     * @param EventDao $eventDao
      */
-    public $eventFacade;
+    public function __construct(ISubstitutesGridWrapperFactory $substitutesGridWrapperFactory, EventDao $eventDao) {
+        parent::__construct();
+        $this->substitutesGridWrapperFactory = $substitutesGridWrapperFactory;
+        $this->eventDao = $eventDao;
+    }
+
 
     public function actionDefault($id) {
-        $event = $this->eventFacade->getEvent($id);
+        $event = $this->eventDao->getEvent($id);
         if(!$event){
             $this->redirect('Homepage:');
         }

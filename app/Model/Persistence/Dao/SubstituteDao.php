@@ -6,10 +6,8 @@
  * Time: 20:18
  */
 
-namespace App\Model\Facades;
+namespace App\Model\Persistence\Dao;
 
-
-use App\Model\Persistence\Dao\EntityDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use Grido\DataSources\Doctrine;

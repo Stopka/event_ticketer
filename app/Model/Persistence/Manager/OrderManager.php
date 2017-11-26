@@ -10,7 +10,8 @@ use App\Model\Persistence\Entity\ChoiceEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OrderEntity;
-use App\Model\Persistence\Factory\SubstituteEntity;
+use App\Model\Persistence\Entity\SubstituteEntity;
+use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
 /**
@@ -35,9 +36,14 @@ class OrderManager extends Object {
     public $onOrderUpdated = array();
 
     /**
+     * OrderManager constructor.
+     * @param EntityManager $entityManager
+     * @param AdditionDao $additionDao
      * @param OptionDao $optionDao
      */
-    public function injectOptionDao(OptionDao $optionDao): void {
+    public function __construct(EntityManager $entityManager, AdditionDao $additionDao, OptionDao $optionDao) {
+        $this->injectEntityManager($entityManager);
+        $this->additionDao = $additionDao;
         $this->optionDao = $optionDao;
     }
 
@@ -87,10 +93,12 @@ class OrderManager extends Object {
     }
 
     /**
-     * @param $values array
+     * @param $values
      * @param EventEntity|null $event
      * @param EarlyEntity|null $early
-     * @return \App\Model\Persistence\Entity\OrderEntity
+     * @param SubstituteEntity|null $substitute
+     * @param OrderEntity|null $order
+     * @return OrderEntity|null
      */
     public function editOrderFromOrderForm($values, ?EventEntity $event = null, ?EarlyEntity $early = null, ?SubstituteEntity $substitute = null, ?OrderEntity $order = null) {
         $entityManager = $this->getEntityManager();

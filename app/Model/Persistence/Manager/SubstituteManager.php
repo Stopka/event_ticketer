@@ -2,11 +2,12 @@
 
 namespace App\Model\Persistence\Manager;
 
-use App\Model\Facades\SubstituteDao;
+use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
+use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
 /**
@@ -28,11 +29,15 @@ class SubstituteManager extends Object {
     public $onSubtituteCreated = array();
 
     /**
+     * SubstituteManager constructor.
+     * @param EntityManager $entityManager
      * @param SubstituteDao $substituteDao
      */
-    public function injectSubstituteDao(SubstituteDao $substituteDao){
+    public function __construct(EntityManager $entityManager, SubstituteDao $substituteDao) {
+        $this->injectEntityManager($entityManager);
         $this->substituteDao = $substituteDao;
     }
+
 
     /**
      * @param $substituteId string|null

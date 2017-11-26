@@ -36,10 +36,10 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  OrderManager */
     private $orderFactory;
 
-    public function __construct(ApplicationDao $applicationFacade, CurrencyDao $currencyFacade, OrderManager $orderFactory) {
+    public function __construct(ApplicationDao $applicationFacade, CurrencyDao $currencyDao, OrderManager $orderFactory) {
         parent::__construct();
         $this->applicationDao = $applicationFacade;
-        $this->currencyDao = $currencyFacade;
+        $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();
         $this->orderFactory = $orderFactory;
 

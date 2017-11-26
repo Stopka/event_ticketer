@@ -9,7 +9,6 @@
 namespace App\Model\Persistence\Dao;
 
 
-use App\Model\Facades\EntityFacade;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
 

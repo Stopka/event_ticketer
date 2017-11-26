@@ -6,15 +6,24 @@
  * Time: 19:13
  */
 
-namespace App\Model\Persistence\Factory;
+namespace App\Model\Persistence\Manager;
 
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyWaveEntity;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
 
 class EarlyWaveManager extends Object implements Subscriber {
     use TDoctrineEntityManager;
+
+    /**
+     * EarlyWaveManager constructor.
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager) {
+        $this->injectEntityManager($entityManager);
+    }
 
     public function onEarlyWaveInvitesSent(EarlyWaveEntity $earlyWave): void{
         $this->setEarlyWaveInvitesSent($earlyWave);

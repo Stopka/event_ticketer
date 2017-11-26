@@ -31,47 +31,48 @@ session:
     autoStart: true
 
 services:
-    - Nette\Mail\SendmailMailer
-    - App\Model\Notifier\EmailMessageFactory(%email.from%, %email.replyTo%)
-    - App\Model\Notifier\EmailService
-    - App\Model\Persistence\Dao\EventDao
-    - App\Model\Persistence\Dao\EarlyDao
-    - App\Model\Persistence\Dao\EarlyWaveDao
-    - App\Model\Persistence\Dao\CurrencyDao
-    - App\Model\Facades\OrderDao
-    - App\Model\Facades\SubstituteDao
-    - App\Model\Persistence\Dao\ApplicationDao
-    - App\Model\Persistence\Dao\OptionDao
-    - App\Model\Persistence\Dao\AdministratorDao
-    - App\Model\Persistence\Dao\ChoiceDao
-    - App\Model\AdminAuthenticator
     - App\Controls\Forms\IOrderFormWrapperFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
-    - App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
+    - App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
     - App\FrontModule\Responses\ApplicationPdfRenderer
+    - App\Model\CronService
+    - App\Model\AdminAuthenticator
     - App\Model\FileStorage(%appDir%/files)
     - App\Model\ApplicationPdfManager
     - App\Model\Persistence\Manager\SubstituteManager
     - App\Model\Persistence\Manager\OrderManager
-    - App\Model\CronService
-    earlyWave.inviteNotifier:
-        class: App\Model\Notifier\EarlyWaveInviteNotifier
+    - App\Model\Persistence\Dao\AdditionDao
+    - App\Model\Persistence\Dao\EventDao
+    - App\Model\Persistence\Dao\EarlyDao
+    - App\Model\Persistence\Dao\EarlyWaveDao
+    - App\Model\Persistence\Dao\CurrencyDao
+    - App\Model\Persistence\Dao\OrderDao
+    - App\Model\Persistence\Dao\SubstituteDao
+    - App\Model\Persistence\Dao\ApplicationDao
+    - App\Model\Persistence\Dao\OptionDao
+    - App\Model\Persistence\Dao\AdministratorDao
+    - App\Model\Persistence\Dao\ChoiceDao
+    - App\Model\Persistence\Manager\ChoiceManager
+    -
+        class: App\Model\Persistence\Manager\EarlyWaveManager
         tags: [kdyby.subscriber]
-    earlyWave.manager:
-        class: App\Model\Persistence\Factory\EarlyWaveManager
-        tags: [kdyby.subscriber]
-    event.capacityStateUpdater:
+    -
         class: App\Model\Persistence\Manager\EventManager
         tags: [kdyby.subscriber]
-    order.createdNotifier:
+    - App\Model\Notifier\EmailMessageFactory(%email.from%, %email.replyTo%)
+    - App\Model\Notifier\EmailService
+    -
+        class: App\Model\Notifier\EarlyWaveInviteNotifier
+        tags: [kdyby.subscriber]
+    -
         class: App\Model\Notifier\OrderCreatedNotifier
         tags: [kdyby.subscriber]
-    substitute.activatedNotifier:
+    -
         class: App\Model\Notifier\SubstituteActivatedNotifier
         tags: [kdyby.subscriber]
     router: App\RouterFactory::createRouter

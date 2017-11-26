@@ -17,29 +17,23 @@ use Nette\Mail\SendException;
 use Nette\Object;
 
 class OrderCreatedNotifier extends Object implements Subscriber {
-
-    /** @var  EmailService */
-    private $emailService;
+    use TEmailService;
 
     /** @var  ApplicationPdfManager */
-    private $pdfApplicationFacade;
-
-
-    /**
-     * @param ApplicationPdfManager $pdfApplicationFacade
-     */
-    public function injectPdfApplicationFacade(ApplicationPdfManager $pdfApplicationFacade): void {
-        $this->pdfApplicationFacade = $pdfApplicationFacade;
-    }
+    private $applicationPdfManager;
 
     /**
+     * OrderCreatedNotifier constructor.
      * @param EmailService $emailService
+     * @param ApplicationPdfManager $applicationPdfManager
      */
-    public function injectEmailService(EmailService $emailService): void {
-        $this->emailService = $emailService;
+    public function __construct(EmailService $emailService, ApplicationPdfManager $applicationPdfManager) {
+        $this->injectEmailService($emailService);
+        $this->applicationPdfManager = $applicationPdfManager;
     }
 
     /**
+     * Event callback
      * @param OrderEntity $orderEntity
      */
     public function onOrderCreated(OrderEntity $orderEntity){
@@ -55,8 +49,9 @@ class OrderCreatedNotifier extends Object implements Subscriber {
         if (!$order->getEmail()) {
             throw new NotReadyException("Order has no email address");
         }
-        $link = $this->emailService->generateLink('Front:Order:', ['id' => $order->getHashId()]);
-        $message = $this->emailService->createMessage();
+        $emailService =$this->getEmailService();
+        $link = $emailService->generateLink('Front:Order:', ['id' => $order->getHashId()]);
+        $message = $emailService->createMessage();
         $message->addTo($order->getEmail(), $order->getFullName());
         $message->setSubject('Přihláška na ' . $order->getEvent()->getName());
         $message->setHtmlBody("<p>Dobrý den,</p>
@@ -67,13 +62,13 @@ class OrderCreatedNotifier extends Object implements Subscriber {
 <p>V případě dotazu pište na ldtmpp@email.cz.</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>");
         foreach ($order->getApplications() as $application) {
-            $file_path = $this->pdfApplicationFacade->getPdfPath($application);
+            $file_path = $this->applicationPdfManager->getPdfPath($application);
             $message->addAttachment('přihláška_' . $application->getId() . '.pdf', @file_get_contents($file_path));
         }
-        foreach ($this->pdfApplicationFacade->getFilePaths($order->getEvent()) as $file) {
+        foreach ($this->applicationPdfManager->getFilePaths($order->getEvent()) as $file) {
             $message->addAttachment($file);
         }
-        $this->emailService->sendMessage($message);
+        $emailService->sendMessage($message);
     }
 
     public function getSubscribedEvents() {

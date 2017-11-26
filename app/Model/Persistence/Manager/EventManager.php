@@ -13,6 +13,7 @@ use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OrderEntity;
+use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
 
@@ -23,12 +24,19 @@ class EventManager extends Object implements Subscriber {
     private $applicationDao;
 
     /**
+     * EventManager constructor.
+     * @param EntityManager $entityManager
      * @param ApplicationDao $applicationDao
      */
-    public function injectApplicationDao(ApplicationDao $applicationDao): void {
+    public function __construct(EntityManager $entityManager, ApplicationDao $applicationDao) {
+        $this->injectEntityManager($entityManager);
         $this->applicationDao = $applicationDao;
     }
 
+    /**
+     * Event callback
+     * @param OrderEntity $orderEntity
+     */
     public function onOrderCreated(OrderEntity $orderEntity) {
         $event = $orderEntity->getEvent();
         if (!$event) {

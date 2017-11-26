@@ -12,13 +12,14 @@ use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Nette\Utils\Strings;
 
 class NamingStrategy extends UnderscoreNamingStrategy {
+
     public function classToTableName($className) {
         $subject = parent::classToTableName($className);
-        if(!Strings::endsWith($className,'Entity')){
+        if (!Strings::endsWith($className, 'Entity')) {
             return $subject;
         }
         $replace = '';
-        $search = $this->getCase()==CASE_LOWER?'_entity':'_ENTITY';
+        $search = $this->getCase() == CASE_LOWER ? '_entity' : '_ENTITY';
         $pos = strrpos($subject, $search);
         if ($pos !== false) {
             $subject = substr_replace($subject, $replace, $pos, strlen($search));

@@ -20,9 +20,14 @@ class EmailMessageFactory extends Object {
     /** @var string[] */
     private $replyTo;
 
+    /**
+     * EmailMessageFactory constructor.
+     * @param string|string[] $form
+     * @param null|string|string[] $replyTo
+     */
     public function __construct($form, $replyTo = NULL) {
-        $this->from = $form;
-        $this->replyTo = $replyTo;
+        $this->setFrom($form);
+        $this->setReplyTo($replyTo);
     }
 
     /**

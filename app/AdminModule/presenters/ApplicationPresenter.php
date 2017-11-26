@@ -8,37 +8,42 @@ use App\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use App\AdminModule\Controls\Grids\ApplicationsGridWrapper;
 use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
 use App\AdminModule\Responses\ApplicationsExportResponse;
+use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\EventDao;
 
 class ApplicationPresenter extends BasePresenter {
 
-    /**
-     * @var  IApplicationsGridWrapperFactory
-     * @inject
-     */
+    /** @var  IApplicationsGridWrapperFactory */
     public $applicationsGridWrapperFactory;
 
-    /**
-     * @var  IReserveApplicationFormWrapperFactory
-     * @inject
-     */
+    /** @var  IReserveApplicationFormWrapperFactory */
     public $reserveApplicationFormWrapperFactory;
 
-    /**
-     * @var EventDao
-     * @inject
-     */
-    public $eventFacade;
+    /** @var EventDao */
+    public $eventDao;
+
+    /** @var ApplicationDao */
+    public $applicationDao;
 
     /**
-     * @var \App\Model\Persistence\Dao\ApplicationDao
-     * @inject
+     * ApplicationPresenter constructor.
+     * @param IApplicationsGridWrapperFactory $applicationsGridWrapperFactory
+     * @param IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory
+     * @param EventDao $eventDao
+     * @param ApplicationDao $applicationDao
      */
-    public $applicationFacade;
+    public function __construct(IApplicationsGridWrapperFactory $applicationsGridWrapperFactory, IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory, EventDao $eventDao, ApplicationDao $applicationDao) {
+        parent::__construct();
+        $this->applicationsGridWrapperFactory = $applicationsGridWrapperFactory;
+        $this->reserveApplicationFormWrapperFactory = $reserveApplicationFormWrapperFactory;
+        $this->eventDao = $eventDao;
+        $this->applicationDao = $applicationDao;
+    }
+
 
     public function actionDefault($id) {
-        $event = $this->eventFacade->getEvent($id);
-        if(!$event){
+        $event = $this->eventDao->getEvent($id);
+        if (!$event) {
             $this->redirect('Homepage:');
         }
         /** @var ApplicationsGridWrapper $applicationGrid */
@@ -48,8 +53,8 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function actionReserve($id) {
-        $event = $this->eventFacade->getEvent($id);
-        if(!$event){
+        $event = $this->eventDao->getEvent($id);
+        if (!$event) {
             $this->redirect('Homepage:');
         }
         /** @var ReserveApplicationFormWrapper $reserveForm */
@@ -59,19 +64,19 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     public function renderExport($id) {
-        $event = $this->eventFacade->getEvent($id);
-        if(!$event){
+        $event = $this->eventDao->getEvent($id);
+        if (!$event) {
             $this->redirect('Homepage:');
         }
-        $response = new ApplicationsExportResponse($event,$this->applicationFacade->getAllEventApplications($event));
+        $response = new ApplicationsExportResponse($event, $this->applicationDao->getAllEventApplications($event));
         $this->sendResponse($response);
     }
 
-    protected function createComponentApplicationsGrid(){
+    protected function createComponentApplicationsGrid() {
         return $this->applicationsGridWrapperFactory->create();
     }
 
-    protected function createComponentReserveForm(){
+    protected function createComponentReserveForm() {
         return $this->reserveApplicationFormWrapperFactory->create();
     }
 }

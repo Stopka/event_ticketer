@@ -31,15 +31,15 @@ class EmailService extends Object {
     /** @var  callable[] */
     public $onEmailSent = Array();
 
-    public function injectLinkGenerator(LinkGenerator $linkGenerator): void {
-        $this->linkGenerator = $linkGenerator;
-    }
-
-    public function injectEmailMessageFactory(EmailMessageFactory $emailMessageFactory): void {
+    /**
+     * EmailService constructor.
+     * @param EmailMessageFactory $emailMessageFactory
+     * @param LinkGenerator $linkGenerator
+     * @param IMailer $mailer
+     */
+    public function __construct(EmailMessageFactory $emailMessageFactory, LinkGenerator $linkGenerator, IMailer $mailer) {
         $this->emailMessageFactory = $emailMessageFactory;
-    }
-
-    public function injectMailer(IMailer $mailer){
+        $this->linkGenerator = $linkGenerator;
         $this->mailer = $mailer;
     }
 

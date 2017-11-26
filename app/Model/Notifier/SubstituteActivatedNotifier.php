@@ -16,9 +16,19 @@ use Nette\Mail\SendException;
 use Nette\Object;
 
 class SubstituteActivatedNotifier extends Object implements Subscriber {
-    use TEmailNotifier;
+    use TEmailService;
 
     /**
+     * SubstituteActivatedNotifier constructor.
+     * @param EmailService $emailService
+     */
+    public function __construct(EmailService $emailService) {
+        $this->injectEmailService($emailService);
+    }
+
+
+    /**
+     * Event callback
      * @param SubstituteEntity $substituteEntity
      */
     public function onSubstituteActivated(SubstituteEntity $substituteEntity): void {

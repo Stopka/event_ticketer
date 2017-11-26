@@ -10,14 +10,14 @@ namespace App\Model\Notifier;
 
 
 
-trait TEmailNotifier {
+trait TEmailService {
     /** @var  EmailService */
     private $emailService;
 
     /**
      * @param EmailService $emailService
      */
-    public function injectEmailService(EmailService $emailService): void {
+    protected function injectEmailService(EmailService $emailService): void {
         $this->emailService = $emailService;
     }
 

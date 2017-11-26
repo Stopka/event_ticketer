@@ -4,29 +4,35 @@ namespace App\FrontModule\Presenters;
 
 use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
-use App\Model;
+use App\Model\Persistence\Dao\SubstituteDao;
 
 
 class SubstitutePresenter extends BasePresenter {
 
-    /**
-     * @var IOrderFormWrapperFactory
-     * @inject
-     */
+    /** @var IOrderFormWrapperFactory */
     public $orderFormWrapperFactory;
 
+    /** @var SubstituteDao */
+    public $substituteDao;
+
     /**
-     * @var Model\Facades\SubstituteDao
-     * @inject
+     * SubstitutePresenter constructor.
+     * @param IOrderFormWrapperFactory $orderFormWrapperFactory
+     * @param SubstituteDao $substituteDao
      */
-    public $substituteFacade;
+    public function __construct(IOrderFormWrapperFactory $orderFormWrapperFactory, SubstituteDao $substituteDao) {
+        parent::__construct();
+        $this->orderFormWrapperFactory = $orderFormWrapperFactory;
+        $this->substituteDao = $substituteDao;
+    }
+
 
     public function actionDefault($id = null) {
         $this->redirect('register', $id);
     }
 
     public function actionRegister($id = null) {
-        $substitute = $this->substituteFacade->getReadySubstitute($id);
+        $substitute = $this->substituteDao->getReadySubstitute($id);
         if (!$substitute) {
             $this->flashMessage('Náhradníkovo místo vypršelo nebo nebylo nalezeno', 'warning');
             $this->redirect('Homepage:');

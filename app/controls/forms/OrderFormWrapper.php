@@ -2,9 +2,9 @@
 
 namespace App\Controls\Forms;
 
-use App\Model\Facades\OrderDao;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
+use App\Model\Persistence\Dao\OrderDao;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OrderEntity;
@@ -43,11 +43,11 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  \App\Model\Persistence\Entity\OrderEntity */
     private $order;
 
-    public function __construct(CurrencyDao $currencyFacade, OrderDao $orderFacade, ApplicationDao $applicationFacade) {
+    public function __construct(CurrencyDao $currencyFacade, OrderDao $orderDao, ApplicationDao $applicationFacade) {
         parent::__construct();
         $this->currencyFacade = $currencyFacade;
         $this->currency = $currencyFacade->getDefaultCurrency();
-        $this->orderManager = $orderFacade;
+        $this->orderManager = $orderDao;
         $this->applicationFacade = $applicationFacade;
         $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
