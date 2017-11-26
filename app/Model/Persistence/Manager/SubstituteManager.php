@@ -42,7 +42,7 @@ class SubstituteManager extends Object {
     /**
      * @param $substituteId string|null
      */
-    public function activate(?string $substituteId): void {
+    public function activateSubstitute(?string $substituteId): void {
         $substitute = $this->substituteDao->getSubstitute($substituteId);
         if (!$substitute || in_array($substitute->getState(), [SubstituteEntity::STATE_ACTIVE, SubstituteEntity::STATE_ORDERED])) {
             return;

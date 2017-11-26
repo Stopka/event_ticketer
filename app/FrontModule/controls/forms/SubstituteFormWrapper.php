@@ -10,25 +10,25 @@ namespace App\FrontModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
-use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Manager\SubstituteManager;
 use Nette\Forms\Controls\SubmitButton;
 
 class SubstituteFormWrapper extends FormWrapper {
 
-    /** @var  \App\Model\Persistence\Dao\SubstituteDao */
-    private $substituteFacade;
+    /** @var  SubstituteManager */
+    private $substituteManager;
 
     /** @var  EarlyEntity */
     private $early;
 
-    /** @var  \App\Model\Persistence\Entity\EventEntity */
+    /** @var  EventEntity */
     private $event;
 
-    public function __construct(SubstituteDao $substituteFacade) {
+    public function __construct(SubstituteManager $substituteDao) {
         parent::__construct();
-        $this->substituteFacade = $substituteFacade;
+        $this->substituteManager = $substituteDao;
     }
 
     /**
@@ -82,7 +82,7 @@ class SubstituteFormWrapper extends FormWrapper {
     public function saveClicked(SubmitButton $button){
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->substituteFacade->createSubtituteFromForm($values, $this->event, $this->early);
+        $this->substituteManager->createSubtituteFromForm($values, $this->event, $this->early);
         $this->getPresenter()->flashMessage('Byl(a) jste úspěšně zapsán(a) mezi náhradníky', 'success');
         $this->getPresenter()->redirect('Homepage:');
     }

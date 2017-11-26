@@ -21,7 +21,7 @@ use Nette\Forms\Controls\SubmitButton;
 class ReserveApplicationFormWrapper extends FormWrapper {
     use AppendAdditionsControls;
 
-    /** @var  \App\Model\Persistence\Entity\EventEntity */
+    /** @var  EventEntity */
     private $event;
 
     /** @var  CurrencyEntity */
@@ -30,18 +30,18 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  CurrencyDao */
     private $currencyDao;
 
-    /** @var  \App\Model\Persistence\Dao\ApplicationDao */
+    /** @var  ApplicationDao */
     private $applicationDao;
 
     /** @var  OrderManager */
-    private $orderFactory;
+    private $orderManager;
 
-    public function __construct(ApplicationDao $applicationFacade, CurrencyDao $currencyDao, OrderManager $orderFactory) {
+    public function __construct(ApplicationDao $applicationDao, CurrencyDao $currencyDao, OrderManager $orderFactory) {
         parent::__construct();
-        $this->applicationDao = $applicationFacade;
+        $this->applicationDao = $applicationDao;
         $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();
-        $this->orderFactory = $orderFactory;
+        $this->orderManager = $orderFactory;
 
     }
 
@@ -89,7 +89,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button){
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->orderFactory->createOrderFromOrderForm($values,$this->event);
+        $this->orderManager->createOrderFromOrderForm($values,$this->event);
         $this->getPresenter()->flashMessage('Přihlášky byly vytvořeny','success');
         $this->getPresenter()->redirect('Application:',$this->event->getId());
     }

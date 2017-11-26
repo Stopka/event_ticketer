@@ -4,7 +4,7 @@ namespace App\Controls\Forms;
 
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
-use App\Model\Persistence\Dao\OrderDao;
+use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OrderEntity;
@@ -22,13 +22,13 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  OrderManager */
     private $orderManager;
 
-    /** @var  \App\Model\Persistence\Dao\CurrencyDao */
-    private $currencyFacade;
+    /** @var  CurrencyDao */
+    private $currencyDao;
 
     /** @var  ApplicationDao */
-    private $applicationFacade;
+    private $applicationDao;
 
-    /** @var  \App\Model\Persistence\Entity\CurrencyEntity */
+    /** @var  CurrencyEntity */
     protected $currency;
 
     /** @var  EarlyEntity */
@@ -40,15 +40,21 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  SubstituteEntity */
     private $substitute;
 
-    /** @var  \App\Model\Persistence\Entity\OrderEntity */
+    /** @var  OrderEntity */
     private $order;
 
-    public function __construct(CurrencyDao $currencyFacade, OrderDao $orderDao, ApplicationDao $applicationFacade) {
+    /**
+     * OrderFormWrapper constructor.
+     * @param CurrencyDao $currencyDao
+     * @param OrderManager $orderManager
+     * @param ApplicationDao $applicationDao
+     */
+    public function __construct(CurrencyDao $currencyDao, OrderManager $orderManager, ApplicationDao $applicationDao) {
         parent::__construct();
-        $this->currencyFacade = $currencyFacade;
-        $this->currency = $currencyFacade->getDefaultCurrency();
-        $this->orderManager = $orderDao;
-        $this->applicationFacade = $applicationFacade;
+        $this->currencyDao = $currencyDao;
+        $this->currency = $currencyDao->getDefaultCurrency();
+        $this->orderManager = $orderManager;
+        $this->applicationDao = $applicationDao;
         $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
 
@@ -61,7 +67,7 @@ class OrderFormWrapper extends FormWrapper {
     }
 
     protected function getApplicationDao() {
-        return $this->applicationFacade;
+        return $this->applicationDao;
     }
 
     public function setOrder(OrderEntity $order){
@@ -200,7 +206,7 @@ class OrderFormWrapper extends FormWrapper {
     protected function appendChildrenControls(Form $form) {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
-        $count_left = $this->event->getCapacityLeft($this->applicationFacade->countIssuedApplications($this->event));
+        $count_left = $this->event->getCapacityLeft($this->applicationDao->countIssuedApplications($this->event));
         if(!$this->substitute&&!$this->order) {
             $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
                 ->setOption('description', "Zbývá $count_left přihlášek")

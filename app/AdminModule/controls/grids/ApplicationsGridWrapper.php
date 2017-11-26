@@ -25,7 +25,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var  ChoiceManager */
     private $choiceManager;
 
-    /** @var  \App\Model\Persistence\Entity\EventEntity */
+    /** @var  EventEntity */
     private $event;
 
     public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceManager $choiceManager) {
@@ -35,10 +35,10 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     /**
-     * @param EventEntity $entity
+     * @param EventEntity $event
      * @return $this
      */
-    public function setEvent(EventEntity $event) {
+    public function setEvent(EventEntity $event): self {
         $this->event = $event;
         return $this;
     }
@@ -57,12 +57,12 @@ class ApplicationsGridWrapper extends GridWrapper {
 
     protected function appendActions(Grid $grid) {
         $grid->addActionEvent('detail', 'Detail', function ($id) {
-            return $this->getPresenter()->redirect('Order:default',$id);
+            $this->getPresenter()->redirect('Order:default', $id);
         })
             ->setIcon('fa fa-eye')
             ->setPrimaryKey('order.id');
         $grid->addActionEvent('upravit', 'Upravit', function ($id) {
-            return $this->getPresenter()->redirect('Order:edit',$id);
+            $this->getPresenter()->redirect('Order:edit', $id);
         })
             ->setPrimaryKey('order.id')
             ->setIcon('fa fa-pencil');
@@ -117,7 +117,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('birthCode', 'Kod rodného čísla')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDate('order.created', 'Vytvořeno','d.m.Y H:i:s')
+        $grid->addColumnDate('order.created', 'Vytvořeno', 'd.m.Y H:i:s')
             ->setSortable()
             ->setFilterDateRange();
         /*$grid->addColumnText('invoiced', 'Faktura')
@@ -154,23 +154,23 @@ class ApplicationsGridWrapper extends GridWrapper {
             $grid->addColumnText('addition' . $addition->getId(), $addition->getName())
                 ->setCustomRender(function (ApplicationEntity $application) use ($addition) {
                     $result = Html::el();
-                    foreach ($application->getChoices() as $choice){
-                        if($choice->getOption()->getAddition()->getId()!=$addition->getId()){
+                    foreach ($application->getChoices() as $choice) {
+                        if ($choice->getOption()->getAddition()->getId() != $addition->getId()) {
                             continue;
                         }
                         $isPayedLink = Html::el('a', [
-                            'id'=>'choice_'.$choice->getId(),
-                            'class'=>'ajax',
-                            'data-ajax-off'=>'unique',
+                            'id' => 'choice_' . $choice->getId(),
+                            'class' => 'ajax',
+                            'data-ajax-off' => 'unique',
                             'title' => 'Přepnout',
-                            'href' => $this->link('inverseChoicePayed!#choice_'.$choice->getId(), $choice->getId()),])
-                            ->addHtml(Html::el('i',['class'=>'fa '.($choice->isPayed()?'fa-check-square-o':'fa-square-o')]));
+                            'href' => $this->link('inverseChoicePayed!#choice_' . $choice->getId(), $choice->getId()),])
+                            ->addHtml(Html::el('i', ['class' => 'fa ' . ($choice->isPayed() ? 'fa-check-square-o' : 'fa-square-o')]));
                         $name = Html::el('span')->setText($choice->getOption()->getName());
                         $result->addHtml(
                             Html::el('div')
                                 ->addHtml($isPayedLink)
                                 ->addHtml($name)
-                            );
+                        );
                     }
                     return $result;
                 });
@@ -179,7 +179,7 @@ class ApplicationsGridWrapper extends GridWrapper {
 
     public function handleInverseChoicePayed($choiceId) {
         $this->choiceManager->inverseChoicePayed($choiceId);
-        if($this->getPresenter()->isAjax()){
+        if ($this->getPresenter()->isAjax()) {
             $this->redrawControl();
             return;
         }

@@ -19,19 +19,25 @@ use Nette\Utils\Html;
  */
 class OrderApplicationsGridWrapper extends GridWrapper {
 
-    /** @var  \App\Model\Persistence\Dao\ApplicationDao */
-    private $applicationFacade;
+    /** @var  ApplicationDao */
+    private $applicationDao;
 
-    /** @var  \App\Model\Persistence\Dao\ChoiceDao */
-    private $choiceFacade;
+    /** @var  ChoiceDao */
+    private $choiceDao;
 
     /** @var  OrderEntity */
     private $order;
 
-    public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceDao $choiceFacade) {
+    /**
+     * OrderApplicationsGridWrapper constructor.
+     * @param ITranslator $translator
+     * @param ApplicationDao $applicationDao
+     * @param ChoiceDao $choiceDao
+     */
+    public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceDao $choiceDao) {
         parent::__construct($translator);
-        $this->applicationFacade = $applicationDao;
-        $this->choiceFacade = $choiceFacade;
+        $this->applicationDao = $applicationDao;
+        $this->choiceDao = $choiceDao;
     }
 
     /**
@@ -44,7 +50,7 @@ class OrderApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function loadModel(Grid $grid) {
-        $grid->setModel($this->applicationFacade->getOrderApplicationsGridModel($this->order));
+        $grid->setModel($this->applicationDao->getOrderApplicationsGridModel($this->order));
     }
 
     protected function configure(\App\Grids\Grid $grid) {

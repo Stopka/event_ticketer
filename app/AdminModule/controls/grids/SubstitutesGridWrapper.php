@@ -6,6 +6,7 @@ use App\Grids\Grid;
 use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
+use App\Model\Persistence\Manager\SubstituteManager;
 use Nette\Localization\ITranslator;
 
 /**
@@ -17,14 +18,18 @@ use Nette\Localization\ITranslator;
 class SubstitutesGridWrapper extends GridWrapper {
 
     /** @var  SubstituteDao */
-    private $substituteFacade;
+    private $substituteDao;
+
+    /** @var  SubstituteManager */
+    private $substituteManager;
 
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(ITranslator $translator, SubstituteDao $substituteDao) {
+    public function __construct(ITranslator $translator, SubstituteDao $substituteDao, SubstituteManager $substituteManager) {
         parent::__construct($translator);
-        $this->substituteFacade = $substituteDao;
+        $this->substituteDao = $substituteDao;
+        $this->substituteManager = $substituteManager;
     }
 
     /**
@@ -37,7 +42,7 @@ class SubstitutesGridWrapper extends GridWrapper {
     }
 
     protected function loadModel(Grid $grid) {
-        $grid->setModel($this->substituteFacade->getAllSubstitutesGridModel($this->event));
+        $grid->setModel($this->substituteDao->getAllSubstitutesGridModel($this->event));
     }
 
     protected function configure(\App\Grids\Grid $grid) {
@@ -100,6 +105,6 @@ class SubstitutesGridWrapper extends GridWrapper {
     }
 
     public function onActivate($substituteId){
-        $this->substituteFacade->activate($substituteId);
+        $this->substituteManager->activateSubstitute($substituteId);
     }
 }
