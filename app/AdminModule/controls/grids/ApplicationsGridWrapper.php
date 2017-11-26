@@ -3,10 +3,11 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
-use App\Model\Entities\ApplicationEntity;
-use App\Model\Entities\EventEntity;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\ChoiceFacade;
+use App\Model\Persistence\Attribute\IGender;
+use App\Model\Persistence\Entity\ApplicationEntity;
+use App\Model\Persistence\Entity\EventEntity;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
@@ -24,7 +25,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var  ChoiceFacade */
     private $choiceFacade;
 
-    /** @var  EventEntity */
+    /** @var  \App\Model\Persistence\Entity\EventEntity */
     private $event;
 
     public function __construct(ITranslator $translator, ApplicationFacade $applicationFacade, ChoiceFacade $choiceFacade) {
@@ -108,8 +109,8 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setSuggestion();
         $grid->addColumnText('gender', 'Pohlaví')
             ->setSortable()
-            ->setReplacement([ApplicationEntity::GENDER_MALE => 'Muž', ApplicationEntity::GENDER_FEMALE => 'Žena'])
-            ->setFilterSelect([null => '', ApplicationEntity::GENDER_MALE => 'Muž', ApplicationEntity::GENDER_FEMALE => 'Žena']);
+            ->setReplacement([IGender::MALE => 'Muž', IGender::FEMALE => 'Žena'])
+            ->setFilterSelect([null => '', IGender::MALE => 'Muž', IGender::FEMALE => 'Žena']);
         $grid->addColumnDate('birthDate', 'Datum narození')
             ->setSortable()
             ->setFilterDateRange();

@@ -20,6 +20,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/kdyby/doctrine-cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/kdyby/events" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/kdyby/forms-replicator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kdyby/strict-objects" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/kdyby/translation" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/latte/latte" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/minetro/recaptcha" />
@@ -94,6 +95,7 @@
           <root url="file://$MODULE_DIR$/vendor/kdyby/doctrine-cache" />
           <root url="file://$MODULE_DIR$/vendor/kdyby/events" />
           <root url="file://$MODULE_DIR$/vendor/kdyby/forms-replicator" />
+          <root url="file://$MODULE_DIR$/vendor/kdyby/strict-objects" />
           <root url="file://$MODULE_DIR$/vendor/kdyby/translation" />
           <root url="file://$MODULE_DIR$/vendor/latte/latte" />
           <root url="file://$MODULE_DIR$/vendor/minetro/recaptcha" />
@@ -154,6 +156,7 @@
           <root url="file://$MODULE_DIR$/vendor/kdyby/doctrine-cache" />
           <root url="file://$MODULE_DIR$/vendor/kdyby/events" />
           <root url="file://$MODULE_DIR$/vendor/kdyby/forms-replicator" />
+          <root url="file://$MODULE_DIR$/vendor/kdyby/strict-objects" />
           <root url="file://$MODULE_DIR$/vendor/kdyby/translation" />
           <root url="file://$MODULE_DIR$/vendor/latte/latte" />
           <root url="file://$MODULE_DIR$/vendor/minetro/recaptcha" />

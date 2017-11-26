@@ -2,7 +2,7 @@
 
 namespace App\FrontModule\Responses;
 
-use App\Model\Entities\ApplicationEntity;
+use App\Model\Persistence\Entity\ApplicationEntity;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\Application;
 
@@ -14,7 +14,7 @@ use Nette\Application\Application;
  */
 class ApplicationPdfRenderer extends PdfRenderer {
 
-    /** @var  ApplicationEntity */
+    /** @var  \App\Model\Persistence\Entity\ApplicationEntity */
     private $application;
 
     public function __construct(Application $app) {

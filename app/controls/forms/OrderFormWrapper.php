@@ -2,15 +2,14 @@
 
 namespace App\Controls\Forms;
 
-use App\Model\Entities\ApplicationEntity;
-use App\Model\Entities\CurrencyEntity;
-use App\Model\Entities\EarlyEntity;
-use App\Model\Entities\EventEntity;
-use App\Model\Entities\OrderEntity;
-use App\Model\Entities\SubstituteEntity;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\CurrencyFacade;
 use App\Model\Facades\OrderFacade;
+use App\Model\Persistence\Entity\CurrencyEntity;
+use App\Model\Persistence\Entity\EarlyEntity;
+use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Entity\OrderEntity;
+use App\Model\Persistence\Entity\SubstituteEntity;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
@@ -29,7 +28,7 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  ApplicationFacade */
     private $applicationFacade;
 
-    /** @var  CurrencyEntity */
+    /** @var  \App\Model\Persistence\Entity\CurrencyEntity */
     protected $currency;
 
     /** @var  EarlyEntity */
@@ -41,7 +40,7 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  SubstituteEntity */
     private $substitute;
 
-    /** @var  OrderEntity */
+    /** @var  \App\Model\Persistence\Entity\OrderEntity */
     private $order;
 
     public function __construct(CurrencyFacade $currencyFacade, OrderFacade $orderFacade, ApplicationFacade $applicationFacade) {
@@ -78,7 +77,7 @@ class OrderFormWrapper extends FormWrapper {
 
 
     /**
-     * @param EarlyEntity $early
+     * @param \App\Model\Persistence\Entity\EarlyEntity $early
      */
     public function setEarly(EarlyEntity $early) {
         $this->early = $early;
@@ -99,7 +98,7 @@ class OrderFormWrapper extends FormWrapper {
     }
 
     /**
-     * @param SubstituteEntity $substitute
+     * @param \App\Model\Persistence\Entity\SubstituteEntity $substitute
      */
     public function setSubstitute(SubstituteEntity $substitute) {
         $this->event = $substitute->getEvent();
@@ -258,8 +257,8 @@ class OrderFormWrapper extends FormWrapper {
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $child->addRadioList('gender', 'Pohlaví', [
-            ApplicationEntity::GENDER_MALE => 'Muž',
-            ApplicationEntity::GENDER_FEMALE => 'Žena',
+            Gender::MALE => 'Muž',
+            Gender::FEMALE => 'Žena',
         ])
             ->setRequired();
         $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)

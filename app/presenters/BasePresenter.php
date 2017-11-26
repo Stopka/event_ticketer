@@ -2,8 +2,8 @@
 
 namespace App\Presenters;
 
-use Nette;
 use App\Model;
+use Nette;
 
 
 /**
@@ -26,7 +26,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
      */
     public $administratorFacade;
 
-    /** @var Model\Entities\AdministratorEntity Entita pro aktuálního uživatele. */
+    /** @var \App\Model\Persistence\Entity\AdministratorEntity Entita pro aktuálního uživatele. */
     protected $administratorEntity;
 
     /**

@@ -3,10 +3,10 @@
 namespace App\FrontModule\Controls\Grids;
 
 use App\Grids\Grid;
-use App\Model\Entities\ApplicationEntity;
-use App\Model\Entities\OrderEntity;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\ChoiceFacade;
+use App\Model\Persistence\Entity\ApplicationEntity;
+use App\Model\Persistence\Entity\OrderEntity;
 use Grido\Components\Filters\Filter;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
@@ -35,7 +35,7 @@ class OrderApplicationsGridWrapper extends GridWrapper {
     }
 
     /**
-     * @param OrderEntity $entity
+     * @param \App\Model\Persistence\Entity\OrderEntity $entity
      * @return $this
      */
     public function setOrder(OrderEntity $order) {

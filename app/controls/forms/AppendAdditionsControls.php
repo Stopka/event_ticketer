@@ -10,10 +10,10 @@ namespace App\Controls\Forms;
 
 
 use App\Model\Entities\AdditionEntity;
-use App\Model\Entities\CurrencyEntity;
-use App\Model\Entities\EventEntity;
-use App\Model\Entities\OptionEntity;
 use App\Model\Facades\ApplicationFacade;
+use App\Model\Persistence\Entity\CurrencyEntity;
+use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Entity\OptionEntity;
 use Nette\Forms\Container;
 use Nette\Utils\Html;
 use Stopka\NetteFormRenderer\HtmlFormComponent;
@@ -22,7 +22,7 @@ trait AppendAdditionsControls {
     use RecalculateControl;
 
     /**
-     * @return EventEntity
+     * @return \App\Model\Persistence\Entity\EventEntity
      */
     abstract protected function getEvent();
 
@@ -116,7 +116,7 @@ trait AppendAdditionsControls {
     abstract protected function isAdmin();
 
     /**
-     * @param OptionEntity $option
+     * @param \App\Model\Persistence\Entity\OptionEntity $option
      * @param $prices array
      * @return string
      */

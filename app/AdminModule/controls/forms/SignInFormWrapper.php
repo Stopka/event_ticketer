@@ -35,7 +35,7 @@ class SignInFormWrapper extends FormWrapper {
             $user->setExpiration('+ 20 minutes', TRUE);
             $user->login($values['username'],$values['password']);
         }catch (AuthenticationException $e){
-            throw new \App\Model\Exceptions\AuthenticationException($e->getMessage(),$e);
+            throw new \App\Model\Exception\AuthenticationException($e->getMessage(),$e);
         }
         $this->redirect('this');
     }

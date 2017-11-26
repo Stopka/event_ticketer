@@ -13,17 +13,11 @@ parameters:
         name: Přihlašovací systém LDT Pardubice z. s.
         domain: application.ldtpardubice.cz
     email:
-        from:
-            address: system@%host.domain%
-            name: %host.name%
-        reply:
-            address: ldtmpp@email.cz
-            name: Radek Vančura
+        from: [system@%host.domain%, %host.name%]
+        replyTo: [ldtmpp@email.cz, Radek Vančura]
 
 php:
     date.timezone: Europe/Prague
-
-
 
 application:
     errorPresenter: Error
@@ -37,8 +31,7 @@ session:
     autoStart: true
 
 services:
-    - App\Model\SystemConfigurations
-    - App\Model\EmailMessageFactory
+    - App\Model\EmailMessageFactory(%email.from%, %email.replyTo%)
     - App\Model\Facades\EventFacade
     - App\Model\Facades\EarlyFacade
     - App\Model\Facades\EarlyWaveFacade
@@ -83,6 +76,7 @@ doctrine:
     password: %database.password%
     metadata:
         App: %appDir%
+    namingStrategy: App\Model\Persistence\Doctrine\NamingStrategy
 
 forms:
     messages:

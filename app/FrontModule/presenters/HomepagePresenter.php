@@ -34,7 +34,7 @@ class HomepagePresenter extends BasePresenter {
      * @param $event
      * @return integer
      */
-    public function countApplications(Model\Entities\EventEntity $event){
+    public function countApplications(Model\Persistence\Entity\EventEntity $event){
         return $this->applicationFacade->countIssuedApplications($event);
     }
 

@@ -9,8 +9,8 @@
 namespace App\AdminModule\Responses;
 
 
-use App\Model\Entities\ApplicationEntity;
-use App\Model\Entities\EventEntity;
+use App\Model\Persistence\Entity\ApplicationEntity;
+use App\Model\Persistence\Entity\EventEntity;
 use Nette;
 use Nette\Application\IResponse;
 use Stopka\TableExporter\ExportResponse;

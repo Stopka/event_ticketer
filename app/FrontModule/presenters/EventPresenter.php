@@ -119,10 +119,10 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param Model\Entities\OptionEntity $option
+     * @param \App\Model\Persistence\Entity\OptionEntity $option
      * @return integer
      */
-    public function countOptionsReserved(Model\Entities\OptionEntity $option){
+    public function countOptionsReserved(Model\Persistence\Entity\OptionEntity $option){
         return $this->applicationFacade->countReservedApplicationsWithOption($option);
     }
 

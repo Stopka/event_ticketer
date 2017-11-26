@@ -10,9 +10,9 @@ namespace App\FrontModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
-use App\Model\Entities\EarlyEntity;
-use App\Model\Entities\EventEntity;
 use App\Model\Facades\SubstituteFacade;
+use App\Model\Persistence\Entity\EarlyEntity;
+use App\Model\Persistence\Entity\EventEntity;
 use Nette\Forms\Controls\SubmitButton;
 
 class SubstituteFormWrapper extends FormWrapper {
@@ -23,7 +23,7 @@ class SubstituteFormWrapper extends FormWrapper {
     /** @var  EarlyEntity */
     private $early;
 
-    /** @var  EventEntity */
+    /** @var  \App\Model\Persistence\Entity\EventEntity */
     private $event;
 
     public function __construct(SubstituteFacade $substituteFacade) {
@@ -32,7 +32,7 @@ class SubstituteFormWrapper extends FormWrapper {
     }
 
     /**
-     * @param EarlyEntity $early
+     * @param \App\Model\Persistence\Entity\EarlyEntity $early
      */
     public function setEarly(EarlyEntity $early) {
         $this->early = $early;
@@ -43,7 +43,7 @@ class SubstituteFormWrapper extends FormWrapper {
     }
 
     /**
-     * @param EventEntity $event
+     * @param \App\Model\Persistence\Entity\EventEntity $event
      */
     public function setEvent(EventEntity $event) {
         $this->early = null;

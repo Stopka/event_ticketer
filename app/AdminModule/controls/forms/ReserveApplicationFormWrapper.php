@@ -11,17 +11,17 @@ namespace App\AdminModule\Controls\Forms;
 
 use App\Controls\Forms\AppendAdditionsControls;
 use App\Controls\Forms\Form;
-use App\Model\Entities\CurrencyEntity;
-use App\Model\Entities\EventEntity;
 use App\Model\Facades\ApplicationFacade;
 use App\Model\Facades\CurrencyFacade;
 use App\Model\Facades\OrderFacade;
+use App\Model\Persistence\Entity\CurrencyEntity;
+use App\Model\Persistence\Entity\EventEntity;
 use Nette\Forms\Controls\SubmitButton;
 
 class ReserveApplicationFormWrapper extends FormWrapper {
     use AppendAdditionsControls;
 
-    /** @var  EventEntity */
+    /** @var  \App\Model\Persistence\Entity\EventEntity */
     private $event;
 
     /** @var  CurrencyEntity */

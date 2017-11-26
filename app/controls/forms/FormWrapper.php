@@ -2,7 +2,7 @@
 
 namespace App\Controls\Forms;
 
-use App\Model\Exceptions\Exception;
+use App\Model\Exception\Exception;
 use Nette;
 use Stopka\NetteFormRenderer\FormRenderer;
 

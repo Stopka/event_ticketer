@@ -3,9 +3,9 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
-use App\Model\Entities\EventEntity;
-use App\Model\Entities\SubstituteEntity;
 use App\Model\Facades\SubstituteFacade;
+use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Entity\SubstituteEntity;
 use Nette\Localization\ITranslator;
 
 /**
@@ -28,7 +28,7 @@ class SubstitutesGridWrapper extends GridWrapper {
     }
 
     /**
-     * @param EventEntity $entity
+     * @param \App\Model\Persistence\Entity\EventEntity $entity
      * @return $this
      */
     public function setEvent(EventEntity $event) {
