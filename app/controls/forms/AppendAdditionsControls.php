@@ -8,11 +8,9 @@
 
 namespace App\Controls\Forms;
 
-
-use App\Model\Entities\AdditionEntity;
-use App\Model\Facades\ApplicationFacade;
+use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
-use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OptionEntity;
 use Nette\Forms\Container;
 use Nette\Utils\Html;
@@ -32,9 +30,9 @@ trait AppendAdditionsControls {
     abstract protected function getCurrency();
 
     /**
-     * @return ApplicationFacade
+     * @return ApplicationDao
      */
-    abstract protected function getApplicationFacade();
+    abstract protected function getApplicationDao();
 
     protected function appendAdditionsControls(Form $form, Container $container) {
         $subcontainer = $container->addContainer('addittions');
@@ -94,7 +92,7 @@ trait AppendAdditionsControls {
             $result[$option->getId()] = [
                 'amount' => $amount->getAmount(),
                 'currency' => $amount->getCurrency()->getSymbol(),
-                'countLeft' => $option->getCapacityLeft($this->getApplicationFacade()->countIssuedApplicationsWithOption($option))
+                'countLeft' => $option->getCapacityLeft($this->getApplicationDao()->countIssuedApplicationsWithOption($option))
             ];
         }
         return $result;

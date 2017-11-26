@@ -10,14 +10,14 @@ namespace App\FrontModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
-use App\Model\Facades\SubstituteFacade;
+use App\Model\Facades\SubstituteDao;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use Nette\Forms\Controls\SubmitButton;
 
 class SubstituteFormWrapper extends FormWrapper {
 
-    /** @var  SubstituteFacade */
+    /** @var  SubstituteDao */
     private $substituteFacade;
 
     /** @var  EarlyEntity */
@@ -26,7 +26,7 @@ class SubstituteFormWrapper extends FormWrapper {
     /** @var  \App\Model\Persistence\Entity\EventEntity */
     private $event;
 
-    public function __construct(SubstituteFacade $substituteFacade) {
+    public function __construct(SubstituteDao $substituteFacade) {
         parent::__construct();
         $this->substituteFacade = $substituteFacade;
     }

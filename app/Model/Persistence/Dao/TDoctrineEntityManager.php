@@ -2,34 +2,32 @@
 /**
  * Created by IntelliJ IDEA.
  * User: stopka
- * Date: 12.1.17
- * Time: 0:27
+ * Date: 26.11.17
+ * Time: 13:07
  */
 
-namespace App\Model\Facades;
+namespace App\Model\Persistence\Dao;
+
 
 use Kdyby\Doctrine\EntityManager;
 
-abstract class DoctrineFacade extends BaseFacade {
-    const ORDER_ASC='ASC';
-    const ORDER_DESC='DESC';
+trait TDoctrineEntityManager {
 
     /** @var  EntityManager */
     private $entityManager;
 
     /**
-     * BaseFacade constructor.
+     * Dao constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager) {
+    public function injectEntityManager(EntityManager $entityManager): void {
         $this->entityManager = $entityManager;
     }
 
     /**
      * @return EntityManager
      */
-    protected function getEntityManager(){
+    protected function getEntityManager(): EntityManager{
         return $this->entityManager;
     }
-
 }

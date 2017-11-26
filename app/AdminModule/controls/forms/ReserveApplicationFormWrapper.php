@@ -11,11 +11,11 @@ namespace App\AdminModule\Controls\Forms;
 
 use App\Controls\Forms\AppendAdditionsControls;
 use App\Controls\Forms\Form;
-use App\Model\Facades\ApplicationFacade;
-use App\Model\Facades\CurrencyFacade;
-use App\Model\Facades\OrderFacade;
+use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Manager\OrderManager;
 use Nette\Forms\Controls\SubmitButton;
 
 class ReserveApplicationFormWrapper extends FormWrapper {
@@ -27,21 +27,21 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  CurrencyEntity */
     private $currency;
 
-    /** @var  CurrencyFacade */
-    private $currencyFacade;
+    /** @var  CurrencyDao */
+    private $currencyDao;
 
-    /** @var  ApplicationFacade */
-    private $applicationFacade;
+    /** @var  \App\Model\Persistence\Dao\ApplicationDao */
+    private $applicationDao;
 
-    /** @var  OrderFacade */
-    private $orderFacade;
+    /** @var  OrderManager */
+    private $orderFactory;
 
-    public function __construct(ApplicationFacade $applicationFacade,CurrencyFacade $currencyFacade, OrderFacade $orderFacade) {
+    public function __construct(ApplicationDao $applicationFacade, CurrencyDao $currencyFacade, OrderManager $orderFactory) {
         parent::__construct();
-        $this->applicationFacade = $applicationFacade;
-        $this->orderFacade = $orderFacade;
-        $this->currencyFacade = $currencyFacade;
-        $this->currency = $this->currencyFacade->getDefaultCurrency();
+        $this->applicationDao = $applicationFacade;
+        $this->currencyDao = $currencyFacade;
+        $this->currency = $this->currencyDao->getDefaultCurrency();
+        $this->orderFactory = $orderFactory;
 
     }
 
@@ -62,8 +62,8 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         return $this->currency;
     }
 
-    protected function getApplicationFacade() {
-        return $this->applicationFacade;
+    protected function getApplicationDao() {
+        return $this->applicationDao;
     }
 
 
@@ -89,7 +89,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button){
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->orderFacade->createOrdersFromReserveForm($values,$this->event);
+        $this->orderFactory->createOrderFromOrderForm($values,$this->event);
         $this->getPresenter()->flashMessage('Přihlášky byly vytvořeny','success');
         $this->getPresenter()->redirect('Application:',$this->event->getId());
     }

@@ -2,14 +2,14 @@
 
 namespace App\Controls\Forms;
 
-use App\Model\Facades\ApplicationFacade;
-use App\Model\Facades\CurrencyFacade;
-use App\Model\Facades\OrderFacade;
-use App\Model\Persistence\Entity\CurrencyEntity;
+use App\Model\Facades\OrderDao;
+use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OrderEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
+use App\Model\Persistence\Manager\OrderManager;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
@@ -19,13 +19,13 @@ use Vodacek\Forms\Controls\DateInput;
 class OrderFormWrapper extends FormWrapper {
     use AppendAdditionsControls;
 
-    /** @var  OrderFacade */
-    private $orderFacade;
+    /** @var  OrderManager */
+    private $orderManager;
 
-    /** @var  CurrencyFacade */
+    /** @var  \App\Model\Persistence\Dao\CurrencyDao */
     private $currencyFacade;
 
-    /** @var  ApplicationFacade */
+    /** @var  ApplicationDao */
     private $applicationFacade;
 
     /** @var  \App\Model\Persistence\Entity\CurrencyEntity */
@@ -43,11 +43,11 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  \App\Model\Persistence\Entity\OrderEntity */
     private $order;
 
-    public function __construct(CurrencyFacade $currencyFacade, OrderFacade $orderFacade, ApplicationFacade $applicationFacade) {
+    public function __construct(CurrencyDao $currencyFacade, OrderDao $orderFacade, ApplicationDao $applicationFacade) {
         parent::__construct();
         $this->currencyFacade = $currencyFacade;
         $this->currency = $currencyFacade->getDefaultCurrency();
-        $this->orderFacade = $orderFacade;
+        $this->orderManager = $orderFacade;
         $this->applicationFacade = $applicationFacade;
         $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
@@ -60,7 +60,7 @@ class OrderFormWrapper extends FormWrapper {
         return $this->currency;
     }
 
-    protected function getApplicationFacade() {
+    protected function getApplicationDao() {
         return $this->applicationFacade;
     }
 
@@ -144,11 +144,11 @@ class OrderFormWrapper extends FormWrapper {
         $form = $button->getForm();
         $values = $form->getValues(true);
         if($this->order) {
-            $this->orderFacade->editOrderFromOrderForm($values, $this->event, $this->early, $this->substitute, $this->order);
+            $this->orderManager->editOrderFromOrderForm($values, $this->event, $this->early, $this->substitute, $this->order);
             $this->getPresenter()->flashMessage('Objednávka byla uložena.', 'success');
             $this->getPresenter()->redirect('Application:',$this->event->getId());
         }else{
-            $this->orderFacade->createOrderFromOrderForm($values, $this->event, $this->early, $this->substitute);
+            $this->orderManager->createOrderFromOrderForm($values, $this->event, $this->early, $this->substitute);
             $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.', 'success');
             $this->getPresenter()->redirect('Homepage:');
         }

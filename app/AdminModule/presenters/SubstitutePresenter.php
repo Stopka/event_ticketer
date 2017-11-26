@@ -5,7 +5,7 @@ namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory;
 use App\AdminModule\Controls\Grids\SubstitutesGridWrapper;
-use App\Model\Facades\EventFacade;
+use App\Model\Persistence\Dao\EventDao;
 
 class SubstitutePresenter extends BasePresenter {
 
@@ -16,7 +16,7 @@ class SubstitutePresenter extends BasePresenter {
     public $substitutesGridWrapperFactory;
 
     /**
-     * @var EventFacade
+     * @var EventDao
      * @inject
      */
     public $eventFacade;

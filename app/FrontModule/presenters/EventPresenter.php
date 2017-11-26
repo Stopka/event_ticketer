@@ -12,19 +12,19 @@ use App\Model;
 class EventPresenter extends BasePresenter {
 
     /**
-     * @var Model\Facades\EventFacade
+     * @var \App\Model\Persistence\Dao\EventDao
      * @inject
      */
     public $eventFacade;
 
     /**
-     * @var Model\Facades\ApplicationFacade
+     * @var \App\Model\Persistence\Dao\ApplicationDao
      * @inject
      */
     public $applicationFacade;
 
     /**
-     * @var Model\Facades\OptionFacade
+     * @var \App\Model\Persistence\Dao\OptionDao
      * @inject
      */
     public $optionFacade;

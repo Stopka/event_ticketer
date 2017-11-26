@@ -10,7 +10,7 @@ use App\Model;
 class OrderPresenter extends BasePresenter {
 
     /**
-     * @var Model\Facades\OrderFacade
+     * @var Model\Facades\OrderDao
      * @inject
      */
     public $orderFacade;
@@ -22,7 +22,7 @@ class OrderPresenter extends BasePresenter {
     public $orderApplicationsGridWrapperFactory;
 
     public function actionDefault($id = null) {
-        $order = $this->orderFacade->getViewableOrderByHash($id);
+        $order = $this->orderFacade->getViewableOrder($id);
         if(!$order){
             $this->flashMessage('Objednávka nebyla nalezena','error');
             $this->redirect('Homepage:');

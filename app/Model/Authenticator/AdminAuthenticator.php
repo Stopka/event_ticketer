@@ -9,7 +9,7 @@
 namespace App\Model;
 
 
-use App\Model\Facades\AdministratorFacade;
+use App\Model\Persistence\Dao\AdministratorDao;
 use Nette\Object;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
@@ -18,10 +18,10 @@ use Nette\Security\IIdentity;
 
 class AdminAuthenticator extends Object implements IAuthenticator {
 
-    /** @var  AdministratorFacade */
+    /** @var  \App\Model\Persistence\Dao\AdministratorDao */
     private $administratorFacade;
 
-    public function __construct(AdministratorFacade $administratorFacade) {
+    public function __construct(AdministratorDao $administratorFacade) {
         $this->administratorFacade = $administratorFacade;
     }
 

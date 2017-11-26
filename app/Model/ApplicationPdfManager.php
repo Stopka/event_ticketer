@@ -6,15 +6,14 @@
  * Time: 20:18
  */
 
-namespace App\Model\Facades;
+namespace App\Model;
 
-
-use App\Model\FileStorage;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use Nette\Object;
 use Nette\Utils\Strings;
 
-class PdfApplicationFacade extends BaseFacade {
+class ApplicationPdfManager extends Object {
 
     const PATH_BASE = '/pdf_applications';
     const PATH_SOURCES = '/sources';

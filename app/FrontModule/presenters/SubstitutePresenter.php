@@ -16,7 +16,7 @@ class SubstitutePresenter extends BasePresenter {
     public $orderFormWrapperFactory;
 
     /**
-     * @var Model\Facades\SubstituteFacade
+     * @var Model\Facades\SubstituteDao
      * @inject
      */
     public $substituteFacade;
@@ -26,7 +26,7 @@ class SubstitutePresenter extends BasePresenter {
     }
 
     public function actionRegister($id = null) {
-        $substitute = $this->substituteFacade->getReadySubstituteByHash($id);
+        $substitute = $this->substituteFacade->getReadySubstitute($id);
         if (!$substitute) {
             $this->flashMessage('Náhradníkovo místo vypršelo nebo nebylo nalezeno', 'warning');
             $this->redirect('Homepage:');

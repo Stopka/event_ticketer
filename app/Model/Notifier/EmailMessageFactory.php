@@ -6,11 +6,10 @@
  * Time: 22:09
  */
 
-namespace App\Model;
+namespace App\Model\Notifier;
 
 
-use Nette\Application\ApplicationException;
-use Nette\Application\LinkGenerator;
+use App\Model\Exception\InvalidInputException;
 use Nette\Mail\Message;
 use Nette\Object;
 
@@ -21,16 +20,9 @@ class EmailMessageFactory extends Object {
     /** @var string[] */
     private $replyTo;
 
-    /** @var  LinkGenerator */
-    private $linkGenerator;
-
     public function __construct($form, $replyTo = NULL) {
         $this->from = $form;
         $this->replyTo = $replyTo;
-    }
-
-    public function injectLinkGenerator(LinkGenerator $linkGenerator) {
-        $this->linkGenerator = $linkGenerator;
     }
 
     /**
@@ -58,20 +50,23 @@ class EmailMessageFactory extends Object {
      * @param string|string[] $replyTo
      */
     public function setReplyTo($replyTo = null): void {
-        if(!$replyTo){
+        if (!$replyTo) {
             $this->replyTo = [null, null];
             return;
         }
         $this->replyTo = $this->getAddressNamePair($replyTo);
     }
 
-    public function create() {
+    /**
+     * @return Message
+     */
+    public function create(): Message {
         $message = new Message();
         list($address, $name) = $this->getFrom();
         $message->setFrom($address, $name);
         list($address, $name) = $this->getReplyTo();
         if ($address) {
-            $message->addReplyTo($address,$name);
+            $message->addReplyTo($address, $name);
         }
         return $message;
     }
@@ -79,6 +74,7 @@ class EmailMessageFactory extends Object {
     /**
      * @param $param string|string[]
      * @return string[] address,name
+     * @throws InvalidInputException
      */
     protected function getAddressNamePair($param): array {
         if (is_string($param)) {
@@ -90,16 +86,7 @@ class EmailMessageFactory extends Object {
                 isset($param[1]) && is_string($param[1]) ? $param[1] : null
             ];
         }
-        throw new ApplicationException("Invalid email address input");
-    }
-
-    /**
-     * @param $dest
-     * @param array $params
-     * @return string
-     */
-    public function link($dest, $params = []) {
-        return $this->linkGenerator->link($dest, $params);
+        throw new InvalidInputException("Invalid email address input");
     }
 
 }

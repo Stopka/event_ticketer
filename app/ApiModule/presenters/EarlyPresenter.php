@@ -2,7 +2,6 @@
 
 namespace App\ApiModule\Presenters;
 
-use App\Model;
 use Nette\Application\Responses\TextResponse;
 use Tracy\Debugger;
 
@@ -10,7 +9,7 @@ use Tracy\Debugger;
 class EarlyPresenter extends BasePresenter {
 
     /**
-     * @var Model\Facades\EarlyWaveFacade
+     * @var \App\Model\Persistence\Dao\EarlyWaveDao
      * @inject
      */
     public $earlyWaveFacede;

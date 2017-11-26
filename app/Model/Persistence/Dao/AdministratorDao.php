@@ -6,32 +6,33 @@
  * Time: 0:27
  */
 
-namespace App\Model\Facades;
-
+namespace App\Model\Persistence\Dao;
 
 use App\Model\Persistence\Entity\AdministratorEntity;
 
-class AdministratorFacade extends EntityFacade {
+class AdministratorDao extends EntityDao {
 
-    protected function getEntityClass() {
+    protected function getEntityClass(): string {
         return AdministratorEntity::class;
     }
 
     /**
      * Najde administrátora podle id
      * @param integer|NULL $id
-     * @return \App\Model\Persistence\Entity\AdministratorEntity|NULL
+     * @return AdministratorEntity|NULL
      */
-    public function getAdministrator($id){
-        return $this->get($id);
+    public function getAdministrator(?string $id): ?AdministratorEntity {
+        /** @var AdministratorEntity $result */
+        $result = $this->get($id);
+        return $result;
     }
 
     /**
      * Najde administrátora podle uživatelského jména
      * @param string|NULL $username
-     * @return \App\Model\Persistence\Entity\AdministratorEntity|NULL
+     * @return AdministratorEntity|NULL
      */
-    public function getAdministratorByUsername($username){
+    public function getAdministratorByUsername(?string $username): ?AdministratorEntity {
         return $this->getRepository()->findOneBy([
             'username' => $username
         ]);

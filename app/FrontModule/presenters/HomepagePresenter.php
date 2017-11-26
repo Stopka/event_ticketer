@@ -9,13 +9,13 @@ use App\Model;
 class HomepagePresenter extends BasePresenter {
 
     /**
-     * @var Model\Facades\EventFacade
+     * @var \App\Model\Persistence\Dao\EventDao
      * @inject
      */
     public $eventFacade;
 
     /**
-     * @var Model\Facades\ApplicationFacade
+     * @var \App\Model\Persistence\Dao\ApplicationDao
      * @inject
      */
     public $applicationFacade;

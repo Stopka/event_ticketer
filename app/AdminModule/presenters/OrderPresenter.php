@@ -7,12 +7,12 @@ use App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory;
 use App\AdminModule\Controls\Grids\OrderApplicationsGridWrapper;
 use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
-use App\Model\Facades\OrderFacade;
+use App\Model\Facades\OrderDao;
 
 class OrderPresenter extends BasePresenter {
 
     /**
-     * @var  OrderFacade
+     * @var  OrderDao
      * @inject
      */
     public $orderFacade;

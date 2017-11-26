@@ -8,8 +8,7 @@ use App\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use App\AdminModule\Controls\Grids\ApplicationsGridWrapper;
 use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
 use App\AdminModule\Responses\ApplicationsExportResponse;
-use App\Model\Facades\ApplicationFacade;
-use App\Model\Facades\EventFacade;
+use App\Model\Persistence\Dao\EventDao;
 
 class ApplicationPresenter extends BasePresenter {
 
@@ -26,13 +25,13 @@ class ApplicationPresenter extends BasePresenter {
     public $reserveApplicationFormWrapperFactory;
 
     /**
-     * @var EventFacade
+     * @var EventDao
      * @inject
      */
     public $eventFacade;
 
     /**
-     * @var ApplicationFacade
+     * @var \App\Model\Persistence\Dao\ApplicationDao
      * @inject
      */
     public $applicationFacade;

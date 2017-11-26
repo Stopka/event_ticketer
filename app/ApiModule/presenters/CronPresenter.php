@@ -9,13 +9,13 @@ use Nette\Application\Responses\TextResponse;
 class CronPresenter extends BasePresenter {
 
     /**
-     * @var Model\Facades\EarlyWaveFacade
+     * @var Model\CronService
      * @inject
      */
-    public $earlyWaveFacede;
+    public $cronService;
 
     public function actionDefault() {
-        $this->earlyWaveFacede->sendUnsentInvites();
+        $this->cronService->run();
         $this->sendResponse(new TextResponse('OK'));
     }
 

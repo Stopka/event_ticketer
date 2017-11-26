@@ -6,21 +6,22 @@
  * Time: 0:27
  */
 
-namespace App\Model\Facades;
+namespace App\Model\Persistence\Dao;
 
-
+use App\Model\Exception\EmptyException;
 use App\Model\Persistence\Entity\CurrencyEntity;
 
-class CurrencyFacade extends EntityFacade {
+class CurrencyDao extends EntityDao {
 
-    protected function getEntityClass() {
+    protected function getEntityClass(): string {
         return CurrencyEntity::class;
     }
 
     /**
      * @return CurrencyEntity
+     * @throws EmptyException
      */
-    public function getDefaultCurrency(){
+    public function getDefaultCurrency(): CurrencyEntity{
         $currency = $this->getRepository()->findOneBy(['default'=>true]);
         if($currency){
             return $currency;
@@ -30,10 +31,14 @@ class CurrencyFacade extends EntityFacade {
 
     /**
      * @param CurrencyEntity $currency
+     * @throws EmptyException
      */
-    public function setDefaultCurrency(CurrencyEntity $currency = null){
+    public function setDefaultCurrency(?CurrencyEntity $currency = null):CurrencyEntity{
         /** @var CurrencyEntity[] $currencies */
         $currencies = $this->getRepository()->findAll();
+        if(!count($currencies)){
+            throw new EmptyException("There are no currencies!");
+        }
         if(!$currency && $currencies){
             $currency = $currencies[0];
         }

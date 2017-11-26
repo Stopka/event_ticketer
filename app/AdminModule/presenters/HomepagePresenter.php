@@ -3,12 +3,12 @@
 namespace App\AdminModule\Presenters;
 
 
-use App\Model\Facades\EventFacade;
+use App\Model\Persistence\Dao\EventDao;
 
 class HomepagePresenter extends BasePresenter {
 
     /**
-     * @var EventFacade
+     * @var \App\Model\Persistence\Dao\EventDao
      * @inject
      */
     public $eventFacade;

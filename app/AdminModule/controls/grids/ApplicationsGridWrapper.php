@@ -3,9 +3,9 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
-use App\Model\Facades\ApplicationFacade;
-use App\Model\Facades\ChoiceFacade;
 use App\Model\Persistence\Attribute\IGender;
+use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Dao\ChoiceDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use Nette\Localization\ITranslator;
@@ -19,16 +19,16 @@ use Nette\Utils\Html;
  */
 class ApplicationsGridWrapper extends GridWrapper {
 
-    /** @var  ApplicationFacade */
+    /** @var  ApplicationDao */
     private $applicationFacade;
 
-    /** @var  ChoiceFacade */
+    /** @var  \App\Model\Persistence\Dao\ChoiceDao */
     private $choiceFacade;
 
     /** @var  \App\Model\Persistence\Entity\EventEntity */
     private $event;
 
-    public function __construct(ITranslator $translator, ApplicationFacade $applicationFacade, ChoiceFacade $choiceFacade) {
+    public function __construct(ITranslator $translator, ApplicationDao $applicationFacade, ChoiceDao $choiceFacade) {
         parent::__construct($translator);
         $this->applicationFacade = $applicationFacade;
         $this->choiceFacade = $choiceFacade;

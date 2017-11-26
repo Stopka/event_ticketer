@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-use App\Model;
 use Nette;
 
 
@@ -21,7 +20,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     public $translator;
 
     /**
-     * @var Model\Facades\AdministratorFacade Fasáda pro manipulaci s uživateli.
+     * @var \App\Model\Persistence\Dao\AdministratorDao Fasáda pro manipulaci s uživateli.
      * @inject
      */
     public $administratorFacade;

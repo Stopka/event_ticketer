@@ -3,7 +3,7 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
-use App\Model\Facades\SubstituteFacade;
+use App\Model\Facades\SubstituteDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use Nette\Localization\ITranslator;
@@ -16,13 +16,13 @@ use Nette\Localization\ITranslator;
  */
 class SubstitutesGridWrapper extends GridWrapper {
 
-    /** @var  SubstituteFacade */
+    /** @var  SubstituteDao */
     private $substituteFacade;
 
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(ITranslator $translator, SubstituteFacade $substituteFacade) {
+    public function __construct(ITranslator $translator, SubstituteDao $substituteFacade) {
         parent::__construct($translator);
         $this->substituteFacade = $substituteFacade;
     }

@@ -6,7 +6,6 @@ use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
 use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
-use App\Model;
 
 
 class EarlyPresenter extends BasePresenter {
@@ -24,13 +23,13 @@ class EarlyPresenter extends BasePresenter {
     public $substituteFormWrapperFactory;
 
     /**
-     * @var Model\Facades\ApplicationFacade
+     * @var \App\Model\Persistence\Dao\ApplicationDao
      * @inject
      */
     public $applicationFacade;
 
     /**
-     * @var Model\Facades\EarlyFacade
+     * @var \App\Model\Persistence\Dao\EarlyDao
      * @inject
      */
     public $earlyFacade;
