@@ -27,7 +27,7 @@ class SubstituteDao extends EntityDao {
         $qb = $this->getRepository()->createQueryBuilder('s');
         $qb->addSelect('s')
             ->where($qb->expr()->andX(
-                $qb->expr()->eq('s.event', $event->getId())
+                $qb->expr()->eq('s.event', $qb->expr()->literal($event->getId()))
             ));
         return new Doctrine($qb);
     }

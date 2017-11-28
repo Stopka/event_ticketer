@@ -5,12 +5,17 @@
         <ul>
             <li n:class="$presenter->isLinkCurrent('Application:default')?active">
                 <a n:href="Application:default,$event->getId()">
-                    <span>Přihlášky</span>
+                    <span><i class="fa fa-ticket"></i> Přihlášky</span>
                 </a>
             </li>
             <li n:class="$presenter->isLinkCurrent('Substitute:default')?active">
                 <a n:href="Substitute:default,$event->getId()">
-                    <span>Náhradníci</span>
+                    <span><i class="fa fa-retweet"></i> Náhradníci</span>
+                </a>
+            </li>
+            <li n:class=" disabled">
+                <a n:href="Application:default,$event->getId()">
+                    <span><i class="fa fa-star"></i> Přednostníci</span>
                 </a>
             </li>
         </ul>

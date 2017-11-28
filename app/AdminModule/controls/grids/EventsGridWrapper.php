@@ -62,6 +62,9 @@ class EventsGridWrapper extends GridWrapper {
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('add','Vytvořit novou událost');
+        $grid->addActionHref('edit','Upravit','Event:edit')
+            ->setIcon('fa fa-pencil');
+        $grid->addActionHref('applications','Přihlášky','Application:')
+            ->setIcon('fa fa-ticket');
     }
 }
