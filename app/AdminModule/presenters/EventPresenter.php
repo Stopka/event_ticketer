@@ -20,10 +20,10 @@ class EventPresenter extends BasePresenter {
     /** @var  EventDao */
     private $eventDao;
 
-    public function __construct(IEventsGridWrapperFactory $eventsGridWrapperFactory, EventDao $eventDao, IEventFromWrapperFactory $eventFromWrapperFactory) {
+    public function __construct(IEventsGridWrapperFactory $eventsGridWrapperFactory, EventDao $additionDao, IEventFromWrapperFactory $eventFromWrapperFactory) {
         parent::__construct();
         $this->eventsGridWrapperFactory = $eventsGridWrapperFactory;
-        $this->eventDao = $eventDao;
+        $this->eventDao = $additionDao;
         $this->eventFormWrapperFactory = $eventFromWrapperFactory;
     }
 

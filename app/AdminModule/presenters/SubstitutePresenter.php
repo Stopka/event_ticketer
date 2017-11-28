@@ -18,12 +18,12 @@ class SubstitutePresenter extends BasePresenter {
     /**
      * SubstitutePresenter constructor.
      * @param ISubstitutesGridWrapperFactory $substitutesGridWrapperFactory
-     * @param EventDao $eventDao
+     * @param EventDao $additionDao
      */
-    public function __construct(ISubstitutesGridWrapperFactory $substitutesGridWrapperFactory, EventDao $eventDao) {
+    public function __construct(ISubstitutesGridWrapperFactory $substitutesGridWrapperFactory, EventDao $additionDao) {
         parent::__construct();
         $this->substitutesGridWrapperFactory = $substitutesGridWrapperFactory;
-        $this->eventDao = $eventDao;
+        $this->eventDao = $additionDao;
     }
 
 

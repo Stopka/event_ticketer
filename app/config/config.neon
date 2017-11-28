@@ -43,6 +43,7 @@ services:
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\IEventsGridWrapperFactory
+    - App\AdminModule\Controls\Grids\IAdditionsGridWrapperFactory
     - App\Model\CronService
     - App\Model\AdminAuthenticator
     - App\Model\FileStorage(%appDir%/files)

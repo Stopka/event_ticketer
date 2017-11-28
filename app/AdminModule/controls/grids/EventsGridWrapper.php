@@ -18,9 +18,9 @@ class EventsGridWrapper extends GridWrapper {
     /** @var  EventDao */
     private $eventDao;
 
-    public function __construct(ITranslator $translator, EventDao $eventDao) {
+    public function __construct(ITranslator $translator, EventDao $additionDao) {
         parent::__construct($translator);
-        $this->eventDao = $eventDao;
+        $this->eventDao = $additionDao;
     }
 
     protected function loadModel(Grid $grid) {

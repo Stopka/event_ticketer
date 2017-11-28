@@ -11,11 +11,29 @@ namespace App\Model\Persistence\Dao;
 
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use Grido\DataSources\Doctrine;
+use Grido\DataSources\IDataSource;
 
 class AdditionDao extends EntityDao {
 
     protected function getEntityClass(): string {
         return AdditionEntity::class;
+    }
+
+    /**
+     * @param EventEntity $eventEntity
+     * @return IDataSource
+     */
+    public function getEventAdditions(EventEntity $eventEntity): IDataSource {
+        $qb = $this->getRepository()->createQueryBuilder('a');
+        $qb->addSelect('a')
+            ->where(
+                $qb->expr()->eq(
+                    'a.event',
+                    $qb->expr()->literal($eventEntity->getId())
+                )
+            );
+        return new Doctrine($qb);
     }
 
     /**
@@ -34,8 +52,8 @@ class AdditionDao extends EntityDao {
      */
     public function getHiddenEventAdditions(EventEntity $event): array {
         return $this->getRepository()->findBy([
-            'visible' => false,
-            'event.id' => $event->getId()]
+                'visible' => false,
+                'event.id' => $event->getId()]
         );
     }
 
