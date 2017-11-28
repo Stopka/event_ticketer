@@ -64,8 +64,8 @@ class EarlyEntity extends BaseEntity {
     /**
      * @return OrderEntity[]
      */
-    public function getOrders(): ArrayCollection {
-        return $this->orders;
+    public function getOrders(): array {
+        return $this->orders->toArray();
     }
 
     /**

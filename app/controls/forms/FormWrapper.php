@@ -7,8 +7,7 @@ use Nette;
 use Stopka\NetteFormRenderer\FormRenderer;
 
 
-abstract class FormWrapper extends Nette\Application\UI\Control {
-
+abstract class FormWrapper extends Nette\Application\UI\Control{
     /**
      * @var null|string path to template
      */

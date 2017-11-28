@@ -7,5 +7,5 @@ interface ISubstituteFormWrapperFactory{
     /**
      * @return SubstituteFormWrapper
      */
-    public function create();
+    public function create(): SubstituteFormWrapper;
 }

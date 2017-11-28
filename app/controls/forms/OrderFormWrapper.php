@@ -178,7 +178,7 @@ class OrderFormWrapper extends FormWrapper {
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $form->addText('phone', 'Telefon', NULL, 13)
-            ->setOption('description', 'Ve formátu +420123456789')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Ve formátu +420123456789')
             ->setRequired()
             ->addRule($form::PATTERN, '%label musí být ve formátu +420123456789', '[+]([0-9]){6,20}');
         $form->addText('email', 'Email')
@@ -209,7 +209,7 @@ class OrderFormWrapper extends FormWrapper {
         $count_left = $this->event->getCapacityLeft($this->applicationDao->countIssuedApplications($this->event));
         if(!$this->substitute&&!$this->order) {
             $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
-                ->setOption('description', "Zbývá $count_left přihlášek")
+                ->setOption($form::OPTION_KEY_DESCRIPTION, "Zbývá $count_left přihlášek")
                 ->setValidationScope(FALSE);
             $add_button->getControlPrototype()->class = 'ajax';
             $add_button->onClick[] = [$this, 'addChild'];
@@ -269,9 +269,9 @@ class OrderFormWrapper extends FormWrapper {
             ->setRequired();
         $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
-            ->addRule(form::VALID, 'Entered date is not valid!');
+            ->addRule($form::VALID, 'Vloženo chybné datum!');
         $child->addText('birthCode', 'Kód rodného čísla', NULL, 255)
-            ->setOption('description', 'Část rodného čísla za lomítkem')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Část rodného čísla za lomítkem')
             ->setRequired()
             ->addRule($form::PATTERN, '%label musí být ve formátu čtyřmístného čísla', '[0-9]{4}');
     }

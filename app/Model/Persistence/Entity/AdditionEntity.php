@@ -98,8 +98,8 @@ class AdditionEntity extends BaseEntity {
     /**
      * @return OptionEntity[]
      */
-    public function getOptions(): ArrayCollection {
-        return $this->options;
+    public function getOptions(): array {
+        return $this->options->toArray();
     }
 
     /**

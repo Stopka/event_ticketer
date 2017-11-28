@@ -7,5 +7,5 @@ interface ISignInFormWrapperFactory{
     /**
      * @return SignInFormWrapper
      */
-    public function create();
+    public function create(): SignInFormWrapper;
 }

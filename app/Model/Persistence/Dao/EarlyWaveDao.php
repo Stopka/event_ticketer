@@ -12,7 +12,6 @@ namespace App\Model\Persistence\Dao;
 use App\Model\Facades\EntityFacade;
 use App\Model\Persistence\Entity\EarlyWaveEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class EarlyWaveDao extends EntityDao {
 
@@ -29,7 +28,7 @@ class EarlyWaveDao extends EntityDao {
     /**
      * @return EarlyWaveEntity[]
      */
-    public function getUnsentInviteEarlyWaves(): ArrayCollection{
+    public function getUnsentInviteEarlyWaves(): array {
         return $this->getRepository()->findBy([
             'event.state' => EventEntity::STATE_ACTIVE,
             'startDate <=' => new \DateTime(),

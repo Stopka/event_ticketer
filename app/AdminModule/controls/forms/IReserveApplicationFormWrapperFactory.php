@@ -7,5 +7,5 @@ interface IReserveApplicationFormWrapperFactory{
     /**
      * @return ReserveApplicationFormWrapper
      */
-    public function create();
+    public function create(): ReserveApplicationFormWrapper;
 }

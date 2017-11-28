@@ -33,8 +33,8 @@ class PriceEntity extends BaseEntity {
     /**
      * @return PriceAmountEntity[]
      */
-    public function getPriceAmounts(): ArrayCollection {
-        return $this->priceAmounts;
+    public function getPriceAmounts(): array {
+        return $this->priceAmounts->toArray();
     }
 
     /**

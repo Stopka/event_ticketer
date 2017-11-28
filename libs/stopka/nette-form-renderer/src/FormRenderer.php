@@ -3,13 +3,14 @@
 namespace Stopka\NetteFormRenderer;
 
 //use Elearning\Model\Forum\Linker;
+use App\Controls\Forms\IFormOptionKeys;
 use Nette;
 use Nette\Forms\Controls;
 use Nette\Utils\Html as Html;
 
-class FormRenderer implements Nette\Forms\IFormRenderer {
+class FormRenderer implements Nette\Forms\IFormRenderer, IFormOptionKeys {
     use Nette\SmartObject;
-
+    const OPTION_KEY_RENDERED = 'rendered';
     /**
      *  /--- form.container
      *
@@ -138,29 +139,29 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
     /**
      * Přepřipraví skupiny s option embedNext na option embed
      */
-    protected function prepareGroups(){
-        $parent=[];
-        $counter=[];
-        foreach($this->form->getGroups() as $group){
-            if($counter&&$counter[0]>0){
-                $embeded=$parent[0]->getOption('embed');
-                if(!$embeded){
-                    $embeded=[];
+    protected function prepareGroups() {
+        $parent = [];
+        $counter = [];
+        foreach ($this->form->getGroups() as $group) {
+            if ($counter && $counter[0] > 0) {
+                $embeded = $parent[0]->getOption(self::OPTION_KEY_EMBED);
+                if (!$embeded) {
+                    $embeded = [];
                 }
-                $embeded[]=$group;
-                $parent[0]->setOption('embed',$embeded);
+                $embeded[] = $group;
+                $parent[0]->setOption(self::OPTION_KEY_EMBED, $embeded);
                 $counter[0]--;
             }
-            $next=$group->getOption('embedNext');
-            if($next===TRUE){
-                $next=1;
+            $next = $group->getOption(self::OPTION_KEY_EMBED_NEXT);
+            if ($next === TRUE) {
+                $next = 1;
             }
-            if($next){
-                array_unshift($counter,$next);
-                array_unshift($parent,$group);
+            if ($next) {
+                array_unshift($counter, $next);
+                array_unshift($parent, $group);
                 continue;
             }
-            while($counter&&$counter[0]===0){
+            while ($counter && $counter[0] === 0) {
                 array_shift($parent);
                 array_shift($counter);
             }
@@ -186,19 +187,19 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
      * @return string
      */
     public function renderMode($mode) {
-        if(is_object($mode)){
-            if($mode instanceof Nette\Forms\Container){
+        if (is_object($mode)) {
+            if ($mode instanceof Nette\Forms\Container) {
                 return $this->renderGroupControls($mode);
             }
-            if($mode instanceof Nette\Forms\ControlGroup){
-               return $this->renderGroup($mode);
+            if ($mode instanceof Nette\Forms\ControlGroup) {
+                return $this->renderGroup($mode);
             }
-            if($mode instanceof Nette\Forms\IControl){
+            if ($mode instanceof Nette\Forms\IControl) {
                 return $this->renderControl($mode);
             }
-            throw new Nette\Application\ApplicationException('Unsupported form render object mode '.get_class($mode));
+            throw new Nette\Application\ApplicationException('Unsupported form render object mode ' . get_class($mode));
         }
-        list($mode, $name) = explode(':',$mode . ':');
+        list($mode, $name) = explode(':', $mode . ':');
         switch (strtolower($mode)) {
             case 'begin':
                 return $this->renderBegin();
@@ -240,7 +241,7 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
         $this->counter = 0;
 
         foreach ($this->form->getControls() as $control) {
-            $control->setOption('rendered', FALSE);
+            $control->setOption(self::OPTION_KEY_RENDERED, FALSE);
         }
 
         if ($this->form->isMethod('get')) {
@@ -270,7 +271,7 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
     public function renderEnd() {
         $s = '';
         foreach ($this->form->getControls() as $control) {
-            if ($control->getOption('type') === 'hidden' && !$control->getOption('rendered')) {
+            if ($control->getOption(self::OPTION_KEY_TYPE) === 'hidden' && !$control->getOption(self::OPTION_KEY_RENDERED)) {
                 $s .= $control->getControl();
             }
         }
@@ -354,28 +355,28 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
      * @return string
      */
     public function renderGroup($group) {
-        if ($group->getOption('rendered')) {
+        if ($group->getOption(self::OPTION_KEY_RENDERED)) {
             return '';
         }
-        if(!$group->getOption('visual')&&!$group->getOption('logical')){
+        if (!$group->getOption(self::OPTION_KEY_VISUAL) && !$group->getOption(self::OPTION_KEY_LOGICAL)) {
             return $this->renderGroupControls($group);
         }
-        $logical = $group->getOption('logical');
-        $defaultContainer = $this->getWrapper($logical?'group logicalContainer':'group container');
+        $logical = $group->getOption(self::OPTION_KEY_LOGICAL);
+        $defaultContainer = $this->getWrapper($logical ? 'group logicalContainer' : 'group container');
         $translator = $this->form->getTranslator();
 
         $s = '';
 
         //Group container
-        $container = $group->getOption('container', $defaultContainer);
+        $container = $group->getOption(self::OPTION_KEY_CONTAINER, $defaultContainer);
         $container = $container instanceof Html ? clone $container : Html::el($container);
 
         //Add attributes to container
-        $id = $group->getOption('id');
+        $id = $group->getOption(self::OPTION_KEY_ID);
         if ($id) {
             $container->id = $id;
         }
-        $class = $group->getOption('class');
+        $class = $group->getOption(self::OPTION_KEY_CLASS);
         if ($class) {
             $container->addClass($class);
         }
@@ -384,8 +385,8 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
         $s .= "\n" . $container->startTag();
 
         //Group label
-        if(!$logical) {
-            $text = $group->getOption('label');
+        if (!$logical) {
+            $text = $group->getOption(self::OPTION_KEY_LABEL);
             $group_label = $this->getWrapper('group label');
             //$this->appendHelpBoxData($group_label, $group->getOption('help'));
             if ($text instanceof Html) {
@@ -396,17 +397,17 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
                 }
                 $group_label->setText($text);
             }
-            if($text){
+            if ($text) {
                 $s .= "\n" . $group_label . "\n";
             }
         }
 
         //Group description
-        $text = $group->getOption('description');
+        $text = $group->getOption(self::OPTION_KEY_DESCRIPTION);
         if ($text instanceof Html) {
             $s .= $text;
 
-        } elseif (is_string($text) ||is_array($text)) {
+        } elseif (is_string($text) || is_array($text)) {
             if ($translator !== NULL) {
                 $text = $translator->translate($text);
             }
@@ -417,21 +418,21 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
         $s .= $this->renderGroupControls($group);
 
         //Group embed group
-        if ($group->getOption('embedNext')&&!$group->getOption('embed')) {
+        if ($group->getOption(self::OPTION_KEY_EMBED_NEXT) && !$group->getOption(self::OPTION_KEY_EMBED)) {
             $this->prepareGroups();
         }
-        if ($embed_group_names = $group->getOption('embed')) {
-            if(is_string($embed_group_names)){
+        if ($embed_group_names = $group->getOption(self::OPTION_KEY_EMBED)) {
+            if (is_string($embed_group_names)) {
                 $embed_group_names = [$embed_group_names];
             }
-            foreach ($embed_group_names as $embed_group_name){
-                if(is_string($embed_group_name)) {//pokud místo jména byla přijata přímo skupina
+            foreach ($embed_group_names as $embed_group_name) {
+                if (is_string($embed_group_name)) {//pokud místo jména byla přijata přímo skupina
                     $embed_group = $this->form->getGroup($embed_group_name);
-                }else {
+                } else {
                     $embed_group = $embed_group_name;
                 }
 
-                if (!$embed_group){
+                if (!$embed_group) {
                     continue;
                 }
                 if ($embed_group == $group) {
@@ -443,7 +444,7 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
 
         //Group container end
         $s .= $container->endTag() . "\n";
-        $group->setOption('rendered',true);
+        $group->setOption(self::OPTION_KEY_RENDERED, true);
         return $s;
     }
 
@@ -457,7 +458,7 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
         if (!($parent instanceof Nette\Forms\Container || $parent instanceof Nette\Forms\ControlGroup)) {
             throw new Nette\InvalidArgumentException('Argument must be Nette\Forms\Container or Nette\Forms\ControlGroup instance.');
         }
-        if(!$parent->getControls()){
+        if (!$parent->getControls()) {
             return '';
         }
 
@@ -465,10 +466,10 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
 
         $buttons = NULL;
         foreach ($parent->getControls() as $control) {
-            if ($control->getOption('rendered') || $control->getOption('type') === 'hidden' || $control->getForm(FALSE) !== $this->form) {
+            if ($control->getOption(self::OPTION_KEY_RENDERED) || $control->getOption(self::OPTION_KEY_TYPE) === 'hidden' || $control->getForm(FALSE) !== $this->form) {
                 continue;
             }
-            if ($control->getOption('type') === 'button') {
+            if ($control->getOption(self::OPTION_KEY_TYPE) === 'button') {
                 $buttons[] = $control;
                 continue;
             }
@@ -479,8 +480,8 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
             $container->addHtml($this->renderPair($control));
         }
         if ($buttons) {
-            $additional_class=$parent instanceof Nette\Forms\Container?'form-actions':NULL;
-            $action_buttons=$this->renderPairMulti($buttons,$additional_class);
+            $additional_class = $parent instanceof Nette\Forms\Container ? 'form-actions' : NULL;
+            $action_buttons = $this->renderPairMulti($buttons, $additional_class);
             $container->addHtml($action_buttons);
         }
 
@@ -503,11 +504,11 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
         $pair->addHtml($this->renderControl($control));
         $pair->class($this->getValue($control->isRequired() ? 'pair .required' : 'pair .optional'), TRUE);
         $pair->class($control->hasErrors() ? $this->getValue('pair .error') : NULL, TRUE);
-        $pair->class($control->getOption('class'), TRUE);
+        $pair->class($control->getOption(self::OPTION_KEY_CLASS), TRUE);
         if (++$this->counter % 2) {
             $pair->class($this->getValue('pair .odd'), TRUE);
         }
-        $pair->id = $control->getOption('id');
+        $pair->id = $control->getOption(self::OPTION_KEY_ID);
         return $pair->render(0);
     }
 
@@ -518,20 +519,20 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
      * @param string|NULL $additional_class třída, která se má přidat kontejneru
      * @return string
      */
-    public function renderPairMulti(array $controls,$additional_class=NULL) {
+    public function renderPairMulti(array $controls, $additional_class = NULL) {
         $s = [];
-        $pair_id=null;
-        $pair_classes=[];
-        if($additional_class){
-            $pair_classes[]=$additional_class;
+        $pair_id = null;
+        $pair_classes = [];
+        if ($additional_class) {
+            $pair_classes[] = $additional_class;
         }
         foreach ($controls as $control) {
             if (!$control instanceof Nette\Forms\IControl) {
                 throw new Nette\InvalidArgumentException('Argument must be array of Nette\Forms\IControl instances.');
             }
-            $description = $control->getOption('description');
+            $description = $control->getOption(self::OPTION_KEY_DESCRIPTION);
             if ($description instanceof Html) {
-                $description = ' ' . $control->getOption('description');
+                $description = ' ' . $control->getOption(self::OPTION_KEY_DESCRIPTION);
 
             } elseif (is_string($description) || is_array($description)) {
                 if ($control instanceof Nette\Forms\Controls\BaseControl) {
@@ -543,7 +544,7 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
                 $description = '';
             }
 
-            $control->setOption('rendered', TRUE);
+            $control->setOption(self::OPTION_KEY_RENDERED, TRUE);
             $el = $control->getControl();
             if ($el instanceof Html && $el->getName() === 'input') {
                 $el->class($this->getValue("control .$el->type"), TRUE);
@@ -552,20 +553,20 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
             //$this->appendHelpBoxData($el,$help);
             $s[] = $el . $description;
             //Přidání id a tříd z option
-            $class=$control->getOption('class');
-            if($class){
-                $pair_classes[]=$class;
+            $class = $control->getOption(self::OPTION_KEY_CLASS);
+            if ($class) {
+                $pair_classes[] = $class;
             }
-            $id=$control->getOption('id');
-            if($id){
-                $pair_id=$id;
+            $id = $control->getOption(self::OPTION_KEY_ID);
+            if ($id) {
+                $pair_id = $id;
             }
         }
         $pair = $this->getWrapper('multi container');
-        if($pair_id){
+        if ($pair_id) {
             $pair->setId($pair_id);
         }
-        foreach ($pair_classes as $pair_class){
+        foreach ($pair_classes as $pair_class) {
             $pair->addClass($pair_class);
         }
         $pair->addHtml($this->renderLabel($control));
@@ -608,7 +609,7 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
             $body->class($this->getValue('control .odd'), TRUE);
         }
 
-        $description = $control->getOption('description');
+        $description = $control->getOption(self::OPTION_KEY_DESCRIPTION);
         if ($description instanceof Html) {
             $description = ' ' . $description;
 
@@ -618,12 +619,12 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
             }
             $description = ' ' . $this->getWrapper('control description')->setText($description);
 
-        } elseif (is_array($description)){
+        } elseif (is_array($description)) {
             if ($control instanceof Nette\Forms\Controls\BaseControl) {
                 $description = $control->translate([$description])[0];
             }
             $description = ' ' . $this->getWrapper('control description')->setText($description);
-        }else {
+        } else {
             $description = '';
         }
 
@@ -631,7 +632,7 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
             $description = $this->getValue('control requiredsuffix') . $description;
         }
 
-        $control->setOption('rendered', TRUE);
+        $control->setOption(self::OPTION_KEY_RENDERED, TRUE);
         $el = $control->getControl();
         if ($el instanceof Html && $el->getName() === 'input') {
             $el->class($this->getValue("control .$el->type"), TRUE);
@@ -660,11 +661,11 @@ class FormRenderer implements Nette\Forms\IFormRenderer {
         return $data;
     }
 
-    public function renderControls(){
+    public function renderControls() {
         throw new Nette\Application\ApplicationException('Yet unsupported render method');
     }
 
-    public function renderButtons(){
+    public function renderButtons() {
         throw new Nette\Application\ApplicationException('Yet unsupported render method');
     }
 

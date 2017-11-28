@@ -13,5 +13,5 @@ interface IApplicationsGridWrapperFactory {
     /**
      * @return ApplicationsGridWrapper
      */
-    public function create();
+    public function create(): ApplicationsGridWrapper;
 }

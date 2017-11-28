@@ -9,7 +9,7 @@ use Nette\Application\ApplicationException;
 use Nette\Utils\Html;
 use Stopka\NetteFormRenderer\HtmlFormComponent;
 
-class Form extends \Nette\Application\UI\Form {
+class Form extends \Nette\Application\UI\Form implements IFormOptionKeys {
 
     /** @var string */
     private $recaptcha_name;

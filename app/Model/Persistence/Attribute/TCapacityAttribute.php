@@ -27,7 +27,7 @@ trait TCapacityAttribute {
     /**
      * @return int
      */
-    public function getCapacity(): int {
+    public function getCapacity(): ?int {
         return $this->capacity;
     }
 

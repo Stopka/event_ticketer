@@ -12,6 +12,7 @@ use App\Model\Persistence\Attribute\TCapacityAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TInternalInfoAttribute;
 use App\Model\Persistence\Attribute\TNameAttribute;
+use App\Model\Persistence\Attribute\TOccupancyIconAttribute;
 use App\Model\Persistence\Attribute\TStartDateAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class EventEntity extends BaseEntity {
-    use TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TStartDateAttribute, TInternalInfoAttribute;
+    use TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TStartDateAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
 
     const STATE_INACTIVE = 0;
     const STATE_ACTIVE = 1;
@@ -40,7 +41,7 @@ class EventEntity extends BaseEntity {
      * @ORM\Column(type="integer")
      * @var integer
      */
-    private $state;
+    private $state = self::STATE_INACTIVE;
 
     /**
      * @ORM\OneToMany(targetEntity="EarlyWaveEntity", mappedBy="event")
@@ -83,8 +84,8 @@ class EventEntity extends BaseEntity {
     /**
      * @return EarlyWaveEntity[]
      */
-    public function getEarlyWaves(): ArrayCollection {
-        return $this->earlyWaves;
+    public function getEarlyWaves(): array {
+        return $this->earlyWaves->toArray();
     }
 
     /**
@@ -120,8 +121,8 @@ class EventEntity extends BaseEntity {
     /**
      * @return OrderEntity[]
      */
-    public function getOrders(): ArrayCollection {
-        return $this->orders;
+    public function getOrders(): array {
+        return $this->orders->toArray();
     }
 
     /**
@@ -156,8 +157,8 @@ class EventEntity extends BaseEntity {
     /**
      * @return SubstituteEntity[]
      */
-    public function getSubstitute(): ArrayCollection {
-        return $this->substitutes;
+    public function getSubstitute(): array {
+        return $this->substitutes->toArray();
     }
 
     /**
@@ -191,8 +192,8 @@ class EventEntity extends BaseEntity {
     /**
      * @return AdditionEntity[]
      */
-    public function getAdditions(): ArrayCollection {
-        return $this->additions;
+    public function getAdditions(): array {
+        return $this->additions->toArray();
     }
 
     /**

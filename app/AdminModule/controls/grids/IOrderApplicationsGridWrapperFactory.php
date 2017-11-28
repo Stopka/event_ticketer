@@ -14,5 +14,5 @@ interface IOrderApplicationsGridWrapperFactory {
     /**
      * @return OrderApplicationsGridWrapper
      */
-    public function create();
+    public function create(): OrderApplicationsGridWrapper;
 }

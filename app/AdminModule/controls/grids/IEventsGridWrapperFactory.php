@@ -8,10 +8,10 @@ namespace App\AdminModule\Controls\Grids;
  * Date: 22.1.17
  * Time: 16:20
  */
-interface ISubstitutesGridWrapperFactory {
+interface IEventsGridWrapperFactory {
 
     /**
-     * @return SubstitutesGridWrapper
+     * @return EventsGridWrapper
      */
-    public function create(): SubstitutesGridWrapper;
+    public function create(): EventsGridWrapper;
 }

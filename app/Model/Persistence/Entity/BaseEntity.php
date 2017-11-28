@@ -55,7 +55,9 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
         }
         $results = [];
         foreach ($methods as $method) {
-            if(!Strings::startsWith($method,'get') || in_array($method,$without)){
+            $reflection = new \ReflectionMethod($this, $method);
+            $parameters = $reflection->getParameters();
+            if(!Strings::startsWith($method,'get') || in_array($method,$without) || count($parameters)){
                 continue;
             }
             $key = Strings::firstLower(Strings::substring($method,3));

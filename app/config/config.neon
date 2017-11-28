@@ -32,14 +32,17 @@ session:
 
 services:
     - App\Controls\Forms\IOrderFormWrapperFactory
+    - App\FrontModule\Controls\IOccupancyControlFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
+    - App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
+    - App\FrontModule\Responses\ApplicationPdfRenderer
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
-    - App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
+    - App\AdminModule\Controls\Forms\IEventFromWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
-    - App\FrontModule\Responses\ApplicationPdfRenderer
+    - App\AdminModule\Controls\Grids\IEventsGridWrapperFactory
     - App\Model\CronService
     - App\Model\AdminAuthenticator
     - App\Model\FileStorage(%appDir%/files)
@@ -75,6 +78,11 @@ services:
     -
         class: App\Model\Notifier\SubstituteActivatedNotifier
         tags: [kdyby.subscriber]
+    -
+        class: App\Model\OccupancyIcons
+        setup:
+            - addIcon('bed', 'Postel')
+            - addIcon('bus', 'Autobus')
     router: App\RouterFactory::createRouter
 
 extensions:

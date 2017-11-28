@@ -6,10 +6,11 @@ use App\Controls\Forms\IOrderFormWrapperFactory;
 use App\Controls\Forms\OrderFormWrapper;
 use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
+use App\FrontModule\Controls\IOccupancyControlFactory;
+use App\FrontModule\Controls\OccupancyControl;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\EventDao;
 use App\Model\Persistence\Dao\OptionDao;
-use App\Model\Persistence\Entity\OptionEntity;
 
 
 class EventPresenter extends BasePresenter {
@@ -17,17 +18,14 @@ class EventPresenter extends BasePresenter {
     /** @var EventDao */
     public $eventDao;
 
-    /** @var ApplicationDao */
-    public $applicationDao;
-
-    /** @var OptionDao */
-    public $optionDao;
-
     /** @var IOrderFormWrapperFactory */
     public $orderFormWrapperFactory;
 
     /** @var ISubstituteFormWrapperFactory */
     public $substituteFormWrapperFactory;
+
+    /** @var  IOccupancyControlFactory */
+    public $occupancyControlFactory;
 
     /**
      * EventPresenter constructor.
@@ -36,14 +34,14 @@ class EventPresenter extends BasePresenter {
      * @param OptionDao $optionDao
      * @param IOrderFormWrapperFactory $orderFormWrapperFactory
      * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
+     * @param IOccupancyControlFactory $occupancyControlFactory
      */
-    public function __construct(EventDao $eventDao, ApplicationDao $applicationDao, OptionDao $optionDao, IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory) {
+    public function __construct(EventDao $eventDao, IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, IOccupancyControlFactory $occupancyControlFactory) {
         parent::__construct();
         $this->eventDao = $eventDao;
-        $this->applicationDao = $applicationDao;
-        $this->optionDao = $optionDao;
         $this->orderFormWrapperFactory = $orderFormWrapperFactory;
         $this->substituteFormWrapperFactory = $substituteFormWrapperFactory;
+        $this->occupancyControlFactory = $occupancyControlFactory;
     }
 
 
@@ -100,6 +98,13 @@ class EventPresenter extends BasePresenter {
         return $this->substituteFormWrapperFactory->create();
     }
 
+    /**
+     * @return \App\FrontModule\Controls\OccupancyControl
+     */
+    protected function createComponentOccupancy(){
+        return $this->occupancyControlFactory->create();
+    }
+
     public function renderOccupancy($id = null){
         if(!$id){
             $events = $this->eventDao->getPublicAvailibleEvents();
@@ -114,22 +119,12 @@ class EventPresenter extends BasePresenter {
             }
         }
         $event = $this->eventDao->getEvent($id);
-        if(!$event){
-            $this->flashMessage('Událost nebyla nalezena','error');
-            $this->redirect('Homepage:');
-        }
         $this->template->event = $event;
-        $this->template->event_issued = $this->applicationDao->countIssuedApplications($event);
-        $this->template->event_reserved = $this->applicationDao->countReservedApplications($event);
-        $this->template->options = $this->optionDao->getOptionsWithLimitedCapacity($event);
-    }
-
-    /**
-     * @param OptionEntity $option
-     * @return int
-     */
-    public function countOptionsReserved(OptionEntity $option): int {
-        return $this->applicationDao->countReservedApplicationsWithOption($option);
+        if($event){
+            /** @var OccupancyControl $occupancy */
+            $occupancy = $this->getComponent('occupancy');
+            $occupancy->setEvent($event);
+        }
     }
 
 }

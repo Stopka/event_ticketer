@@ -1,0 +1,22 @@
+<!--<p>Bylo vydáno {$event_issued} přihlášek</p>-->
+<fieldset>
+    <legend>Rezervováno {$event_reserved} z {$event->getCapacity()} míst</legend>
+    <div class="occupancy_visual">
+        {*}
+        $icons->getIconHtml(key,occupied);
+        {/*}
+        <div n:for="$i=0; $i<$event_reserved; $i++" class="item reserved"></div>
+        <div n:for="$i=$event_reserved; $i<$event->getCapacity(); $i++" class="item free"></div>
+    </div>
+</fieldset>
+<fieldset n:foreach="$options as $option" n:class="'option_'.$option->getId()">
+    {var $reserved = $control->countOptionsReserved($option)}
+    <legend>{$option->getAddition()->getName()}: {$option->getName()} obsazeno {$reserved} z {$option->getCapacity()} míst</legend>
+    <div class="occupancy_visual">
+        {*}
+        $icons->getIconHtml(key,occupied);
+        {/*}
+        <div n:for="$i=0; $i<$reserved; $i++" class="item reserved"></div>
+        <div n:for="$i=$reserved; $i<$option->getCapacity(); $i++" class="item free"></div>
+    </div>
+</fieldset>

@@ -54,4 +54,20 @@ class EventManager extends Object implements Subscriber {
     public function getSubscribedEvents() {
         return ['OrderManager::onOrderCreated'];
     }
+
+    public function editEventFromEventForm(array $values, EventEntity $eventEntity):EventEntity{
+        $em = $this->getEntityManager();
+        $eventEntity->setByValueArray($values);
+        $em->flush();
+        return $eventEntity;
+    }
+
+    public function createEventFromEventForm(array $values):EventEntity{
+        $em = $this->getEntityManager();
+        $eventEntity = new EventEntity();
+        $eventEntity->setByValueArray($values);
+        $em->persist($eventEntity);
+        $em->flush();
+        return $eventEntity;
+    }
 }

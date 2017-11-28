@@ -53,8 +53,8 @@ class ApplicationEntity extends BaseEntity {
     /**
      * @return ChoiceEntity[]
      */
-    public function getChoices(): ArrayCollection {
-        return $this->choices;
+    public function getChoices(): array {
+        return $this->choices->toArray();
     }
 
     /**

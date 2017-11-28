@@ -9,6 +9,8 @@
 namespace App\Model\Persistence\Dao;
 
 use App\Model\Persistence\Entity\EventEntity;
+use Grido\DataSources\Doctrine;
+use Grido\DataSources\IDataSource;
 
 class EventDao extends EntityDao {
 
@@ -21,6 +23,15 @@ class EventDao extends EntityDao {
      */
     public function getAllEvents(): array {
         return $this->getRepository()->findAll();
+    }
+
+    /**
+     * @return IDataSource
+     */
+    public function getAllEventsGridModel(): IDataSource{
+        $qb = $this->getRepository()->createQueryBuilder('a');
+        $qb->addSelect('a');
+        return new Doctrine($qb);
     }
 
     /**

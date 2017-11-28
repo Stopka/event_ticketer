@@ -72,8 +72,8 @@ class OrderEntity extends BaseEntity {
     /**
      * @return ApplicationEntity[]
      */
-    public function getApplications(): ArrayCollection {
-        return $this->applications;
+    public function getApplications(): array {
+        return $this->applications->toArray();
     }
 
     /**

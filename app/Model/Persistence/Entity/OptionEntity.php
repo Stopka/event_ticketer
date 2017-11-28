@@ -12,6 +12,7 @@ use App\Model\Persistence\Attribute\TCapacityAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TInternalInfoAttribute;
 use App\Model\Persistence\Attribute\TNameAttribute;
+use App\Model\Persistence\Attribute\TOccupancyIconAttribute;
 use App\Model\Persistence\Attribute\TPriceAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class OptionEntity extends BaseEntity {
-    use TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TPriceAttribute, TInternalInfoAttribute;
+    use TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TPriceAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
 
     public function __construct() {
         $this->choices = new ArrayCollection();
@@ -66,8 +67,8 @@ class OptionEntity extends BaseEntity {
     /**
      * @return ChoiceEntity[]
      */
-    public function getChoices(): ArrayCollection {
-        return $this->choices;
+    public function getChoices(): array {
+        return $this->choices->toArray();
     }
 
     /**

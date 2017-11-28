@@ -7,5 +7,5 @@ interface IOrderFormWrapperFactory{
     /**
      * @return OrderFormWrapper
      */
-    public function create();
+    public function create(): OrderFormWrapper;
 }

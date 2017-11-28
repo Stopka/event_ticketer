@@ -66,8 +66,8 @@ class EarlyWaveEntity extends BaseEntity {
     /**
      * @return EarlyEntity[]
      */
-    public function getEarlies(): ArrayCollection {
-        return $this->earlies;
+    public function getEarlies(): array {
+        return $this->earlies->toArray();
     }
 
     /**

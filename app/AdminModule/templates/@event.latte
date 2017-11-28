@@ -1,6 +1,6 @@
 {layout '@layout.latte'}
 {block content}
-    <h1>{$event->getName()}</h1>
+    <h1><i class="fa fa-calendar-o"></i> Událost <em>{$event->getName()}</em></h1>
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Application:default')?active">
