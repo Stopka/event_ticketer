@@ -1,7 +1,7 @@
 {layout '@layout.latte'}
 {block content}
-    <h1 n:if="$event"><i class="fa fa-pencil"></i> Upravit událost <em>{$event->getName()}</em></h1>
-    <h1 n:if="!$event"><i class="fa fa-plus-circle"></i> Vytvořit událost</h1>
+    <h1 n:if="$event"><i class="fa fa-calendar-o"></i><i class="fa fa-pencil"></i> Upravit událost <em>{$event->getName()}</em></h1>
+    <h1 n:if="!$event"><i class="fa fa-calendar-o"></i><i class="fa fa-plus-circle"></i> Vytvořit událost</h1>
     {var $eventId = $event?$event->getId():null }
     <div class="nav-tabs">
         <ul>
