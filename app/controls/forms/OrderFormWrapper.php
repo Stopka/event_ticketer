@@ -216,10 +216,10 @@ class OrderFormWrapper extends FormWrapper {
         }
         $children = $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
             $group = $form->addGroup()
-                ->setOption('class', 'price_subspace');
+                ->setOption($form::OPTION_KEY_CLASS, 'price_subspace');
             $parent_group = $form->getGroup('Přihlášky');
-            $count = $parent_group->getOption('embedNext');
-            $parent_group->setOption('embedNext', $count ? $count + 1 : 1);
+            $count = $parent_group->getOption($form::OPTION_KEY_EMBED_NEXT);
+            $parent_group->setOption($form::OPTION_KEY_EMBED_NEXT, $count ? $count + 1 : 1);
             $child->setCurrentGroup($group);
 
             $this->appendChildControls($form, $child);

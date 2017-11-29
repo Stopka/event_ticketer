@@ -38,7 +38,7 @@ class EventFormWrapper extends FormWrapper {
         $this->occupancyIcons = $occupancyIcons;
     }
 
-    public function setEvent(?EventEntity $event): void{
+    public function setEvent(?EventEntity $event): void {
         $this->event = $event;
     }
 
@@ -47,62 +47,62 @@ class EventFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $this->appendEventControls($form);
-        $this->appendSubmitControls($form, $this->event?'Upravit':'Vytvořit', [$this, 'submitClicked']);
+        $this->appendSubmitControls($form, $this->event ? 'Upravit' : 'Vytvořit', [$this, 'submitClicked']);
         $this->loadData($form);
     }
 
-    protected function loadData(Form $form){
-        if(!$this->event){
+    protected function loadData(Form $form) {
+        if (!$this->event) {
             return;
         }
-        $values=$this->event->getValueArray();
-        $values['limitCapacity']=$this->event->getCapacity()!==null;
-        if(!$this->event->getCapacity()){
+        $values = $this->event->getValueArray();
+        $values['limitCapacity'] = $this->event->getCapacity() !== null;
+        if (!$this->event->getCapacity()) {
             unset($values['capacity']);
         }
-        $values['public']=$this->event->getStartDate()!==null;
-        if(!$this->event->getStartDate()){
+        $values['public'] = $this->event->getStartDate() !== null;
+        if (!$this->event->getStartDate()) {
             unset($values['startDate']);
         }
         $form->setDefaults($values);
     }
 
-    protected function preprocessData(array $values):array{
-        if(!$values['limitCapacity']){
-            $values['capacity']=null;
+    protected function preprocessData(array $values): array {
+        if (!$values['limitCapacity']) {
+            $values['capacity'] = null;
         }
-        if(!$values['public']){
-            $values['startDate']=null;
+        if (!$values['public']) {
+            $values['startDate'] = null;
         }
         return $values;
     }
 
     protected function appendEventControls(Form $form) {
         //$form->addGroup("Událost");
-        $form->addText('name','Název')
+        $form->addText('name', 'Název')
             ->setRequired();
-        $form->addRadioList('occupancyIcon','Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons())
+        $form->addRadioList('occupancyIcon', 'Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons())
             ->setRequired();
-        $form->addCheckbox('limitCapacity','Omezit kapacitu')
-            ->setOption($form::OPTION_KEY_DESCRIPTION,"Vydat jen určitý počet lístků")
-            ->addCondition($form::EQUAL,true)
+        $form->addCheckbox('limitCapacity', 'Omezit kapacitu')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Vydat jen určitý počet lístků")
+            ->addCondition($form::EQUAL, true)
             ->toggle('capacityControlGroup');
         $form->addText('capacity', 'Kapacita')
             ->setDefaultValue(10)
-            ->setOption($form::OPTION_KEY_DESCRIPTION,'Celkové maximum míst v události')
-            ->setOption($form::OPTION_KEY_TYPE,'number')
-            ->setOption($form::OPTION_KEY_ID,'capacityControlGroup')
-            ->addConditionOn($form['limitCapacity'],$form::EQUAL,true)
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Celkové maximum míst v události')
+            ->setOption($form::OPTION_KEY_TYPE, 'number')
+            ->setOption($form::OPTION_KEY_ID, 'capacityControlGroup')
+            ->addConditionOn($form['limitCapacity'], $form::EQUAL, true)
             ->addRule($form::FILLED)
             ->addRule($form::INTEGER)
-            ->addRule($form::RANGE,[1,null]);
-        $form->addCheckbox('public','Veřejný výdej')
-            ->setOption($form::OPTION_KEY_DESCRIPTION,"Vydávat přihlášky široké veřejnosti")
-            ->addCondition($form::EQUAL,true)
+            ->addRule($form::RANGE, null, [1, null]);
+        $form->addCheckbox('public', 'Veřejný výdej')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Vydávat přihlášky široké veřejnosti")
+            ->addCondition($form::EQUAL, true)
             ->toggle('startDateControlGroup');
         $form->addDate('startDate', 'Začátek', DateInput::TYPE_DATE)
-            ->setOption($form::OPTION_KEY_DESCRIPTION,'Od kdy budou přihlášky dostupné široké veřejnosti')
-            ->setOption($form::OPTION_KEY_ID,'startDateControlGroup')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Od kdy budou přihlášky dostupné široké veřejnosti')
+            ->setOption($form::OPTION_KEY_ID, 'startDateControlGroup')
             ->setDefaultValue(new \DateTime())
             ->setRequired(false)
             ->addRule($form::VALID)
@@ -117,14 +117,14 @@ class EventFormWrapper extends FormWrapper {
         $form = $button->getForm();
         $values = $form->getValues(true);
         $values = $this->preprocessData($values);
-        if($this->event) {
+        if ($this->event) {
             $this->eventManager->editEventFromEventForm($values, $this->event);
             $this->getPresenter()->flashMessage('Událost byla upravena', 'success');
             $this->getPresenter()->redirect('this');
-        }else{
+        } else {
             $event = $this->eventManager->createEventFromEventForm($values);
             $this->getPresenter()->flashMessage('Událost byla vytvořena', 'success');
-            $this->getPresenter()->redirect('Addition:default',[$event->getId()]);
+            $this->getPresenter()->redirect('Addition:default', [$event->getId()]);
         }
     }
 
