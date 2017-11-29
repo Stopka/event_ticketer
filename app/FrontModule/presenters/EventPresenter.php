@@ -29,16 +29,16 @@ class EventPresenter extends BasePresenter {
 
     /**
      * EventPresenter constructor.
-     * @param EventDao $eventDao
+     * @param EventDao $additionDao
      * @param ApplicationDao $applicationDao
      * @param OptionDao $optionDao
      * @param IOrderFormWrapperFactory $orderFormWrapperFactory
      * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
      * @param IOccupancyControlFactory $occupancyControlFactory
      */
-    public function __construct(EventDao $eventDao, IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, IOccupancyControlFactory $occupancyControlFactory) {
+    public function __construct(EventDao $additionDao, IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, IOccupancyControlFactory $occupancyControlFactory) {
         parent::__construct();
-        $this->eventDao = $eventDao;
+        $this->eventDao = $additionDao;
         $this->orderFormWrapperFactory = $orderFormWrapperFactory;
         $this->substituteFormWrapperFactory = $substituteFormWrapperFactory;
         $this->occupancyControlFactory = $occupancyControlFactory;

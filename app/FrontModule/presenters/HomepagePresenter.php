@@ -17,12 +17,12 @@ class HomepagePresenter extends BasePresenter {
 
     /**
      * HomepagePresenter constructor.
-     * @param EventDao $eventDao
+     * @param EventDao $additionDao
      * @param ApplicationDao $applicationDao
      */
-    public function __construct(EventDao $eventDao, ApplicationDao $applicationDao) {
+    public function __construct(EventDao $additionDao, ApplicationDao $applicationDao) {
         parent::__construct();
-        $this->eventDao = $eventDao;
+        $this->eventDao = $additionDao;
         $this->applicationDao = $applicationDao;
     }
 

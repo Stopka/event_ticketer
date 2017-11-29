@@ -29,12 +29,12 @@ class EventFormWrapper extends FormWrapper {
 
     /**
      * EventFormWrapper constructor.
-     * @param EventManager $eventManager
+     * @param EventManager $additionManager
      * @param $occupancyIcons OccupancyIcons
      */
-    public function __construct(EventManager $eventManager, OccupancyIcons $occupancyIcons) {
+    public function __construct(EventManager $additionManager, OccupancyIcons $occupancyIcons) {
         parent::__construct();
-        $this->eventManager = $eventManager;
+        $this->eventManager = $additionManager;
         $this->occupancyIcons = $occupancyIcons;
     }
 
@@ -78,7 +78,7 @@ class EventFormWrapper extends FormWrapper {
     }
 
     protected function appendEventControls(Form $form) {
-        $form->addGroup("Událost");
+        //$form->addGroup("Událost");
         $form->addText('name','Název')
             ->setRequired();
         $form->addRadioList('occupancyIcon','Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons())

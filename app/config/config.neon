@@ -39,6 +39,7 @@ services:
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
     - App\AdminModule\Controls\Forms\IEventFromWrapperFactory
+    - App\AdminModule\Controls\Forms\IAdditionFormWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
@@ -62,6 +63,7 @@ services:
     - App\Model\Persistence\Dao\AdministratorDao
     - App\Model\Persistence\Dao\ChoiceDao
     - App\Model\Persistence\Manager\ChoiceManager
+    - App\Model\Persistence\Manager\AdditionManager
     -
         class: App\Model\Persistence\Manager\EarlyWaveManager
         tags: [kdyby.subscriber]
