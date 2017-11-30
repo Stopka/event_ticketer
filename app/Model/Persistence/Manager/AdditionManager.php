@@ -14,6 +14,7 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\AdditionEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
+use Tracy\Debugger;
 
 class AdditionManager extends Object {
     use TDoctrineEntityManager;
@@ -38,10 +39,13 @@ class AdditionManager extends Object {
 
     public function createAdditionFromEventForm(array $values):AdditionEntity{
         $em = $this->getEntityManager();
+        Debugger::barDump($values);
         $additionEntity = new AdditionEntity();
-        $additionEntity->setByValueArray($values);
+        /*$additionEntity->setByValueArray($values);
         $em->persist($additionEntity);
         $em->flush();
+        */
+
         return $additionEntity;
     }
 }

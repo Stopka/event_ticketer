@@ -77,7 +77,24 @@ class AdditionFormWrapper extends FormWrapper {
     }
 
     protected function preprocessData(array $values): array {
-
+        if(!$values['requiredForState']){
+            $values['requiredForState']=null;
+        }
+        if(!$values['enoughForState']){
+            $values['enoughForState']=null;
+        }
+        foreach ($values['options'] as $key=>$value){
+            if(!$value['limitCapacity']){
+                $values['options'][$key]['capacity']=null;
+            }
+            if(!$value['occupancyIcon']){
+                $values['options'][$key]['occupancyIcon']=null;
+            }
+            if(!$value['setPrice']){
+                $values['options'][$key]['price']=null;
+            }
+            unset($values['options'][$key]['limitCapacity'], $values['options'][$key]['setPrice']);
+        }
         return $values;
     }
 
@@ -181,6 +198,9 @@ class AdditionFormWrapper extends FormWrapper {
 
     protected function appendOptionControls(Form $form, Container $container) {
         $number = $this->getCounterNumber();
+        if($this->additionEntity) {
+            $container->addHidden('id');
+        }
         $container->addText('name', 'Název')
             ->setRequired();
         $container->addCheckbox('limitCapacity', 'Omezit kapacitu')
@@ -194,35 +214,42 @@ class AdditionFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_ID, "capacityControlGroup_$number")
             ->setRequired(false)
             ->addRule($form::INTEGER)
+            ->addRule($form::RANGE, null, [1, null])
             ->addConditionOn($container['limitCapacity'], $form::EQUAL, true)
-            ->addRule($form::FILLED)
-            ->addRule($form::RANGE, null, [1, null]);
-        $container->addRadioList('occupancyIcon', 'Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons())
-            ->setRequired();
+            ->addRule($form::FILLED);
+        $container->addRadioList('occupancyIcon', 'Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons('Žádná'))
+            ->setRequired(false)
+            ->setDefaultValue(null);
         $container->addCheckbox('setPrice', 'Nastavit cenu')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Pokud je tato cena za příplatek, zvolte tuto možnost")
             ->addCondition($form::EQUAL, true)
             ->toggle("priceControlGroup_$number");
+        $price = $container->addContainer('price');
+        $this->appendPriceControls($form,$container,$price, $number);
+    }
+
+    public function appendPriceControls(Form $form, Container $parent, Container $container, int $number) {
         $group = $container->getCurrentGroup();
-        $group->setOption($form::OPTION_KEY_EMBED_NEXT,1);
-        $subgroup = $form->addGroup('Cena')
-            ->setOption($form::OPTION_KEY_LOGICAL,true)
+        $embed = $group->getOption($form::OPTION_KEY_EMBED_NEXT);
+        $group->setOption($form::OPTION_KEY_EMBED_NEXT,$embed+1);
+        $subgroup = $form->addGroup(Html::el()->addHtml(Html::el('i',['class'=>'fa fa-money']))->addText(' Cena'))
+            //->setOption($form::OPTION_KEY_LOGICAL,true)
             ->setOption($form::OPTION_KEY_ID,"priceControlGroup_$number");
         $container->setCurrentGroup($subgroup);
-        $amount = $container->addText('priceAmount', 'Cena')
+        $amount = $container->addText('priceAmount', 'Částka')
             ->setDefaultValue(0)
             ->setOption($form::OPTION_KEY_TYPE, 'number')
             //->setOption($form::OPTION_KEY_DESCRIPTION, "Měna: CZK")
             //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
             ->setRequired(false)
-            ->addRule($form::FLOAT,null,2)
+            ->addRule($form::FLOAT,null)
             ->addRule($form::RANGE, null, [0, null])
-            ->addConditionOn($container['setPrice'], $form::EQUAL, true)
+            ->addConditionOn($parent['setPrice'], $form::EQUAL, true)
             ->addRule($form::FILLED);
         $container->addSelect('priceCurrency', 'Měna', [1=>"CZK"])
             ->setDefaultValue(1)
             ->setRequired(false)
-            ->addConditionOn($container['setPrice'], $form::EQUAL, true)
+            ->addConditionOn($parent['setPrice'], $form::EQUAL, true)
             ->addRule($form::FILLED);
     }
 

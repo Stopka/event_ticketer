@@ -36,10 +36,14 @@ class OccupancyIcons extends Object {
     }
 
     /**
+     * @param $noneLabel null|string
      * @return array
      */
-    public function getLabeledIcons(): array {
+    public function getLabeledIcons(?string $noneLabel = null): array {
         $result = [];
+        if($noneLabel){
+            $result[null]=$noneLabel;
+        }
         foreach ($this->icons as $key => $title) {
             $result[$key] = $this->getLabel($key);
         }
