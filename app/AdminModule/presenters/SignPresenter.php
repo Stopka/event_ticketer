@@ -10,7 +10,10 @@ class SignPresenter extends BasePresenter {
     /** @var ISignInFormWrapperFactory */
     public $signInFromWrapperFactory;
 
-    /** @var string */
+    /**
+     * @var string
+     * @persistent
+     */
     public $backlink;
 
     /**
@@ -29,7 +32,12 @@ class SignPresenter extends BasePresenter {
 
     public function actionIn(){
         if($this->getUser()->isLoggedIn()){
-            $this->redirect('Homepage:');
+            if($this->backlink){
+                $this->restoreRequest($this->backlink);
+                $this->backlink = null;
+                return;
+            }
+            $this->redirect('Homepage:',['backlink'=>null]);
         }
     }
 
