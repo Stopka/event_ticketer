@@ -55,7 +55,6 @@ class OrderFormWrapper extends FormWrapper {
         $this->currency = $currencyDao->getDefaultCurrency();
         $this->orderManager = $orderManager;
         $this->applicationDao = $applicationDao;
-        $this->setTemplate(__DIR__ . '/OrderFormWrapper.latte');
     }
 
     protected function getEvent() {

@@ -29,7 +29,7 @@ class AdditionFormWrapper extends FormWrapper {
     /** @var  AdditionEntity */
     private $additionEntity;
 
-    /** @var int  */
+    /** @var int */
     private $counter = 0;
 
     /** @var  OccupancyIcons */
@@ -130,16 +130,21 @@ class AdditionFormWrapper extends FormWrapper {
             ->setValidationScope(FALSE);
         $add_button->getControlPrototype()->class = 'ajax';
         $add_button->onClick[] = [$this, 'addOption'];
-        $options = $form->addDynamic('options', function (Container $child) use ($removeEvent, $form) {
+        $options = $form->addDynamic('options', function (Container $option) use ($removeEvent, $form) {
             $group = $form->addGroup();
             $parent_group = $form->getGroup('Možnosti');
             $count = $parent_group->getOption($form::OPTION_KEY_EMBED_NEXT);
             $parent_group->setOption($form::OPTION_KEY_EMBED_NEXT, $count ? $count + 1 : 1);
-            $child->setCurrentGroup($group);
+            $option->setCurrentGroup($group);
 
-            $this->appendOptionControls($form, $child);
+            $this->appendOptionControls($form, $option);
 
-            $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')
+            $subgroup = $form->addGroup()
+                ->setOption($form::OPTION_KEY_LOGICAL,true);
+            $count = $group->getOption($form::OPTION_KEY_EMBED_NEXT);
+            $group->setOption($form::OPTION_KEY_EMBED_NEXT,$count+1);
+            $option->setCurrentGroup($subgroup);
+            $remove_button = $option->addSubmit('remove', 'Zrušit tuto možnost')
                 ->setValidationScope(FALSE); # disables validation
             $remove_button->onClick[] = $removeEvent;
             $remove_button->getControlPrototype()->class = 'ajax';
@@ -147,35 +152,35 @@ class AdditionFormWrapper extends FormWrapper {
         }, $this->getOptionCount(), $this->isOptionCountFixed());
     }
 
-    private function getOptionCount(){
+    private function getOptionCount() {
         return 0;
-        if($this->order){
+        if ($this->order) {
             return 0;
         }
-        if($this->substitute){
+        if ($this->substitute) {
             return $this->substitute->getCount();
         }
         return 1;
     }
 
-    private function isOptionCountFixed(){
+    private function isOptionCountFixed() {
         return false;
-        if($this->order){
+        if ($this->order) {
             return false;
         }
-        if($this->substitute){
+        if ($this->substitute) {
             return false;
         }
         return true;
     }
 
-    private function getCounterNumber():int{
+    private function getCounterNumber(): int {
         return $this->counter++;
     }
 
     protected function appendOptionControls(Form $form, Container $container) {
-        $number  =$this->getCounterNumber();
-        $container->addText('name','Název')
+        $number = $this->getCounterNumber();
+        $container->addText('name', 'Název')
             ->setRequired();
         $container->addCheckbox('limitCapacity', 'Omezit kapacitu')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Možnost bude dostupná veřejné registraci do vyčerpání kapacity")
@@ -186,14 +191,39 @@ class AdditionFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Kolik příhlášek může mít zvolenou tuto možnost')
             ->setOption($form::OPTION_KEY_TYPE, 'number')
             ->setOption($form::OPTION_KEY_ID, "capacityControlGroup_$number")
+            ->setRequired(false)
+            ->addRule($form::INTEGER)
             ->addConditionOn($container['limitCapacity'], $form::EQUAL, true)
             ->addRule($form::FILLED)
-            ->addRule($form::INTEGER)
             ->addRule($form::RANGE, null, [1, null]);
         $container->addRadioList('occupancyIcon', 'Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons())
             ->setRequired();
+        $container->addCheckbox('setPrice', 'Nastavit cenu')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Pokud je tato cena za příplatek, zvolte tuto možnost")
+            ->addCondition($form::EQUAL, true)
+            ->toggle("priceControlGroup_$number");
+        $group = $container->getCurrentGroup();
+        $group->setOption($form::OPTION_KEY_EMBED_NEXT,1);
+        $subgroup = $form->addGroup('Cena')
+            ->setOption($form::OPTION_KEY_LOGICAL,true)
+            ->setOption($form::OPTION_KEY_ID,"priceControlGroup_$number");
+        $container->setCurrentGroup($subgroup);
+        $amount = $container->addText('priceAmount', 'Cena')
+            ->setDefaultValue(0)
+            ->setOption($form::OPTION_KEY_TYPE, 'number')
+            //->setOption($form::OPTION_KEY_DESCRIPTION, "Měna: CZK")
+            //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
+            ->setRequired(false)
+            ->addRule($form::FLOAT,null,2)
+            ->addRule($form::RANGE, null, [0, null])
+            ->addConditionOn($container['setPrice'], $form::EQUAL, true)
+            ->addRule($form::FILLED);
+        $container->addSelect('priceCurrency', 'Měna', [1=>"CZK"])
+            ->setDefaultValue(1)
+            ->setRequired(false)
+            ->addConditionOn($container['setPrice'], $form::EQUAL, true)
+            ->addRule($form::FILLED);
     }
-
 
 
     public function addOption(SubmitButton $button) {
