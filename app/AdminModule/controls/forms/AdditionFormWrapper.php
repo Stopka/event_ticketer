@@ -17,6 +17,7 @@ use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\AdditionManager;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\Html;
 
 class AdditionFormWrapper extends FormWrapper {
 
@@ -124,15 +125,15 @@ class AdditionFormWrapper extends FormWrapper {
     }
 
     protected function appendOptionsControls(Form $form) {
-        $form->addGroup('Možnosti');
+        $optionsGroup = $form->addGroup(Html::el()->addHtml(Html::el('i',['class'=>'fa fa-list-ul']))->addText(' Možnosti'));
         $removeEvent = [$this, 'removeOption'];
         $add_button = $form->addSubmit('add', 'Přidat další možnost')
             ->setValidationScope(FALSE);
         $add_button->getControlPrototype()->class = 'ajax';
         $add_button->onClick[] = [$this, 'addOption'];
-        $options = $form->addDynamic('options', function (Container $option) use ($removeEvent, $form) {
+        $options = $form->addDynamic('options', function (Container $option) use ($removeEvent, $form, $optionsGroup) {
             $group = $form->addGroup();
-            $parent_group = $form->getGroup('Možnosti');
+            $parent_group = $optionsGroup;//$form->getGroup('Možnosti');
             $count = $parent_group->getOption($form::OPTION_KEY_EMBED_NEXT);
             $parent_group->setOption($form::OPTION_KEY_EMBED_NEXT, $count ? $count + 1 : 1);
             $option->setCurrentGroup($group);
