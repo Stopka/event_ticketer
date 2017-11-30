@@ -11,7 +11,7 @@ abstract class FormWrapper extends Nette\Application\UI\Control{
     /**
      * @var null|string path to template
      */
-    private $template_path = null;
+    private $template_path = __DIR__.'/FormWrapper.latte';
 
     /**
      * @return FormRenderer
@@ -75,14 +75,8 @@ abstract class FormWrapper extends Nette\Application\UI\Control{
      * @param array ...$args
      */
     public function render(...$args) {
-        if (!$this->template_path) {
-            /** @var Form $form */
-            $form = $this->getComponent('form');
-            $form->render(...$args);
-            return;
-        }
         $this->template->setFile($this->template_path);
-        $this->template->render();
+        $this->template->render(...$args);
     }
 
     /**

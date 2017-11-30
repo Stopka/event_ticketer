@@ -41,6 +41,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter {
     }
 
     public function startup() {
+        $this->getSession()->start();
         parent::startup();
         if ($this->getUser()->isLoggedIn()) {
             $this->administratorEntity = $this->administratorFacade->getAdministrator($this->getUser()->getId());
