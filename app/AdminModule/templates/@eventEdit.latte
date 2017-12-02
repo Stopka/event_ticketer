@@ -1,18 +1,19 @@
 {layout '@layout.latte'}
 {block content}
-    <h1 n:if="$event"><i class="fa fa-calendar-o"></i><i class="fa fa-pencil"></i> Upravit událost <em>{$event->getName()}</em></h1>
-    <h1 n:if="!$event"><i class="fa fa-calendar-o"></i><i class="fa fa-plus-circle"></i> Vytvořit událost</h1>
+    <h1 n:if="$event"><i class="fa fa-calendar-o"></i> Událost <em>{$event->getName()}</em></h1>
+    <h1 n:if="!$event"><i class="fa fa-calendar-o"></i> Událost</h1>
     {var $eventId = $event?$event->getId():null }
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Event:edit')?active">
                 <a n:href="Event:edit,$eventId">
-                    <span><i class="fa fa-cog"></i> Nastavení</span>
+                    <span n:if="$event"><i class="fa fa-pencil"></i> Upravit událost</span>
+                    <span n:if="!$event"><i class="fa fa-plus-circle"></i> Vytvořit událost</span>
                 </a>
             </li>
             <li n:class="$presenter->isLinkCurrent('Addition:default')?active, !$event?disabled">
                 <a n:href="Addition:default,$eventId">
-                    <span><i class="fa fa-archive"></i> Přídavky</span>
+                    <span><i class="fa fa-archive"></i> Přídavky události</span>
                 </a>
             </li>
         </ul>

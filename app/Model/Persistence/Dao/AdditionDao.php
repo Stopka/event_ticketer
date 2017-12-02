@@ -24,7 +24,7 @@ class AdditionDao extends EntityDao {
      * @param EventEntity $eventEntity
      * @return IDataSource
      */
-    public function getEventAdditions(EventEntity $eventEntity): IDataSource {
+    public function getEventAdditionsGridModel(EventEntity $eventEntity): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('a');
         $qb->addSelect('a')
             ->where(

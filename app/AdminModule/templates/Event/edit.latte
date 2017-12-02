@@ -1,5 +1,6 @@
 {layout "../@eventEdit.latte"}
 {block subcontent}
-<h2><i class="fa fa-cog"></i> Nastavení</h2>
+<h2 n:if="$event"><i class="fa fa-pencil"></i> Upravit událost</h2>
+<h2 n:if="!$event"><i class="fa fa-plus-circle"></i> Vytvořit událost</h2>
 
 {control eventForm}

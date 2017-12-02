@@ -55,7 +55,13 @@ class OccupancyIcons extends Object {
      * @param bool $occupied
      * @return Html
      */
-    public function getIconHtml(string $key, bool $occupied = true): Html {
+    public function getIconHtml(?string $key, bool $occupied = true): Html {
+        if(!$key){
+            foreach ($this->icons as $k=>$label){
+                $key = $k;
+                break;
+            }
+        }
         return Html::el("i", [
             'class' => [
                 "occupancy-icon",

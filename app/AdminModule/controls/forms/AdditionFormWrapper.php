@@ -16,9 +16,7 @@ use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\AdditionManager;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Utils\Html;
 
 class AdditionFormWrapper extends FormWrapper {
 
@@ -68,7 +66,6 @@ class AdditionFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $this->appendAdditionControls($form);
-        $this->appendOptionsControls($form);
         $this->appendSubmitControls($form, $this->additionEntity ? 'Upravit' : 'Vytvořit', [$this, 'submitClicked']);
         $this->loadData($form);
     }
@@ -79,6 +76,7 @@ class AdditionFormWrapper extends FormWrapper {
         }
         $values = $this->additionEntity->getValueArray();
         $form->setDefaults($values);
+
     }
 
     protected function preprocessData(array $values): array {
@@ -87,18 +85,6 @@ class AdditionFormWrapper extends FormWrapper {
         }
         if(!$values['enoughForState']){
             $values['enoughForState']=null;
-        }
-        foreach ($values['options'] as $key=>$value){
-            if(!$value['limitCapacity']){
-                $values['options'][$key]['capacity']=null;
-            }
-            if(!$value['occupancyIcon']){
-                $values['options'][$key]['occupancyIcon']=null;
-            }
-            if(!$value['setPrice']){
-                $values['options'][$key]['price']=null;
-            }
-            unset($values['options'][$key]['limitCapacity'], $values['options'][$key]['setPrice']);
         }
         return $values;
     }
@@ -144,129 +130,6 @@ class AdditionFormWrapper extends FormWrapper {
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, null, [1, null]);
-    }
-
-    protected function appendOptionsControls(Form $form) {
-        $optionsGroup = $form->addGroup(Html::el()->addHtml(Html::el('i',['class'=>'fa fa-list-ul']))->addText(' Možnosti'));
-        $removeEvent = [$this, 'removeOption'];
-        $add_button = $form->addSubmit('add', 'Přidat další možnost')
-            ->setValidationScope(FALSE);
-        $add_button->getControlPrototype()->class = 'ajax';
-        $add_button->onClick[] = [$this, 'addOption'];
-        $options = $form->addDynamic('options', function (Container $option) use ($removeEvent, $form, $optionsGroup) {
-            $group = $form->addGroup();
-            $parent_group = $optionsGroup;//$form->getGroup('Možnosti');
-            $count = $parent_group->getOption($form::OPTION_KEY_EMBED_NEXT);
-            $parent_group->setOption($form::OPTION_KEY_EMBED_NEXT, $count ? $count + 1 : 1);
-            $option->setCurrentGroup($group);
-
-            $this->appendOptionControls($form, $option);
-
-            $subgroup = $form->addGroup()
-                ->setOption($form::OPTION_KEY_LOGICAL,true);
-            $count = $group->getOption($form::OPTION_KEY_EMBED_NEXT);
-            $group->setOption($form::OPTION_KEY_EMBED_NEXT,$count+1);
-            $option->setCurrentGroup($subgroup);
-            $remove_button = $option->addSubmit('remove', 'Zrušit tuto možnost')
-                ->setValidationScope(FALSE); # disables validation
-            $remove_button->onClick[] = $removeEvent;
-            $remove_button->getControlPrototype()->class = 'ajax';
-
-        }, $this->getOptionCount(), $this->isOptionCountFixed());
-    }
-
-    private function getOptionCount() {
-        return 0;
-        if ($this->order) {
-            return 0;
-        }
-        if ($this->substitute) {
-            return $this->substitute->getCount();
-        }
-        return 1;
-    }
-
-    private function isOptionCountFixed() {
-        return false;
-        if ($this->order) {
-            return false;
-        }
-        if ($this->substitute) {
-            return false;
-        }
-        return true;
-    }
-
-    private function getCounterNumber(): int {
-        return $this->counter++;
-    }
-
-    protected function appendOptionControls(Form $form, Container $container) {
-        $number = $this->getCounterNumber();
-        if($this->additionEntity) {
-            $container->addHidden('id');
-        }
-        $container->addText('name', 'Název')
-            ->setRequired();
-        $container->addCheckbox('limitCapacity', 'Omezit kapacitu')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Možnost bude dostupná veřejné registraci do vyčerpání kapacity")
-            ->addCondition($form::EQUAL, true)
-            ->toggle("capacityControlGroup_$number");
-        $container->addText('capacity', 'Kapacita')
-            ->setDefaultValue(10)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Kolik příhlášek může mít zvolenou tuto možnost')
-            ->setOption($form::OPTION_KEY_TYPE, 'number')
-            ->setOption($form::OPTION_KEY_ID, "capacityControlGroup_$number")
-            ->setRequired(false)
-            ->addRule($form::INTEGER)
-            ->addRule($form::RANGE, null, [1, null])
-            ->addConditionOn($container['limitCapacity'], $form::EQUAL, true)
-            ->addRule($form::FILLED);
-        $container->addRadioList('occupancyIcon', 'Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons('Žádná'))
-            ->setRequired(false)
-            ->setDefaultValue(null);
-        $container->addCheckbox('setPrice', 'Nastavit cenu')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Pokud je tato cena za příplatek, zvolte tuto možnost")
-            ->addCondition($form::EQUAL, true)
-            ->toggle("priceControlGroup_$number");
-        $price = $container->addContainer('price');
-        $this->appendPriceControls($form,$container,$price, $number);
-    }
-
-    public function appendPriceControls(Form $form, Container $parent, Container $container, int $number) {
-        $group = $container->getCurrentGroup();
-        $embed = $group->getOption($form::OPTION_KEY_EMBED_NEXT);
-        $group->setOption($form::OPTION_KEY_EMBED_NEXT,$embed+1);
-        $subgroup = $form->addGroup(Html::el()->addHtml(Html::el('i',['class'=>'fa fa-money']))->addText(' Cena'))
-            //->setOption($form::OPTION_KEY_LOGICAL,true)
-            ->setOption($form::OPTION_KEY_ID,"priceControlGroup_$number");
-        $container->setCurrentGroup($subgroup);
-        foreach ($this->currecyDao->getAllCurrecies() as $currecy){
-            $container->addText($currecy->getCode(), $currecy->getCode())
-                ->setDefaultValue(0)
-                ->setOption($form::OPTION_KEY_TYPE, 'number')
-                ->setOption($form::OPTION_KEY_DESCRIPTION, "Částka v měně ".$currecy->getName())
-                //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
-                ->setRequired(false)
-                ->addRule($form::FLOAT,null)
-                ->addRule($form::RANGE, null, [0, null])
-                ->addConditionOn($parent['setPrice'], $form::EQUAL, true)
-                ->addRule($form::FILLED);
-        }
-    }
-
-
-    public function addOption(SubmitButton $button) {
-        $form = $button->getForm();
-        $form['options']->createOne();
-        $this->redrawControl('form');
-    }
-
-    public function removeOption(SubmitButton $button) {
-        $child = $button->getParent();
-        $children = $child->getParent();
-        $children->remove($child, TRUE);
-        $this->redrawControl('form');
     }
 
     /**

@@ -34,7 +34,7 @@ class AdditionsGridWrapper extends GridWrapper {
     }
 
     protected function loadModel(Grid $grid) {
-        $grid->setModel($this->additionDao->getEventAdditions($this->eventEntity));
+        $grid->setModel($this->additionDao->getEventAdditionsGridModel($this->eventEntity));
     }
 
     protected function configure(\App\Grids\Grid $grid) {
@@ -57,6 +57,9 @@ class AdditionsGridWrapper extends GridWrapper {
 
 
     protected function appendActions(Grid $grid) {
-
+        $grid->addActionHref('edit','Upravit', 'Addition:edit')
+            ->setIcon('fa fa-pencil-o');
+        $grid->addActionHref('options','Možnosti', 'Option:')
+            ->setIcon('fa fa-list-ul');
     }
 }

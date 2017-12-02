@@ -10,8 +10,11 @@ namespace App\Model\Persistence\Dao;
 
 
 use App\Model\Facades\EntityFacade;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OptionEntity;
+use Grido\DataSources\Doctrine;
+use Grido\DataSources\IDataSource;
 
 class OptionDao extends EntityDao {
 
@@ -38,6 +41,18 @@ class OptionDao extends EntityDao {
             'addition.event.id' => $event->getId(),
             'capacity !=' => null
         ]);
+    }
+
+    public function getAdditionOptionsGridModel(AdditionEntity $additionEntity): IDataSource{
+        $qb = $this->getRepository()->createQueryBuilder('a');
+        $qb->addSelect('a')
+            ->where(
+                $qb->expr()->eq(
+                    'a.addition',
+                    $qb->expr()->literal($additionEntity->getId())
+                )
+            );
+        return new Doctrine($qb);
     }
 
 }
