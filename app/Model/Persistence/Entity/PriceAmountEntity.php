@@ -35,7 +35,7 @@ class PriceAmountEntity extends BaseEntity {
      * @ORM\Column(type="float")
      * @var float
      */
-    private $amount;
+    private $amount = 0.0;
 
     /**
      * @return float

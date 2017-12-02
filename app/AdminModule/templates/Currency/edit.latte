@@ -1,0 +1,5 @@
+{block content}
+<h1 n:if="$currency"><i class="fa fa-btc"></i><i class="fa fa-pencil"></i> Upravit měnu <em>{$currency->getCode()}</em></h1>
+<h1 n:if="!$currency"><i class="fa fa-btc"></i><i class="fa fa-plus-circle"></i> Vytvořit měnu</h1>
+
+{control currencyForm}

@@ -10,11 +10,49 @@ namespace App\Model\Persistence\Dao;
 
 use App\Model\Exception\EmptyException;
 use App\Model\Persistence\Entity\CurrencyEntity;
+use Grido\DataSources\Doctrine;
+use Grido\DataSources\IDataSource;
 
 class CurrencyDao extends EntityDao {
 
     protected function getEntityClass(): string {
         return CurrencyEntity::class;
+    }
+
+    /**
+     * @param null|string $currencyId
+     * @return CurrencyEntity|null
+     */
+    public function getCurrency(?string $currencyId): ?CurrencyEntity{
+        /** @var CurrencyEntity $result */
+        $result = $this->get($currencyId);
+        return $result;
+    }
+
+    /**
+     * @param null|string $currencyId
+     * @return CurrencyEntity|null
+     */
+    public function getCurrencyByCode(?string $currencyCode): ?CurrencyEntity{
+        /** @var CurrencyEntity $result */
+        $result = $this->getRepository()->findOneBy(['code'=>$currencyCode]);
+        return $result;
+    }
+
+    /**
+     * @return CurrencyEntity[]
+     */
+    public function getAllCurrecies(): array{
+        return $this->getRepository()->findAll();
+    }
+
+    /**
+     * @return IDataSource
+     */
+    public function getAllCurrenciesGridModel(): IDataSource{
+        $qb = $this->getRepository()->createQueryBuilder('a');
+        $qb->addSelect('a');
+        return new Doctrine($qb);
     }
 
     /**

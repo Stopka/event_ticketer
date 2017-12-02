@@ -18,9 +18,13 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
 
     /**
      * @param array $values
+     * @param array $omit
      */
-    public function setByValueArray(array $values): void {
+    public function setByValueArray(array $values, array $omit = []): void {
         foreach ($values as $name => $value) {
+            if(in_array($name,$omit)){
+                continue;
+            }
             $setterName = 'set' . Strings::capitalize($name);
             if (method_exists($this, $setterName)) {
                 call_user_func([$this, $setterName], $value);
@@ -34,16 +38,16 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
      * @return array
      */
     public function getValueArray(?array $with = null, array $without = []): array {
-        array_push($without,'getValueArray');
-        for($i=0;$i<count($without);$i++){
-            if(Strings::startsWith($without[$i],'get')){
+        array_push($without, 'getValueArray');
+        for ($i = 0; $i < count($without); $i++) {
+            if (Strings::startsWith($without[$i], 'get')) {
                 continue;
             }
-            $without[$i]='get'.Strings::capitalize($without[$i]);
+            $without[$i] = 'get' . Strings::capitalize($without[$i]);
         }
         $methods = get_class_methods($this);
-        if($with){
-            for($i=0;$i<count($with);$i++) {
+        if ($with) {
+            for ($i = 0; $i < count($with); $i++) {
                 if (!Strings::startsWith($with[$i], 'get')) {
                     $with[$i] = 'get' . Strings::capitalize($with[$i]);
                 }
@@ -57,13 +61,13 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
         foreach ($methods as $method) {
             $reflection = new \ReflectionMethod($this, $method);
             $parameters = $reflection->getParameters();
-            if(!Strings::startsWith($method,'get') || in_array($method,$without) || count($parameters)){
+            if (!Strings::startsWith($method, 'get') || in_array($method, $without) || count($parameters)) {
                 continue;
             }
-            $key = Strings::firstLower(Strings::substring($method,3));
+            $key = Strings::firstLower(Strings::substring($method, 3));
             try {
                 $results[$key] = call_user_func([$this, $method]);
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
 
             }
         }

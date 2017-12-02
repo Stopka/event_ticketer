@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait TOccupancyIconAttribute {
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @var string
      */
     private $occupancyIcon;
@@ -28,7 +28,7 @@ trait TOccupancyIconAttribute {
     /**
      * @param string $occupancyIcon
      */
-    public function setOccupancyIcon(string $occupancyIcon) {
+    public function setOccupancyIcon(?string $occupancyIcon) {
         $this->occupancyIcon = $occupancyIcon;
     }
 

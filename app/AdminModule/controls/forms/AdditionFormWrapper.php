@@ -11,6 +11,7 @@ namespace App\AdminModule\Controls\Forms;
 
 use App\Controls\Forms\Form;
 use App\Model\OccupancyIcons;
+use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
@@ -36,15 +37,19 @@ class AdditionFormWrapper extends FormWrapper {
     /** @var  OccupancyIcons */
     private $occupancyIcons;
 
+    /** @var  CurrencyDao */
+    private $currecyDao;
+
     /**
      * EventFormWrapper constructor.
      * @param AdditionManager $additionManager
      * @param $occupancyIcons OccupancyIcons
      */
-    public function __construct(AdditionManager $additionManager, OccupancyIcons $occupancyIcons) {
+    public function __construct(AdditionManager $additionManager, OccupancyIcons $occupancyIcons,CurrencyDao $currencyDao) {
         parent::__construct();
         $this->additionManager = $additionManager;
         $this->occupancyIcons = $occupancyIcons;
+        $this->currecyDao = $currencyDao;
     }
 
     public function setEventEntity(?EventEntity $eventEntity): void {
@@ -236,21 +241,18 @@ class AdditionFormWrapper extends FormWrapper {
             //->setOption($form::OPTION_KEY_LOGICAL,true)
             ->setOption($form::OPTION_KEY_ID,"priceControlGroup_$number");
         $container->setCurrentGroup($subgroup);
-        $amount = $container->addText('priceAmount', 'Částka')
-            ->setDefaultValue(0)
-            ->setOption($form::OPTION_KEY_TYPE, 'number')
-            //->setOption($form::OPTION_KEY_DESCRIPTION, "Měna: CZK")
-            //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
-            ->setRequired(false)
-            ->addRule($form::FLOAT,null)
-            ->addRule($form::RANGE, null, [0, null])
-            ->addConditionOn($parent['setPrice'], $form::EQUAL, true)
-            ->addRule($form::FILLED);
-        $container->addSelect('priceCurrency', 'Měna', [1=>"CZK"])
-            ->setDefaultValue(1)
-            ->setRequired(false)
-            ->addConditionOn($parent['setPrice'], $form::EQUAL, true)
-            ->addRule($form::FILLED);
+        foreach ($this->currecyDao->getAllCurrecies() as $currecy){
+            $container->addText($currecy->getCode(), $currecy->getCode())
+                ->setDefaultValue(0)
+                ->setOption($form::OPTION_KEY_TYPE, 'number')
+                ->setOption($form::OPTION_KEY_DESCRIPTION, "Částka v měně ".$currecy->getName())
+                //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
+                ->setRequired(false)
+                ->addRule($form::FLOAT,null)
+                ->addRule($form::RANGE, null, [0, null])
+                ->addConditionOn($parent['setPrice'], $form::EQUAL, true)
+                ->addRule($form::FILLED);
+        }
     }
 
 
@@ -279,9 +281,9 @@ class AdditionFormWrapper extends FormWrapper {
             $this->getPresenter()->flashMessage('Přídavek byl upraven', 'success');
             $this->getPresenter()->redirect('Addition:default', [$this->event->getId()]);
         } else {
-            $event = $this->additionManager->createAdditionFromEventForm($values);
+            $addition = $this->additionManager->createAdditionFromEventForm($values,$this->eventEntity);
             $this->getPresenter()->flashMessage('Přídavek byl vytvořen', 'success');
-            $this->getPresenter()->redirect('Addition:default', [$event->getId()]);
+            $this->getPresenter()->redirect('Addition:default', [$this->eventEntity->getId()]);
         }
     }
 
