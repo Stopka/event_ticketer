@@ -32,7 +32,7 @@ class EventEntity extends BaseEntity {
 
     public function __construct() {
         $this->earlyWaves = new ArrayCollection();
-        $this->orders = new ArrayCollection();
+        $this->carts = new ArrayCollection();
         $this->additions = new ArrayCollection();
         $this->substitutes = new ArrayCollection();
     }
@@ -50,10 +50,10 @@ class EventEntity extends BaseEntity {
     private $earlyWaves;
 
     /**
-     * @ORM\OneToMany(targetEntity="OrderEntity", mappedBy="event")
-     * @var OrderEntity[]
+     * @ORM\OneToMany(targetEntity="CartEntity", mappedBy="event")
+     * @var CartEntity[]
      */
-    private $orders;
+    private $carts;
 
     /**
      * @ORM\OneToMany(targetEntity="SubstituteEntity", mappedBy="event")
@@ -119,38 +119,38 @@ class EventEntity extends BaseEntity {
     }
 
     /**
-     * @return OrderEntity[]
+     * @return CartEntity[]
      */
-    public function getOrders(): array {
-        return $this->orders->toArray();
+    public function getCarts(): array {
+        return $this->carts->toArray();
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function addOrder(OrderEntity $order): void {
-        $order->setEvent($this);
+    public function addCart(CartEntity $cart): void {
+        $cart->setEvent($this);
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function addIversedOrder(OrderEntity $order): void {
-        $this->orders->add($order);
+    public function addIversedCart(CartEntity $cart): void {
+        $this->carts->add($cart);
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function removeOrder(OrderEntity $order): void {
-        $order->setEvent(NULL);
+    public function removeCart(CartEntity $cart): void {
+        $cart->setEvent(NULL);
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function removeIversedOrder(OrderEntity $order): void {
-        $this->orders->removeElement($order);
+    public function removeIversedCart(CartEntity $cart): void {
+        $this->carts->removeElement($cart);
     }
 
 

@@ -20,13 +20,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Model\Entities
  * @ORM\Entity
  */
-class OrderEntity extends BaseEntity {
+class CartEntity extends BaseEntity {
     use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute;
 
     const STATE_ORDER = 0;
 
     /**
-     * OrderEntity constructor
+     * CartEntity constructor
      */
     public function __construct() {
         $this->applications = new ArrayCollection();
@@ -40,25 +40,25 @@ class OrderEntity extends BaseEntity {
     private $state = self::STATE_ORDER;
 
     /**
-     * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="order"))
+     * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="cart"))
      * @var ApplicationEntity[]
      */
     private $applications;
 
     /**
-     * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="carts")
      * @var EventEntity
      */
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity="EarlyEntity", inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity="EarlyEntity", inversedBy="carts")
      * @var EarlyEntity
      */
     private $early;
 
     /**
-     * @ORM\OneToOne(targetEntity="SubstituteEntity", inversedBy="order")
+     * @ORM\OneToOne(targetEntity="SubstituteEntity", inversedBy="cart")
      * @var SubstituteEntity
      */
     private $substitute;
@@ -80,14 +80,14 @@ class OrderEntity extends BaseEntity {
      * @param ApplicationEntity $application
      */
     public function addApplication(ApplicationEntity $application): void {
-        $application->setOrder($this);
+        $application->setCart($this);
     }
 
     /**
      * @param ApplicationEntity $application
      */
     public function removeApplication(ApplicationEntity $application): void {
-        $application->setOrder(NULL);
+        $application->setCart(NULL);
     }
 
     /**
@@ -118,11 +118,11 @@ class OrderEntity extends BaseEntity {
      */
     public function setEvent(?EventEntity $event) {
         if($this->event){
-            $event->removeIversedOrder($this);
+            $event->removeIversedCart($this);
         }
         $this->event = $event;
         if($event) {
-            $event->addIversedOrder($this);
+            $event->addIversedCart($this);
         }
     }
 
@@ -173,11 +173,11 @@ class OrderEntity extends BaseEntity {
      */
     public function setSubstitute(?SubstituteEntity $substitute): void {
         if($this->substitute){
-            $this->substitute->setInversedOrder(NULL);
+            $this->substitute->setInversedCart(NULL);
         }
         $this->substitute = $substitute;
         if($this->substitute){
-            $this->substitute->setInversedOrder($this);
+            $this->substitute->setInversedCart($this);
         }
     }
 

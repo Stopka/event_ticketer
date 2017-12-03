@@ -51,7 +51,6 @@ class CurrencyDao extends EntityDao {
      */
     public function getAllCurrenciesGridModel(): IDataSource{
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->addSelect('a');
         return new Doctrine($qb);
     }
 

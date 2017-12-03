@@ -38,29 +38,29 @@ class ApplicationsExportResponse implements IResponse {
         $response->setFilenameWithDate('přihlášky-');
         $response->setColumnDelimiter(';');
         //$response->setCharset('windows-1250');
-        $response->addColumn('order_id','Číslo objednávky')
+        $response->addColumn('cart_id','Číslo objednávky')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
-                return $applicaiton->getOrder()->getId();
+                return $applicaiton->getCart()->getId();
             });
-        $response->addColumn('order_email','Email')
+        $response->addColumn('cart_email','Email')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
-                return $applicaiton->getOrder()->getEmail();
+                return $applicaiton->getCart()->getEmail();
             });
-        $response->addColumn('order_firstName','Jméno rodiče')
+        $response->addColumn('cart_firstName','Jméno rodiče')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
-                return $applicaiton->getOrder()->getFirstName();
+                return $applicaiton->getCart()->getFirstName();
             });
-        $response->addColumn('order_lastName','Příjmení rodiče')
+        $response->addColumn('cart_lastName','Příjmení rodiče')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
-                return $applicaiton->getOrder()->getLastName();
+                return $applicaiton->getCart()->getLastName();
             });
-        $response->addColumn('order_phone','Telefon')
+        $response->addColumn('cart_phone','Telefon')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
-                return $applicaiton->getOrder()->getPhone();
+                return $applicaiton->getCart()->getPhone();
             });
-        $response->addColumn('order_created','Vytvoření objednávky')
+        $response->addColumn('cart_created','Vytvoření objednávky')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){
-                return $applicaiton->getOrder()->getCreated()->format('Y-m-d H:i:s');
+                return $applicaiton->getCart()->getCreated()->format('Y-m-d H:i:s');
             });
         $response->addColumn('id','Id přihlášky')
             ->setCustomRenderer(function(ApplicationEntity $applicaiton){

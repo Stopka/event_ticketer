@@ -1,14 +1,14 @@
 {block content}
-<h1>Objednávka #{$order->getId()}</h1>
+<h1>Objednávka #{$cart->getId()}</h1>
 <ul>
-    <li>Událost: <strong>{$order->getEvent()->getName()}</strong></li>
-    <li>Jméno: <strong>{$order->getFirstName()}</strong></li>
-    <li>Příjmení: <strong>{$order->getLastName()}</strong></li>
-    <li>Telefon: <strong>{$order->getPhone()}</strong></li>
-    <li>Email: <strong>{$order->getEmail()}</strong></li>
-    <li n:if="$order->getEarly()">
+    <li>Událost: <strong>{$cart->getEvent()->getName()}</strong></li>
+    <li>Jméno: <strong>{$cart->getFirstName()}</strong></li>
+    <li>Příjmení: <strong>{$cart->getLastName()}</strong></li>
+    <li>Telefon: <strong>{$cart->getPhone()}</strong></li>
+    <li>Email: <strong>{$cart->getEmail()}</strong></li>
+    <li n:if="$cart->getEarly()">
         Přednostně na jméno:
-        <strong>{$order->getEarly()->getFirstName()} {$order->getEarly()->getLastName()}</strong>
+        <strong>{$cart->getEarly()->getFirstName()} {$cart->getEarly()->getLastName()}</strong>
     </li>
 </ul>
 

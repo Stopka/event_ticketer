@@ -25,7 +25,7 @@ class EarlyEntity extends BaseEntity {
     use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute, TAddressAttribute;
 
     public function __construct() {
-        $this->orders = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
 
@@ -36,10 +36,10 @@ class EarlyEntity extends BaseEntity {
     private $earlyWave;
 
     /**
-     * @ORM\OneToMany(targetEntity="OrderEntity", mappedBy="early")
-     * @var OrderEntity[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="CartEntity", mappedBy="early")
+     * @var CartEntity[]|ArrayCollection
      */
-    private $orders;
+    private $carts;
 
     /**
      * @return EarlyWaveEntity
@@ -62,40 +62,40 @@ class EarlyEntity extends BaseEntity {
     }
 
     /**
-     * @return OrderEntity[]
+     * @return CartEntity[]
      */
-    public function getOrders(): array {
-        return $this->orders->toArray();
+    public function getCarts(): array {
+        return $this->carts->toArray();
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function addOrder(OrderEntity $order): void {
-        $order->setEarly($this);
+    public function addCart(CartEntity $cart): void {
+        $cart->setEarly($this);
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      * @internal
      */
-    public function addIversedOrder(OrderEntity $order): void {
-        $this->orders->add($order);
+    public function addIversedCart(CartEntity $cart): void {
+        $this->carts->add($cart);
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function removeOrder(OrderEntity $order): void {
-        $order->setEarly(NULL);
+    public function removeCart(CartEntity $cart): void {
+        $cart->setEarly(NULL);
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      * @internal
      */
-    public function removeIversedOrder(OrderEntity $order): void {
-        $this->orders->removeElement($order);
+    public function removeIversedCart(CartEntity $cart): void {
+        $this->carts->removeElement($cart);
     }
 
     public function __clone() {

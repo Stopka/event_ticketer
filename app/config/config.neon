@@ -31,10 +31,10 @@ session:
     autoStart: true
 
 services:
-    - App\Controls\Forms\IOrderFormWrapperFactory
+    - App\Controls\Forms\ICartFormWrapperFactory
     - App\FrontModule\Controls\IOccupancyControlFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
-    - App\FrontModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
+    - App\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory
     - App\FrontModule\Responses\ApplicationPdfRenderer
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
@@ -44,11 +44,12 @@ services:
     - App\AdminModule\Controls\Forms\IOptionFormWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
-    - App\AdminModule\Controls\Grids\IOrderApplicationsGridWrapperFactory
+    - App\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\IEventsGridWrapperFactory
     - App\AdminModule\Controls\Grids\IAdditionsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ICurrenciesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IOptionsGridWrapperFactory
+    - App\AdminModule\Controls\Grids\IEarliesGridWrapperFactory
     - App\Model\CronService
     - App\Model\AdminAuthenticator
     - App\Model\FileStorage(%appDir%/files)
@@ -58,14 +59,14 @@ services:
     - App\Model\Persistence\Dao\EarlyDao
     - App\Model\Persistence\Dao\EarlyWaveDao
     - App\Model\Persistence\Dao\CurrencyDao
-    - App\Model\Persistence\Dao\OrderDao
+    - App\Model\Persistence\Dao\CartDao
     - App\Model\Persistence\Dao\SubstituteDao
     - App\Model\Persistence\Dao\ApplicationDao
     - App\Model\Persistence\Dao\OptionDao
     - App\Model\Persistence\Dao\AdministratorDao
     - App\Model\Persistence\Dao\ChoiceDao
     - App\Model\Persistence\Manager\SubstituteManager
-    - App\Model\Persistence\Manager\OrderManager
+    - App\Model\Persistence\Manager\CartManager
     - App\Model\Persistence\Manager\ChoiceManager
     - App\Model\Persistence\Manager\AdditionManager
     - App\Model\Persistence\Manager\CurrencyManager
@@ -82,7 +83,7 @@ services:
         class: App\Model\Notifier\EarlyWaveInviteNotifier
         tags: [kdyby.subscriber]
     -
-        class: App\Model\Notifier\OrderCreatedNotifier
+        class: App\Model\Notifier\CartCreatedNotifier
         tags: [kdyby.subscriber]
     -
         class: App\Model\Notifier\SubstituteActivatedNotifier

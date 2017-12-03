@@ -2,27 +2,27 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Controls\Forms\IOrderFormWrapperFactory;
-use App\Controls\Forms\OrderFormWrapper;
+use App\Controls\Forms\CartFormWrapper;
+use App\Controls\Forms\ICartFormWrapperFactory;
 use App\Model\Persistence\Dao\SubstituteDao;
 
 
 class SubstitutePresenter extends BasePresenter {
 
-    /** @var IOrderFormWrapperFactory */
-    public $orderFormWrapperFactory;
+    /** @var ICartFormWrapperFactory */
+    public $cartFormWrapperFactory;
 
     /** @var SubstituteDao */
     public $substituteDao;
 
     /**
      * SubstitutePresenter constructor.
-     * @param IOrderFormWrapperFactory $orderFormWrapperFactory
+     * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param SubstituteDao $substituteDao
      */
-    public function __construct(IOrderFormWrapperFactory $orderFormWrapperFactory, SubstituteDao $substituteDao) {
+    public function __construct(ICartFormWrapperFactory $cartFormWrapperFactory, SubstituteDao $substituteDao) {
         parent::__construct();
-        $this->orderFormWrapperFactory = $orderFormWrapperFactory;
+        $this->cartFormWrapperFactory = $cartFormWrapperFactory;
         $this->substituteDao = $substituteDao;
     }
 
@@ -37,18 +37,18 @@ class SubstitutePresenter extends BasePresenter {
             $this->flashMessage('Náhradníkovo místo vypršelo nebo nebylo nalezeno', 'warning');
             $this->redirect('Homepage:');
         }
-        /** @var OrderFormWrapper $orderFormWrapper */
-        $orderFormWrapper = $this->getComponent('orderForm');
-        $orderFormWrapper->setSubstitute($substitute);
+        /** @var CartFormWrapper $cartFormWrapper */
+        $cartFormWrapper = $this->getComponent('cartForm');
+        $cartFormWrapper->setSubstitute($substitute);
         $event = $substitute->getEvent();
         $this->template->event = $event;
     }
 
     /**
-     * @return OrderFormWrapper
+     * @return CartFormWrapper
      */
-    protected function createComponentOrderForm() {
-        return $this->orderFormWrapperFactory->create();
+    protected function createComponentCartForm() {
+        return $this->cartFormWrapperFactory->create();
     }
 
 }

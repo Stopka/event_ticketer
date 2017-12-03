@@ -107,7 +107,7 @@ class ApplicationPdfManager extends Object {
                 $path_extension .= $info;
             }
         }
-        return $this->getSourcePath().'/'.$applicationEntity->getOrder()->getEvent()->getId().$path_extension.'.pdf';
+        return $this->getSourcePath().'/'.$applicationEntity->getCart()->getEvent()->getId().$path_extension.'.pdf';
     }
 
     /**

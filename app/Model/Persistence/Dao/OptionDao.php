@@ -45,13 +45,7 @@ class OptionDao extends EntityDao {
 
     public function getAdditionOptionsGridModel(AdditionEntity $additionEntity): IDataSource{
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->addSelect('a')
-            ->where(
-                $qb->expr()->eq(
-                    'a.addition',
-                    $qb->expr()->literal($additionEntity->getId())
-                )
-            );
+        $qb->whereCriteria(['a.addition'=>$additionEntity]);
         return new Doctrine($qb);
     }
 

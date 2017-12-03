@@ -11,8 +11,8 @@ namespace App\Model\Persistence\Manager;
 
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
+use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use App\Model\Persistence\Entity\OrderEntity;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
@@ -35,10 +35,10 @@ class EventManager extends Object implements Subscriber {
 
     /**
      * Event callback
-     * @param OrderEntity $orderEntity
+     * @param CartEntity $cartEntity
      */
-    public function onOrderCreated(OrderEntity $orderEntity) {
-        $event = $orderEntity->getEvent();
+    public function onCartCreated(CartEntity $cartEntity) {
+        $event = $cartEntity->getEvent();
         if (!$event) {
             return;
         }
@@ -52,7 +52,7 @@ class EventManager extends Object implements Subscriber {
     }
 
     public function getSubscribedEvents() {
-        return ['OrderManager::onOrderCreated'];
+        return ['CartManager::onCartCreated'];
     }
 
     public function editEventFromEventForm(array $values, EventEntity $eventEntity):EventEntity{

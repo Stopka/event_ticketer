@@ -2,8 +2,8 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Controls\Forms\IOrderFormWrapperFactory;
-use App\Controls\Forms\OrderFormWrapper;
+use App\Controls\Forms\CartFormWrapper;
+use App\Controls\Forms\ICartFormWrapperFactory;
 use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use App\Model\Persistence\Dao\ApplicationDao;
@@ -12,8 +12,8 @@ use App\Model\Persistence\Dao\EarlyDao;
 
 class EarlyPresenter extends BasePresenter {
 
-    /** @var IOrderFormWrapperFactory */
-    public $orderFormWrapperFactory;
+    /** @var ICartFormWrapperFactory */
+    public $cartFormWrapperFactory;
 
     /** @var ISubstituteFormWrapperFactory */
     public $substituteFormWrapperFactory;
@@ -26,14 +26,14 @@ class EarlyPresenter extends BasePresenter {
 
     /**
      * EarlyPresenter constructor.
-     * @param IOrderFormWrapperFactory $orderFormWrapperFactory
+     * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
      * @param ApplicationDao $applicationDao
      * @param EarlyDao $earlyDao
      */
-    public function __construct(IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, ApplicationDao $applicationDao, EarlyDao $earlyDao) {
+    public function __construct(ICartFormWrapperFactory $cartFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, ApplicationDao $applicationDao, EarlyDao $earlyDao) {
         parent::__construct();
-        $this->orderFormWrapperFactory = $orderFormWrapperFactory;
+        $this->cartFormWrapperFactory = $cartFormWrapperFactory;
         $this->substituteFormWrapperFactory = $substituteFormWrapperFactory;
         $this->applicationDao = $applicationDao;
         $this->earlyDao = $earlyDao;
@@ -50,9 +50,9 @@ class EarlyPresenter extends BasePresenter {
             $this->flashMessage('Přístup k registraci nebyl povolen', 'warning');
             $this->redirect('Homepage:');
         }
-        /** @var OrderFormWrapper $orderFormWrapper */
-        $orderFormWrapper = $this->getComponent('orderForm');
-        $orderFormWrapper->setEarly($early);
+        /** @var CartFormWrapper $cartFormWrapper */
+        $cartFormWrapper = $this->getComponent('cartForm');
+        $cartFormWrapper->setEarly($early);
         $event = $early->getEarlyWave()->getEvent();
         if ($event->isCapacityFull()) {
             $this->flashMessage('Již nejsou žádné volné přihlášky.', 'warning');
@@ -67,7 +67,7 @@ class EarlyPresenter extends BasePresenter {
             $this->flashMessage('Přístup k registraci nebyl povolen', 'warning');
             $this->redirect('Homepage:');
         }
-        /** @var OrderFormWrapper $orderFormWrapper */
+        /** @var SubstituteFormWrapper $substituteFormWrapper */
         $substituteFormWrapper = $this->getComponent('substituteForm');
         $substituteFormWrapper->setEarly($early);
         $event = $early->getEarlyWave()->getEvent();
@@ -78,10 +78,10 @@ class EarlyPresenter extends BasePresenter {
     }
 
     /**
-     * @return OrderFormWrapper
+     * @return CartFormWrapper
      */
-    protected function createComponentOrderForm() {
-        return $this->orderFormWrapperFactory->create();
+    protected function createComponentCartForm() {
+        return $this->cartFormWrapperFactory->create();
     }
 
     /**

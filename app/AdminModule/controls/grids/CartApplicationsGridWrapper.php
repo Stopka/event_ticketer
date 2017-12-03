@@ -11,7 +11,7 @@ namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
 
-class OrderApplicationsGridWrapper extends \App\FrontModule\Controls\Grids\OrderApplicationsGridWrapper {
+class CartApplicationsGridWrapper extends \App\FrontModule\Controls\Grids\CartApplicationsGridWrapper {
     protected function appendApplicationColumns(Grid $grid) {
         parent::appendApplicationColumns($grid);
         $grid->addColumnDate('birthDate','Datum narození');

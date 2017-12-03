@@ -6,7 +6,7 @@ use App\Grids\Grid;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\ChoiceDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
-use App\Model\Persistence\Entity\OrderEntity;
+use App\Model\Persistence\Entity\CartEntity;
 use Grido\Components\Filters\Filter;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
@@ -17,7 +17,7 @@ use Nette\Utils\Html;
  * Date: 22.1.17
  * Time: 16:20
  */
-class OrderApplicationsGridWrapper extends GridWrapper {
+class CartApplicationsGridWrapper extends GridWrapper {
 
     /** @var  ApplicationDao */
     private $applicationDao;
@@ -25,11 +25,11 @@ class OrderApplicationsGridWrapper extends GridWrapper {
     /** @var  ChoiceDao */
     private $choiceDao;
 
-    /** @var  OrderEntity */
-    private $order;
+    /** @var  CartEntity */
+    private $cart;
 
     /**
-     * OrderApplicationsGridWrapper constructor.
+     * CartApplicationsGridWrapper constructor.
      * @param ITranslator $translator
      * @param ApplicationDao $applicationDao
      * @param ChoiceDao $choiceDao
@@ -41,16 +41,16 @@ class OrderApplicationsGridWrapper extends GridWrapper {
     }
 
     /**
-     * @param \App\Model\Persistence\Entity\OrderEntity $entity
+     * @param \App\Model\Persistence\Entity\CartEntity $entity
      * @return $this
      */
-    public function setOrder(OrderEntity $order) {
-        $this->order = $order;
+    public function setCart(CartEntity $cart) {
+        $this->cart = $cart;
         return $this;
     }
 
     protected function loadModel(Grid $grid) {
-        $grid->setModel($this->applicationDao->getOrderApplicationsGridModel($this->order));
+        $grid->setModel($this->applicationDao->getCartApplicationsGridModel($this->cart));
     }
 
     protected function configure(\App\Grids\Grid $grid) {
@@ -87,11 +87,11 @@ class OrderApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('zip','PSČ');
         $grid->addColumnText('firstName', 'Jméno');
         $grid->addColumnText('lastName', 'Příjmení');
-        $grid->addColumnDate('order.created', 'Vytvořeno');
+        $grid->addColumnDate('cart.created', 'Vytvořeno');
     }
 
     protected function appendAdditionsColumns(Grid $grid) {
-        foreach ($this->order->getEvent()->getAdditions() as $addition) {
+        foreach ($this->cart->getEvent()->getAdditions() as $addition) {
             if($addition->isHidden()){
                 continue;
             }

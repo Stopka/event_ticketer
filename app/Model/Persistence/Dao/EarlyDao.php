@@ -9,6 +9,9 @@
 namespace App\Model\Persistence\Dao;
 
 use App\Model\Persistence\Entity\EarlyEntity;
+use App\Model\Persistence\Entity\EventEntity;
+use Grido\DataSources\Doctrine;
+use Grido\DataSources\IDataSource;
 
 class EarlyDao extends EntityDao {
 
@@ -36,6 +39,16 @@ class EarlyDao extends EntityDao {
             return $early;
         }
         return NULL;
+    }
+
+    /**
+     * @param EventEntity|null $eventEntity
+     * @return IDataSource
+     */
+    public function getEventEarliesGridModel(?EventEntity $eventEntity): IDataSource {
+        $qb = $this->getRepository()->createQueryBuilder('a');
+        $qb->whereCriteria(['a.earlyWave.event'=>$eventEntity]);
+        return new Doctrine($qb);
     }
 
 }

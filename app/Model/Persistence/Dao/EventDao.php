@@ -30,7 +30,6 @@ class EventDao extends EntityDao {
      */
     public function getAllEventsGridModel(): IDataSource{
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->addSelect('a');
         return new Doctrine($qb);
     }
 

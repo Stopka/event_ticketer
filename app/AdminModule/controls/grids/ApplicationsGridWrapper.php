@@ -28,6 +28,9 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var  EventEntity */
     private $event;
 
+    /** @var int  */
+    private $counter = 0;
+
     public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceManager $choiceManager) {
         parent::__construct($translator);
         $this->applicationDao = $applicationDao;
@@ -44,12 +47,12 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function loadModel(Grid $grid) {
-        $grid->setModel($this->applicationDao->getAllApplicationsGridModel($this->event));
+        $grid->setModel($this->applicationDao->getEventApplicationsGridModel($this->event));
     }
 
     protected function configure(\App\Grids\Grid $grid) {
         $this->loadModel($grid);
-        $this->appendOrderColumns($grid);
+        $this->appendCartColumns($grid);
         $this->appendApplicationColumns($grid);
         $this->appendAdditionsColumns($grid);
         $this->appendActions($grid);
@@ -57,14 +60,14 @@ class ApplicationsGridWrapper extends GridWrapper {
 
     protected function appendActions(Grid $grid) {
         $grid->addActionEvent('detail', 'Detail', function ($id) {
-            $this->getPresenter()->redirect('Order:default', $id);
+            $this->getPresenter()->redirect('Cart:default', $id);
         })
             ->setIcon('fa fa-eye')
-            ->setPrimaryKey('order.id');
+            ->setPrimaryKey('cart.id');
         $grid->addActionEvent('upravit', 'Upravit', function ($id) {
-            $this->getPresenter()->redirect('Order:edit', $id);
+            $this->getPresenter()->redirect('Cart:edit', $id);
         })
-            ->setPrimaryKey('order.id')
+            ->setPrimaryKey('cart.id')
             ->setIcon('fa fa-pencil');
     }
 
@@ -117,7 +120,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('birthCode', 'Kod rodného čísla')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDate('order.created', 'Vytvořeno', 'd.m.Y H:i:s')
+        $grid->addColumnDate('cart.created', 'Vytvořeno', 'd.m.Y H:i:s')
             ->setSortable()
             ->setFilterDateRange();
         /*$grid->addColumnText('invoiced', 'Faktura')
@@ -130,28 +133,32 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);*/
     }
 
-    protected function appendOrderColumns(Grid $grid) {
-        $grid->addColumnText('order.firstName', 'Jméno rodiče')
+    protected function appendCartColumns(Grid $grid) {
+        $grid->addColumnText('cart.firstName', 'Jméno rodiče')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnText('order.lastName', 'Příjmení rodiče')
+        $grid->addColumnText('cart.lastName', 'Příjmení rodiče')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
         /*
-        $grid->addColumnText('order.phone','Telefon rodiče')
+        $grid->addColumnText('cart.phone','Telefon rodiče')
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnEmail('order.email','Email rodiče')
+        $grid->addColumnEmail('cart.email','Email rodiče')
             ->setFilterText()
             ->setSuggestion();
         */
     }
 
+    protected function getCounterNumber():int{
+        return $this->counter++;
+    }
+
     protected function appendAdditionsColumns(Grid $grid) {
         foreach ($this->event->getAdditions() as $addition) {
-            $grid->addColumnText('addition' . $addition->getId(), $addition->getName())
+            $grid->addColumnText('addition' . $this->getCounterNumber(), $addition->getName())
                 ->setCustomRender(function (ApplicationEntity $application) use ($addition) {
                     $result = Html::el();
                     foreach ($application->getChoices() as $choice) {

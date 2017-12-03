@@ -47,11 +47,11 @@ class SubstitutesGridWrapper extends GridWrapper {
 
     protected function configure(\App\Grids\Grid $grid) {
         $this->loadModel($grid);
-        $this->appendOrderColumns($grid);
+        $this->appendCartColumns($grid);
         $this->appendActions($grid);
     }
 
-    protected function appendOrderColumns(Grid $grid) {
+    protected function appendCartColumns(Grid $grid) {
         $grid->addColumnText('state', 'Stav')
             ->setSortable()
             ->setReplacement([

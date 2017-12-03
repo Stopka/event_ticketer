@@ -13,8 +13,8 @@
                     <span><i class="fa fa-retweet"></i> Náhradníci</span>
                 </a>
             </li>
-            <li n:class=" disabled">
-                <a n:href="Application:default,$event->getId()">
+            <li n:class=" $presenter->isLinkCurrent('Early:default')?active">
+                <a n:href="Early:default,$event->getId()">
                     <span><i class="fa fa-star"></i> Přednostníci</span>
                 </a>
             </li>

@@ -28,7 +28,7 @@ class SubstituteEntity extends BaseEntity {
     const STATE_OVERDUE = 4;
 
     /**
-     * OrderEntity constructor
+     * CartEntity constructor
      */
     public function __construct() {
         $this->created = new \DateTime();
@@ -65,10 +65,10 @@ class SubstituteEntity extends BaseEntity {
     private $count;
 
     /**
-     * @ORM\OneToOne(targetEntity="OrderEntity", mappedBy="substitute")
-     * @var OrderEntity
+     * @ORM\OneToOne(targetEntity="CartEntity", mappedBy="substitute")
+     * @var CartEntity
      */
-    private $order;
+    private $cart;
 
     /**
      * @return EventEntity
@@ -148,25 +148,25 @@ class SubstituteEntity extends BaseEntity {
     }
 
     /**
-     * @return OrderEntity
+     * @return CartEntity
      */
-    public function getOrder(): ?OrderEntity {
-        return $this->order;
+    public function getCart(): ?CartEntity {
+        return $this->cart;
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function setOrder(?OrderEntity $order) {
-        $order->setSubstitute($this);
+    public function setCart(?CartEntity $cart) {
+        $cart->setSubstitute($this);
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function setInversedOrder(?OrderEntity $order) {
-        $this->order = $order;
-        if($this->order){
+    public function setInversedCart(?CartEntity $cart) {
+        $this->cart = $cart;
+        if($this->cart){
             $this->setState(self::STATE_ORDERED);
         }else{
             $this->setState(self::STATE_WAITING);

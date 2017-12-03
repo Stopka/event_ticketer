@@ -15,7 +15,7 @@ use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use App\Model\Persistence\Manager\OrderManager;
+use App\Model\Persistence\Manager\CartManager;
 use Nette\Forms\Controls\SubmitButton;
 
 class ReserveApplicationFormWrapper extends FormWrapper {
@@ -33,15 +33,15 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  ApplicationDao */
     private $applicationDao;
 
-    /** @var  OrderManager */
-    private $orderManager;
+    /** @var  CartManager */
+    private $cartManager;
 
-    public function __construct(ApplicationDao $applicationDao, CurrencyDao $currencyDao, OrderManager $orderFactory) {
+    public function __construct(ApplicationDao $applicationDao, CurrencyDao $currencyDao, CartManager $cartManager) {
         parent::__construct();
         $this->applicationDao = $applicationDao;
         $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();
-        $this->orderManager = $orderFactory;
+        $this->cartManager = $cartManager;
 
     }
 
@@ -89,7 +89,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button){
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->orderManager->createOrderFromOrderForm($values,$this->event);
+        $this->cartManager->createCartFromCartForm($values,$this->event);
         $this->getPresenter()->flashMessage('Přihlášky byly vytvořeny','success');
         $this->getPresenter()->redirect('Application:',$this->event->getId());
     }

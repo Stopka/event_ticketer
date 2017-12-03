@@ -9,9 +9,9 @@
 namespace App\Model\Persistence\Dao;
 
 use App\Model\Persistence\Entity\ApplicationEntity;
+use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OptionEntity;
-use App\Model\Persistence\Entity\OrderEntity;
 use Grido\DataSources\Doctrine;
 use Grido\DataSources\IDataSource;
 
@@ -22,14 +22,12 @@ class ApplicationDao extends EntityDao {
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cartEntity
      * @return IDataSource
      */
-    public function getOrderApplicationsGridModel(OrderEntity $order): IDataSource {
+    public function getCartApplicationsGridModel(CartEntity $cartEntity): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->addSelect('a')
-            ->where($qb->expr()->eq('a.order', $order->getId()
-            ));
+        $qb->whereCriteria(['a.cart'=>$cartEntity]);
         return new Doctrine($qb);
     }
 
@@ -40,7 +38,7 @@ class ApplicationDao extends EntityDao {
     public function countReservedApplications(EventEntity $event): int {
         $states = ApplicationEntity::getStatesReserved();
         return $this->getRepository()->countBy([
-            'order.event.id' => $event->getId(),
+            'cart.event.id' => $event->getId(),
             'state' => $states
         ]);
     }
@@ -52,7 +50,7 @@ class ApplicationDao extends EntityDao {
     public function countIssuedApplications(EventEntity $event): int {
         $states = ApplicationEntity::getStatesNotIssued();
         return $this->getRepository()->countBy([
-            'order.event.id' => $event->getId(),
+            'cart.event.id' => $event->getId(),
             'state !=' => $states
         ]);
     }
@@ -82,16 +80,15 @@ class ApplicationDao extends EntityDao {
     }
 
     /**
-     * @return Doctrine
+     * @param EventEntity $event
+     * @return IDataSource
      */
-    public function getAllApplicationsGridModel(EventEntity $event): IDataSource {
+    public function getEventApplicationsGridModel(EventEntity $event): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->addSelect('a')
-            ->where($qb->expr()->andX(
-                $qb->expr()->notIn('a.state', ApplicationEntity::getStatesNotIssued())/*,
-                $qb->expr()->eq('a.order.event.id',$event->getId())*/
-            ));
-        //TODO filtr podle eventu
+        $qb->whereCriteria([
+            'a.cart.event'=>$event,
+            'a.state !='=>ApplicationEntity::getStatesNotIssued()
+        ]);
         return new Doctrine($qb);
     }
 

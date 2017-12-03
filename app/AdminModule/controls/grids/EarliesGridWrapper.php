@@ -1,0 +1,74 @@
+<?php
+
+namespace App\AdminModule\Controls\Grids;
+
+use App\Grids\Grid;
+use App\Model\Persistence\Dao\EarlyDao;
+use App\Model\Persistence\Entity\EventEntity;
+use Nette\Localization\ITranslator;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: stopka
+ * Date: 22.1.17
+ * Time: 16:20
+ */
+class EarliesGridWrapper extends GridWrapper {
+
+    /** @var  EarlyDao */
+    private $earlyDao;
+
+    /** @var  EventEntity */
+    private $eventEntity;
+
+    public function __construct(ITranslator $translator, EarlyDao $earlyDao) {
+        parent::__construct($translator);
+        $this->earlyDao = $earlyDao;
+    }
+
+    /**
+     * @param EventEntity $eventEntity
+     */
+    public function setEventEntity(EventEntity $eventEntity): void {
+         $this->eventEntity = $eventEntity;
+    }
+
+    protected function loadModel(Grid $grid) {
+        $grid->setModel($this->earlyDao->getEventEarliesGridModel($this->eventEntity));
+    }
+
+    protected function configure(\App\Grids\Grid $grid) {
+        $this->loadModel($grid);
+        $this->appendEarlyWaveColumns($grid);
+        $this->appendEarlyColumns($grid);
+        $this->appendActions($grid);
+    }
+
+    protected function appendEarlyColumns(Grid $grid) {
+        $grid->addColumnText('firstName', 'Jméno')
+            ->setSortable()
+            ->setFilterText();
+        $grid->addColumnText('lastName', 'Příjmení')
+            ->setSortable()
+            ->setFilterText();
+        $grid->addColumnText('email', 'Email')
+            ->setSortable()
+            ->setFilterText();
+    }
+
+    protected function appendEarlyWaveColumns(Grid $grid) {
+        $grid->addColumnText('earlyWave.inviteSent', 'Odesláno')
+            ->setReplacement([true=>'Ano',false=>'Ne'])
+            ->setSortable()
+            ->setFilterSelect([null=>'', true=>'Ano',false=>'Ne']);
+        $grid->addColumnNumber('earlyWave.startDate', 'Začátek')
+            ->setSortable()
+            ->setFilterDate();
+    }
+
+
+    protected function appendActions(Grid $grid) {
+        $grid->addActionHref('edit','Upravit', 'Early:edit')
+            ->setIcon('fa fa-pencil-o');
+    }
+}

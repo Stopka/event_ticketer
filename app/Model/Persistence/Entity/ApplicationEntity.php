@@ -35,10 +35,10 @@ class ApplicationEntity extends BaseEntity {
     private $choices;
 
     /**
-     * @ORM\ManyToOne(targetEntity="OrderEntity", inversedBy="applications")
-     * @var OrderEntity
+     * @ORM\ManyToOne(targetEntity="CartEntity", inversedBy="applications")
+     * @var CartEntity
      */
-    private $order;
+    private $cart;
 
     /**
      * @ORM\Column(type="integer")
@@ -88,22 +88,22 @@ class ApplicationEntity extends BaseEntity {
     }
 
     /**
-     * @return OrderEntity
+     * @return CartEntity
      */
-    public function getOrder(): ?OrderEntity {
-        return $this->order;
+    public function getCart(): ?CartEntity {
+        return $this->cart;
     }
 
     /**
-     * @param OrderEntity $order
+     * @param CartEntity $cart
      */
-    public function setOrder(OrderEntity $order) {
-        if ($this->order) {
-            $this->order->removeInversedApplication($this);
+    public function setCart(CartEntity $cart) {
+        if ($this->cart) {
+            $this->cart->removeInversedApplication($this);
         }
-        $this->order = $order;
-        if ($order) {
-            $order->addInversedApplication($this);
+        $this->cart = $cart;
+        if ($cart) {
+            $cart->addInversedApplication($this);
         }
     }
 
@@ -131,7 +131,7 @@ class ApplicationEntity extends BaseEntity {
             return;
         }
         $this->state = self::STATE_WAITING;
-        $event = $this->getOrder()->getEvent();
+        $event = $this->getCart()->getEvent();
         $required_states = [];
         $required_additions = [];
         $enough = [];

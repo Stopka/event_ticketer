@@ -2,8 +2,8 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Controls\Forms\IOrderFormWrapperFactory;
-use App\Controls\Forms\OrderFormWrapper;
+use App\Controls\Forms\CartFormWrapper;
+use App\Controls\Forms\ICartFormWrapperFactory;
 use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use App\FrontModule\Controls\IOccupancyControlFactory;
@@ -18,8 +18,8 @@ class EventPresenter extends BasePresenter {
     /** @var EventDao */
     public $eventDao;
 
-    /** @var IOrderFormWrapperFactory */
-    public $orderFormWrapperFactory;
+    /** @var ICartFormWrapperFactory */
+    public $cartFormWrapperFactory;
 
     /** @var ISubstituteFormWrapperFactory */
     public $substituteFormWrapperFactory;
@@ -32,14 +32,14 @@ class EventPresenter extends BasePresenter {
      * @param EventDao $additionDao
      * @param ApplicationDao $applicationDao
      * @param OptionDao $optionDao
-     * @param IOrderFormWrapperFactory $orderFormWrapperFactory
+     * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
      * @param IOccupancyControlFactory $occupancyControlFactory
      */
-    public function __construct(EventDao $additionDao, IOrderFormWrapperFactory $orderFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, IOccupancyControlFactory $occupancyControlFactory) {
+    public function __construct(EventDao $additionDao, ICartFormWrapperFactory $cartFormWrapperFactory, ISubstituteFormWrapperFactory $substituteFormWrapperFactory, IOccupancyControlFactory $occupancyControlFactory) {
         parent::__construct();
         $this->eventDao = $additionDao;
-        $this->orderFormWrapperFactory = $orderFormWrapperFactory;
+        $this->cartFormWrapperFactory = $cartFormWrapperFactory;
         $this->substituteFormWrapperFactory = $substituteFormWrapperFactory;
         $this->occupancyControlFactory = $occupancyControlFactory;
     }
@@ -63,9 +63,9 @@ class EventPresenter extends BasePresenter {
             $this->flashMessage('Již nejsou žádné volné přihlášky.', 'warning');
             $this->redirect('substitute', $id);
         }
-        /** @var OrderFormWrapper $orderForm */
-        $orderForm = $this->getComponent('orderForm');
-        $orderForm->setEvent($event);
+        /** @var CartFormWrapper $cartForm */
+        $cartForm = $this->getComponent('cartForm');
+        $cartForm->setEvent($event);
         $this->template->event = $event;
     }
 
@@ -85,10 +85,10 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @return OrderFormWrapper
+     * @return CartFormWrapper
      */
-    protected function createComponentOrderForm(){
-        return $this->orderFormWrapperFactory->create();
+    protected function createComponentCartForm(){
+        return $this->cartFormWrapperFactory->create();
     }
 
     /**

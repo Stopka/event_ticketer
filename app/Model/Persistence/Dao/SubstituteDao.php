@@ -25,10 +25,7 @@ class SubstituteDao extends EntityDao {
      */
     public function getAllSubstitutesGridModel(EventEntity $event): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('s');
-        $qb->addSelect('s')
-            ->where($qb->expr()->andX(
-                $qb->expr()->eq('s.event', $qb->expr()->literal($event->getId()))
-            ));
+        $qb->whereCriteria(['s.event'=>$event]);
         return new Doctrine($qb);
     }
 

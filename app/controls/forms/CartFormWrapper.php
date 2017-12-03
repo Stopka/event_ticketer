@@ -4,23 +4,23 @@ namespace App\Controls\Forms;
 
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
+use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use App\Model\Persistence\Entity\OrderEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
-use App\Model\Persistence\Manager\OrderManager;
+use App\Model\Persistence\Manager\CartManager;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Vodacek\Forms\Controls\DateInput;
 
 
-class OrderFormWrapper extends FormWrapper {
+class CartFormWrapper extends FormWrapper {
     use AppendAdditionsControls;
 
-    /** @var  OrderManager */
-    private $orderManager;
+    /** @var  CartManager */
+    private $cartManager;
 
     /** @var  CurrencyDao */
     private $currencyDao;
@@ -40,20 +40,20 @@ class OrderFormWrapper extends FormWrapper {
     /** @var  SubstituteEntity */
     private $substitute;
 
-    /** @var  OrderEntity */
-    private $order;
+    /** @var  CartEntity */
+    private $cart;
 
     /**
-     * OrderFormWrapper constructor.
+     * CartFormWrapper constructor.
      * @param CurrencyDao $currencyDao
-     * @param OrderManager $orderManager
+     * @param CartManager $cartManager
      * @param ApplicationDao $applicationDao
      */
-    public function __construct(CurrencyDao $currencyDao, OrderManager $orderManager, ApplicationDao $applicationDao) {
+    public function __construct(CurrencyDao $currencyDao, CartManager $cartManager, ApplicationDao $applicationDao) {
         parent::__construct();
         $this->currencyDao = $currencyDao;
         $this->currency = $currencyDao->getDefaultCurrency();
-        $this->orderManager = $orderManager;
+        $this->cartManager = $cartManager;
         $this->applicationDao = $applicationDao;
     }
 
@@ -69,15 +69,15 @@ class OrderFormWrapper extends FormWrapper {
         return $this->applicationDao;
     }
 
-    public function setOrder(OrderEntity $order){
-        $this->order = $order;
-        $this->event = $order->getEvent();
-        $this->early = $order->getEarly();
-        $this->substitute = $order->getSubstitute();
+    public function setCart(CartEntity $cart){
+        $this->cart = $cart;
+        $this->event = $cart->getEvent();
+        $this->early = $cart->getEarly();
+        $this->substitute = $cart->getSubstitute();
     }
 
     public function isAdmin() {
-        return $this->order?true:false;
+        return $this->cart?true:false;
     }
 
 
@@ -117,7 +117,7 @@ class OrderFormWrapper extends FormWrapper {
         $this->appendCommonControls($form);
         $this->appendChildrenControls($form);
         $this->appendFinalControls($form);
-        $this->appendSubmitControls($form, $this->order?'Uložit':'Rezervovat', [$this, 'registerClicked']);
+        $this->appendSubmitControls($form, $this->cart?'Uložit':'Rezervovat', [$this, 'registerClicked']);
         $this->loadData($form);
     }
 
@@ -128,9 +128,9 @@ class OrderFormWrapper extends FormWrapper {
         if ($this->substitute) {
             $form->setDefaults($this->substitute->getValueArray());
         }
-        if($this->order){
-            $form->setDefaults($this->order->getValueArray());
-            foreach ($this->order->getApplications() as $application){
+        if($this->cart){
+            $form->setDefaults($this->cart->getValueArray());
+            foreach ($this->cart->getApplications() as $application){
                 $form['children'][$application->getId()]['child']->setDefaults($application->getValueArray());
                 $form['commons']->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice){
@@ -148,12 +148,12 @@ class OrderFormWrapper extends FormWrapper {
     protected function registerClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        if($this->order) {
-            $this->orderManager->editOrderFromOrderForm($values, $this->event, $this->early, $this->substitute, $this->order);
+        if($this->cart) {
+            $this->cartManager->editCartFromCartForm($values, $this->event, $this->early, $this->substitute, $this->cart);
             $this->getPresenter()->flashMessage('Objednávka byla uložena.', 'success');
             $this->getPresenter()->redirect('Application:',$this->event->getId());
         }else{
-            $this->orderManager->createOrderFromOrderForm($values, $this->event, $this->early, $this->substitute);
+            $this->cartManager->createCartFromCartForm($values, $this->event, $this->early, $this->substitute);
             $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.', 'success');
             $this->getPresenter()->redirect('Homepage:');
         }
@@ -206,7 +206,7 @@ class OrderFormWrapper extends FormWrapper {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
         $count_left = $this->event->getCapacityLeft($this->applicationDao->countIssuedApplications($this->event));
-        if(!$this->substitute&&!$this->order) {
+        if(!$this->substitute&&!$this->cart) {
             $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
                 ->setOption($form::OPTION_KEY_DESCRIPTION, "Zbývá $count_left přihlášek")
                 ->setValidationScope(FALSE);
@@ -224,7 +224,7 @@ class OrderFormWrapper extends FormWrapper {
             $this->appendChildControls($form, $child);
             $this->appendAdditionsControls($form, $child);
 
-            if(!$this->order) {
+            if(!$this->cart) {
                 $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')
                     ->setValidationScope(FALSE); # disables validation
                 $remove_button->onClick[] = $removeEvent;
@@ -234,7 +234,7 @@ class OrderFormWrapper extends FormWrapper {
     }
 
     private function getApplicationCount(){
-        if($this->order){
+        if($this->cart){
             return 0;
         }
         if($this->substitute){
@@ -244,7 +244,7 @@ class OrderFormWrapper extends FormWrapper {
     }
 
     private function isApplicationCountFixed(){
-        if($this->order){
+        if($this->cart){
             return false;
         }
         if($this->substitute){
