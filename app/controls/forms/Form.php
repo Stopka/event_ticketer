@@ -7,6 +7,7 @@ use Minetro\Forms\reCAPTCHA\ReCaptchaField;
 use Minetro\Forms\reCAPTCHA\ReCaptchaHolder;
 use Nette\Application\ApplicationException;
 use Nette\Utils\Html;
+use Stopka\NetteFormRenderer\Forms\IFormOptionKeys;
 use Stopka\NetteFormRenderer\HtmlFormComponent;
 
 class Form extends \Nette\Application\UI\Form implements IFormOptionKeys {

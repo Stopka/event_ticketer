@@ -49,6 +49,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdi" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdi-tcpdf" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/stopka/nette-form-renderer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/config" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/console" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
@@ -112,6 +113,7 @@
           <root url="file://$MODULE_DIR$/vendor/psr/log" />
           <root url="file://$MODULE_DIR$/vendor/setasign/fpdi" />
           <root url="file://$MODULE_DIR$/vendor/setasign/fpdi-tcpdf" />
+          <root url="file://$MODULE_DIR$/vendor/stopka/nette-form-renderer" />
           <root url="file://$MODULE_DIR$/vendor/symfony/config" />
           <root url="file://$MODULE_DIR$/vendor/symfony/console" />
           <root url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
@@ -172,6 +174,7 @@
           <root url="file://$MODULE_DIR$/vendor/psr/log" />
           <root url="file://$MODULE_DIR$/vendor/setasign/fpdi" />
           <root url="file://$MODULE_DIR$/vendor/setasign/fpdi-tcpdf" />
+          <root url="file://$MODULE_DIR$/vendor/stopka/nette-form-renderer" />
           <root url="file://$MODULE_DIR$/vendor/symfony/config" />
           <root url="file://$MODULE_DIR$/vendor/symfony/console" />
           <root url="file://$MODULE_DIR$/vendor/symfony/filesystem" />

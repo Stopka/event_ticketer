@@ -4,7 +4,7 @@ namespace App\Controls\Forms;
 
 use App\Model\Exception\Exception;
 use Nette;
-use Stopka\NetteFormRenderer\FormRenderer;
+use Stopka\NetteFormRenderer\Forms\Rendering\BetterFormRenderer;
 
 
 abstract class FormWrapper extends Nette\Application\UI\Control{
@@ -14,10 +14,10 @@ abstract class FormWrapper extends Nette\Application\UI\Control{
     private $template_path = __DIR__.'/FormWrapper.latte';
 
     /**
-     * @return FormRenderer
+     * @return Nette\Forms\IFormRenderer
      */
     protected function getFormRenderer() {
-        return new FormRenderer();
+        return new BetterFormRenderer();
     }
 
     /**
