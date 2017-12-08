@@ -15,10 +15,10 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Object;
+use Nette\SmartObject;
 
-class AdditionManager extends Object {
-    use TDoctrineEntityManager;
+class AdditionManager {
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  AdditionDao */
     private $additionDao;

@@ -13,6 +13,7 @@ use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,7 +22,7 @@ use Nette\Object;
  * Time: 17:37
  */
 class CartManager extends Object {
-    use TDoctrineEntityManager;
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  OptionDao */
     private $optionDao;

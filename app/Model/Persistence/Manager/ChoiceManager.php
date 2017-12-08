@@ -6,7 +6,7 @@ use App\Model\Exception\NotFoundException;
 use App\Model\Persistence\Dao\ChoiceDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,8 +14,8 @@ use Nette\Object;
  * Date: 26.11.17
  * Time: 17:37
  */
-class ChoiceManager extends Object {
-    use TDoctrineEntityManager;
+class ChoiceManager {
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  ChoiceDao */
     private $choiceDao;

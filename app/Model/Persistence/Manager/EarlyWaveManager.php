@@ -12,10 +12,10 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyWaveEntity;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
-use Nette\Object;
+use Nette\SmartObject;
 
-class EarlyWaveManager extends Object implements Subscriber {
-    use TDoctrineEntityManager;
+class EarlyWaveManager implements Subscriber {
+    use SmartObject, TDoctrineEntityManager;
 
     /**
      * EarlyWaveManager constructor.

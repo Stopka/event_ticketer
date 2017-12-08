@@ -10,10 +10,11 @@ namespace App\Model;
 
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Strings;
 
-class ApplicationPdfManager extends Object {
+class ApplicationPdfManager {
+    use SmartObject;
 
     const PATH_BASE = '/pdf_applications';
     const PATH_SOURCES = '/sources';

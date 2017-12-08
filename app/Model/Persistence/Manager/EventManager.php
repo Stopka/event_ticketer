@@ -15,10 +15,10 @@ use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Events\Subscriber;
-use Nette\Object;
+use Nette\SmartObject;
 
-class EventManager extends Object implements Subscriber {
-    use TDoctrineEntityManager;
+class EventManager implements Subscriber {
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  ApplicationDao */
     private $applicationDao;

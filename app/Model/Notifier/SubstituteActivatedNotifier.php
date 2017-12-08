@@ -13,10 +13,10 @@ use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use Kdyby\Events\Subscriber;
 use Nette\Mail\SendException;
-use Nette\Object;
+use Nette\SmartObject;
 
-class SubstituteActivatedNotifier extends Object implements Subscriber {
-    use TEmailService;
+class SubstituteActivatedNotifier implements Subscriber {
+    use SmartObject, TEmailService;
 
     /**
      * SubstituteActivatedNotifier constructor.

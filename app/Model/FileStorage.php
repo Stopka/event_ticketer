@@ -9,9 +9,10 @@
 namespace App\Model;
 
 
-use Nette\Object;
+use Nette\SmartObject;
 
-class FileStorage extends Object {
+class FileStorage {
+    use SmartObject;
 
     /**
      * @var string

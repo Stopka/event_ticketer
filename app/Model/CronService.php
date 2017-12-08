@@ -9,13 +9,14 @@
 namespace App\Model;
 
 
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Class CronService
  * @package App\Model
  */
-class CronService extends Object {
+class CronService {
+    use SmartObject;
     public $onCronRun = Array();
 
     public function run(){

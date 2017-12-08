@@ -9,13 +9,15 @@ namespace Stopka\TableExporter;
 use Elearning\Model\Company\Setting;
 use Elearning\Model\Root\Translator;
 use Nette\Localization\ITranslator;
+use Nette\SmartObject;
 
 /**
  * Sloupec v CSV souboru. Umožňuje nastait validační pravidla a ověřit je
  *
  * @author stopka
  */
-class Column extends \Nette\Object {
+class Column {
+    use SmartObject;
     /** @var \string */
     protected $key;
     /** @var  \string */

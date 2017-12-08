@@ -9,8 +9,8 @@
 namespace App\Model\Persistence\Dao;
 
 
-use Nette\Object;
+use Nette\SmartObject;
 
-abstract class Dao extends Object {
-
+abstract class Dao {
+    use SmartObject;
 }

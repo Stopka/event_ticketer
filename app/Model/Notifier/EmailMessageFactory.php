@@ -11,9 +11,10 @@ namespace App\Model\Notifier;
 
 use App\Model\Exception\InvalidInputException;
 use Nette\Mail\Message;
-use Nette\Object;
+use Nette\SmartObject;
 
-class EmailMessageFactory extends Object {
+class EmailMessageFactory {
+    use SmartObject;
 
     /** @var  string[] */
     private $from;

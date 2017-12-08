@@ -14,10 +14,10 @@ use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Entity\CartEntity;
 use Kdyby\Events\Subscriber;
 use Nette\Mail\SendException;
-use Nette\Object;
+use Nette\SmartObject;
 
-class CartCreatedNotifier extends Object implements Subscriber {
-    use TEmailService;
+class CartCreatedNotifier implements Subscriber {
+    use SmartObject, TEmailService;
 
     /** @var  ApplicationPdfManager */
     private $applicationPdfManager;

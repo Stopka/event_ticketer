@@ -6,13 +6,15 @@
  */
 
 namespace Stopka\TableExporter;
+use Nette\SmartObject;
 
 /**
  * Třída pro práci se znakovými sadami a s konverzemi textu mezi UTF-8 a těmito sadami
  *
  * @author stopka
  */
-class Charsets extends \Nette\Object {
+class Charsets {
+    use SmartObject;
 
     private static $charsets = Array(
         'big5',

@@ -14,10 +14,11 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\Mail\SendException;
-use Nette\Object;
+use Nette\SmartObject;
 use Tracy\Debugger;
 
-class EmailService extends Object {
+class EmailService {
+    use SmartObject;
 
     /** @var  EmailMessageFactory */
     private $emailMessageFactory;

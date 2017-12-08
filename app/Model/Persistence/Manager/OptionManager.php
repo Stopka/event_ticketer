@@ -17,10 +17,10 @@ use App\Model\Persistence\Entity\OptionEntity;
 use App\Model\Persistence\Entity\PriceAmountEntity;
 use App\Model\Persistence\Entity\PriceEntity;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Object;
+use Nette\SmartObject;
 
-class OptionManager extends Object {
-    use TDoctrineEntityManager;
+class OptionManager {
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  CurrencyDao */
     private $currencyDao;

@@ -8,7 +8,7 @@ use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,8 +16,8 @@ use Nette\Object;
  * Date: 26.11.17
  * Time: 17:37
  */
-class SubstituteManager extends Object {
-    use TDoctrineEntityManager;
+class SubstituteManager {
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  SubstituteDao */
     private $substituteDao;

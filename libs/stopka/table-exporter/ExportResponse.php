@@ -6,6 +6,7 @@ namespace Stopka\TableExporter;
  * Based on implementation of CSVResponse.
  */
 use Nette\Application\ApplicationException;
+use Nette\SmartObject;
 use PHPExcel;
 use PHPExcel_Shared_Font;
 
@@ -14,7 +15,8 @@ use PHPExcel_Shared_Font;
  *
  * @author stopka
  */
-class ExportResponse extends \Nette\Object implements \Nette\Application\IResponse {
+class ExportResponse implements \Nette\Application\IResponse {
+    use SmartObject;
     
     const EXPORT_FORMAT_CSV = 'csv';
     const EXPORT_FORMAT_XLS = 'xls';

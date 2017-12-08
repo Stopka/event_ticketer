@@ -10,13 +10,14 @@ namespace App\Model;
 
 
 use App\Model\Persistence\Dao\AdministratorDao;
-use Nette\Object;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
+use Nette\SmartObject;
 
-class AdminAuthenticator extends Object implements IAuthenticator {
+class AdminAuthenticator implements IAuthenticator {
+    use SmartObject;
 
     /** @var  \App\Model\Persistence\Dao\AdministratorDao */
     private $administratorDao;

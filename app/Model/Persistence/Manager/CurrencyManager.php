@@ -13,10 +13,10 @@ use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Object;
+use Nette\SmartObject;
 
-class CurrencyManager extends Object {
-    use TDoctrineEntityManager;
+class CurrencyManager {
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  CurrencyDao */
     private $currencyDao;

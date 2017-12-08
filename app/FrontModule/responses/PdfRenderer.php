@@ -4,6 +4,7 @@ namespace App\FrontModule\Responses;
 use Joseki\Application\Responses\PdfResponse;
 use Nette\Application\Application;
 use Nette\Application\UI\Presenter;
+use Nette\SmartObject;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +12,8 @@ use Nette\Application\UI\Presenter;
  * Date: 25.1.17
  * Time: 11:11
  */
-abstract class PdfRenderer extends \Nette\Object {
+abstract class PdfRenderer {
+    use SmartObject;
 
     /** @var  Application */
     private $app;

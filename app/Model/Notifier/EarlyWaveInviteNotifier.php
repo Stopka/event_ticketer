@@ -17,10 +17,10 @@ use App\Model\Persistence\Entity\EarlyEntity;
 use Doctrine\ORM\EntityManager;
 use Kdyby\Events\Subscriber;
 use Nette\Mail\SendException;
-use Nette\Object;
+use Nette\SmartObject;
 
-class EarlyWaveInviteNotifier extends Object implements Subscriber {
-    use TDoctrineEntityManager, TEmailService;
+class EarlyWaveInviteNotifier implements Subscriber {
+    use SmartObject, TDoctrineEntityManager, TEmailService;
 
     /** @var  EarlyWaveDao */
     private $earlyWaveDao;

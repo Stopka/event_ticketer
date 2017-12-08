@@ -11,10 +11,12 @@ namespace App\Model;
 
 use App\Model\Exception\DuplicateEntryException;
 use App\Model\Exception\NotFoundException;
-use Nette\Object;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 
-class OccupancyIcons extends Object {
+class OccupancyIcons {
+    use SmartObject;
+
     private $icons = [];
 
     /**
