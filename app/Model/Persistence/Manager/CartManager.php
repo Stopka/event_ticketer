@@ -12,7 +12,6 @@ use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use Kdyby\Doctrine\EntityManager;
-use Nette\Object;
 use Nette\SmartObject;
 
 /**
@@ -21,7 +20,7 @@ use Nette\SmartObject;
  * Date: 26.11.17
  * Time: 17:37
  */
-class CartManager extends Object {
+class CartManager {
     use SmartObject, TDoctrineEntityManager;
 
     /** @var  OptionDao */
