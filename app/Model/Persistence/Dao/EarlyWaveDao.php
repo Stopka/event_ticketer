@@ -36,6 +36,14 @@ class EarlyWaveDao extends EntityDao {
         ]);
     }
 
-
+    /**
+     * @param EventEntity|null $eventEntity
+     * @return EarlyWaveEntity[]
+     */
+    public function getEventEearlyWaves(?EventEntity $eventEntity): array{
+        return $this->getRepository()->findBy([
+            'event' => $eventEntity
+        ]);
+    }
 
 }

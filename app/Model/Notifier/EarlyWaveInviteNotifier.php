@@ -14,6 +14,7 @@ use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
+use App\Model\Persistence\Entity\EarlyWaveEntity;
 use Doctrine\ORM\EntityManager;
 use Kdyby\Events\Subscriber;
 use Nette\Mail\SendException;
@@ -54,6 +55,14 @@ class EarlyWaveInviteNotifier implements Subscriber {
         $waves = $this->earlyWaveDao->getUnsentInviteEarlyWaves();
         foreach ($waves as $wave) {
             $this->sendEarlyWaveInvites($wave->getId());
+        }
+    }
+
+    public function onEarlyWaveCreated(EarlyWaveEntity $earlyWave): void{
+        try {
+            $this->sendEarlyInvite($earlyWave);
+        }catch(NotReadyException $exception){
+
         }
     }
 
@@ -107,6 +116,9 @@ $link</p>
     }
 
     function getSubscribedEvents() {
-        return ["CronService::onCronRun"];
+        return [
+            "CronService::onCronRun",
+            'EarlyWaveManager::onEarlyWaveCreated'
+        ];
     }
 }

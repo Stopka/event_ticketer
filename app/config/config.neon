@@ -3,6 +3,10 @@
 # https://nette.org/security-warning
 #
 parameters:
+    dateFormat:
+        date: 'd.m.Y'
+        time: 'H:i:s'
+        dateTime: '%%date%% %%time%%'
     database:
         driver: mysql
         host: localhost
@@ -42,6 +46,7 @@ services:
     - App\AdminModule\Controls\Forms\IAdditionFormWrapperFactory
     - App\AdminModule\Controls\Forms\ICurrencyFromWrapperFactory
     - App\AdminModule\Controls\Forms\IOptionFormWrapperFactory
+    - App\AdminModule\Controls\Forms\IEarlyFormWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     - App\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory
@@ -54,6 +59,7 @@ services:
     - App\Model\AdminAuthenticator
     - App\Model\FileStorage(%appDir%/files)
     - App\Model\ApplicationPdfManager
+    - App\Model\DateFormatter(%dateFormat.date%,%dateFormat.time%,%dateFormat.dateTime%)
     - App\Model\Persistence\Dao\AdditionDao
     - App\Model\Persistence\Dao\EventDao
     - App\Model\Persistence\Dao\EarlyDao
@@ -71,6 +77,7 @@ services:
     - App\Model\Persistence\Manager\AdditionManager
     - App\Model\Persistence\Manager\CurrencyManager
     - App\Model\Persistence\Manager\OptionManager
+    - App\Model\Persistence\Manager\EarlyManager
     -
         class: App\Model\Persistence\Manager\EarlyWaveManager
         tags: [kdyby.subscriber]

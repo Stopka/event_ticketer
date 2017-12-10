@@ -3,9 +3,11 @@
 namespace App\AdminModule\Presenters;
 
 
-use App\AdminModule\Controls\Forms\AdditionFormWrapper;
+use App\AdminModule\Controls\Forms\EarlyFormWrapper;
+use App\AdminModule\Controls\Forms\IEarlyFormWrapperFactory;
 use App\AdminModule\Controls\Grids\EarliesGridWrapper;
 use App\AdminModule\Controls\Grids\IEarliesGridWrapperFactory;
+use App\Model\Persistence\Dao\EarlyDao;
 use App\Model\Persistence\Dao\EventDao;
 
 class EarlyPresenter extends BasePresenter {
@@ -16,10 +18,18 @@ class EarlyPresenter extends BasePresenter {
     /** @var  IEarliesGridWrapperFactory */
     private $earliesGridWrapperFactory;
 
-    public function __construct(EventDao $eventDao, IEarliesGridWrapperFactory $earliesGridWrapperFactory) {
+    /** @var IEarlyFormWrapperFactory */
+    private $earlyFormWrapperFactory;
+
+    /** @var EarlyDao */
+    private $earlyDao;
+
+    public function __construct(EventDao $eventDao, IEarliesGridWrapperFactory $earliesGridWrapperFactory, IEarlyFormWrapperFactory $earlyFormWrapperFactory, EarlyDao $earlyDao) {
         parent::__construct();
         $this->eventDao = $eventDao;
+        $this->earlyDao =  $earlyDao;
         $this->earliesGridWrapperFactory = $earliesGridWrapperFactory;
+        $this->earlyFormWrapperFactory = $earlyFormWrapperFactory;
     }
 
     public function actionDefault($id = null) {
@@ -39,24 +49,24 @@ class EarlyPresenter extends BasePresenter {
             $this->flashMessage('Událost nenalezena','error');
             $this->redirect("Homepage:");
         }
-        /** @var AdditionFormWrapper $additionForm */
-        $additionForm = $this->getComponent('additionForm');
-        $additionForm->setEventEntity($event);
-        $this->template->addition = null;
+        /** @var EarlyFormWrapper $earlyForm */
+        $earlyForm = $this->getComponent('earlyForm');
+        $earlyForm->setEventEntity($event);
+        $this->template->early = null;
         $this->template->event = $event;
     }
 
     public function actionEdit($id = null){
-        $addition = $this->additionDao->getAddition($id);
-        if(!$addition){
+        $early = $this->earlyDao->getEarly($id);
+        if(!$early){
             $this->flashMessage('Přídavek nenalezen','error');
             $this->redirect("Homepage:");
         }
-        /** @var AdditionFormWrapper $additionForm */
-        $additionForm = $this->getComponent('additionForm');
-        $additionForm->setAdditionEntity($addition);
-        $this->template->addition = $addition;
-        $this->template->event = $addition->getEvent();
+        /** @var EarlyFormWrapper $earlyForm */
+        $earlyForm = $this->getComponent('earlyForm');
+        $earlyForm->setEarlyEntity($early);
+        $this->template->early = $early;
+        $this->template->event = $earlyForm->getEventEntity();
     }
 
     /**
@@ -64,5 +74,12 @@ class EarlyPresenter extends BasePresenter {
      */
     protected function createComponentEarliesGrid(){
         return $this->earliesGridWrapperFactory->create();
+    }
+
+    /**
+     * @return EarlyFormWrapper
+     */
+    protected function createComponentEarlyForm(){
+        return $this->earlyFormWrapperFactory->create();
     }
 }

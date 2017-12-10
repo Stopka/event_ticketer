@@ -43,13 +43,13 @@ class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
             if (Strings::startsWith($without[$i], 'get')) {
                 continue;
             }
-            $without[$i] = 'get' . Strings::capitalize($without[$i]);
+            $without[$i] = 'get' . Strings::firstUpper($without[$i]);
         }
         $methods = get_class_methods($this);
         if ($with) {
             for ($i = 0; $i < count($with); $i++) {
                 if (!Strings::startsWith($with[$i], 'get')) {
-                    $with[$i] = 'get' . Strings::capitalize($with[$i]);
+                    $with[$i] = 'get' . Strings::firstUpper($with[$i]);
                 }
                 if (!in_array($with[$i], $methods)) {
                     unset($with[$i]);

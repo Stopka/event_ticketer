@@ -8,11 +8,9 @@
 
 namespace App\Model\Persistence\Entity;
 
-use App\Model\Persistence\Attribute\TAddressAttribute;
 use App\Model\Persistence\Attribute\TEmailAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
-use App\Model\Persistence\Attribute\TPhoneAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class EarlyEntity extends BaseEntity {
-    use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute, TAddressAttribute;
+    use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute;
 
     public function __construct() {
         $this->carts = new ArrayCollection();

@@ -9,6 +9,7 @@
 namespace App\Model\Persistence\Entity;
 
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
+use App\Model\Persistence\Attribute\TNameAttribute;
 use App\Model\Persistence\Attribute\TStartDateAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class EarlyWaveEntity extends BaseEntity {
-    use TIdentifierAttribute, TStartDateAttribute;
+    use TIdentifierAttribute, TStartDateAttribute, TNameAttribute;
 
     public function __construct() {
         $this->earlies = new ArrayCollection();
@@ -124,6 +125,5 @@ class EarlyWaveEntity extends BaseEntity {
     public function setInviteSent(bool $inviteSent = true): void {
         $this->inviteSent = $inviteSent;
     }
-
 
 }

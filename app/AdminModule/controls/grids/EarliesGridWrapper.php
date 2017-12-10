@@ -57,13 +57,16 @@ class EarliesGridWrapper extends GridWrapper {
     }
 
     protected function appendEarlyWaveColumns(Grid $grid) {
+        $grid->addColumnText('earlyWave.name', 'Vlna')
+            ->setSortable()
+            ->setFilterText();
+        $grid->addColumnDate('earlyWave.startDate', 'Začátek')
+            ->setSortable()
+            ->setFilterDate();
         $grid->addColumnText('earlyWave.inviteSent', 'Odesláno')
             ->setReplacement([true=>'Ano',false=>'Ne'])
             ->setSortable()
             ->setFilterSelect([null=>'', true=>'Ano',false=>'Ne']);
-        $grid->addColumnNumber('earlyWave.startDate', 'Začátek')
-            ->setSortable()
-            ->setFilterDate();
     }
 
 
