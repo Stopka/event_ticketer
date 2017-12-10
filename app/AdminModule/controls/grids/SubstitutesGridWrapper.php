@@ -3,11 +3,11 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
+use App\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use App\Model\Persistence\Manager\SubstituteManager;
-use Nette\Localization\ITranslator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,8 +26,14 @@ class SubstitutesGridWrapper extends GridWrapper {
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(ITranslator $translator, SubstituteDao $substituteDao, SubstituteManager $substituteManager) {
-        parent::__construct($translator);
+    /**
+     * SubstitutesGridWrapper constructor.
+     * @param GridWrapperDependencies $gridWrapperDependencies
+     * @param SubstituteDao $substituteDao
+     * @param SubstituteManager $substituteManager
+     */
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies, SubstituteDao $substituteDao, SubstituteManager $substituteManager) {
+        parent::__construct($gridWrapperDependencies);
         $this->substituteDao = $substituteDao;
         $this->substituteManager = $substituteManager;
     }

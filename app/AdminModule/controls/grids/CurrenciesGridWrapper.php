@@ -3,8 +3,8 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
+use App\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\CurrencyDao;
-use Nette\Localization\ITranslator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,8 +17,13 @@ class CurrenciesGridWrapper extends GridWrapper {
     /** @var  CurrencyDao */
     private $currencyDao;
 
-    public function __construct(ITranslator $translator, CurrencyDao $currencyDao) {
-        parent::__construct($translator);
+    /**
+     * CurrenciesGridWrapper constructor.
+     * @param GridWrapperDependencies $gridWrapperDependencies
+     * @param CurrencyDao $currencyDao
+     */
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies, CurrencyDao $currencyDao) {
+        parent::__construct($gridWrapperDependencies);
         $this->currencyDao = $currencyDao;
     }
 

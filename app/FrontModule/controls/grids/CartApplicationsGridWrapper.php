@@ -3,12 +3,12 @@
 namespace App\FrontModule\Controls\Grids;
 
 use App\Grids\Grid;
+use App\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\ChoiceDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CartEntity;
 use Grido\Components\Filters\Filter;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
@@ -30,12 +30,12 @@ class CartApplicationsGridWrapper extends GridWrapper {
 
     /**
      * CartApplicationsGridWrapper constructor.
-     * @param ITranslator $translator
+     * @param GridWrapperDependencies $gridWrapperDependencies
      * @param ApplicationDao $applicationDao
      * @param ChoiceDao $choiceDao
      */
-    public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceDao $choiceDao) {
-        parent::__construct($translator);
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies, ApplicationDao $applicationDao, ChoiceDao $choiceDao) {
+        parent::__construct($gridWrapperDependencies);
         $this->applicationDao = $applicationDao;
         $this->choiceDao = $choiceDao;
     }
@@ -81,10 +81,10 @@ class CartApplicationsGridWrapper extends GridWrapper {
                 ApplicationEntity::STATE_CANCELLED => 'Zrušeno'
             ]);
 
-        $grid->addColumnText('street','Ulice');
-        $grid->addColumnText('address','Číslo popisné');
-        $grid->addColumnText('city','Město');
-        $grid->addColumnText('zip','PSČ');
+        $grid->addColumnText('street', 'Ulice');
+        $grid->addColumnText('address', 'Číslo popisné');
+        $grid->addColumnText('city', 'Město');
+        $grid->addColumnText('zip', 'PSČ');
         $grid->addColumnText('firstName', 'Jméno');
         $grid->addColumnText('lastName', 'Příjmení');
         $grid->addColumnDate('cart.created', 'Vytvořeno');
@@ -92,24 +92,24 @@ class CartApplicationsGridWrapper extends GridWrapper {
 
     protected function appendAdditionsColumns(Grid $grid) {
         foreach ($this->cart->getEvent()->getAdditions() as $addition) {
-            if($addition->isHidden()){
+            if ($addition->isHidden()) {
                 continue;
             }
             $grid->addColumnText('addition' . $addition->getId(), $addition->getName())
                 ->setCustomRender(function (ApplicationEntity $application) use ($addition) {
                     $result = Html::el();
-                    foreach ($application->getChoices() as $choice){
-                        if($choice->getOption()->getAddition()->getId()!=$addition->getId()){
+                    foreach ($application->getChoices() as $choice) {
+                        if ($choice->getOption()->getAddition()->getId() != $addition->getId()) {
                             continue;
                         }
                         $isPayedLink = Html::el('strong')
-                            ->addHtml(Html::el('i',['class'=>'fa '.($choice->isPayed()?'fa-check-square-o':'fa-square-o')]));
+                            ->addHtml(Html::el('i', ['class' => 'fa ' . ($choice->isPayed() ? 'fa-check-square-o' : 'fa-square-o')]));
                         $name = Html::el('span')->setText($choice->getOption()->getName());
                         $result->addHtml(
                             Html::el('div')
                                 ->addHtml($isPayedLink)
                                 ->addHtml($name)
-                            );
+                        );
                     }
                     return $result;
                 });

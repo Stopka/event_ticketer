@@ -3,9 +3,9 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
+use App\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\AdditionDao;
 use App\Model\Persistence\Entity\EventEntity;
-use Nette\Localization\ITranslator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,8 +21,13 @@ class AdditionsGridWrapper extends GridWrapper {
     /** @var  EventEntity */
     private $eventEntity;
 
-    public function __construct(ITranslator $translator, AdditionDao $additionDao) {
-        parent::__construct($translator);
+    /**
+     * AdditionsGridWrapper constructor.
+     * @param GridWrapperDependencies $gridWrapperDependencies
+     * @param AdditionDao $additionDao
+     */
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies, AdditionDao $additionDao) {
+        parent::__construct($gridWrapperDependencies);
         $this->additionDao = $additionDao;
     }
 

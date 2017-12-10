@@ -3,9 +3,9 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
+use App\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\EarlyDao;
 use App\Model\Persistence\Entity\EventEntity;
-use Nette\Localization\ITranslator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,8 +21,13 @@ class EarliesGridWrapper extends GridWrapper {
     /** @var  EventEntity */
     private $eventEntity;
 
-    public function __construct(ITranslator $translator, EarlyDao $earlyDao) {
-        parent::__construct($translator);
+    /**
+     * EarliesGridWrapper constructor.
+     * @param GridWrapperDependencies $gridWrapperDependencies
+     * @param EarlyDao $earlyDao
+     */
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies, EarlyDao $earlyDao) {
+        parent::__construct($gridWrapperDependencies);
         $this->earlyDao = $earlyDao;
     }
 

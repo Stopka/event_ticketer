@@ -3,12 +3,12 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
+use App\Grids\GridWrapperDependencies;
 use App\Model\OccupancyIcons;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\OptionDao;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\OptionEntity;
-use Nette\Localization\ITranslator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,8 +30,15 @@ class OptionsGridWrapper extends GridWrapper {
     /** @var  CurrencyDao */
     private $currencyDao;
 
-    public function __construct(ITranslator $translator, OptionDao $optionDao, OccupancyIcons $occupancyIcons, CurrencyDao $currencyDao) {
-        parent::__construct($translator);
+    /**
+     * OptionsGridWrapper constructor.
+     * @param GridWrapperDependencies $gridWrapperDependencies
+     * @param OptionDao $optionDao
+     * @param OccupancyIcons $occupancyIcons
+     * @param CurrencyDao $currencyDao
+     */
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies, OptionDao $optionDao, OccupancyIcons $occupancyIcons, CurrencyDao $currencyDao) {
+        parent::__construct($gridWrapperDependencies);
         $this->optionDao = $optionDao;
         $this->occupancyIcons = $occupancyIcons;
         $this->currencyDao = $currencyDao;

@@ -9,6 +9,7 @@
 namespace App\Grids;
 
 
+use App\Model\DateFormatter;
 use Grido\Translations\FileTranslator;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
@@ -23,8 +24,17 @@ abstract class GridWrapper extends Control {
     /** @var  ITranslator */
     private  $translator;
 
-    public function __construct(ITranslator $translator) {
-        $this->translator = $translator;
+    /** @var DateFormatter */
+    private $dateFormatter;
+
+    /**
+     * GridWrapper constructor.
+     * @param GridWrapperDependencies $gridWrapperDependencies
+     */
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies) {
+        parent::__construct();
+        $this->translator = $gridWrapperDependencies->getTranslator();
+        $this->dateFormatter = $gridWrapperDependencies->getDateFormatter();
     }
 
 
@@ -42,6 +52,7 @@ abstract class GridWrapper extends Control {
         $grid = $this->createGrid();
         //$grid->setTranslator($this->translator);
         $grid->setTranslator(new FileTranslator('cs'));
+        $grid->setDateFormatter($this->dateFormatter);
         $this->configure($grid);
         $grid->setDefaultPerPage(300);
         $grid->setPerPageList([300]);

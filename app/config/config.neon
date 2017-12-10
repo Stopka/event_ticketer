@@ -35,6 +35,7 @@ session:
     autoStart: true
 
 services:
+    - App\Grids\GridWrapperDependencies
     - App\Controls\Forms\ICartFormWrapperFactory
     - App\FrontModule\Controls\IOccupancyControlFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory

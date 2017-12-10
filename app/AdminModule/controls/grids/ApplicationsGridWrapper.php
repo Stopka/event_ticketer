@@ -3,12 +3,12 @@
 namespace App\AdminModule\Controls\Grids;
 
 use App\Grids\Grid;
+use App\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\ChoiceManager;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
@@ -31,8 +31,14 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var int  */
     private $counter = 0;
 
-    public function __construct(ITranslator $translator, ApplicationDao $applicationDao, ChoiceManager $choiceManager) {
-        parent::__construct($translator);
+    /**
+     * ApplicationsGridWrapper constructor.
+     * @param GridWrapperDependencies $gridWrapperDependencies
+     * @param ApplicationDao $applicationDao
+     * @param ChoiceManager $choiceManager
+     */
+    public function __construct(GridWrapperDependencies $gridWrapperDependencies, ApplicationDao $applicationDao, ChoiceManager $choiceManager) {
+        parent::__construct($gridWrapperDependencies);
         $this->applicationDao = $applicationDao;
         $this->choiceManager = $choiceManager;
     }
