@@ -7,3 +7,4 @@ vendor/*
 app/config/config.local.neon
 www/vendor/*
 composer.lock
+package-lock.json

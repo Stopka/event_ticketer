@@ -11,11 +11,11 @@
   ],
   "dependencies": {
     "jquery": "^1.12",
-    "font-awesome": "fontawesome#^4.6.3",
+    "font-awesome": "fontawesome#^4.7.0",
     "jquery-ui": "^1.12.1",
     "normalize-css": "normalize.css#^5.0.0",
     "nette-live-form-validation": "^1.8.1",
-    "nette.ajax.js": "^2.1.0",
+    "nette.ajax.js": "^2.3.0",
     "bootstrap": "^3.3.7",
     "grido": "^2.1.2",
     "voda-date-input": "^1.1.0"
