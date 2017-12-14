@@ -11,6 +11,7 @@ namespace App\AdminModule\Controls\Forms;
 
 use App\Controls\Forms\AppendAdditionsControls;
 use App\Controls\Forms\Form;
+use App\Controls\Forms\FormWrapperDependencies;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\CurrencyEntity;
@@ -36,8 +37,8 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  CartManager */
     private $cartManager;
 
-    public function __construct(ApplicationDao $applicationDao, CurrencyDao $currencyDao, CartManager $cartManager) {
-        parent::__construct();
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, ApplicationDao $applicationDao, CurrencyDao $currencyDao, CartManager $cartManager) {
+        parent::__construct($formWrapperDependencies);
         $this->applicationDao = $applicationDao;
         $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();

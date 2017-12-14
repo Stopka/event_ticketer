@@ -10,6 +10,7 @@ namespace App\AdminModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
+use App\Controls\Forms\FormWrapperDependencies;
 use App\Model\OccupancyIcons;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\AdditionEntity;
@@ -41,8 +42,8 @@ class OptionFormWrapper extends FormWrapper {
      * @param OccupancyIcons $occupancyIcons
      * @param CurrencyDao $currencyDao
      */
-    public function __construct(OptionManager $optionManager, OccupancyIcons $occupancyIcons, CurrencyDao $currencyDao) {
-        parent::__construct();
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, OptionManager $optionManager, OccupancyIcons $occupancyIcons, CurrencyDao $currencyDao) {
+        parent::__construct($formWrapperDependencies);
         $this->optionManager = $optionManager;
         $this->occupancyIcons = $occupancyIcons;
         $this->currecyDao = $currencyDao;

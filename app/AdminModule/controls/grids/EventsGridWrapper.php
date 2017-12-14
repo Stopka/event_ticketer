@@ -2,8 +2,8 @@
 
 namespace App\AdminModule\Controls\Grids;
 
-use App\Grids\Grid;
-use App\Grids\GridWrapperDependencies;
+use App\Controls\Grids\Grid;
+use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\EventDao;
 use App\Model\Persistence\Entity\EventEntity;
 
@@ -32,7 +32,7 @@ class EventsGridWrapper extends GridWrapper {
         $grid->setModel($this->eventDao->getAllEventsGridModel());
     }
 
-    protected function configure(\App\Grids\Grid $grid) {
+    protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendEventColumns($grid);
         $this->appendActions($grid);

@@ -2,8 +2,8 @@
 
 namespace App\AdminModule\Controls\Grids;
 
-use App\Grids\Grid;
-use App\Grids\GridWrapperDependencies;
+use App\Controls\Grids\Grid;
+use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
@@ -56,7 +56,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->setModel($this->applicationDao->getEventApplicationsGridModel($this->event));
     }
 
-    protected function configure(\App\Grids\Grid $grid) {
+    protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendCartColumns($grid);
         $this->appendApplicationColumns($grid);

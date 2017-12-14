@@ -10,6 +10,7 @@ namespace App\AdminModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
+use App\Controls\Forms\FormWrapperDependencies;
 use App\Model\DateFormatter;
 use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Entity\EarlyEntity;
@@ -36,8 +37,8 @@ class EarlyFormWrapper extends FormWrapper {
     private $dateFormatter;
 
 
-    public function __construct(EarlyManager $earlyManager, EarlyWaveDao $earlyWaveDao, DateFormatter $dateFormater) {
-        parent::__construct();
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, EarlyManager $earlyManager, EarlyWaveDao $earlyWaveDao, DateFormatter $dateFormater) {
+        parent::__construct($formWrapperDependencies);
         $this->earlyManager = $earlyManager;
         $this->earlyWaveDao = $earlyWaveDao;
         $this->dateFormatter = $dateFormater;

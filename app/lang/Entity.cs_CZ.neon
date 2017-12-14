@@ -1,0 +1,59 @@
+Id: ID
+Name: Název
+State: Stav
+Default: Výchozí
+Created: Vytvořeno
+Count: počet
+Address:
+    Address: Addresa
+    AddressNumber: Adresa
+    City: Město
+    Zip: PSČ
+    Country: Stát
+Person:
+    Person: Osoba
+    FullName: Celé jméno
+    FirstName: Jméno
+    Username: Uživatelské jméno
+    LastName: Příjmení
+    Password: Heslo
+    Gender: Pohlaví
+    BirthDate: Datum narození
+    Email: Email
+    Phone: Telefon
+    Type:
+        User: Uživatel
+        Administrator: Administrátor
+        Customer: Zákazník
+        Early: Přednostník
+        Substitute: Náhradník
+Addition:
+    Addition: Přídavek
+    RequiredForState: Vyžadováno pro
+    EnoughForState: Dostatečné pro
+    Visible: Viditelné v registraci
+    Hidden: Schovat v náhledu
+    Minimum: Minimum
+    Maximum: Maximum
+    Choice: Volba
+    Payed: Zaplaceno
+    Option: Možnost
+Event:
+    Event: Událost
+    Capacity: Kapacita
+    CapacityFull: Kapacita naplněna
+    StartDate: Datum začátku
+    EndDate: Datum konce
+    OccupancyIcon: Ikona obsazenosti
+    EarlyWave: Přednostní vlna
+    InviteSent: Poznvánka rozeslána
+    Application: Přihláška
+    Cart: Objednávka
+Price:
+    Price: Cena
+    Amount: Částka
+    Currency:
+        Currency: Měna
+        Symbol: Symbol
+        Code: Kód
+

@@ -10,6 +10,7 @@ namespace App\AdminModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
+use App\Controls\Forms\FormWrapperDependencies;
 use App\Model\OccupancyIcons;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\EventManager;
@@ -32,8 +33,8 @@ class EventFormWrapper extends FormWrapper {
      * @param EventManager $additionManager
      * @param $occupancyIcons OccupancyIcons
      */
-    public function __construct(EventManager $additionManager, OccupancyIcons $occupancyIcons) {
-        parent::__construct();
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, EventManager $additionManager, OccupancyIcons $occupancyIcons) {
+        parent::__construct($formWrapperDependencies);
         $this->eventManager = $additionManager;
         $this->occupancyIcons = $occupancyIcons;
     }

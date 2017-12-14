@@ -8,6 +8,6 @@ namespace App\FrontModule\Controls\Grids;
  * Date: 22.1.17
  * Time: 16:20
  */
-abstract class GridWrapper extends \App\Grids\GridWrapper {
+abstract class GridWrapper extends \App\Controls\Grids\GridWrapper {
 
 }

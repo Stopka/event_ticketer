@@ -6,7 +6,7 @@
  * Time: 14:38
  */
 
-namespace App\Grids;
+namespace App\Controls\Grids;
 
 
 use App\Model\DateFormatter;

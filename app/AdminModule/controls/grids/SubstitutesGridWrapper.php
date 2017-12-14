@@ -2,8 +2,8 @@
 
 namespace App\AdminModule\Controls\Grids;
 
-use App\Grids\Grid;
-use App\Grids\GridWrapperDependencies;
+use App\Controls\Grids\Grid;
+use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
@@ -51,7 +51,7 @@ class SubstitutesGridWrapper extends GridWrapper {
         $grid->setModel($this->substituteDao->getAllSubstitutesGridModel($this->event));
     }
 
-    protected function configure(\App\Grids\Grid $grid) {
+    protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendCartColumns($grid);
         $this->appendActions($grid);

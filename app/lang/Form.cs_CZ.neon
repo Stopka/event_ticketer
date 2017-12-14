@@ -1,0 +1,19 @@
+Rule:
+    Equal: 'Pole %label musí být %s.'
+    Filled: 'Vyplnte prosím pole %label.'
+    NorEqual: 'Pole %label nesmí být %s.'
+    Integer: 'Pole %label musí být celé číslo.'
+    Float: 'Pole %label musí být číslo.'
+    Min: 'Pole %label musí být větší nebo rovno %d.'
+    Max: 'Pole %label musí být menší nebo rovno %d.'
+    Range: 'Pole %label musí být v rozsahu %d - %d.'
+    Length: 'Pole %label musí mít délku %d znaků.'
+    MinLength: 'Pole %label musí mít minimální %d znaků.'
+    MaxLength: 'Pole %label může mít maximálně %d znaků.'
+    Email: 'Pole %label musí být platná emailová adresa'
+Action:
+    Edit: Upravit
+    Create: Vytvořit
+    Save: Uložit
+    SignIn: Přihlásit se
+SignIn.Message.Success: Přihlášení bylo úspěšné

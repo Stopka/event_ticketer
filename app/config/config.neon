@@ -35,7 +35,8 @@ session:
     autoStart: true
 
 services:
-    - App\Grids\GridWrapperDependencies
+    - App\Controls\Grids\GridWrapperDependencies
+    - App\Controls\Forms\FormWrapperDependencies
     - App\Controls\Forms\ICartFormWrapperFactory
     - App\FrontModule\Controls\IOccupancyControlFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
@@ -112,9 +113,13 @@ extensions:
     replicator: Kdyby\Replicator\DI\ReplicatorExtension
 
 translation:
-        default: cs
-        fallback: [cs]
-        whitelist: [cs]
+    default: cs_CZ
+    fallback: [cs_CZ]
+    whitelist: [cs_CZ]
+    resolvers:
+        session: on
+        request: on
+        header: on
 
 doctrine:
     host: %database.host%
@@ -127,18 +132,18 @@ doctrine:
 
 forms:
     messages:
-        EQUAL: 'Pole %label musí být %s.'
-        FILLED: 'Vyplnte prosím pole %label.'
-        NOT_EQUAL: 'Pole %label nesmí být %s.'
-        INTEGER: 'Pole %label musí být celé číslo.'
-        FLOAT: 'Pole %label musí být číslo.'
-        MIN: 'Pole %label musí být větší nebo rovno %d.'
-        MAX: 'Pole %label musí být menší nebo rovno %d.'
-        RANGE: 'Pole %label musí být v rozsahu %d - %d.'
-        LENGTH: 'Pole %label musí mít délku %d znaků.'
-        MIN_LENGTH: 'Pole %label musí mít minimální %d znaků.'
-        MAX_LENGTH: 'Pole %label může mít maximálně %d znaků.'
-        EMAIL: 'Pole %label musí být platná emailová adresa'
+        EQUAL: 'Form.Rule.Equal'
+        FILLED: 'Form.Rule.Filled'
+        NOT_EQUAL: 'Form.Rule.NotEqual'
+        INTEGER: 'Form.Rule.Integer'
+        FLOAT: 'Form.Rule.Float'
+        MIN: 'Form.Rule.Min'
+        MAX: 'Form.Rule.Max'
+        RANGE: 'Form.Rule.Range'
+        LENGTH: 'Form.Rule.Length'
+        MIN_LENGTH: 'Form.Rule.MinLength'
+        MAX_LENGTH: 'Form.Rule.MaxLength'
+        EMAIL: 'Form.Rule.Email'
 
 tracy:
     email: stopka@ldtpardubice.cz

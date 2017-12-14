@@ -2,8 +2,8 @@
 
 namespace App\FrontModule\Controls\Grids;
 
-use App\Grids\Grid;
-use App\Grids\GridWrapperDependencies;
+use App\Controls\Grids\Grid;
+use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\ChoiceDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
@@ -53,7 +53,7 @@ class CartApplicationsGridWrapper extends GridWrapper {
         $grid->setModel($this->applicationDao->getCartApplicationsGridModel($this->cart));
     }
 
-    protected function configure(\App\Grids\Grid $grid) {
+    protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $grid->getTablePrototype()->addClass('grido-no-paginator grido-no-filter grido-no-reset');
         $this->appendApplicationColumns($grid);

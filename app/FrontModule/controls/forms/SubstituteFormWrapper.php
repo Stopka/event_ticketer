@@ -10,6 +10,7 @@ namespace App\FrontModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
+use App\Controls\Forms\FormWrapperDependencies;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\SubstituteManager;
@@ -26,8 +27,8 @@ class SubstituteFormWrapper extends FormWrapper {
     /** @var  EventEntity */
     private $event;
 
-    public function __construct(SubstituteManager $substituteDao) {
-        parent::__construct();
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, SubstituteManager $substituteDao) {
+        parent::__construct($formWrapperDependencies);
         $this->substituteManager = $substituteDao;
     }
 

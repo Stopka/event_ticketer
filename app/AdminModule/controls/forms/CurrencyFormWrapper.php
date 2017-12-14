@@ -10,6 +10,7 @@ namespace App\AdminModule\Controls\Forms;
 
 
 use App\Controls\Forms\Form;
+use App\Controls\Forms\FormWrapperDependencies;
 use App\Model\OccupancyIcons;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Manager\CurrencyManager;
@@ -29,8 +30,8 @@ class CurrencyFormWrapper extends FormWrapper {
      * @param EventManager $additionManager
      * @param $occupancyIcons OccupancyIcons
      */
-    public function __construct(CurrencyManager $currencyManager) {
-        parent::__construct();
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, CurrencyManager $currencyManager) {
+        parent::__construct($formWrapperDependencies);
         $this->currencyManager = $currencyManager;
     }
 

@@ -2,8 +2,8 @@
 
 namespace App\AdminModule\Controls\Grids;
 
-use App\Grids\Grid;
-use App\Grids\GridWrapperDependencies;
+use App\Controls\Grids\Grid;
+use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\EarlyDao;
 use App\Model\Persistence\Entity\EventEntity;
 
@@ -42,7 +42,7 @@ class EarliesGridWrapper extends GridWrapper {
         $grid->setModel($this->earlyDao->getEventEarliesGridModel($this->eventEntity));
     }
 
-    protected function configure(\App\Grids\Grid $grid) {
+    protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendEarlyWaveColumns($grid);
         $this->appendEarlyColumns($grid);

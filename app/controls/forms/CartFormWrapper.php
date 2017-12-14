@@ -49,8 +49,8 @@ class CartFormWrapper extends FormWrapper {
      * @param CartManager $cartManager
      * @param ApplicationDao $applicationDao
      */
-    public function __construct(CurrencyDao $currencyDao, CartManager $cartManager, ApplicationDao $applicationDao) {
-        parent::__construct();
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, CurrencyDao $currencyDao, CartManager $cartManager, ApplicationDao $applicationDao) {
+        parent::__construct($formWrapperDependencies);
         $this->currencyDao = $currencyDao;
         $this->currency = $currencyDao->getDefaultCurrency();
         $this->cartManager = $cartManager;

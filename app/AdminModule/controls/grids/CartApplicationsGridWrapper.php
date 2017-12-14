@@ -9,7 +9,7 @@
 namespace App\AdminModule\Controls\Grids;
 
 
-use App\Grids\Grid;
+use App\Controls\Grids\Grid;
 
 class CartApplicationsGridWrapper extends \App\FrontModule\Controls\Grids\CartApplicationsGridWrapper {
     protected function appendApplicationColumns(Grid $grid) {

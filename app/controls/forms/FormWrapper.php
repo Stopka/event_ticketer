@@ -2,16 +2,36 @@
 
 namespace App\Controls\Forms;
 
+use App\Controls\Control;
 use App\Model\Exception\Exception;
+use Kdyby\Translation\ITranslator;
 use Nette;
 use Stopka\NetteFormRenderer\Forms\Rendering\BetterFormRenderer;
 
 
-abstract class FormWrapper extends Nette\Application\UI\Control{
+abstract class FormWrapper extends Control {
     /**
      * @var null|string path to template
      */
     private $template_path = __DIR__.'/FormWrapper.latte';
+
+    /**
+     * @var ITranslator;
+     */
+    private $translator;
+
+    public function __construct(FormWrapperDependencies $formWrapperDependencies) {
+        parent::__construct();
+        $this->translator = $formWrapperDependencies->getTranslator();
+    }
+
+    /**
+     * @return ITranslator
+     */
+    public function getTranslator(): ITranslator {
+        return $this->translator;
+    }
+
 
     /**
      * @return Nette\Forms\IFormRenderer
@@ -32,6 +52,7 @@ abstract class FormWrapper extends Nette\Application\UI\Control{
      */
     protected function createComponentForm() {
         $form = $this->createForm();
+        $form->setTranslator($this->getTranslator());
         $form->setRenderer($this->getFormRenderer());
         $this->appendFormControls($form);
         return $form;

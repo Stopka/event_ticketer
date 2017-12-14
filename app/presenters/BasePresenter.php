@@ -2,13 +2,14 @@
 
 namespace App\Presenters;
 
+use App\Controls\IFlashMessage;
 use Nette;
 
 
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Nette\Application\UI\Presenter {
+abstract class BasePresenter extends Nette\Application\UI\Presenter implements IFlashMessage {
 
     /** @var string|null */
     public $locale;

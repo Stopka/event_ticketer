@@ -6,12 +6,11 @@
  * Time: 14:38
  */
 
-namespace App\Grids;
+namespace App\Controls\Grids;
 
 
+use App\Controls\Control;
 use App\Model\DateFormatter;
-use Grido\Translations\FileTranslator;
-use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 
 abstract class GridWrapper extends Control {
@@ -50,8 +49,8 @@ abstract class GridWrapper extends Control {
      */
     protected function createComponentGrid() {
         $grid = $this->createGrid();
-        //$grid->setTranslator($this->translator);
-        $grid->setTranslator(new FileTranslator('cs'));
+        $grid->setTranslator($this->translator);
+        //$grid->setTranslator(new FileTranslator('cs'));
         $grid->setDateFormatter($this->dateFormatter);
         $this->configure($grid);
         $grid->setDefaultPerPage(300);
