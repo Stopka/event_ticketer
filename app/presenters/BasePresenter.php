@@ -3,6 +3,9 @@
 namespace App\Presenters;
 
 use App\Controls\IFlashMessage;
+use App\Controls\TInjectTranslator;
+use App\Model\Persistence\Dao\AdministratorDao;
+use App\Model\Persistence\Entity\AdministratorEntity;
 use Nette;
 
 
@@ -10,33 +13,34 @@ use Nette;
  * Base presenter for all application presenters.
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter implements IFlashMessage {
+    use TInjectTranslator;
 
     /** @var string|null */
     public $locale;
 
     /**
-     * @var \Kdyby\Translation\Translator Obstarává jazykový překlad na úrovni presenteru.
-     * @inject
+     * @var AdministratorDao
      */
-    public $translator;
+    private $administratorDao;
 
-    /**
-     * @var \App\Model\Persistence\Dao\AdministratorDao Fasáda pro manipulaci s uživateli.
-     * @inject
-     */
-    public $administratorFacade;
-
-    /** @var \App\Model\Persistence\Entity\AdministratorEntity Entita pro aktuálního uživatele. */
+    /** @var AdministratorEntity Current signed in admin */
     protected $administratorEntity;
 
     /**
-     * Registrace makra na překlad.
+     * @param AdministratorDao $administratorDao
+     */
+    public function injectAdministratorDao(AdministratorDao $administratorDao) {
+        $this->administratorDao = $administratorDao;
+    }
+
+    /**
+     * Translation macro registration
      * @inheritdoc
      */
     protected function createTemplate() {
-        /** @var Nette\Bridges\ApplicationLatte\Template $template Latte šablona pro aktuální presenter. */
+        /** @var Nette\Bridges\ApplicationLatte\Template $template Latte templet of current presenter */
         $template = parent::createTemplate();
-        $this->translator->createTemplateHelpers()
+        $this->getTranslator()->createTemplateHelpers()
             ->register($template->getLatte());
         return $template;
     }
@@ -45,12 +49,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter implements I
         $this->getSession()->start();
         parent::startup();
         if ($this->getUser()->isLoggedIn()) {
-            $this->administratorEntity = $this->administratorFacade->getAdministrator($this->getUser()->getId());
+            $this->administratorEntity = $this->administratorDao->getAdministrator($this->getUser()->getId());
         }
     }
 
     public function beforeRender() {
         parent::beforeRender();
-        $this->template->administratorEntity = $this->administratorEntity;
+        $this->getTemplate()->administratorEntity = $this->administratorEntity;
     }
 }

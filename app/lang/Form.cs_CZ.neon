@@ -17,3 +17,8 @@ Action:
     Save: Uložit
     SignIn: Přihlásit se
 SignIn.Message.Success: Přihlášení bylo úspěšné
+EarlyWave:
+    Description.StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace'
+    Message:
+        Edit.Success: 'Přídavek byl upraven'
+        Create.Success: 'Přídavek byl vytvořen'

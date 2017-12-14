@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Model\Exception;
 
 use Kdyby\Translation\ITranslator;
+use Throwable;
 
 /**
  * Description of RuntimeException
@@ -9,35 +11,50 @@ use Kdyby\Translation\ITranslator;
  * @author stopka
  */
 class Exception extends \RuntimeException {
+    /** @var int|null */
+    private $count;
 
-    /** @var  string[] */
-    private $full_message;
+    /** @var array */
+    private $parameters;
 
-    /**
-     * @param \string|\array $message textová zpráva, nebo pole [zpráva,count,params] pro použití v překladu
-     * @param \Exception $previous
-     */
-    public function __construct($message, $previous = NULL) {
-        if(is_array($message)){
-            if(count($message)==3){
-                list($message,$count,$params)=$message;
-            }else{
-                list($message,$params)=$message;
-                $count=NULL;
-            }
-        }else{
-            $params=[];
-            $count=NULL;
-        }
-        if($previous){
-            $params['reason']=$previous->getMessage();
-        }
-        $this->full_message=[$message,$count,$params];
-        parent::__construct($message, $this->code, $previous);
+    /** @var string */
+    private $bareMessage;
+
+    public function __construct(string $message = "", ?int $count ,  array $params = [], int $code = 0, Throwable $previous = null) {
+        $this->bareMessage = $message;
+        $this->count = $count;
+        $this->parameters = $params;
+        parent::__construct($this->buildMessage($message, $count, $params), $code, $previous);
     }
 
-    public function getFullMessage(){
-        return $this->full_message;
+    protected function buildMessage(string $message ="", ?int $count = null, array $params = []) :string {
+        return json_encode([
+            'message'=>$message,
+            'count'=>$count,
+            'params'=>$params
+        ]);
+    }
+
+
+    /**
+     * @return int|null
+     */
+    public function getCount(): ?int {
+        return $this->count;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters(): array {
+        return $this->parameters;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBareMessage(): string {
+        return $this->bareMessage;
     }
 
     /**
@@ -46,26 +63,16 @@ class Exception extends \RuntimeException {
      * @return \string
      */
     public function getTranslatedMessage(ITranslator $translator) {
-        $e=$this->getPrevious();
-        $message=$this->getFullMessage();
-        if(is_subclass_of($e,'\App\Model\Exceptions')){
+        $e = $this->getPrevious();
+        $message = $this->getBareMessage();
+        $count = $this->getCount();
+        $parameters = $this->getParameters();
+        if (!isset($parameters['reason']) && is_subclass_of($e, Exception::class)) {
             /** @var Exception $e */
-            $submessage=$e->getTranslatedMessage($translator);
-            $message[2]['reason']=$submessage;
+            $submessage = $e->getTranslatedMessage($translator);
+            $parameters['reason'] = $submessage;
         }
-        return $translator->translate($message);
-    }
-
-    /**
-     * Přidá do message další parametr pro překlad zpráv
-     * určeno pro volání parent konstruktoru
-     * @param $message přijatá zpráva
-     * @param $name jméno parametru
-     * @param $param parametr samotný
-     */
-    protected function addParamToMessage($message,$name,$param){
-        $message[2][$name]=$param;
-        return $message;
+        return $translator->translate($message, $count, $parameters, 'Error');
     }
 }
 

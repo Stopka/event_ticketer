@@ -10,21 +10,16 @@ namespace App\Controls\Grids;
 
 
 use App\Controls\Control;
-use App\Model\DateFormatter;
-use Nette\Localization\ITranslator;
+use App\Controls\TInjectDateFormatter;
+use App\Controls\TInjectTranslator;
 
 abstract class GridWrapper extends Control {
+    use TInjectTranslator, TInjectDateFormatter;
 
     /**
      * @var null|string path to template
      */
     private $template_path = null;
-
-    /** @var  ITranslator */
-    private  $translator;
-
-    /** @var DateFormatter */
-    private $dateFormatter;
 
     /**
      * GridWrapper constructor.
@@ -32,8 +27,8 @@ abstract class GridWrapper extends Control {
      */
     public function __construct(GridWrapperDependencies $gridWrapperDependencies) {
         parent::__construct();
-        $this->translator = $gridWrapperDependencies->getTranslator();
-        $this->dateFormatter = $gridWrapperDependencies->getDateFormatter();
+        $this->injectTranslator($gridWrapperDependencies->getTranslator());
+        $this->injectDateFormatter($gridWrapperDependencies->getDateFormatter());
     }
 
 
@@ -49,9 +44,9 @@ abstract class GridWrapper extends Control {
      */
     protected function createComponentGrid() {
         $grid = $this->createGrid();
-        $grid->setTranslator($this->translator);
+        $grid->setTranslator($this->getTranslator());
         //$grid->setTranslator(new FileTranslator('cs'));
-        $grid->setDateFormatter($this->dateFormatter);
+        $grid->setDateFormatter($this->getDateFormatter());
         $this->configure($grid);
         $grid->setDefaultPerPage(300);
         $grid->setPerPageList([300]);
@@ -68,8 +63,9 @@ abstract class GridWrapper extends Control {
         if (!$template_path) {
             $template_path = __DIR__.'/GridWrapper.latte';
         }
-        $this->template->setFile($template_path);
-        $this->template->render();
+        $template = $this->getTemplate();
+        $template->setFile($template_path);
+        $template->render();
     }
 
     /**

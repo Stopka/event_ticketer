@@ -8,8 +8,7 @@
 
 namespace App\Controls\Forms;
 
-
-use Nette\Localization\ITranslator;
+use Kdyby\Translation\ITranslator;
 use Nette\SmartObject;
 
 class FormWrapperDependencies {

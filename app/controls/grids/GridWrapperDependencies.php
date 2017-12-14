@@ -10,7 +10,7 @@ namespace App\Controls\Grids;
 
 
 use App\Model\DateFormatter;
-use Nette\Localization\ITranslator;
+use Kdyby\Translation\ITranslator;
 use Nette\SmartObject;
 
 class GridWrapperDependencies {
