@@ -63,13 +63,13 @@ class OptionsGridWrapper extends GridWrapper {
     }
 
     protected function appendOptionColumns(Grid $grid) {
-        $grid->addColumnText('name', 'Název')
+        $grid->addColumnText('name', 'Entity.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnNumber('capacity', 'Kapacita')
+        $grid->addColumnNumber('capacity', 'Entity.Event.Capacity')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnNumber('occupnacyIcon', 'Ikona obsazenosti')
+        $grid->addColumnNumber('occupnacyIcon', 'Entity.Event.OccupancyIcon')
             ->setSortable()
             ->setCustomRender(function(OptionEntity $option){
                 return $this->occupancyIcons->getIconHtml($option->getOccupancyIcon());
@@ -78,7 +78,7 @@ class OptionsGridWrapper extends GridWrapper {
 
     protected function appendPriceColumns(Grid $grid){
         foreach ($this->currencyDao->getAllCurrecies() as $currecy) {
-            $grid->addColumnNumber('price'.$currecy->getCode(),'Cena '.$currecy->getCode(),2)
+            $grid->addColumnNumber('price'.$currecy->getCode(),$this->getTranslator()->translate('Entity.Price.Price').' '.$currecy->getCode(),2)
                 ->setCustomRender(function(OptionEntity $optionEntity) use($currecy){
                     $price = $optionEntity->getPrice();
                     if(!$price){
@@ -95,6 +95,6 @@ class OptionsGridWrapper extends GridWrapper {
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit','Upravit', 'Option:edit');
+        $grid->addActionHref('edit','Form.Action.Edit', 'Option:edit');
     }
 }

@@ -50,33 +50,33 @@ class EarliesGridWrapper extends GridWrapper {
     }
 
     protected function appendEarlyColumns(Grid $grid) {
-        $grid->addColumnText('firstName', 'Jméno')
+        $grid->addColumnText('firstName', 'Entity.Person.FirstName')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('lastName', 'Příjmení')
+        $grid->addColumnText('lastName', 'Entity.Person.LastName')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('email', 'Email')
+        $grid->addColumnText('email', 'Entity.Person.Email')
             ->setSortable()
             ->setFilterText();
     }
 
     protected function appendEarlyWaveColumns(Grid $grid) {
-        $grid->addColumnText('earlyWave.name', 'Vlna')
+        $grid->addColumnText('earlyWave.name', 'Entity.Event.EarlyWave')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDate('earlyWave.startDate', 'Začátek')
+        $grid->addColumnDate('earlyWave.startDate', 'Entity.Event.StartDate')
             ->setSortable()
             ->setFilterDate();
-        $grid->addColumnText('earlyWave.inviteSent', 'Odesláno')
-            ->setReplacement([true=>'Ano',false=>'Ne'])
+        $grid->addColumnText('earlyWave.inviteSent', 'Entity.Event.InviteSent')
+            ->setReplacement([true=>'Entity.Boolean.Yes',false=>'Entity.Boolean.No'])
             ->setSortable()
-            ->setFilterSelect([null=>'', true=>'Ano',false=>'Ne']);
+            ->setFilterSelect([null=>'', true=>'Entity.Boolean.Yes',false=>'Entity.Boolean.No']);
     }
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit','Upravit', 'Early:edit')
+        $grid->addActionHref('edit','Form.Action.Edit', 'Early:edit')
             ->setIcon('fa fa-pencil-o');
     }
 }

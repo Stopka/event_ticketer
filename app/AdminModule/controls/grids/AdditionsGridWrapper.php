@@ -49,22 +49,22 @@ class AdditionsGridWrapper extends GridWrapper {
     }
 
     protected function appendAdditionColumns(Grid $grid) {
-        $grid->addColumnText('name', 'Název')
+        $grid->addColumnText('name', 'Entity.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnNumber('minimum', 'Minimum')
+        $grid->addColumnNumber('minimum', 'Entity.Addition.Minimum')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnNumber('maximum', 'Maximum')
+        $grid->addColumnNumber('maximum', 'Entity.Addition.Maximum')
             ->setSortable()
             ->setFilterNumber();
     }
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit','Upravit', 'Addition:edit')
+        $grid->addActionHref('edit','Form.Action.Edit', 'Addition:edit')
             ->setIcon('fa fa-pencil-o');
-        $grid->addActionHref('options','Možnosti', 'Option:')
+        $grid->addActionHref('options','Entity.Addition.Options', 'Option:')
             ->setIcon('fa fa-list-ul');
     }
 }

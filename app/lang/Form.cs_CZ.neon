@@ -19,6 +19,8 @@ Action:
     SignIn: Přihlásit se
     SignOut: Odhlásit se
     Reserve: 'Rezervovat'
+    Switch: 'Přepnout'
+    Activate: 'Aktivovat'
 SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
 EarlyWave:
     Description:

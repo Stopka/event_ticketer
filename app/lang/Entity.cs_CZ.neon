@@ -3,8 +3,12 @@ Name: Název
 State: Stav
 Default: Výchozí
 Created: Vytvořeno
-Count: počet
+Count: Počet
 Link: Odkaz
+Detail: Detail
+Boolean:
+    'Yes': Ano
+    'No': Ne
 Address:
     Address: Addresa
     AddressNumber: Adresa
@@ -53,6 +57,7 @@ Event:
     Capacity: Kapacita
     CapacityFull: Kapacita naplněna
     StartDate: Datum začátku
+    Public: Veřejný výdej
     EndDate: Datum konce
     Occupancy: Obsazenost
     OccupancyIcon: Ikona obsazenosti
@@ -62,6 +67,12 @@ Event:
     Applications: Přihlášky
     Cart: Objednávka
     Registration: Registrace
+    State:
+        State: Stav
+        Inactive: Neaktivní
+        Active: Aktivní
+        Closed: Dokončeno
+        Cancelled: Zrušeno
 Price:
     Price: Cena
     Amount: Částka
@@ -70,6 +81,21 @@ Currency:
     Currencies: Měny
     Symbol: Symbol
     Code: Kód
+Application:
+    Count: Počet přihlášek
+    State:
+        State:  'Stav'
+        Waiting: 'Čeká'
+        Reserved: 'Rezervováno'
+        Fulfilled: 'Splněno'
+        Cancelled: 'Zrušeno'
+Substitute:
+    State:
+        State: 'Stav'
+        Waiting: 'Ve frontě'
+        Active: 'Přijatý'
+        Overdue: 'Prošlý'
+        Ordered: 'Registrovaný'
 OccupancyIcon:
     None: Žádná
     Bus: Autobus

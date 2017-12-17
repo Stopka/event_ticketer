@@ -65,12 +65,12 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionEvent('detail', 'Detail', function ($id) {
+        $grid->addActionEvent('detail', 'Entity.Detail', function ($id) {
             $this->getPresenter()->redirect('Cart:default', $id);
         })
             ->setIcon('fa fa-eye')
             ->setPrimaryKey('cart.id');
-        $grid->addActionEvent('upravit', 'Upravit', function ($id) {
+        $grid->addActionEvent('upravit', 'Form.Action.Edit', function ($id) {
             $this->getPresenter()->redirect('Cart:edit', $id);
         })
             ->setPrimaryKey('cart.id')
@@ -78,25 +78,25 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendApplicationColumns(Grid $grid) {
-        $grid->addColumnNumber('id', 'ID')
+        $grid->addColumnNumber('id', 'Entity.Id')
             ->setSortable()
             ->setDefaultSort('ASC')
             ->setFilterNumber();
-        $grid->addColumnText('state', 'Stav')
+        $grid->addColumnText('state', 'Entity.Application.State.State')
             ->setSortable()
             ->setReplacement([
-                ApplicationEntity::STATE_WAITING => 'Nové',
-                ApplicationEntity::STATE_RESERVED => 'Rezervováno',
-                ApplicationEntity::STATE_FULFILLED => 'Doplaceno',
-                ApplicationEntity::STATE_CANCELLED => 'Zrušeno'
+                ApplicationEntity::STATE_WAITING => 'Entity.Application.State.Waiting',
+                ApplicationEntity::STATE_RESERVED => 'Entity.Application.State.Reserved',
+                ApplicationEntity::STATE_FULFILLED => 'Entity.Application.State.Fulfilled',
+                ApplicationEntity::STATE_CANCELLED => 'Entity.Application.State.Cancelled'
             ])
             ->setSortable()
             ->setFilterSelect([
                 NULL => '',
-                ApplicationEntity::STATE_WAITING => 'Nové',
-                ApplicationEntity::STATE_RESERVED => 'Rezervováno',
-                ApplicationEntity::STATE_FULFILLED => 'Doplaceno',
-                ApplicationEntity::STATE_CANCELLED => 'Zrušeno'
+                ApplicationEntity::STATE_WAITING => 'Entity.Application.State.Waiting',
+                ApplicationEntity::STATE_RESERVED => 'Entity.Application.State.Reserved',
+                ApplicationEntity::STATE_FULFILLED => 'Entity.Application.State.Fulfilled',
+                ApplicationEntity::STATE_CANCELLED => 'Entity.Application.State.Cancelled'
             ]);
 
         /*$grid->addColumnText('address','Adresa')
@@ -108,11 +108,11 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('zip','PSČ')
             ->setFilterText()
             ->setSuggestion();*/
-        $grid->addColumnText('firstName', 'Jméno')
+        $grid->addColumnText('firstName', 'Entity.Person.FirstName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnText('lastName', 'Příjmení')
+        $grid->addColumnText('lastName', 'Entity.Person.LastName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
@@ -126,7 +126,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('birthCode', 'Kod rodného čísla')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDate('cart.created', 'Vytvořeno', 'd.m.Y H:i:s')
+        $grid->addColumnDateTime('cart.created', 'Entity.Created')
             ->setSortable()
             ->setFilterDateRange();
         /*$grid->addColumnText('invoiced', 'Faktura')
@@ -175,7 +175,7 @@ class ApplicationsGridWrapper extends GridWrapper {
                             'id' => 'choice_' . $choice->getId(),
                             'class' => 'ajax',
                             'data-ajax-off' => 'unique',
-                            'title' => 'Přepnout',
+                            'title' => $this->getTranslator()->translate('Form.Action.Switch'),
                             'href' => $this->link('inverseChoicePayed!#choice_' . $choice->getId(), $choice->getId()),])
                             ->addHtml(Html::el('i', ['class' => 'fa ' . ($choice->isPayed() ? 'fa-check-square-o' : 'fa-square-o')]));
                         $name = Html::el('span')->setText($choice->getOption()->getName());

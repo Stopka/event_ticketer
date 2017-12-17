@@ -38,25 +38,25 @@ class CurrenciesGridWrapper extends GridWrapper {
     }
 
     protected function appendCurrencyColumns(Grid $grid) {
-        $grid->addColumnText('name', 'Název')
+        $grid->addColumnText('name', 'Entity.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('code', 'Kód')
+        $grid->addColumnText('code', 'Entity.Currency.Code')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('symbol', 'Symbol')
+        $grid->addColumnText('symbol', 'Entity.Currency.Symbol')
             ->setSortable();
-        $grid->addColumnNumber('default', 'Výchozí')
+        $grid->addColumnNumber('default', 'Entity.Default')
             ->setSortable()
-            ->setReplacement([true=>'Ano',false=>"Ne"])
-            ->setFilterSelect([null=>'', true=>'Ano',false=>"Ne"]);
+            ->setReplacement([true=>'Entity.Boolean.Yes',false=>"Entity.Boolean.No"])
+            ->setFilterSelect([null=>'', true=>'Entity.Boolean.Yes',false=>"Entity.Boolean.No"]);
     }
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit','Upravit','Currency:edit')
+        $grid->addActionHref('edit','Form.Action.Edit','Currency:edit')
             ->setIcon('fa fa-pencil');
-        $grid->addActionEvent('setDefault','Výchozí',[$this,'onSetDefaultClicked'])
+        $grid->addActionEvent('setDefault','Entity.Default',[$this,'onSetDefaultClicked'])
             ->setIcon('fa fa-check-square');
     }
 

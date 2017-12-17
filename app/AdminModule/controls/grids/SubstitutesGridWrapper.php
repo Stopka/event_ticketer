@@ -58,40 +58,40 @@ class SubstitutesGridWrapper extends GridWrapper {
     }
 
     protected function appendCartColumns(Grid $grid) {
-        $grid->addColumnText('state', 'Stav')
+        $grid->addColumnText('state', 'Entity.Substitute.State.State')
             ->setSortable()
             ->setReplacement([
-                SubstituteEntity::STATE_WAITING => 'Ve frontě',
-                SubstituteEntity::STATE_ACTIVE => 'Přijatý',
-                SubstituteEntity::STATE_OVERDUE => 'Prošlý',
-                SubstituteEntity::STATE_ORDERED => 'Registrovaný'
+                SubstituteEntity::STATE_WAITING => 'Entity.Substitute.State.Waiting',
+                SubstituteEntity::STATE_ACTIVE => 'Entity.Substitute.State.Active',
+                SubstituteEntity::STATE_OVERDUE => 'Entity.Substitute.State.Overdue',
+                SubstituteEntity::STATE_ORDERED => 'Entity.Substitute.State.Ordered'
             ])
             ->setFilterSelect([
                 NULL => '',
-                SubstituteEntity::STATE_WAITING => 'Ve frontě',
-                SubstituteEntity::STATE_ACTIVE => 'Přijatý',
-                SubstituteEntity::STATE_OVERDUE => 'Prošlý',
-                SubstituteEntity::STATE_ORDERED => 'Registrovaný'
+                SubstituteEntity::STATE_WAITING => 'Entity.Substitute.State.Waiting',
+                SubstituteEntity::STATE_ACTIVE => 'Entity.Substitute.State.Active',
+                SubstituteEntity::STATE_OVERDUE => 'Entity.Substitute.State.Overdue',
+                SubstituteEntity::STATE_ORDERED => 'Entity.Substitute.State.Ordered'
             ]);
-        $grid->addColumnText('firstName', 'Jméno')
+        $grid->addColumnText('firstName', 'Entity.Person.FirstName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnText('lastName', 'Příjmení')
+        $grid->addColumnText('lastName', 'Entity.Person.LastName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnEmail('email', 'Email')
+        $grid->addColumnEmail('email', 'Entity.Person.Email')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnDate('created', 'Vytvořeno', 'd.m.Y H:i:s')
+        $grid->addColumnDate('created', 'Entity.Created', 'd.m.Y H:i:s')
             ->setDefaultSort('ASC')
             ->setFilterDateRange();
-        $grid->addColumnText('count', 'Přihlášek')
+        $grid->addColumnText('count', 'Entity.Application.Count')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnText('early.lastName', 'Přednostní')
+        $grid->addColumnText('early.lastName', 'Entity.Person.Type.Substitute')
             ->setCustomRender(function (SubstituteEntity $susbstitute) {
                 $early = $susbstitute->getEarly();
                 if (!$early) {
@@ -103,7 +103,7 @@ class SubstitutesGridWrapper extends GridWrapper {
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionEvent('activate', 'Přijmout',[$this,'onActivate'])
+        $grid->addActionEvent('activate', 'Form.Action.Activate',[$this,'onActivate'])
             ->setDisable(function(SubstituteEntity $substitute){
                 return $substitute->isOrdered()||$substitute->isActive();
             })

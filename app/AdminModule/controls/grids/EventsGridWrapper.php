@@ -39,16 +39,16 @@ class EventsGridWrapper extends GridWrapper {
     }
 
     protected function appendEventColumns(Grid $grid) {
-        $grid->addColumnText('name', 'Název')
+        $grid->addColumnText('name', 'Entity.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('state', 'Stav')
+        $grid->addColumnText('state', 'Entity.Event.State.State')
             ->setSortable()
             ->setReplacement([
-                EventEntity::STATE_INACTIVE => 'Neaktivní',
-                EventEntity::STATE_ACTIVE => 'Aktivní',
-                EventEntity::STATE_CLOSED => 'Dokončený',
-                EventEntity::STATE_CANCELLED => 'Zrušený'
+                EventEntity::STATE_INACTIVE => 'Entity.Event.State.Inactive',
+                EventEntity::STATE_ACTIVE => 'Entity.Event.State.Active',
+                EventEntity::STATE_CLOSED => 'Entity.Event.State.Closed',
+                EventEntity::STATE_CANCELLED => 'Entity.Event.State.Cancelled'
             ])
             ->setFilterSelect([
                 NULL => '',
@@ -57,19 +57,19 @@ class EventsGridWrapper extends GridWrapper {
                 EventEntity::STATE_CLOSED => 'Dokončený',
                 EventEntity::STATE_CANCELLED => 'Zrušený'
             ]);
-        $grid->addColumnNumber('capacity', 'Kapacita', '0')
+        $grid->addColumnNumber('capacity', 'Entity.Event.Capacity', '0')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnDate('startDate', 'Veřejný výdej', 'd.m.Y H:i:s')
+        $grid->addColumnDate('startDate', 'Entity.Event.Public')
             ->setDefaultSort('ASC')
             ->setFilterDateRange();
     }
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit','Upravit','Event:edit')
+        $grid->addActionHref('edit','Form.Action.Edit','Event:edit')
             ->setIcon('fa fa-pencil');
-        $grid->addActionHref('applications','Přihlášky','Application:')
+        $grid->addActionHref('applications','Entity.Event.Applications','Application:')
             ->setIcon('fa fa-ticket');
     }
 }
