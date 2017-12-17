@@ -92,11 +92,11 @@ class EarlyWaveFormWrapper extends FormWrapper {
         $values = $this->preprocessData($values);
         if ($this->earlyWaveEntity) {
             $this->earlyWaveManager->editEarlyFromEarlyForm($values, $this->earlyWaveEntity, $this->eventEntity);
-            $this->getPresenter()->flashMessage('EarlyWave.Message.Edit.Success', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.EarlyWave.Message.Edit.Success', 'success');
             $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
         } else {
             $addition = $this->earlyWaveManager->createEarlyFromEarlyForm($values, $this->eventEntity);
-            $this->getPresenter()->flashMessage('EarlyWave.Message.Create.Success', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.EarlyWave.Message.Create.Success', 'success');
             $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
         }
     }

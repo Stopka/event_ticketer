@@ -10,15 +10,86 @@ Rule:
     Length: 'Pole %label musí mít délku %d znaků.'
     MinLength: 'Pole %label musí mít minimální %d znaků.'
     MaxLength: 'Pole %label může mít maximálně %d znaků.'
-    Email: 'Pole %label musí být platná emailová adresa'
+    Email: 'Pole %label musí být platná emailová adresa.'
+    Date: 'Pole %label není ve správném tvaru data.'
 Action:
     Edit: Upravit
     Create: Vytvořit
     Save: Uložit
     SignIn: Přihlásit se
-SignIn.Message.Success: Přihlášení bylo úspěšné
+    SignOut: Odhlásit se
+    Reserve: 'Rezervovat'
+SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
 EarlyWave:
-    Description.StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace'
+    Description:
+        StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace?'
     Message:
-        Edit.Success: 'Přídavek byl upraven'
-        Create.Success: 'Přídavek byl vytvořen'
+        Edit.Success: 'Vlna byla upravena.'
+        Create.Success: 'Vlna byla vytvořena.'
+Addition:
+    Description:
+        Maximum: 'Kolik možností může uživatel při registraci maximálně zvolit?'
+        Minimum: 'Kolik možností musí uživatel při registraci minimálně zvolit?'
+        Hidden: 'Má být přídavek schován v uživatelském náhledu objednávky?'
+        Visible: 'Má být přídavek vidět ve veřejném registračním formuláři?'
+        EnoughForState: 'Splnění tohoto přídavku je dostatečné pro přechod přihlášky do zvoleného stavu.'
+        RequiredForState: 'Splnění tohoto přídavku je povinné pro přechod přihlášky do zvoleného stavu.'
+    Message:
+        Edit.Success: 'Přídavek byl upraven.'
+        Create.Success: 'Přídavek byl vytvořen.'
+Cart:
+    Message:
+        Edit.Success: 'Objednávka byla upravena.'
+        Create.Success: 'Registarce byla vytvořena. Přihlášky byly odeslány emailem.'
+Currency:
+    Rule:
+        Code.Pattern: 'Kód musí sestávat ze 3 velkých písmen'
+    Description:
+        Code: 'Třípísmenný kód měny podle standardu ISO 4217'
+        Symbol: 'Běžně užívaný symbol měny'
+    Message:
+        Edit.Success: 'Měna byla upravena'
+        Create.Success: 'Měna byla vytvořena'
+Early:
+    EarlyWave:
+        CreateNew: 'Vytvořit novou'
+    Group:
+        NewEarlyWave: 'Nová vlna přednostníků'
+    Description:
+        EarlyWave: 'Přidejte přednostníka do již existující vlny, nebo vytvořte vlnu novou'
+        StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace'
+    Message:
+        Edit.Success: 'Přednostník byl upraven'
+        Create.Success: 'Přednostník byl vytvořen'
+Event:
+    Attribute:
+        Public: 'Veřejný výdej'
+        LimitCapacity: 'Omezit kapacitu'
+    Description:
+        StartDate: 'Od kdy budou přihlášky dostupné široké veřejnosti'
+        Public: 'Vydávat přihlášky široké veřejnosti'
+        Capacity: 'Celkové maximum míst v události'
+        LimitCapacity: 'Vydat jen určitý počet lístků'
+    Message:
+        Edit.Success: 'Událost byla upravena'
+        Create.Success: 'Událost byla vytvořena'
+Option:
+    Group:
+        PriceSetting: 'Nastavení ceny'
+    Attribute:
+        SetPrice: 'Nastavit cenu'
+        LimitCapacity: 'Omezit kapacitu'
+    Description:
+        LimitCapacity: 'Možnost bude dostupná veřejné registraci do vyčerpání kapacity'
+        Capacity: 'Kolik příhlášek může mít zvolenou tuto možnost'
+        Amount: 'Částka v měně %currency%'
+        SetPrice: 'Pokud je tato cena za příplatek, zvolte tuto možnost'
+    Message:
+        Edit.Success: 'Možnost byla upravena'
+        Create.Success: 'Možnost byla vytvořena'
+Reserve:
+    Message:
+        Create.Success: 'Přihlášky byly vytvořeny'
+Substitute:
+    Message:
+        Create.Success: 'Byl(a) jste úspěšně zapsán(a) mezi náhradníky'

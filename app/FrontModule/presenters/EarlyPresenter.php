@@ -47,7 +47,7 @@ class EarlyPresenter extends BasePresenter {
     public function actionRegister($id = null) {
         $early = $this->earlyDao->getReadyEarlyByHash($id);
         if (!$early) {
-            $this->flashMessage('Přístup k registraci nebyl povolen', 'warning');
+            $this->flashTranslatedMessage('Error.Cart.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
         /** @var CartFormWrapper $cartFormWrapper */
@@ -55,7 +55,7 @@ class EarlyPresenter extends BasePresenter {
         $cartFormWrapper->setEarly($early);
         $event = $early->getEarlyWave()->getEvent();
         if ($event->isCapacityFull()) {
-            $this->flashMessage('Již nejsou žádné volné přihlášky.', 'warning');
+            $this->flashTranslatedMessage('Error.Cart.Full', 'warning');
             $this->redirect('substitute', $id);
         }
         $this->template->event = $event;
@@ -64,7 +64,7 @@ class EarlyPresenter extends BasePresenter {
     public function actionSubstitute($id = null) {
         $early = $this->earlyDao->getReadyEarlyByHash($id);
         if (!$early) {
-            $this->flashMessage('Přístup k registraci nebyl povolen', 'warning');
+            $this->flashTranslatedMessage('Early.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
         /** @var SubstituteFormWrapper $substituteFormWrapper */

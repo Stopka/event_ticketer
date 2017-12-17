@@ -35,8 +35,9 @@ session:
     autoStart: true
 
 services:
-    - App\Controls\Grids\GridWrapperDependencies
+    - App\Controls\ControlDependencies
     - App\Controls\Forms\FormWrapperDependencies
+    - App\Controls\Grids\GridWrapperDependencies
     - App\Controls\Forms\ICartFormWrapperFactory
     - App\FrontModule\Controls\IOccupancyControlFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
@@ -101,8 +102,8 @@ services:
     -
         class: App\Model\OccupancyIcons
         setup:
-            - addIcon('bed', 'Postel')
-            - addIcon('bus', 'Autobus')
+            - addIcon('bed')
+            - addIcon('bus')
     router: App\RouterFactory::createRouter
 
 extensions:

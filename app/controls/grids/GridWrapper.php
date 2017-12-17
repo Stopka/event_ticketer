@@ -11,10 +11,9 @@ namespace App\Controls\Grids;
 
 use App\Controls\Control;
 use App\Controls\TInjectDateFormatter;
-use App\Controls\TInjectTranslator;
 
 abstract class GridWrapper extends Control {
-    use TInjectTranslator, TInjectDateFormatter;
+    use TInjectDateFormatter;
 
     /**
      * @var null|string path to template
@@ -26,8 +25,7 @@ abstract class GridWrapper extends Control {
      * @param GridWrapperDependencies $gridWrapperDependencies
      */
     public function __construct(GridWrapperDependencies $gridWrapperDependencies) {
-        parent::__construct();
-        $this->injectTranslator($gridWrapperDependencies->getTranslator());
+        parent::__construct($gridWrapperDependencies->getControlDependencies());
         $this->injectDateFormatter($gridWrapperDependencies->getDateFormatter());
     }
 

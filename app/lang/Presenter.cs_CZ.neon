@@ -1,0 +1,55 @@
+AdminLayout:
+    Setting:
+        H1: 'Nastavení systému'
+Admin:
+    Addition:
+        Add.H1: Vytvořit přídavek
+        Edit.H1: Upravit přídavek
+    Application:
+        Reserve.H1: 'Rezervovat přihlášky'
+        Export.H1: 'Exportovat seznam'
+    Currency:
+        Add.H1: 'Vytvořit měnu'
+        Edit.H1: 'Upravit měnu'
+    Early:
+        Add.H1: 'Vytvořit přednostníka'
+        Edit:H1: 'Upravit přednostníka'
+    Event:
+        Edit.H1: 'Upravit událost'
+        Add.H1: 'Vytvořit událost'
+    Sign:
+        In:
+            H1: 'Přihlášení'
+    Option:
+        Add.H1: 'Vytvořit možnost'
+        Default:
+        Edit.H1: 'Upravit možnost'
+Front:
+    Early:
+        Register:
+            H2: 'Přednostní registrace'
+        Substitute:
+            H2: 'Registrovat se mezi náhradníky'
+            EventFull: 'Všechny přihlášky již byly vydány. Může se stát, že se nějaká místa ještě uvolní. Máte-li zájem se uscházet o uvolněná místa, registrujte se mezi náhradníky. O uvolněném místě vás budme informovat emailem.'
+    Event:
+        Occupancy:
+        Register:
+            H2: 'Registrace'
+        Substitute:
+            H2: 'Registrovat se mezi náhradníky'
+            EventFull: 'Všechny přihlášky již byly vydány. Může se stát, že se nějaká místa ještě uvolní. Máte-li zájem se uscházet o uvolněná místa, registrujte se mezi náhradníky. O uvolněném místě vás budme informovat emailem.'
+    Homepage:
+        Default:
+            H1: 'Události na které lze získat přihlášku'
+            EventCapacityLeft: 'Zbývá %count% volná přihláška|Zbývají %count% volné přihlášky|Zbývá %count% volných přihlášek'
+            NoEvents: 'Aktuálně nejsou žádné aktivní události, do kterých by se dalo registrovat'
+            FutureEventsH2: 'Chystané události'
+            FutureEvents: 'Události, které budou teprve zpřístupněny veřejnosti'
+            StartDate: 'K dispozici od %start_date%'
+    Substitute:
+        Register:
+            H1: 'Registrace náhradníka'
+    Order:
+        Default:
+            H1: 'Objednávka #%cart_id%'
+            EarlyLabel: 'Přednostně na jméno'

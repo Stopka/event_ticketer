@@ -1,11 +1,11 @@
 {layout '@layout.latte'}
 {block content}
-    <h1><i class="fa fa-wrench"></i> Nastavení systému</h1>
+    <h1><i class="fa fa-wrench"></i> {_'Presenter.AdminLayout.Setting.H1'}</h1>
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Currency:default')?active">
                 <a n:href="Currency:default">
-                    <span><i class="fa fa-btc"></i> Měny</span>
+                    <span><i class="fa fa-btc"></i> {_'Entity.Currency.Currencies'}</span>
                 </a>
             </li>
         </ul>

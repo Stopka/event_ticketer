@@ -2,37 +2,41 @@
  * @param EventEntity[] $events
  *}
 {block content}
-<h1>Události na které lze získat přihlášku</h1>
+<h1><i class="fa fa-calendar"></i> {_'Presenter.Front.Homepage.Default.H1'}</h1>
 
 <ul n:if="$events">
     <li n:foreach="$events as $event">
         <div>
             <a n:href="Event:,$event->getId()">
-                <i class="fa fa-calendar-o"></i>
+                <i class="fa fa-calendar-check-o"></i>
                 <span>{$event->getName()}</span>
             </a>
         </div>
         <div n:if="$event->isCapacitySet()">
-            <em>Zbývá {$event->getCapacityLeft($control->countApplications($event))} volných přihlášek</em>
+            <em>{_'Presenter.Front.Homepage.Default.EventCapacityLeft',$event->getCapacityLeft($control->countApplications($event))}</em>
         </div>
     </li>
 </ul>
 
 <p n:if="!$events">
-    Aktuálně nejsou žádné aktivní události, do kterých by se dalo registrovat
+    {_'Presenter.Front.Order.Default.NoEvents'}
 </p>
 
-<h2 n:if="$future_events">Události, které budou teprve zpřístupněny veřejnosti</h2>
+<h2 n:if="$future_events">{_'Presenter.Front.Order.Default.FutureEventsH2'}</h2>
+<p n:if="$future_events">
+    {_'Presenter.Front.Order.Default.FutureEvents'}
+</p>
 <ul n:if="$future_events">
     <li n:foreach="$future_events as $event">
         <div>
             <strong>
-                <i class="fa fa-calendar-o"></i>
+                <i class="fa fa-calendar-times-o"></i>
                 <span>{$event->getName()}</span>
             </strong>
         </div>
         <div>
-            <em>K dispozici od {$event->getStartDate()|date:'%d.%m.%Y'}</em>
+            {$date = $event->getStartDate()|date:'%d.%m.%Y'}
+            <em>{_'Presenter.Front.Order.Default.StartDate',['start_date'=>$date]}</em>
         </div>
     </li>
 </ul>

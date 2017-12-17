@@ -25,7 +25,7 @@ class CartPresenter extends BasePresenter {
     public function actionDefault($id = null) {
         $cart = $this->cartDao->getViewableCart($id);
         if(!$cart){
-            $this->flashMessage('Objednávka nebyla nalezena','error');
+            $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
         /** @var CartApplicationsGridWrapper $applicationsGrid */

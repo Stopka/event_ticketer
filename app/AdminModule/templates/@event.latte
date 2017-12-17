@@ -1,21 +1,21 @@
 {layout '@layout.latte'}
 {block content}
-    <h1><i class="fa fa-calendar-o"></i> Událost <em>{$event->getName()}</em></h1>
+    <h1><i class="fa fa-calendar-o"></i> {_'Entity.Event.Event'} <em>{$event->getName()}</em></h1>
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Application:default')?active">
                 <a n:href="Application:default,$event->getId()">
-                    <span><i class="fa fa-ticket"></i> Přihlášky</span>
+                    <span><i class="fa fa-ticket"></i> {_'Entity.Event.Applications'}</span>
                 </a>
             </li>
             <li n:class="$presenter->isLinkCurrent('Substitute:default')?active">
                 <a n:href="Substitute:default,$event->getId()">
-                    <span><i class="fa fa-retweet"></i> Náhradníci</span>
+                    <span><i class="fa fa-retweet"></i> {_'Entity.Person.Type.Substitutes'}</span>
                 </a>
             </li>
             <li n:class=" $presenter->isLinkCurrent('Early:default')?active">
                 <a n:href="Early:default,$event->getId()">
-                    <span><i class="fa fa-star"></i> Přednostníci</span>
+                    <span><i class="fa fa-star"></i> {_'Entity.Person.Type.Earlies'}</span>
                 </a>
             </li>
         </ul>

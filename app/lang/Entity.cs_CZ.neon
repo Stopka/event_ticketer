@@ -4,6 +4,7 @@ State: Stav
 Default: Výchozí
 Created: Vytvořeno
 Count: počet
+Link: Odkaz
 Address:
     Address: Addresa
     AddressNumber: Adresa
@@ -26,9 +27,15 @@ Person:
         Administrator: Administrátor
         Customer: Zákazník
         Early: Přednostník
+        Earlies: 'Přednostníci'
         Substitute: Náhradník
+        Substitutes: Náhradníci
 Addition:
+    ForState:
+        Reserved: 'Závaznou rezervaci'
+        Fulfilled: 'Celkové dokončení'
     Addition: Přídavek
+    Additions: Přídavky
     RequiredForState: Vyžadováno pro
     EnoughForState: Dostatečné pro
     Visible: Viditelné v registraci
@@ -36,24 +43,34 @@ Addition:
     Minimum: Minimum
     Maximum: Maximum
     Choice: Volba
+    Choices: Volby
     Payed: Zaplaceno
     Option: Možnost
+    Options: Možnosti přídavku
 Event:
     Event: Událost
+    Events: Události
     Capacity: Kapacita
     CapacityFull: Kapacita naplněna
     StartDate: Datum začátku
     EndDate: Datum konce
+    Occupancy: Obsazenost
     OccupancyIcon: Ikona obsazenosti
     EarlyWave: Přednostní vlna
     InviteSent: Poznvánka rozeslána
     Application: Přihláška
+    Applications: Přihlášky
     Cart: Objednávka
+    Registration: Registrace
 Price:
     Price: Cena
     Amount: Částka
-    Currency:
-        Currency: Měna
-        Symbol: Symbol
-        Code: Kód
-
+Currency:
+    Currency: Měna
+    Currencies: Měny
+    Symbol: Symbol
+    Code: Kód
+OccupancyIcon:
+    None: Žádná
+    Bus: Autobus
+    Bed: Postel

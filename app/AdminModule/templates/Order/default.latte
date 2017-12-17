@@ -2,35 +2,35 @@
  * @param EventEntity[] $events
  *}
 {block content}
-<h1>Objednávka #{$cart->getId()}</h1>
+<h1><i class="fa fa-shopping-cart"></i> {_'Entity.Event.Cart'} #{$cart->getId()}</h1>
 <ul>
-    <li>Událost: <strong>{$cart->getEvent()->getName()}</strong></li>
-    <li n:if="$cart->getFirstName()">Jméno: <strong>{$cart->getFirstName()}</strong></li>
-    <li n:if="$cart->getLastName()">Příjmení: <strong>{$cart->getLastName()}</strong></li>
-    <li n:if="$cart->getPhone()">Telefon: <strong>{$cart->getPhone()}</strong></li>
-    <li n:if="$cart->getEmail()">Email: <strong><a href="mailto:{$cart->getEmail()}">{$cart->getEmail()}</a></strong></li>
+    <li>{_'Entity.Event.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
+    <li n:if="$cart->getFirstName()">{_'Entity.Person.FirstName'}: <strong>{$cart->getFirstName()}</strong></li>
+    <li n:if="$cart->getLastName()">{_'Entity.Person.LastName'}: <strong>{$cart->getLastName()}</strong></li>
+    <li n:if="$cart->getPhone()">{_'Entity.Person.Phone'}: <strong>{$cart->getPhone()}</strong></li>
+    <li n:if="$cart->getEmail()">{_'Entity.Person.Email'}: <strong><a href="mailto:{$cart->getEmail()}">{$cart->getEmail()}</a></strong></li>
     {var $link = $control->link('//:Front:Cart:default',$cart->getHashId())}
-    <li>Odkaz: <strong><a href="{$link}">{$link}</a></strong></li>
+    <li>{_'Entity.Link'}: <strong><a href="{$link}">{$link}</a></strong></li>
     <li n:if="$cart->getEarly()">
-        Přednostní výdej pro:
+        {_'Entity.Person.Type.Early'}:
         {var $early = $cart->getEarly()}
         <ul>
-            <li n:if="$early->getFirstName()">Jméno: <strong>{$early->getFirstName()}</strong></li>
-            <li n:if="$early->getLastName()">Příjmení: <strong>{$early->getLastName()}</strong></li>
-            <li n:if="$early->getEmail()">Email: <strong><a href="mailto:{$early->getEmail()}">{$early->getEmail()}</a></strong></li>
-            <li n:if="$early->getPhone()">Phone: <strong>{$early->getPhone()}</strong></li>
+            <li n:if="$early->getFirstName()">{_'Entity.Person.FirstName'}: <strong>{$early->getFirstName()}</strong></li>
+            <li n:if="$early->getLastName()">{_'Entity.Person.LastName'}: <strong>{$early->getLastName()}</strong></li>
+            <li n:if="$early->getEmail()">{_'Entity.Person.Email'}: <strong><a href="mailto:{$early->getEmail()}">{$early->getEmail()}</a></strong></li>
+            <li n:if="$early->getPhone()">{_'Entity.Person.Phone'}: <strong>{$early->getPhone()}</strong></li>
         </ul>
     </li>
     <li n:if="$cart->getSubstitute()">
-        Náhradník:
+        {_'Entity.Person.Type.Substitute'}:
         {var $substitute = $cart->getSubstitute()}
         <ul>
-            <li n:if="$substitute->getFirstName()">Jméno: <strong>{$substitute->getFirstName()}</strong></li>
-            <li n:if="$substitute->getLastName()">Příjmení: <strong>{$substitute->getLastName()}</strong></li>
-            <li n:if="$substitute->getEmail()">Email: <strong><a href="mailto:{$substitute->getEmail()}">{$substitute->getEmail()}</a></strong></li>
+            <li n:if="$substitute->getFirstName()">{_'Entity.Person.FirstName'}: <strong>{$substitute->getFirstName()}</strong></li>
+            <li n:if="$substitute->getLastName()">{_'Entity.Person.LastName'}: <strong>{$substitute->getLastName()}</strong></li>
+            <li n:if="$substitute->getEmail()">{_'Entity.Person.Email'}: <strong><a href="mailto:{$substitute->getEmail()}">{$substitute->getEmail()}</a></strong></li>
         </ul>
     </li>
 </ul>
 
-<h2>Přihlášky</h2>
+<h2><i class="fa fa-ticket"></i> {_'Entity.Event.Applications'}</h2>
 {control cartApplicationsGrid}

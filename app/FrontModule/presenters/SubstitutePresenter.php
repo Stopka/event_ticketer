@@ -34,7 +34,7 @@ class SubstitutePresenter extends BasePresenter {
     public function actionRegister($id = null) {
         $substitute = $this->substituteDao->getReadySubstitute($id);
         if (!$substitute) {
-            $this->flashMessage('Náhradníkovo místo vypršelo nebo nebylo nalezeno', 'warning');
+            $this->flashTranslatedMessage('Error.Substitute.NotFound', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
         /** @var CartFormWrapper $cartFormWrapper */

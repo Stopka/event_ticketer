@@ -35,7 +35,7 @@ class OptionPresenter extends BasePresenter {
     public function actionDefault($id = null) {
         $addition = $this->additionDao->getAddition($id);
         if(!$addition){
-            $this->flashMessage('Přídavek nenalezen','error');
+            $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
         /** @var OptionsGridWrapper $optionsGrid */
@@ -47,7 +47,7 @@ class OptionPresenter extends BasePresenter {
     public function actionAdd($id){
         $addition = $this->additionDao->getAddition($id);
         if(!$addition){
-            $this->flashMessage('Přídavek nenalezen','error');
+            $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
         /** @var OptionFormWrapper $optionForm */
@@ -60,7 +60,7 @@ class OptionPresenter extends BasePresenter {
     public function actionEdit($id = null){
         $option = $this->optionDao->getOption($id);
         if(!$option){
-            $this->flashMessage('Možnost nenalezena','error');
+            $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
         /** @var OptionFormWrapper $optionForm */

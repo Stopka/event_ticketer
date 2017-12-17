@@ -9,29 +9,21 @@
 namespace App\Controls\Grids;
 
 
+use App\Controls\TControlDependencies;
+use App\Controls\TInjectTranslator;
 use App\Model\DateFormatter;
 use Kdyby\Translation\ITranslator;
 use Nette\SmartObject;
 
 class GridWrapperDependencies {
-    use SmartObject;
-
-    /** @var  ITranslator */
-    private  $translator;
+    use SmartObject, TInjectTranslator, TControlDependencies;
 
     /** @var DateFormatter */
     private $dateFormatter;
 
     public function __construct(ITranslator $translator, DateFormatter $dateFormatter) {
-        $this->translator = $translator;
         $this->dateFormatter = $dateFormatter;
-    }
-
-    /**
-     * @return ITranslator
-     */
-    public function getTranslator(): ITranslator {
-        return $this->translator;
+        $this->injectTranslator($translator);
     }
 
     /**

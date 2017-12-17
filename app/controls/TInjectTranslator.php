@@ -10,17 +10,16 @@ namespace App\Controls;
 
 
 use Kdyby\Translation\ITranslator;
-use Kdyby\Translation\Translator;
 
 trait TInjectTranslator {
-    /** @var Translator */
+    /** @var ITranslator */
     private $translator;
 
     public function injectTranslator(ITranslator $translator){
         $this->translator = $translator;
     }
 
-    public function getTranslator(): ?Translator{
+    public function getTranslator(): ?ITranslator{
         return $this->translator;
     }
 }

@@ -52,15 +52,15 @@ class EventPresenter extends BasePresenter {
     public function actionRegister($id = null) {
         $event = $this->eventDao->getEvent($id);
         if(!$event||!$event->isActive()){
-            $this->flashMessage('Událost nebyla nalezena','error');
+            $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
         if(!$event->isStarted()){
-            $this->flashMessage('Událost ještě nebyla zpřístupněna veřejnosti.', 'warning');
+            $this->flashTranslatedMessage('Error.Event.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
         if ($event->isCapacityFull()) {
-            $this->flashMessage('Již nejsou žádné volné přihlášky.', 'warning');
+            $this->flashTranslatedMessage('Error.Event.Full', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('substitute', $id);
         }
         /** @var CartFormWrapper $cartForm */
@@ -72,7 +72,7 @@ class EventPresenter extends BasePresenter {
     public function actionSubstitute($id = null) {
         $event = $this->eventDao->getPublicAvailibleEvent($id);
         if(!$event){
-            $this->flashMessage('Událost nebyla nalezena','error');
+            $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
         if (!$event->isCapacityFull()) {

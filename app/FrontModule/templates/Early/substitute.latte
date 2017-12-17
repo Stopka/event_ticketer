@@ -2,7 +2,7 @@
  * @param EventEntity[] $events
  *}
 {block content}
-<h1>{$event->getName()}</h1>
-<h2>Registrovat se mezi náhradníky</h2>
-<p>Všechny přihlášky již byly vydány. Může se stát, že se nějaká místa ještě uvolní. Máte-li zájem se uscházet o uvolněná místa, registrujte se mezi náhradníky. O uvolněném místě vás budme informovat emailem.</p>
+<h1><i class="fa fa-calendar-o"></i> {$event->getName()}</h1>
+<p>{_'Presenter.Front.Early.Substitute.EventFull'}</p>
+<h2><i class="fa fa-retweet"></i><i class="fa fa-user-plus"></i> {_'Presenter.Front.Early.Substitute.H2'}</h2>
 {control substituteForm}

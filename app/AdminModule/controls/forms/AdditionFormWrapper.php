@@ -67,7 +67,7 @@ class AdditionFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $this->appendAdditionControls($form);
-        $this->appendSubmitControls($form, $this->additionEntity ? 'Upravit' : 'Vytvořit', [$this, 'submitClicked']);
+        $this->appendSubmitControls($form, $this->additionEntity ? 'Form.Action.Edit' : 'Form.Action.Create', [$this, 'submitClicked']);
         $this->loadData($form);
     }
 
@@ -91,41 +91,41 @@ class AdditionFormWrapper extends FormWrapper {
     }
 
     protected function appendAdditionControls(Form $form) {
-        $form->addGroup("Přídavek")
+        $form->addGroup("Entity.Addition.Addition")
             ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addText('name', 'Název')
+        $form->addText('name', 'Entity.Name')
             ->setRequired();
-        $form->addSelect('requiredForState', 'Vyžadováno pro', [
+        $form->addSelect('requiredForState', 'Entity.Addition.RequiredForState', [
             null => 'Nic',
-            ApplicationEntity::STATE_RESERVED => 'Závaznou rezervaci',
-            ApplicationEntity::STATE_FULFILLED => 'Celkové dokončení'
+            ApplicationEntity::STATE_RESERVED => 'Entity.Addition.ForState.Reserved',
+            ApplicationEntity::STATE_FULFILLED => 'Entity.Addition.ForState.Fulfilled'
         ])
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Splnění tohoto přídavku je povinné pro přechod přihlášky do zvoleného stavu")
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.RequiredForState")
             ->setDefaultValue(null)
             ->setRequired(false);
-        $form->addSelect('enoughForState', 'Dostatečné pro', [
+        $form->addSelect('enoughForState', 'Entity.Addition.EnoughForState', [
             null => 'Nic',
-            ApplicationEntity::STATE_RESERVED => 'Závaznou rezervaci',
-            ApplicationEntity::STATE_FULFILLED => 'Celkové dokončení'
+            ApplicationEntity::STATE_RESERVED => 'Entity.Addition.ForState.Reserved',
+            ApplicationEntity::STATE_FULFILLED => 'Entity.Addition.ForState.Fulfilled'
         ])
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Splnění tohoto přídavku je dostatečné pro přechod přihlášky do zvoleného stavu")
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.EnoughForState")
             ->setDefaultValue(null)
             ->setRequired(false);
-        $form->addCheckbox('visible', 'Viditelné v registraci')
+        $form->addCheckbox('visible', 'Entity.Addition.Visible')
             ->setDefaultValue(true)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Má být přídavek vidět ve veřejném registračním formuláři?");
-        $form->addCheckbox('hidden', 'Schovat v náhledu')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Visible");
+        $form->addCheckbox('hidden', 'Entity.Addition.Hidden')
             ->setDefaultValue(false)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Má být přídavek schován ve uživatelském náhledu objednávky?");
-        $form->addText('minimum', 'Minimum')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Kolik následujícíh možností musí uživatel při registraci minimálně zvolit")
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Hidden");
+        $form->addText('minimum', 'Entity.Addition.Minimum')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Minimum")
             ->setOption($form::MIME_TYPE, "number")
             ->setDefaultValue(0)
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, null, [0, null]);
-        $form->addText('maximum', 'Maximum')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Kolik následujícíh možností může uživatel při registraci maximálně zvolit")
+        $form->addText('maximum', 'Entity.Addition.Maximum')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Maximum")
             ->setOption($form::MIME_TYPE, "number")
             ->setDefaultValue(1)
             ->setRequired()
@@ -142,11 +142,11 @@ class AdditionFormWrapper extends FormWrapper {
         $values = $this->preprocessData($values);
         if ($this->additionEntity) {
             $this->additionManager->editAdditionFromEventForm($values, $this->additionEntity);
-            $this->getPresenter()->flashMessage('Přídavek byl upraven', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Addition.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Addition:default', [$this->event->getId()]);
         } else {
             $addition = $this->additionManager->createAdditionFromEventForm($values,$this->eventEntity);
-            $this->getPresenter()->flashMessage('Přídavek byl vytvořen', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Addition.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Addition:default', [$this->eventEntity->getId()]);
         }
     }

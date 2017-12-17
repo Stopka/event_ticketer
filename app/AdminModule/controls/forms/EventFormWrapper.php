@@ -48,7 +48,7 @@ class EventFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $this->appendEventControls($form);
-        $this->appendSubmitControls($form, $this->event ? 'Upravit' : 'Vytvořit', [$this, 'submitClicked']);
+        $this->appendSubmitControls($form, $this->event ? 'Form.Action.Edit' : 'Form.Action.Create', [$this, 'submitClicked']);
         $this->loadData($form);
     }
 
@@ -80,33 +80,33 @@ class EventFormWrapper extends FormWrapper {
 
     protected function appendEventControls(Form $form) {
         //$form->addGroup("Událost");
-        $form->addText('name', 'Název')
+        $form->addText('name', 'Entity.Name')
             ->setRequired();
-        $form->addRadioList('occupancyIcon', 'Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons())
+        $form->addRadioList('occupancyIcon', 'Entity.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons())
             ->setRequired();
-        $form->addCheckbox('limitCapacity', 'Omezit kapacitu')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Vydat jen určitý počet lístků")
+        $form->addCheckbox('limitCapacity', 'Form.Event.Attribute.LimitCapacity')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Event.Description.LimitCapacity")
             ->addCondition($form::EQUAL, true)
             ->toggle('capacityControlGroup');
-        $form->addText('capacity', 'Kapacita')
+        $form->addText('capacity', 'Entity.Event.Capacity')
             ->setDefaultValue(10)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Celkové maximum míst v události')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Event.Description.Capacity')
             ->setOption($form::OPTION_KEY_TYPE, 'number')
             ->setOption($form::OPTION_KEY_ID, 'capacityControlGroup')
             ->addConditionOn($form['limitCapacity'], $form::EQUAL, true)
             ->addRule($form::FILLED)
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, null, [1, null]);
-        $form->addCheckbox('public', 'Veřejný výdej')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Vydávat přihlášky široké veřejnosti")
+        $form->addCheckbox('public', 'Form.Event.Attribute.Public')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Event.Description.Public")
             ->addCondition($form::EQUAL, true)
             ->toggle('startDateControlGroup');
-        $form->addDate('startDate', 'Začátek', DateInput::TYPE_DATE)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Od kdy budou přihlášky dostupné široké veřejnosti')
+        $form->addDate('startDate', 'Entity.Event.StartDate', DateInput::TYPE_DATE)
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Event.Description.StartDate')
             ->setOption($form::OPTION_KEY_ID, 'startDateControlGroup')
             ->setDefaultValue(new \DateTime())
             ->setRequired(false)
-            ->addRule($form::VALID)
+            ->addRule($form::VALID,'Form.Rule.Date')
             ->addConditionOn($form["public"], $form::EQUAL, true)
             ->addRule($form::FILLED);
     }
@@ -120,11 +120,11 @@ class EventFormWrapper extends FormWrapper {
         $values = $this->preprocessData($values);
         if ($this->event) {
             $this->eventManager->editEventFromEventForm($values, $this->event);
-            $this->getPresenter()->flashMessage('Událost byla upravena', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Event.Message.Edit.Success', 'success');
             $this->getPresenter()->redirect('this');
         } else {
             $event = $this->eventManager->createEventFromEventForm($values);
-            $this->getPresenter()->flashMessage('Událost byla vytvořena', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Event.Message.Create.Success', 'success');
             $this->getPresenter()->redirect('Addition:default', [$event->getId()]);
         }
     }

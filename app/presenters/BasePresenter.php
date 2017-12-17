@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Controls\IFlashMessage;
+use App\Controls\TFlashTranslatedMessage;
 use App\Controls\TInjectTranslator;
 use App\Model\Persistence\Dao\AdministratorDao;
 use App\Model\Persistence\Entity\AdministratorEntity;
@@ -13,7 +14,7 @@ use Nette;
  * Base presenter for all application presenters.
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter implements IFlashMessage {
-    use TInjectTranslator;
+    use TInjectTranslator, TFlashTranslatedMessage;
 
     /** @var string|null */
     public $locale;

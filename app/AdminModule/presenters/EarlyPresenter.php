@@ -46,7 +46,7 @@ class EarlyPresenter extends BasePresenter {
     public function actionAdd($id){
         $event = $this->eventDao->getEvent($id);
         if(!$event){
-            $this->flashMessage('Událost nenalezena','error');
+            $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
         /** @var EarlyFormWrapper $earlyForm */
@@ -59,7 +59,7 @@ class EarlyPresenter extends BasePresenter {
     public function actionEdit($id = null){
         $early = $this->earlyDao->getEarly($id);
         if(!$early){
-            $this->flashMessage('Přídavek nenalezen','error');
+            $this->flashTranslatedMessage('Error.Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
         /** @var EarlyFormWrapper $earlyForm */

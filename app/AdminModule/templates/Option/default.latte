@@ -1,7 +1,7 @@
 {layout "../@additionEdit.latte"}
 {block subcontent}
-    <h2><i class="fa fa-list-ul"></i> Možnosti přídavku</h2>
+    <h2><i class="fa fa-list-ul"></i> {_'Entity.Addition.Options'}</h2>
     <p>
-        <a n:href="Option:add,$addition->getId()"><i class="fa fa-plus-circle"></i> Vytvořit možnost</a>
+        <a n:href="Option:add,$addition->getId()"><i class="fa fa-plus-circle"></i> {_'Presenter.Admin.Option.Add.H1'}</a>
     </p>
     {control optionsGrid}

@@ -66,7 +66,7 @@ class OptionFormWrapper extends FormWrapper {
     protected function appendFormControls(Form $form) {
         $this->appendOptionControls($form);
         $this->appendPriceControls($form);
-        $this->appendSubmitControls($form, $this->optionEntity ? 'Upravit' : 'Vytvořit', [$this, 'submitClicked']);
+        $this->appendSubmitControls($form, $this->optionEntity ? 'Form.Action.Edit' : 'Form.Action.Create', [$this, 'submitClicked']);
         $this->loadData($form);
     }
 
@@ -102,17 +102,17 @@ class OptionFormWrapper extends FormWrapper {
     }
 
     protected function appendOptionControls(Form $form) {
-        $form->addGroup('Možnost')
+        $form->addGroup('Entity.Addition.Option')
             ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addText('name', 'Název')
+        $form->addText('name', 'Entity.Name')
             ->setRequired();
-        $form->addCheckbox('limitCapacity', 'Omezit kapacitu')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Možnost bude dostupná veřejné registraci do vyčerpání kapacity")
+        $form->addCheckbox('limitCapacity', 'Form.Option.Attribute.LimitCapacity')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.LimitCapacity")
             ->addCondition($form::EQUAL, true)
             ->toggle("capacityControlGroup");
-        $form->addText('capacity', 'Kapacita')
+        $form->addText('capacity', 'Entity.Event.Capacity')
             ->setDefaultValue(10)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Kolik příhlášek může mít zvolenou tuto možnost')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Option.Description.Capacity')
             ->setOption($form::OPTION_KEY_TYPE, 'number')
             ->setOption($form::OPTION_KEY_ID, "capacityControlGroup")
             ->setRequired(false)
@@ -120,20 +120,20 @@ class OptionFormWrapper extends FormWrapper {
             ->addRule($form::RANGE, null, [1, null])
             ->addConditionOn($form['limitCapacity'], $form::EQUAL, true)
             ->addRule($form::FILLED);
-        $form->addRadioList('occupancyIcon', 'Ikona obsazenosti', $this->occupancyIcons->getLabeledIcons('Žádná'))
+        $form->addRadioList('occupancyIcon', 'Entity.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons('Entity.OccupancyIcon.None'))
             ->setRequired(false)
             ->setDefaultValue(null);
     }
 
     public function appendPriceControls(Form $form) {
-        $group = $form->addGroup('Nastavení ceny')
+        $group = $form->addGroup('Form.Option.Group.PriceSetting')
             ->setOption($form::OPTION_KEY_LOGICAL, true)
-            ->setOption($form::OPTION_KEY_EMBED_NEXT,1);
-        $form->addCheckbox('setPrice', 'Nastavit cenu')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Pokud je tato cena za příplatek, zvolte tuto možnost")
+            ->setOption($form::OPTION_KEY_EMBED_NEXT, 1);
+        $form->addCheckbox('setPrice', 'Form.Option.Attribute.SetPrice')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.SetPrice")
             ->addCondition($form::EQUAL, true)
             ->toggle("priceControlGroup");
-        $subgroup = $form->addGroup(Html::el()->addHtml(Html::el('i', ['class' => 'fa fa-money']))->addText(' Cena'))
+        $subgroup = $form->addGroup(Html::el()->addHtml(Html::el('i', ['class' => 'fa fa-money']))->addText(' '.$this->getTranslator()->translate('Entity.Price.Price')))
             //->setOption($form::OPTION_KEY_LOGICAL,true)
             ->setOption($form::OPTION_KEY_ID, "priceControlGroup");
 
@@ -143,7 +143,10 @@ class OptionFormWrapper extends FormWrapper {
             $container->addText($currecy->getCode(), $currecy->getCode())
                 ->setDefaultValue(0)
                 ->setOption($form::OPTION_KEY_TYPE, 'number')
-                ->setOption($form::OPTION_KEY_DESCRIPTION, "Částka v měně " . $currecy->getName())
+                ->setOption(
+                    $form::OPTION_KEY_DESCRIPTION,
+                    $this->getTranslator()->translate("Form.Option.Description.Amount", ['currency' => $currecy->getName()])
+                )
                 //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
                 ->setRequired(false)
                 ->addRule($form::FLOAT, null)
@@ -162,11 +165,11 @@ class OptionFormWrapper extends FormWrapper {
         $values = $this->preprocessData($values);
         if ($this->optionEntity) {
             $this->optionManager->editOptionFromOptionForm($values, $this->optionEntity);
-            $this->getPresenter()->flashMessage('Možnost byla upravena', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Option.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()]);
         } else {
             $addition = $this->optionManager->createOptionFromEventForm($values, $this->additionEntity);
-            $this->getPresenter()->flashMessage('Možnost byla vytvořena', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Option.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()]);
         }
     }

@@ -150,11 +150,11 @@ class CartFormWrapper extends FormWrapper {
         $values = $form->getValues(true);
         if($this->cart) {
             $this->cartManager->editCartFromCartForm($values, $this->event, $this->early, $this->substitute, $this->cart);
-            $this->getPresenter()->flashMessage('Objednávka byla uložena.', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Cart.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Application:',$this->event->getId());
         }else{
             $this->cartManager->createCartFromCartForm($values, $this->event, $this->early, $this->substitute);
-            $this->getPresenter()->flashMessage('Registarce byla vytvořena. Přihlášky byly odeslány emailem.', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Cart.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Homepage:');
         }
     }

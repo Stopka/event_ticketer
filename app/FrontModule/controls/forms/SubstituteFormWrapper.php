@@ -61,22 +61,22 @@ class SubstituteFormWrapper extends FormWrapper {
      * @param Form $form
      */
     protected function appendFormControls(Form $form) {
-        $form->addText('firstName', 'Jméno', NULL, 255)
+        $form->addText('firstName', 'Entity.Person.FirstName', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $form->addText('lastName', 'Příjmení', NULL, 255)
+        $form->addText('lastName', 'Entity.Person.LastName', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $form->addText('email', 'Email')
+        $form->addText('email', 'Entity.Person.Email')
             ->setRequired()
             ->addRule($form::EMAIL);
-        $form->addText('count', 'Počet přihlášek')
+        $form->addText('count', 'Entity.Count')
             ->setType('number')
             ->setDefaultValue(1)
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE,NULL,[1,5]);
-        $this->appendSubmitControls($form,'Registrovat',[$this,'saveClicked']);
+        $this->appendSubmitControls($form,'Form.Action.Register',[$this,'saveClicked']);
         $this->loadData($form);
     }
 
@@ -84,7 +84,7 @@ class SubstituteFormWrapper extends FormWrapper {
         $form = $button->getForm();
         $values = $form->getValues(true);
         $this->substituteManager->createSubtituteFromForm($values, $this->event, $this->early);
-        $this->getPresenter()->flashMessage('Byl(a) jste úspěšně zapsán(a) mezi náhradníky', 'success');
+        $this->getPresenter()->flashTranslatedMessage('Form.Substitute.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Homepage:');
     }
 }

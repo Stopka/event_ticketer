@@ -37,7 +37,7 @@ class CartPresenter extends BasePresenter {
     public function actionDefault($id) {
         $cart = $this->cartDao->getCart($id);
         if(!$cart){
-            $this->flashMessage('Objednávka nebyla nalezena','error');
+            $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
         /** @var CartApplicationsGridWrapper $cartApplicationsGrid */
@@ -49,7 +49,7 @@ class CartPresenter extends BasePresenter {
     public function actionEdit($id) {
         $cart = $this->cartDao->getCart($id);
         if(!$cart){
-            $this->flashMessage('Objednávka nebyla nalezena','error');
+            $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
         /** @var CartFormWrapper $cartForm */

@@ -30,7 +30,7 @@ class SubstitutePresenter extends BasePresenter {
     public function actionDefault($id) {
         $event = $this->eventDao->getEvent($id);
         if(!$event){
-            $this->flashMessage("Událost nenalezena!","error");
+            $this->flashTranslatedMessage("Error.Event.NotFound",self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
         /** @var SubstitutesGridWrapper $substitutesGridWrapper */

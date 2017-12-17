@@ -3,24 +3,24 @@
 namespace App\Controls\Forms;
 
 use App\Controls\Control;
-use App\Controls\TInjectTranslator;
 use App\Model\Exception\Exception;
 use Nette;
 use Stopka\NetteFormRenderer\Forms\Rendering\BetterFormRenderer;
 
 
 abstract class FormWrapper extends Control {
-    use TInjectTranslator;
     /**
      * @var null|string path to template
      */
     private $template_path = __DIR__.'/FormWrapper.latte';
 
+    /**
+     * FormWrapper constructor.
+     * @param FormWrapperDependencies $formWrapperDependencies
+     */
     public function __construct(FormWrapperDependencies $formWrapperDependencies) {
-        parent::__construct();
-        $this->injectTranslator($formWrapperDependencies->getTranslator());
+        parent::__construct($formWrapperDependencies->getControlDependencies());
     }
-
 
     /**
      * @return Nette\Forms\IFormRenderer

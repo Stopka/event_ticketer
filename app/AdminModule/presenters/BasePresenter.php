@@ -19,7 +19,7 @@ abstract class BasePresenter extends \App\Presenters\BasePresenter {
      */
     protected function checkUser() {
         if (!$this->getUser()->isLoggedIn()) {
-            $this->flashMessage($this->getTranslator()->translate('Error.Permission.NotSignedIn'), self::FLASH_MESSAGE_TYPE_WARNING);
+            $this->flashTranslatedMessage('Error.Permission.NotSignedIn', self::FLASH_MESSAGE_TYPE_WARNING);
             $backlink = $this->storeRequest();
             $this->redirect('Sign:in', array('backlink' => $backlink));
         }

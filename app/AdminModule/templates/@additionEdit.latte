@@ -1,18 +1,18 @@
 {layout '@layout.latte'}
 {block content}
-    <h1 n:if="$addition"><i class="fa fa-archive"></i> Přídavek <em>{$addition->getName()}</em></h1>
-    <h1 n:if="!$addition"><i class="fa fa-archive"></i> Přídavek</h1>
+    <h1 n:if="$addition"><i class="fa fa-archive"></i> {_'Entity.Addition.Addition'} <em>{$addition->getName()}</em></h1>
+    <h1 n:if="!$addition"><i class="fa fa-archive"></i> {_'Entity.Addition.Addition'}</h1>
     {var $additionId = $addition?$addition->getId():null }
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Addition:edit')?active">
                 <a n:href="Addition:edit,$additionId">
-                    <span><i class="fa fa-pencil"></i> Upravit přídavek</span>
+                    <span><i class="fa fa-pencil"></i> {_'Presenter.Admin.Addition.Edit.H1'}</span>
                 </a>
             </li>
             <li n:class="$presenter->isLinkCurrent('Option:default')?active, !$addition?disabled">
                 <a n:href="Option:default,$additionId">
-                    <span><i class="fa fa-list-ul"></i> Možnosti přídavku</span>
+                    <span><i class="fa fa-list-ul"></i> {_'Entity.Addition.Options'}</span>
                 </a>
             </li>
         </ul>

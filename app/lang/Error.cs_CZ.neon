@@ -1,2 +1,11 @@
-EarlyWave.NotFound: 'Přednostní vlna nenalezena'
 Permission.NotSignedIn: 'Pro pokračování se musíte se přihlásit'
+EarlyWave.NotFound: 'Přednostní vlna nenalezena'
+Event:
+    NotFound: 'Událost nenalezena'
+    NotReady: 'Událost ještě nebyla zpřístupněna veřejnosti.'
+    Full: 'Již nejsou žádné volné přihlášky.'
+Cart.NotFound: 'Objednávka nebyla nalezena'
+Addition.NotFound: 'Přídavek nenalezen'
+Early.NotReady: 'Přístup k registraci nebyl povolen'
+Event.Full: 'Již nejsou žádné volné přihlášky.'
+Substitute.NotFound: 'Náhradníkovo místo vypršelo nebo nebylo nalezeno'

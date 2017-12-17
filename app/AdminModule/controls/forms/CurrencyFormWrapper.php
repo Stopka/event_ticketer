@@ -44,7 +44,7 @@ class CurrencyFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $this->appendCurrencyControls($form);
-        $this->appendSubmitControls($form, $this->currencyEntity ? 'Upravit' : 'Vytvořit', [$this, 'submitClicked']);
+        $this->appendSubmitControls($form, $this->currencyEntity ? 'Form.Action.Edit' : 'Form.Action.Create', [$this, 'submitClicked']);
         $this->loadData($form);
     }
 
@@ -62,14 +62,14 @@ class CurrencyFormWrapper extends FormWrapper {
 
     protected function appendCurrencyControls(Form $form) {
         //$form->addGroup("Událost");
-        $form->addText('name', 'Název')
+        $form->addText('name', 'Entity.Name')
             ->setRequired();
-        $form->addText('code', 'Kód')
-            ->setOption($form::OPTION_KEY_DESCRIPTION,"Třípísmenný kód měny podle standardu ISO 4217")
+        $form->addText('code', 'Entity.Currency.Currency.Code')
+            ->setOption($form::OPTION_KEY_DESCRIPTION,"Form.Currency.Description.Code")
             ->setRequired()
-            ->addRule($form::PATTERN,  "Kód musí sestávat ze 3 velkých písmen",'[A-Z]{3}');
-        $form->addText('symbol', 'Symbol')
-            ->setOption($form::OPTION_KEY_DESCRIPTION,"Běžně užívaný symbol měny")
+            ->addRule($form::PATTERN,  "Form.Currency.Rule.Code.Pattern",'[A-Z]{3}');
+        $form->addText('symbol', 'Entity.Currency.Currency.Symbol')
+            ->setOption($form::OPTION_KEY_DESCRIPTION,"Form.Currency.Description.Symbol")
             ->setRequired();
     }
 
@@ -82,11 +82,11 @@ class CurrencyFormWrapper extends FormWrapper {
         $values = $this->preprocessData($values);
         if ($this->currencyEntity) {
             $this->currencyManager->editCurrencyFromCurrencyForm($values, $this->currencyEntity);
-            $this->getPresenter()->flashMessage('Měna byla upravena', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Currency.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Currency:default');
         } else {
             $currency = $this->currencyManager->createCurrencyFromCurrencyForm($values);
-            $this->getPresenter()->flashMessage('Měna byla vytvořena', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Currency.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Currency:default');
         }
     }

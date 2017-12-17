@@ -9,7 +9,7 @@
     <head>
         <meta charset="utf-8">
 
-        <title>Obsazenost {$event->getName()}</title>
+        <title>{_'Entity.Event.Occupancy'} - {$event->getName()}</title>
         <link rel="shortcut icon" href="{$basePath}/app/images/logo.ico">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" type="text/css" href="{$basePath}/vendor/normalize-css/normalize.css"/>
@@ -17,12 +17,12 @@
     </head>
     <body>
         {if $event}
-            <h1>{$event->getName()}</h1>
-            <h2>Obsazenost</h2>
+            <h1><i class="fa fa-calendar-o"></i> {$event->getName()}</h1>
+            <h2><i class="fa fa-ticket"></i> {_'Entity.Event.Occupancy'}</h2>
             <hr class="clear" />
             {control occupancy}
         {else}
-            <p>Událost nebyla nalezena</p>
+            <p>{_'Error.Event.NotFound'}</p>
         {/if}
     </body>
 </html>

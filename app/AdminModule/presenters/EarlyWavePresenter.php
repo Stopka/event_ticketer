@@ -25,7 +25,7 @@ class EarlyWavePresenter extends BasePresenter {
     public function actionEdit($id = null){
         $early = $this->earlyWaveDao->getEarlyWave($id);
         if(!$early){
-            $this->flashMessage('Error.EarlyWave.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
+            $this->flashTranslatedMessage('Error.EarlyWave.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
         /** @var EarlyWaveFormWrapper $earlyWaveForm */

@@ -1,7 +1,7 @@
 {layout "../@setting.latte"}
 {block subcontent}
-<h2><i class="fa fa-btc"></i> Měny</h2>
+<h2><i class="fa fa-btc"></i> {_'Entity.Currency.Currencies'}</h2>
 <p>
-    <a n:href="Currency:add"><i class="fa fa-plus-circle"></i> Vytvořit měnu</a>
+    <a n:href="Currency:add"><i class="fa fa-plus-circle"></i> {_'Presenter.Admin.Currency.Add.H1'}</a>
 </p>
 {control currenciesGrid}

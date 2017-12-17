@@ -67,7 +67,7 @@ class EarlyFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $this->appendEarlyControls($form);
-        $this->appendSubmitControls($form, $this->earlyEntity ? 'Upravit' : 'Vytvořit', [$this, 'submitClicked']);
+        $this->appendSubmitControls($form, $this->earlyEntity ? 'Form.Action.Edit' : 'Form.Action.Create', [$this, 'submitClicked']);
         $this->loadData($form);
     }
 
@@ -92,7 +92,7 @@ class EarlyFormWrapper extends FormWrapper {
      * @return string[] earlyID => earlyTitle
      */
     protected function getEarlyFormSelectArray(): array{
-    $result = [null => 'Vytvořit novou'];
+    $result = [null => 'Form.Early.EarlyWave.CreateNew'];
     $waves = $this->earlyWaveDao->getEventEearlyWaves($this->eventEntity);
     foreach ($waves as $wave){
         $result[$wave->getId()] = $wave->getName().' - '.$this->dateFormatter->getDateString($wave->getStartDate());
@@ -101,31 +101,30 @@ class EarlyFormWrapper extends FormWrapper {
 }
 
     protected function appendEarlyControls(Form $form) {
-        $form->addGroup("Přednostník")
+        $form->addGroup("Entity.Person.Type.Early")
             ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addText('firstName', 'Jméno')
+        $form->addText('firstName', 'Entity.Person.FirstName')
             ->setRequired(false);
-        $form->addText('lastName', 'Příjmení')
+        $form->addText('lastName', 'Entity.Person.LastName')
             ->setRequired(false);
-        $form->addEmail('email', 'Email')
+        $form->addEmail('email', 'Entity.Person.Email')
             ->setRequired(true);
-        $form->addSelect('earlyWaveId', 'Vlna přednostníků', $this->getEarlyFormSelectArray($this->eventEntity))
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Přidejte přednostníka do již existující vlny, nebo vytvořte vlnu novou")
+        $form->addSelect('earlyWaveId', 'Entity.Event.EarlyWave', $this->getEarlyFormSelectArray($this->eventEntity))
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Early.Description.EarlyWave")
             ->setDefaultValue(null)
             ->setRequired(false)
             ->addCondition($form::FILLED)
             ->toggle('earlyWaveControlGroup', false);
-        $form->addGroup("Nová vlna přednostníků")
+        $form->addGroup("Form.Early.Group.NewEarlyWave")
             ->setOption($form::OPTION_KEY_ID, 'earlyWaveControlGroup');
         $wave = $form->addContainer('earlyWave');
-        $wave->addText('name', 'Název')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Kdy se rozešlou přihlášky')
+        $wave->addText('name', 'Entity.Name')
             ->setRequired(false);
-        $wave->addDate('startDate', 'Začátek', DateInput::TYPE_DATE)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace')
+        $wave->addDate('startDate', 'Entity.Event.StartDate', DateInput::TYPE_DATE)
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Early.Description.StartDate')
             ->setDefaultValue(new \DateTime())
             ->setRequired(false)
-            ->addRule($form::VALID)
+            ->addRule($form::VALID,'Form.Rule.Date')
             ->addConditionOn($form["earlyWaveId"], $form::FILLED)
             ->elseCondition()
             ->addRule($form::FILLED);
@@ -140,11 +139,11 @@ class EarlyFormWrapper extends FormWrapper {
         $values = $this->preprocessData($values);
         if ($this->earlyEntity) {
             $this->earlyManager->editEarlyFromEarlyForm($values, $this->earlyEntity, $this->eventEntity);
-            $this->getPresenter()->flashMessage('Přídavek byl upraven', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Early.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
         } else {
             $addition = $this->earlyManager->createEarlyFromEarlyForm($values,$this->eventEntity);
-            $this->getPresenter()->flashMessage('Přídavek byl vytvořen', 'success');
+            $this->getPresenter()->flashTranslatedMessage('Form.Early.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
         }
     }

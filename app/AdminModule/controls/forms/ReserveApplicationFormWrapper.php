@@ -73,25 +73,25 @@ class ReserveApplicationFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
-        $form->addGroup('General')
+        $form->addGroup('Entity.Event.Cart')
             ->setOption('visual',false);
-        $form->addText('count', 'Počet', null, 255)
+        $form->addText('count', 'Entity.Count', null, 255)
             ->setType('number')
             ->setDefaultValue(1)
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, NULL, [1, 100]);
-        $form->addGroup('Volby')
+        $form->addGroup('Entity.Addition.Choices')
             ->setOption('class', 'price_subspace');
         $this->appendAdditionsControls($form,$form);
-        $this->appendSubmitControls($form, 'Rezervovat', [$this, 'reserveClicked']);
+        $this->appendSubmitControls($form, 'Form.Action.Reserve', [$this, 'reserveClicked']);
     }
 
     public function reserveClicked(SubmitButton $button){
         $form = $button->getForm();
         $values = $form->getValues(true);
         $this->cartManager->createCartFromCartForm($values,$this->event);
-        $this->getPresenter()->flashMessage('Přihlášky byly vytvořeny','success');
+        $this->getPresenter()->flashTranslatedMessage('Form.Reserve.Message.Create.Success',self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Application:',$this->event->getId());
     }
 

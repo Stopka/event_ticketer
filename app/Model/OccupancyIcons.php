@@ -9,21 +9,30 @@
 namespace App\Model;
 
 
+use App\Controls\TInjectTranslator;
 use App\Model\Exception\DuplicateEntryException;
 use App\Model\Exception\NotFoundException;
+use Kdyby\Translation\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
+use Nette\Utils\Strings;
 
 class OccupancyIcons {
-    use SmartObject;
+    use SmartObject, TInjectTranslator;
 
     private $icons = [];
+
+    public function __construct(ITranslator $translator) {
+        $this->injectTranslator($translator);
+    }
+
 
     /**
      * @param string $key
      * @param string $label
      */
-    public function addIcon(string $key, string $label): void {
+    public function addIcon(string $key, ?string $label = null): void {
+        $label = $label ?? Strings::firstUpper($key);
         if (isset($this->icons[$key])) {
             throw new DuplicateEntryException("There is already icon with key " . $key);
         }
@@ -43,8 +52,8 @@ class OccupancyIcons {
      */
     public function getLabeledIcons(?string $noneLabel = null): array {
         $result = [];
-        if($noneLabel){
-            $result[null]=$noneLabel;
+        if ($noneLabel) {
+            $result[null] = $noneLabel;
         }
         foreach ($this->icons as $key => $title) {
             $result[$key] = $this->getLabel($key);
@@ -58,8 +67,8 @@ class OccupancyIcons {
      * @return Html
      */
     public function getIconHtml(?string $key, bool $occupied = true): Html {
-        if(!$key){
-            foreach ($this->icons as $k=>$label){
+        if (!$key) {
+            foreach ($this->icons as $k => $label) {
                 $key = $k;
                 break;
             }
@@ -78,8 +87,13 @@ class OccupancyIcons {
             $this->getIconHtml($key)
         )->addHtml(
             Html::el('span')
-                ->setText($this->icons[$key] ?? "")
+                ->setText($this->getLabelText($key))
         );
+    }
+
+    protected function getLabelText(string $key): string {
+        $label = $this->icons[$key] ?? "";
+        return $this->getTranslator()->translate('Entity.OccupancyIcon.' . $label);
     }
 
     /**
