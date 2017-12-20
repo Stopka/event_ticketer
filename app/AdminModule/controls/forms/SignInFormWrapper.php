@@ -45,7 +45,7 @@ class SignInFormWrapper extends FormWrapper {
         try{
             $user->setExpiration('+ 20 minutes', TRUE);
             $user->login($values['username'],$values['password']);
-            $this->getPresenter()->flashTranslatedMessage($this->getTranslator()->translate("Form.SignIn.Message.Success"),self::FLASH_MESSAGE_TYPE_SUCCESS);
+            $this->getPresenter()->flashTranslatedMessage("Form.SignIn.Message.Success",self::FLASH_MESSAGE_TYPE_SUCCESS);
         }catch (AuthenticationException $e){
             throw new \App\Model\Exception\AuthenticationException($e->getMessage(),$e);
         }

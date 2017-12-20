@@ -52,10 +52,10 @@ class EventsGridWrapper extends GridWrapper {
             ])
             ->setFilterSelect([
                 NULL => '',
-                EventEntity::STATE_INACTIVE => 'Neaktivní',
-                EventEntity::STATE_ACTIVE => 'Aktivní',
-                EventEntity::STATE_CLOSED => 'Dokončený',
-                EventEntity::STATE_CANCELLED => 'Zrušený'
+                EventEntity::STATE_INACTIVE => 'Entity.Event.State.Inactive',
+                EventEntity::STATE_ACTIVE => 'Entity.Event.State.Active',
+                EventEntity::STATE_CLOSED => 'Entity.Event.State.Closed',
+                EventEntity::STATE_CANCELLED => 'Entity.Event.State.Cancelled'
             ]);
         $grid->addColumnNumber('capacity', 'Entity.Event.Capacity', '0')
             ->setSortable()

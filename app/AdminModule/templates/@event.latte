@@ -18,6 +18,11 @@
                     <span><i class="fa fa-star"></i> {_'Entity.Person.Type.Earlies'}</span>
                 </a>
             </li>
+            <li n:class=" $presenter->isLinkCurrent('EarlyWave:default')?active">
+                <a n:href="EarlyWave:default,$event->getId()">
+                    <span><i class="fa fa-star-o"></i> {_'Entity.Event.EarlyWaves'}</span>
+                </a>
+            </li>
         </ul>
     </div>
 

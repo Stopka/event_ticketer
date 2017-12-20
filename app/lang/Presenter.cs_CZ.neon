@@ -14,6 +14,9 @@ Admin:
     Early:
         Add.H1: 'Vytvořit přednostníka'
         Edit:H1: 'Upravit přednostníka'
+    EarlyWave:
+        Add.H1: 'Vytvořit přednostní vlnu'
+        Edit:H1: 'Upravit přednostní vlnu'
     Event:
         Edit.H1: 'Upravit událost'
         Add.H1: 'Vytvořit událost'

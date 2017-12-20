@@ -51,6 +51,7 @@ services:
     - App\AdminModule\Controls\Forms\IOptionFormWrapperFactory
     - App\AdminModule\Controls\Forms\IEarlyFormWrapperFactory
     - App\AdminModule\Controls\Forms\IEarlyWaveFormWrapperFactory
+    - App\AdminModule\Controls\Grids\IEarlyWavesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
     - App\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory

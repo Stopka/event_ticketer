@@ -77,10 +77,10 @@ class EarlyWaveFormWrapper extends FormWrapper {
         $form->addText('name', 'Entity.Name')
             ->setRequired(false);
         $form->addDate('startDate', 'Entity.Event.StartDate', DateInput::TYPE_DATE)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'EarlyWave.Description.StartDate')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.EarlyWave.Description.StartDate')
             ->setDefaultValue(new \DateTime())
             ->setRequired(true)
-            ->addRule($form::VALID);
+            ->addRule($form::VALID,'Form.Rule.Date');
     }
 
     /**

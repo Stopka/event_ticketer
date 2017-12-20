@@ -1,0 +1,7 @@
+{layout "../@event.latte"}
+{block subcontent}
+    <h2><i class="fa fa-star-o"></i> {_'Entity.Event.EarlyWaves'}</h2>
+    <p>
+        <a n:href="EarlyWave:add,$event->getId()"><i class="fa fa-plus-circle"></i> {_'Presenter.Admin.EarlyWave.Add.H1'}</a>
+    </p>
+    {control earlyWavesGrid}
