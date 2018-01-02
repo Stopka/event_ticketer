@@ -1,0 +1,9 @@
+Event:
+    Message:
+        Activate.Success: 'Event was successfully activated'
+        Deactivate.Success: 'Event was successfully deactivated'
+        Cancel.Success: 'Event was successfully cancelled'
+        Close.Success: 'Event was successfully closed'
+    Confirm:
+        Cancel: 'Opravdu chcete zrušit událost "%event%"?'
+        Close: 'Opravdu chcete uzavřít událost "%event%"?'

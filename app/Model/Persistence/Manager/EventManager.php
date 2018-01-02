@@ -9,6 +9,9 @@
 namespace App\Model\Persistence\Manager;
 
 
+use App\Model\Exception\AlreadyDoneException;
+use App\Model\Exception\NotFoundException;
+use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\CartEntity;
@@ -69,5 +72,23 @@ class EventManager implements Subscriber {
         $em->persist($eventEntity);
         $em->flush();
         return $eventEntity;
+    }
+
+    public function setEventState(?EventEntity $eventEntity, int $state = EventEntity::STATE_ACTIVE): void {
+        if(!$eventEntity){
+            throw new NotFoundException("Error.Event.NotFound");
+        }
+        if($eventEntity->isActive() && $state === EventEntity::STATE_ACTIVE){
+            throw new AlreadyDoneException("Error.Event.AlreadyActivated");
+        }
+        if($eventEntity->getState() === EventEntity::STATE_CANCELLED){
+            throw new NotReadyException("Error.Event.AlreadyCancelled");
+        }
+
+        if($eventEntity->getState() === EventEntity::STATE_CLOSED){
+            throw new NotReadyException("Error.Event.AlreadyClosed");
+        }
+        $eventEntity->setState($state);
+        $this->getEntityManager()->flush();
     }
 }

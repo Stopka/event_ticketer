@@ -21,6 +21,9 @@ Action:
     Reserve: 'Rezervovat'
     Switch: 'Přepnout'
     Activate: 'Aktivovat'
+    Deactivate: 'Deaktivovat'
+    Cancel: 'Zrušit'
+    Close: 'Uzavřít'
 SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
 EarlyWave:
     Description:
