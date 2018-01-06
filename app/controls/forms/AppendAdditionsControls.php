@@ -14,7 +14,6 @@ use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\OptionEntity;
 use Nette\Forms\Container;
 use Nette\Utils\Html;
-use Stopka\NetteFormRenderer\HtmlFormComponent;
 
 trait AppendAdditionsControls {
     use RecalculateControl;
@@ -42,7 +41,7 @@ trait AppendAdditionsControls {
             }
             $this->appendAdditionContols($subcontainer, $addition);
         }
-        $subcontainer['total'] = new HtmlFormComponent('Celkem za přihlášku',
+        $subcontainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Celkem za přihlášku',
             Html::el('div', ['class' => 'price_subtotal'])
                 ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
                 ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
@@ -56,11 +55,11 @@ trait AppendAdditionsControls {
             return;
         }
         if ($addition->getMaximum() > 1 && count($options) > 1) {
-            $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
+            $control = $container->addCheckboxList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
                 ->setRequired($addition->getMinimum() == 0)
                 ->setTranslator();
         } else {
-            $control = $container->addRadioList($addition->getId(), $addition->getName(), $options)
+            $control = $container->addRadioList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
                 ->setRequired()
                 ->setTranslator();
             if (count($options) == 1) {

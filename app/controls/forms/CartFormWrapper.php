@@ -2,6 +2,7 @@
 
 namespace App\Controls\Forms;
 
+use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\CartEntity;
@@ -262,8 +263,8 @@ class CartFormWrapper extends FormWrapper {
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $child->addRadioList('gender', 'Pohlaví', [
-            Gender::MALE => 'Muž',
-            Gender::FEMALE => 'Žena',
+            IGender::MALE => 'Muž',
+            IGender::FEMALE => 'Žena',
         ])
             ->setRequired();
         $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
