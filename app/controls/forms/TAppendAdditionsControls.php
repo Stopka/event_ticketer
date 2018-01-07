@@ -15,8 +15,8 @@ use App\Model\Persistence\Entity\OptionEntity;
 use Nette\Forms\Container;
 use Nette\Utils\Html;
 
-trait AppendAdditionsControls {
-    use RecalculateControl;
+trait TAppendAdditionsControls {
+    use TRecalculateControl;
 
     /**
      * @return \App\Model\Persistence\Entity\EventEntity
@@ -33,13 +33,13 @@ trait AppendAdditionsControls {
      */
     abstract protected function getApplicationDao();
 
-    protected function appendAdditionsControls(Form $form, Container $container) {
+    protected function appendAdditionsControls(Form $form, Container $container, int $index = 0) {
         $subcontainer = $container->addContainer('addittions');
         foreach ($this->getEvent()->getAdditions() as $addition) {
             if (!$addition->isVisible()) {
                 continue;
             }
-            $this->appendAdditionContols($subcontainer, $addition);
+            $this->appendAdditionContols($subcontainer, $addition, $index);
         }
         $subcontainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Celkem za přihlášku',
             Html::el('div', ['class' => 'price_subtotal'])
@@ -48,9 +48,11 @@ trait AppendAdditionsControls {
         );
     }
 
-    protected function appendAdditionContols(Container $container, AdditionEntity $addition) {
+    protected function appendAdditionContols(Container $container, AdditionEntity $addition, int $index) {
         $prices = $this->createAdditionPrices($addition);
         $options = $this->createAdditionOptions($addition, $prices);
+        $preselectedOptions = $this->getPreselectedOptions($addition, $index);
+        $predisabledOptions = $this->getPredisabledOptions($addition, $prices);
         if (!count($options)) {
             return;
         }
@@ -58,19 +60,22 @@ trait AppendAdditionsControls {
             $control = $container->addCheckboxList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
                 ->setRequired($addition->getMinimum() > 0)
                 ->setTranslator()
-                ->setDefaultValue($keys);
+                ->setDefaultValue($preselectedOptions);
         } else {
             $control = $container->addRadioList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
                 ->setRequired()
                 ->setTranslator();
-            if($keys) {
-                $control->setDefaultValue($keys[0]);
+            if ($preselectedOptions) {
+                $control->setDefaultValue($preselectedOptions[0]);
             }
         }
-        if($keys){
-            $control->getContainerPrototype()
-                ->setAttribute('data-price-precheck',json_encode($keys))
-                ->setAttribute('data-price-predisabled',json_encode($keys));
+        if ($preselectedOptions) {
+            $control->getControlPrototype()
+                ->setAttribute('data-price-prechecked', json_encode($preselectedOptions));
+        }
+        if ($predisabledOptions) {
+            $control->getControlPrototype()
+                ->setAttribute('data-price-predisabled', json_encode($predisabledOptions));
         }
         if ($prices) {
             $control->getControlPrototype()
@@ -113,6 +118,40 @@ trait AppendAdditionsControls {
         return $result;
     }
 
+    /**
+     * @param AdditionEntity $additionEntity
+     * @return array
+     */
+    protected function getPreselectedOptions(AdditionEntity $additionEntity, int $index = 1): array {
+        $result = [];
+        foreach ($additionEntity->getOptions() as $option) {
+            if ($option->getAutoSelect() == OptionEntity::AUTOSELECT_ALWAYS) {
+                $result[] = $option->getIdAlphaNumeric();
+            }
+            if ($option->getAutoSelect() == OptionEntity::AUTOSELECT_SECONDON && $index >= 2) {
+                $result[] = $option->getIdAlphaNumeric();
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param AdditionEntity $additionEntity
+     * @param array $prices
+     * @return array
+     */
+    protected function getPredisabledOptions(AdditionEntity $additionEntity, array $prices): array {
+        $result = [];
+        foreach ($additionEntity->getOptions() as $option) {
+            $isAutoselected = $option->getAutoSelect() != OptionEntity::AUTOSELECT_NONE;
+            $isFull = isset($prices[$option->getIdAlphaNumeric()]['countLeft']) && $prices[$option->getIdAlphaNumeric()]['countLeft'] === 0;
+            if ($isAutoselected || $isFull) {
+                $result[] = $option->getIdAlphaNumeric();
+            }
+        }
+        return $result;
+    }
+
     abstract protected function isAdmin();
 
     /**
@@ -138,7 +177,7 @@ trait AppendAdditionsControls {
         if (isset($prices[$option->getIdAlphaNumeric()]) && isset($prices[$option->getIdAlphaNumeric()]['countLeft'])) {
             $left = $prices[$option->getIdAlphaNumeric()]['countLeft'];
             $result->addHtml(
-                Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0&&!$this->isAdmin()])
+                Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0 && !$this->isAdmin()])
                     ->setText("Zbývá $left míst")
             );
         }

@@ -9,9 +9,9 @@
 namespace App\AdminModule\Controls\Forms;
 
 
-use App\Controls\Forms\AppendAdditionsControls;
 use App\Controls\Forms\Form;
 use App\Controls\Forms\FormWrapperDependencies;
+use App\Controls\Forms\TAppendAdditionsControls;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Entity\CurrencyEntity;
@@ -20,7 +20,7 @@ use App\Model\Persistence\Manager\CartManager;
 use Nette\Forms\Controls\SubmitButton;
 
 class ReserveApplicationFormWrapper extends FormWrapper {
-    use AppendAdditionsControls;
+    use TAppendAdditionsControls;
 
     /** @var  EventEntity */
     private $event;
@@ -46,7 +46,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
 
     }
 
-    public function setEvent(EventEntity $event){
+    public function setEvent(EventEntity $event) {
         $this->event = $event;
     }
 
@@ -74,7 +74,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     protected function appendFormControls(Form $form) {
         $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
         $form->addGroup('Entity.Event.Cart')
-            ->setOption('visual',false);
+            ->setOption('visual', false);
         $form->addText('count', 'Entity.Count', null, 255)
             ->setType('number')
             ->setDefaultValue(1)
@@ -83,16 +83,16 @@ class ReserveApplicationFormWrapper extends FormWrapper {
             ->addRule($form::RANGE, NULL, [1, 100]);
         $form->addGroup('Entity.Addition.Choices')
             ->setOption('class', 'price_subspace');
-        $this->appendAdditionsControls($form,$form);
+        $this->appendAdditionsControls($form, $form, 1);
         $this->appendSubmitControls($form, 'Form.Action.Reserve', [$this, 'reserveClicked']);
     }
 
-    public function reserveClicked(SubmitButton $button){
+    public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->cartManager->createCartFromCartForm($values,$this->event);
-        $this->getPresenter()->flashTranslatedMessage('Form.Reserve.Message.Create.Success',self::FLASH_MESSAGE_TYPE_SUCCESS);
-        $this->getPresenter()->redirect('Application:',$this->event->getId());
+        $this->cartManager->createCartFromCartForm($values, $this->event);
+        $this->getPresenter()->flashTranslatedMessage('Form.Reserve.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
+        $this->getPresenter()->redirect('Application:', $this->event->getId());
     }
 
 }

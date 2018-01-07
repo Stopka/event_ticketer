@@ -18,7 +18,7 @@ use Vodacek\Forms\Controls\DateInput;
 
 
 class CartFormWrapper extends FormWrapper {
-    use AppendAdditionsControls;
+    use TAppendAdditionsControls;
 
     /** @var  CartManager */
     private $cartManager;
@@ -215,6 +215,7 @@ class CartFormWrapper extends FormWrapper {
             $add_button->onClick[] = [$this, 'addChild'];
         }
         $children = $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
+            $childIndex = count($form['children']->getComponents());
             $group = $form->addGroup()
                 ->setOption($form::OPTION_KEY_CLASS, 'price_subspace');
             $parent_group = $form->getGroup('Přihlášky');
@@ -223,7 +224,7 @@ class CartFormWrapper extends FormWrapper {
             $child->setCurrentGroup($group);
 
             $this->appendChildControls($form, $child);
-            $this->appendAdditionsControls($form, $child);
+            $this->appendAdditionsControls($form, $child, $childIndex);
 
             if(!$this->cart) {
                 $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')

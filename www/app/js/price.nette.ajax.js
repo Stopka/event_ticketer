@@ -30,17 +30,22 @@
             currency: '.price_currency'
         },
         restorePrechecked: function(){
-            $('[data-price-value][data-price-precheck]').each(function (index,elem) {
+            $('[data-price-value][data-price-prechecked]').each(function (index,elem) {
                 var el = $(elem);
-                if(el.val()!=el.data('price-precheck')) {
+                if(!el.data('price-prechecked').includes(el.val())) {
                     return;
                 }
                 elem.checked = true;
             })
         },
         restorePredisabled: function(){
-            input = $('[data-price-predisable]').parent().find('input');
-            input.attr('disabled',true);
+            $('[data-price-value][data-price-predisabled]').each(function (index,elem) {
+                var el = $(elem);
+                if(!el.data('price-predisabled').includes(el.val())) {
+                    return;
+                }
+                elem.disabled = true;
+            })
         },
         onComplete: function (event) {
             this.planRecalcucation();

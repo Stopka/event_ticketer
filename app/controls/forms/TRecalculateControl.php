@@ -11,11 +11,12 @@ namespace App\Controls\Forms;
 
 use Nette\Utils\Html;
 
-trait RecalculateControl {
+trait TRecalculateControl {
 
     protected function createRecalculateHtml() {
         return Html::el('a', ['href' => '#', 'class' => 'price_recalculate', 'title' => 'Přepočítat'])
             ->addHtml(Html::el('i', ['class' => 'fa fa-calculator']))
+            ->addText(' ')
             ->addHtml(Html::el('span')->addText('Přepočítat'));
 
     }
