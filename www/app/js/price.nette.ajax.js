@@ -99,8 +99,16 @@
             el.find(this.selectors.input).each(function (index, input_el) {
                 var el = $(input_el);
                 var value = Nette.getValue(input_el);
-                if (el.val() !== value) {//optření proti duplicitnímu započítávání
-                    return;
+                if(Array.isArray(value)) {//optření proti duplicitnímu započítávání
+                    if (!value.includes(el.val())) {//opatření pro checkbox list
+                        return;
+                    }else{
+                        value = el.val();
+                    }
+                }else{
+                    if (el.val() !== value) {
+                        return;
+                    }
                 }
                 var prices = el.data('price-value');
                 if (prices[value] && prices[value].currency != currency) {//pokud nesouhlasí měna

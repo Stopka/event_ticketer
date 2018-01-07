@@ -54,20 +54,23 @@ trait AppendAdditionsControls {
         if (!count($options)) {
             return;
         }
-        if ($addition->getMaximum() > 1 && count($options) > 1) {
+        if ($addition->getMinimum() !== 1 || $addition->getMaximum() > 1 || $addition->getMaximum() == count($options)) {
             $control = $container->addCheckboxList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
-                ->setRequired($addition->getMinimum() == 0)
-                ->setTranslator();
+                ->setRequired($addition->getMinimum() > 0)
+                ->setTranslator()
+                ->setDefaultValue($keys);
         } else {
             $control = $container->addRadioList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
                 ->setRequired()
                 ->setTranslator();
-            if (count($options) == 1) {
-                $keys = array_keys($options);
-                $key = array_pop($keys);
-                $control->getControlPrototype()->setAttribute('data-price-precheck', $key);
-                $control->setDefaultValue($key);
+            if($keys) {
+                $control->setDefaultValue($keys[0]);
             }
+        }
+        if($keys){
+            $control->getContainerPrototype()
+                ->setAttribute('data-price-precheck',json_encode($keys))
+                ->setAttribute('data-price-predisabled',json_encode($keys));
         }
         if ($prices) {
             $control->getControlPrototype()
@@ -88,7 +91,7 @@ trait AppendAdditionsControls {
                 continue;
             }
             $amount = $option->getPrice()->getPriceAmountByCurrency($this->getCurrency());
-            $result[$option->getId()] = [
+            $result[$option->getIdAlphaNumeric()] = [
                 'amount' => $amount->getAmount(),
                 'currency' => $amount->getCurrency()->getSymbol(),
                 'countLeft' => $option->getCapacityLeft($this->getApplicationDao()->countIssuedApplicationsWithOption($option))
@@ -105,7 +108,7 @@ trait AppendAdditionsControls {
     protected function createAdditionOptions(AdditionEntity $addition, $prices) {
         $result = [];
         foreach ($addition->getOptions() as $option) {
-            $result[$option->getId()] = $this->createOptionLabel($option, $prices);
+            $result[$option->getIdAlphaNumeric()] = $this->createOptionLabel($option, $prices);
         }
         return $result;
     }
@@ -125,18 +128,24 @@ trait AppendAdditionsControls {
                     ->setText($option->getName())
             );
         }
-        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['amount']) && isset($prices[$option->getId()]['currency'])) {
-            $price = $prices[$option->getId()];
+        if (isset($prices[$option->getIdAlphaNumeric()]) && isset($prices[$option->getIdAlphaNumeric()]['amount']) && isset($prices[$option->getIdAlphaNumeric()]['currency'])) {
+            $price = $prices[$option->getIdAlphaNumeric()];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline'])
                     ->setText($price['amount'] . $price['currency'])
             );
         }
-        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['countLeft'])) {
-            $left = $prices[$option->getId()]['countLeft'];
+        if (isset($prices[$option->getIdAlphaNumeric()]) && isset($prices[$option->getIdAlphaNumeric()]['countLeft'])) {
+            $left = $prices[$option->getIdAlphaNumeric()]['countLeft'];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0&&!$this->isAdmin()])
                     ->setText("Zbývá $left míst")
+            );
+        }
+        if ($option->getDescription()) {
+            $result->addHtml(
+                Html::el('span', ['class' => 'description'])
+                    ->setHtml($option->getDescription())
             );
         }
         return $result;

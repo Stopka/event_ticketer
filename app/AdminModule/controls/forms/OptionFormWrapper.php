@@ -106,6 +106,15 @@ class OptionFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_LOGICAL, true);
         $form->addText('name', 'Entity.Name')
             ->setRequired();
+        $form->addTextArea('description', 'Entity.Description')
+            ->setRequired(false);
+        $form->addSelect('autoSelect', 'Entity.Addition.AutoSelect.AutoSelect',[
+            OptionEntity::AUTOSELECT_NONE => "Entity.Addition.AutoSelect.None",
+            OptionEntity::AUTOSELECT_ALWAYS => "Entity.Addition.AutoSelect.Always",
+            OptionEntity::AUTOSELECT_SECONDON => "Entity.Addition.AutoSelect.SecondOn",
+        ])
+            ->setRequired()
+            ->setDefaultValue(OptionEntity::AUTOSELECT_NONE);
         $form->addCheckbox('limitCapacity', 'Form.Option.Attribute.LimitCapacity')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.LimitCapacity")
             ->addCondition($form::EQUAL, true)
@@ -150,7 +159,6 @@ class OptionFormWrapper extends FormWrapper {
                 //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
                 ->setRequired(false)
                 ->addRule($form::FLOAT, null)
-                ->addRule($form::RANGE, null, [0, null])
                 ->addConditionOn($form['setPrice'], $form::EQUAL, true)
                 ->addRule($form::FILLED);
         }

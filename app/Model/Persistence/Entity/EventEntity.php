@@ -63,6 +63,7 @@ class EventEntity extends BaseEntity {
 
     /**
      * @ORM\OneToMany(targetEntity="AdditionEntity", mappedBy="event")
+     * @ORM\OrderBy({"position" = "ASC"})
      * @var AdditionEntity[]
      */
     private $additions;

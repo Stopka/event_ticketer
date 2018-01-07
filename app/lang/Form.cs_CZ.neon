@@ -24,7 +24,13 @@ Action:
     Deactivate: 'Deaktivovat'
     Cancel: 'Zrušit'
     Close: 'Uzavřít'
+    MoveUp: 'Přesunout výš'
+    MoveDown: 'Přesunout níž'
 SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
+Entity:
+    Message:
+        MoveUp.Success: 'Položka byla úspěšně přesunuta výš.'
+        MoveDown.Success: 'Položka byla úspěšně přesunuta níž.'
 EarlyWave:
     Description:
         StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace?'

@@ -34,6 +34,12 @@ class OptionManager {
         $this->currencyDao = $currencyDao;
     }
 
+    /**
+     * @param array $values
+     * @param OptionEntity $optionEntity
+     * @return OptionEntity
+     * @throws \Exception
+     */
     public function editOptionFromOptionForm(array $values, OptionEntity $optionEntity): OptionEntity {
         $em = $this->getEntityManager();
         $optionEntity->setByValueArray($values,['price']);
@@ -59,6 +65,7 @@ class OptionManager {
     /**
      * @param array $values
      * @return AdditionEntity
+     * @throws \Exception
      */
     public function createOptionFromEventForm(array $values, AdditionEntity $additionEntity): OptionEntity {
         $em = $this->getEntityManager();
@@ -85,5 +92,27 @@ class OptionManager {
         }
         $em->flush();
         return $optionEntity;
+    }
+
+    /**
+     * @param OptionEntity $optionEntity
+     * @throws \Exception
+     */
+    public function moveOptionUp(OptionEntity $optionEntity){
+        $addition = $optionEntity->getAddition();
+        $sorter = new PositionSorter();
+        $sorter->moveEntityUp($optionEntity,$addition->getOptions());
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param OptionEntity $optionEntity
+     * @throws \Exception
+     */
+    public function moveOptionDown(OptionEntity $optionEntity){
+        $addition = $optionEntity->getAddition();
+        $sorter = new PositionSorter();
+        $sorter->moveEntityDown($optionEntity,$addition->getOptions());
+        $this->getEntityManager()->flush();
     }
 }

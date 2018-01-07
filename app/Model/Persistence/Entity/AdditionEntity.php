@@ -8,8 +8,10 @@
 
 namespace App\Model\Persistence\Entity;
 
+use App\Model\Persistence\Attribute\ISortableEntity;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TNameAttribute;
+use App\Model\Persistence\Attribute\TPositionAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,8 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Model\Entities
  * @ORM\Entity
  */
-class AdditionEntity extends BaseEntity {
-    use TIdentifierAttribute, TNameAttribute;
+class AdditionEntity extends BaseEntity implements ISortableEntity {
+    use TPositionAttribute, TIdentifierAttribute, TNameAttribute;
 
     public function __construct() {
         $this->options = new ArrayCollection();
@@ -69,6 +71,7 @@ class AdditionEntity extends BaseEntity {
 
     /**
      * @ORM\OneToMany(targetEntity="OptionEntity", mappedBy="addition")
+     * @ORM\OrderBy({"position" = "ASC"})
      * @var OptionEntity[]
      */
     private $options;

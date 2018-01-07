@@ -8,11 +8,13 @@
 
 namespace App\Model\Persistence\Entity;
 
+use App\Model\Persistence\Attribute\ISortableEntity;
 use App\Model\Persistence\Attribute\TCapacityAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TInternalInfoAttribute;
 use App\Model\Persistence\Attribute\TNameAttribute;
 use App\Model\Persistence\Attribute\TOccupancyIconAttribute;
+use App\Model\Persistence\Attribute\TPositionAttribute;
 use App\Model\Persistence\Attribute\TPriceAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,12 +24,24 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Model\Entities
  * @ORM\Entity
  */
-class OptionEntity extends BaseEntity {
-    use TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TPriceAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
+class OptionEntity extends BaseEntity implements ISortableEntity {
+    use TPositionAttribute, TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TPriceAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
 
-    public function __construct() {
-        $this->choices = new ArrayCollection();
-    }
+    const AUTOSELECT_NONE = 0;
+    const AUTOSELECT_ALWAYS = 1;
+    const AUTOSELECT_SECONDON = 2;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @var integer
+     */
+    private $autoSelect = self::AUTOSELECT_NONE;
 
 
     /**
@@ -41,6 +55,38 @@ class OptionEntity extends BaseEntity {
      * @var ChoiceEntity[]
      */
     private $choices;
+
+    public function __construct() {
+        $this->choices = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getAutoSelect(): int {
+        return $this->autoSelect;
+    }
+
+    /**
+     * @param int $autoSelect
+     */
+    public function setAutoSelect(int $autoSelect): void {
+        $this->autoSelect = $autoSelect;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): ?string {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(?string $description): void {
+        $this->description = $description;
+    }
 
     /**
      * @return AdditionEntity

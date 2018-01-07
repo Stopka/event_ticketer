@@ -143,7 +143,7 @@ class AdditionFormWrapper extends FormWrapper {
         if ($this->additionEntity) {
             $this->additionManager->editAdditionFromEventForm($values, $this->additionEntity);
             $this->getPresenter()->flashTranslatedMessage('Form.Addition.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
-            $this->getPresenter()->redirect('Addition:default', [$this->event->getId()]);
+            $this->getPresenter()->redirect('Addition:default', [$this->eventEntity->getId()]);
         } else {
             $addition = $this->additionManager->createAdditionFromEventForm($values,$this->eventEntity);
             $this->getPresenter()->flashTranslatedMessage('Form.Addition.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);

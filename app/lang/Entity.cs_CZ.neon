@@ -1,5 +1,7 @@
 Id: ID
 Name: Název
+Position: Position
+Description: Popisek
 State: Stav
 Default: Výchozí
 Created: Vytvořeno
@@ -51,6 +53,11 @@ Addition:
     Payed: Zaplaceno
     Option: Možnost
     Options: Možnosti přídavku
+    AutoSelect:
+        AutoSelect: Zvolit automaticky
+        None: Nikdy
+        Always: Vždy
+        SecondOn: Od druhé přihlášky dál
 Event:
     Event: Událost
     Events: Události
