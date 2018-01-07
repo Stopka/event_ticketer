@@ -14,7 +14,6 @@ use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
-use Tracy\Debugger;
 
 class AdditionManager {
     use SmartObject, TDoctrineEntityManager;
@@ -70,7 +69,6 @@ class AdditionManager {
         $additions = $event->getAdditions();
         $sorter = new PositionSorter();
         $sorter->moveEntityUp($additionEntity,$additions);
-        Debugger::barDump($additions);
         $this->getEntityManager()->flush();
     }
 
