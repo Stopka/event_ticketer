@@ -64,11 +64,11 @@ class AdditionManager {
      * @param AdditionEntity $additionEntity
      * @throws \Exception
      */
-    public function moveAdditionUp(AdditionEntity $additionEntity){
+    public function moveAdditionUp(AdditionEntity $additionEntity) {
         $event = $additionEntity->getEvent();
         $additions = $event->getAdditions();
         $sorter = new PositionSorter();
-        $sorter->moveEntityUp($additionEntity,$additions);
+        $sorter->moveEntityUp($additionEntity, $additions);
         $this->getEntityManager()->flush();
     }
 
@@ -76,10 +76,20 @@ class AdditionManager {
      * @param AdditionEntity $additionEntity
      * @throws \Exception
      */
-    public function moveAdditionDown(AdditionEntity $additionEntity){
+    public function moveAdditionDown(AdditionEntity $additionEntity) {
         $event = $additionEntity->getEvent();
         $sorter = new PositionSorter();
-        $sorter->moveEntityDown($additionEntity,$event->getAdditions());
+        $sorter->moveEntityDown($additionEntity, $event->getAdditions());
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param AdditionEntity $additionEntity
+     * @throws \Exception
+     */
+    public function deleteAddition(AdditionEntity $additionEntity): void {
+        $em = $this->getEntityManager();
+        $em->remove($additionEntity);
+        $em->flush();
     }
 }

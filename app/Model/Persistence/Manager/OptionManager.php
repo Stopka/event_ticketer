@@ -115,4 +115,14 @@ class OptionManager {
         $sorter->moveEntityDown($optionEntity,$addition->getOptions());
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * @param OptionEntity $optionEntity
+     * @throws \Exception
+     */
+    public function deleteOption(OptionEntity $optionEntity){
+        $em = $this->getEntityManager();
+        $em->remove($optionEntity);
+        $em->flush();
+    }
 }

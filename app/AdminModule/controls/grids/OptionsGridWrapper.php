@@ -124,9 +124,19 @@ class OptionsGridWrapper extends GridWrapper {
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit', 'Form.Action.Edit', 'Option:edit');
-        $grid->addActionEvent('moveUp', 'Form.Action.MoveUp', [$this, 'onMoveUpClicked']);
-        $grid->addActionEvent('moveDown', 'Form.Action.MoveDown', [$this, 'onMoveDownClicked']);
+        $grid->addActionHref('edit', 'Form.Action.Edit', 'Option:edit')
+            ->setIcon('fa fa-pencil');
+        $grid->addActionEvent('moveUp', 'Form.Action.MoveUp', [$this, 'onMoveUpClicked'])
+            ->setIcon('fa fa-arrow-up');
+        $grid->addActionEvent('moveDown', 'Form.Action.MoveDown', [$this, 'onMoveDownClicked'])
+            ->setIcon('fa fa-arrow-down');
+        $grid->addActionEvent('delete', 'Form.Action.Delete', [$this, 'onDeleteClicked'])
+            ->setIcon('fa fa-trash')
+            ->setConfirm(function (OptionEntity $optionEntity) {
+                return $this->getTranslator()->translate('Form.Entity.Message.Delete.Confirm', null, [
+                    'name' => $optionEntity->getName()
+                ]);
+            });
     }
 
     /**
@@ -156,6 +166,21 @@ class OptionsGridWrapper extends GridWrapper {
         }
         $this->optionManager->moveOptionDown($option);
         $this->flashTranslatedMessage('Entity.Message.MoveDown.Success');
+        $this->redirect('this');
+    }
+
+    /**
+     * @param string $optionId
+     * @throws \Exception
+     * @throws \Nette\Application\AbortException
+     */
+    public function onDeleteClicked(string $optionId){
+        $option = $this->optionDao->getOption($optionId);
+        if (!$option) {
+            return;
+        }
+        $this->optionManager->deleteOption($option);
+        $this->flashTranslatedMessage('Entity.Message.Delete.Success');
         $this->redirect('this');
     }
 }

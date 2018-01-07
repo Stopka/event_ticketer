@@ -70,7 +70,7 @@ class AdditionEntity extends BaseEntity implements ISortableEntity {
     private $event;
 
     /**
-     * @ORM\OneToMany(targetEntity="OptionEntity", mappedBy="addition")
+     * @ORM\OneToMany(targetEntity="OptionEntity", mappedBy="addition", cascade={"persist","remove"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var OptionEntity[]
      */

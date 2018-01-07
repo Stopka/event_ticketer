@@ -51,7 +51,7 @@ class OptionEntity extends BaseEntity implements ISortableEntity {
     private $addition;
 
     /**
-     * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="option")
+     * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="option", cascade={"persist","remove"})
      * @var ChoiceEntity[]
      */
     private $choices;

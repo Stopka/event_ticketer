@@ -5,6 +5,7 @@ namespace App\AdminModule\Controls\Grids;
 use App\Controls\Grids\Grid;
 use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\AdditionDao;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\AdditionManager;
 
@@ -71,11 +72,20 @@ class AdditionsGridWrapper extends GridWrapper {
 
     protected function appendActions(Grid $grid) {
         $grid->addActionHref('edit', 'Form.Action.Edit', 'Addition:edit')
-            ->setIcon('fa fa-pencil-o');
+            ->setIcon('fa fa-pencil');
         $grid->addActionHref('options', 'Entity.Addition.Options', 'Option:')
             ->setIcon('fa fa-list-ul');
-        $grid->addActionEvent('moveUp', 'Form.Action.MoveUp', [$this, 'onMoveUpClicked']);
-        $grid->addActionEvent('moveDown', 'Form.Action.MoveDown', [$this, 'onMoveDownClicked']);
+        $grid->addActionEvent('moveUp', 'Form.Action.MoveUp', [$this, 'onMoveUpClicked'])
+            ->setIcon('fa fa-arrow-up');
+        $grid->addActionEvent('moveDown', 'Form.Action.MoveDown', [$this, 'onMoveDownClicked'])
+            ->setIcon('fa fa-arrow-down');
+        $grid->addActionEvent('delete', 'Form.Action.Delete', [$this, 'onDeleteClicked'])
+            ->setIcon('fa fa-trash')
+            ->setConfirm(function (AdditionEntity $additionEntity) {
+                return $this->getTranslator()->translate('Form.Entity.Message.Delete.Confirm', null, [
+                    'name' => $additionEntity->getName()
+                ]);
+            });
     }
 
     /**
@@ -98,13 +108,23 @@ class AdditionsGridWrapper extends GridWrapper {
      * @throws \Exception
      * @throws \Nette\Application\AbortException
      */
-    public function onMoveDownClicked(string $addditionId){
+    public function onMoveDownClicked(string $addditionId) {
         $addition = $this->additionDao->getAddition($addditionId);
-        if(!$addition){
+        if (!$addition) {
             return;
         }
         $this->additionManager->moveAdditionDown($addition);
         $this->flashTranslatedMessage('Entity.Message.MoveDown.Success');
+        $this->redirect('this');
+    }
+
+    public function onDeleteClicked(string $addditionId) {
+        $addition = $this->additionDao->getAddition($addditionId);
+        if (!$addition) {
+            return;
+        }
+        $this->additionManager->deleteAddition($addition);
+        $this->flashTranslatedMessage('Entity.Message.Delete.Success');
         $this->redirect('this');
     }
 }

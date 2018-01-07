@@ -26,11 +26,15 @@ Action:
     Close: 'Uzavřít'
     MoveUp: 'Přesunout výš'
     MoveDown: 'Přesunout níž'
+    Delete: 'Smazat'
 SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
 Entity:
     Message:
         MoveUp.Success: 'Položka byla úspěšně přesunuta výš.'
         MoveDown.Success: 'Položka byla úspěšně přesunuta níž.'
+        Delete.Success: 'Položka byla úspěšně smazána.'
+        Delete.Confirm: 'Opravdu chcete smazat položku "%name%"?'
+
 EarlyWave:
     Description:
         StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace?'

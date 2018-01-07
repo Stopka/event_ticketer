@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait TPriceAttribute {
 
     /**
-     * @ORM\ManyToOne(targetEntity="PriceEntity")
+     * @ORM\ManyToOne(targetEntity="PriceEntity", cascade={"persist","remove"})
      * @var PriceEntity
      */
     private $price;

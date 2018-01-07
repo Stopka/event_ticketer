@@ -9,6 +9,8 @@
 namespace App\Controls\Grids;
 
 
+use App\Controls\Grids\Components\Event;
+use App\Controls\Grids\Components\Href;
 use App\Model\DateFormatter;
 
 class Grid extends \Grido\Grid {
@@ -32,7 +34,7 @@ class Grid extends \Grido\Grid {
 
     public function addColumnDate($name, $label, $dateFormat = NULL) {
         $dateColumn = parent::addColumnDate($name, $label, $dateFormat);
-        if($this->dateFormatter && !$dateFormat) {
+        if ($this->dateFormatter && !$dateFormat) {
             $dateColumn->setDateFormat($this->dateFormatter->getDateFormat());
         }
         return $dateColumn;
@@ -40,7 +42,7 @@ class Grid extends \Grido\Grid {
 
     public function addColumnTime($name, $label, $dateFormat = NULL) {
         $dateColumn = parent::addColumnDate($name, $label, $dateFormat);
-        if($this->dateFormatter && !$dateFormat) {
+        if ($this->dateFormatter && !$dateFormat) {
             $dateColumn->setDateFormat($this->dateFormatter->getTimeFormat());
         }
         return $dateColumn;
@@ -48,10 +50,19 @@ class Grid extends \Grido\Grid {
 
     public function addColumnDateTime($name, $label, $dateFormat = NULL) {
         $dateColumn = parent::addColumnDate($name, $label, $dateFormat);
-        if($this->dateFormatter && !$dateFormat) {
+        if ($this->dateFormatter && !$dateFormat) {
             $dateColumn->setDateFormat($this->dateFormatter->getDateTimeFormat());
         }
         return $dateColumn;
     }
+
+    public function addActionHref($name, $label, $destination = NULL, array $arguments = []) {
+        return new Href($this, $name, $label, $destination, $arguments);
+    }
+
+    public function addActionEvent($name, $label, $onClick = NULL) {
+        return new Event($this, $name, $label, $onClick);
+    }
+
 
 }

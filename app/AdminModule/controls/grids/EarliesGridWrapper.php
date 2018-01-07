@@ -77,6 +77,6 @@ class EarliesGridWrapper extends GridWrapper {
 
     protected function appendActions(Grid $grid) {
         $grid->addActionHref('edit','Form.Action.Edit', 'Early:edit')
-            ->setIcon('fa fa-pencil-o');
+            ->setIcon('fa fa-pencil');
     }
 }

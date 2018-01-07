@@ -25,7 +25,7 @@ class PriceEntity extends BaseEntity {
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="PriceAmountEntity",mappedBy="price")
+     * @ORM\OneToMany(targetEntity="PriceAmountEntity",mappedBy="price", cascade={"persist","remove"})
      * @var PriceAmountEntity[]
      */
     private $priceAmounts;
