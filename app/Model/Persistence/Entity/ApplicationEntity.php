@@ -9,7 +9,7 @@
 namespace App\Model\Persistence\Entity;
 
 use App\Model\Persistence\Attribute\TAddressAttribute;
-use App\Model\Persistence\Attribute\TBirthIdAttribute;
+use App\Model\Persistence\Attribute\TBirthDateAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use TIdentifierAttribute, TPersonNameAttribute, TAddressAttribute, TBirthIdAttribute;
+    use TIdentifierAttribute, TPersonNameAttribute, TAddressAttribute, TBirthDateAttribute;
 
     const STATE_WAITING = 1;
     const STATE_RESERVED = 2;

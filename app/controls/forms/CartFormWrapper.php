@@ -5,6 +5,7 @@ namespace App\Controls\Forms;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
+use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
@@ -29,6 +30,9 @@ class CartFormWrapper extends FormWrapper {
     /** @var  ApplicationDao */
     private $applicationDao;
 
+    /** @var InsuranceCompanyDao */
+    private $insuranceCompanyDao;
+
     /** @var  CurrencyEntity */
     protected $currency;
 
@@ -50,12 +54,19 @@ class CartFormWrapper extends FormWrapper {
      * @param CartManager $cartManager
      * @param ApplicationDao $applicationDao
      */
-    public function __construct(FormWrapperDependencies $formWrapperDependencies, CurrencyDao $currencyDao, CartManager $cartManager, ApplicationDao $applicationDao) {
+    public function __construct(
+        FormWrapperDependencies $formWrapperDependencies,
+        CurrencyDao $currencyDao,
+        CartManager $cartManager,
+        ApplicationDao $applicationDao,
+        InsuranceCompanyDao $insuranceCompanyDao
+    ) {
         parent::__construct($formWrapperDependencies);
         $this->currencyDao = $currencyDao;
         $this->currency = $currencyDao->getDefaultCurrency();
         $this->cartManager = $cartManager;
         $this->applicationDao = $applicationDao;
+        $this->insuranceCompanyDao = $insuranceCompanyDao;
     }
 
     protected function getEvent() {
@@ -145,6 +156,7 @@ class CartFormWrapper extends FormWrapper {
 
     /**
      * @param SubmitButton $button
+     * @throws \Nette\Application\AbortException
      */
     protected function registerClicked(SubmitButton $button) {
         $form = $button->getForm();
@@ -170,7 +182,8 @@ class CartFormWrapper extends FormWrapper {
     }
 
     protected function appendParentControls(Form $form) {
-        $form->addGroup('Rodič');
+        $form->addGroup('Zákonný zástupce dětí')
+            ->setOption(Form::OPTION_KEY_DESCRIPTION,"Mají-li děti různé zákonné zástupce, vyplňte pro každé dítě formulář samostatně.");
         $form->addText('firstName', 'Jméno', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
@@ -179,20 +192,19 @@ class CartFormWrapper extends FormWrapper {
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $form->addText('phone', 'Telefon', NULL, 13)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Ve formátu +420123456789')
+            ->setDefaultValue('+420')
             ->setRequired()
             ->addRule($form::PATTERN, '%label musí být ve formátu +420123456789', '[+]([0-9]){6,20}');
         $form->addText('email', 'Email')
             ->setRequired()
-            ->addRule($form::EMAIL);
+            ->addRule($form::EMAIL)
+            ->setDefaultValue('@');
     }
 
     protected function appendCommonControls(Form $form) {
         $form->addGroup('Bydliště dětí');
         $comons = $form->addContainer('commons');
-        $comons->addText('street', 'Ulice', NULL, 255)
-            ->setRequired()
-            ->addRule($form::MAX_LENGTH, NULL, 255);
-        $comons->addText('address', 'Číslo popisné', NULL, 255)
+        $comons->addText('street', 'Ulice č.p.', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $comons->addText('city', 'Město', NULL, 255)
@@ -271,10 +283,17 @@ class CartFormWrapper extends FormWrapper {
         $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
             ->addRule($form::VALID, 'Vloženo chybné datum!');
-        $child->addText('birthCode', 'Kód rodného čísla', NULL, 255)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Část rodného čísla za lomítkem')
-            ->setRequired()
-            ->addRule($form::PATTERN, '%label musí být ve formátu čtyřmístného čísla', '[0-9]{4}');
+        $child->addSelect('insuranceCompany', 'Zdravotní pojišťovna',
+            $this->insuranceCompanyDao->getInsuranceCompanyList())
+            ->setRequired(true);
+        $child->addTextArea('friend', 'Umístění')
+            ->setOption(Form::OPTION_KEY_DESCRIPTION,"S kým máte zájem umístit dítě do oddílu. Uveďte maximálně jedno jméno. Umístění můžeme garantovat pouze u té dvojice dětí, jejichž jména budou vzájemně uvedena na obou přihláškách. Vzhledem ke snaze o sestavení vyrovnaných oddílů nemůžeme zaručit společné umístění většího počtu dětí. U sourozenců uveďte, zda je chcete společně do oddílu.")
+            ->setRequired(false)
+            ->addRule($form::MAX_LENGTH, null, 256);
+        $child->addTextArea('info', 'Další informace')
+            ->setOption(Form::OPTION_KEY_DESCRIPTION,"Fobie, stravovací návyky a podobně")
+            ->setRequired(false)
+            ->addRule($form::MAX_LENGTH, null, 512);
     }
 
 
