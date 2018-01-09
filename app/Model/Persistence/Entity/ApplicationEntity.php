@@ -10,6 +10,7 @@ namespace App\Model\Persistence\Entity;
 
 use App\Model\Persistence\Attribute\TAddressAttribute;
 use App\Model\Persistence\Attribute\TBirthDateAttribute;
+use App\Model\Persistence\Attribute\TGenderAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use TIdentifierAttribute, TPersonNameAttribute, TAddressAttribute, TBirthDateAttribute;
+    use TIdentifierAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute;
 
     const STATE_WAITING = 1;
     const STATE_RESERVED = 2;
@@ -46,8 +47,68 @@ class ApplicationEntity extends BaseEntity {
      */
     private $state = self::STATE_WAITING;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="InsuranceCompanyEntity")
+     * @var InsuranceCompanyEntity
+     */
+    private $insuranceCompany;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     */
+    private $friend;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     */
+    private $info;
+
     public function __construct() {
         $this->choices = new ArrayCollection();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFriend(): ?string {
+        return $this->friend;
+    }
+
+    /**
+     * @param null|string $friend
+     */
+    public function setFriend(?string $friend): void {
+        $this->friend = $friend;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getInfo(): ?string {
+        return $this->info;
+    }
+
+    /**
+     * @param null|string $info
+     */
+    public function setInfo(?string $info): void {
+        $this->info = $info;
+    }
+
+    /**
+     * @return InsuranceCompanyEntity
+     */
+    public function getInsuranceCompany(): InsuranceCompanyEntity {
+        return $this->insuranceCompany;
+    }
+
+    /**
+     * @param InsuranceCompanyEntity $insuranceCompany
+     */
+    public function setInsuranceCompany(InsuranceCompanyEntity $insuranceCompany): void {
+        $this->insuranceCompany = $insuranceCompany;
     }
 
     /**
