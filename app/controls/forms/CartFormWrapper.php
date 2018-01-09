@@ -177,7 +177,8 @@ class CartFormWrapper extends FormWrapper {
         $form->addHtml('total', 'Celková cena',
             Html::el('div', ['class' => 'price_total'])
                 ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
-                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
+                ->addHtml(Html::el('span', ['class' => 'price_currency']))
+                ->addHtml($this->createRecalculateHtml())
         );
     }
 
@@ -221,7 +222,12 @@ class CartFormWrapper extends FormWrapper {
         $count_left = $this->event->getCapacityLeft($this->applicationDao->countIssuedApplications($this->event));
         if(!$this->substitute&&!$this->cart) {
             $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
-                ->setOption($form::OPTION_KEY_DESCRIPTION, "Zbývá $count_left přihlášek")
+                ->setOption($form::OPTION_KEY_DESCRIPTION,
+                    Html::el('span',[
+                        'class'=>'description control-description countLeft'
+                    ])
+                        ->setText("Zbývá $count_left přihlášek")
+                    )
                 ->setValidationScope(FALSE);
             $add_button->getControlPrototype()->class = 'ajax';
             $add_button->onClick[] = [$this, 'addChild'];

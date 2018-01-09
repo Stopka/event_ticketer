@@ -170,14 +170,14 @@ trait TAppendAdditionsControls {
         if (isset($prices[$option->getIdAlphaNumeric()]) && isset($prices[$option->getIdAlphaNumeric()]['amount']) && isset($prices[$option->getIdAlphaNumeric()]['currency'])) {
             $price = $prices[$option->getIdAlphaNumeric()];
             $result->addHtml(
-                Html::el('span', ['class' => 'description inline'])
+                Html::el('span', ['class' => 'description inline price'])
                     ->setText($price['amount'] . $price['currency'])
             );
         }
         if (isset($prices[$option->getIdAlphaNumeric()]) && isset($prices[$option->getIdAlphaNumeric()]['countLeft'])) {
             $left = $prices[$option->getIdAlphaNumeric()]['countLeft'];
             $result->addHtml(
-                Html::el('span', ['class' => 'description inline', 'data-price-predisable' => $left == 0 && !$this->isAdmin()])
+                Html::el('span', ['class' => 'description inline countLeft', 'data-price-predisable' => $left == 0 && !$this->isAdmin()])
                     ->setText("Zbývá $left míst")
             );
         }

@@ -372,6 +372,22 @@ fieldset{
 	max-width: 710px;
 }
 
+fieldset>.description{
+	padding: 10px;
+	padding-top: 0;
+}
+
+.description.price,
+.price_total .price_amount,
+.price_total .price_currency,
+.price_subtotal .price_amount,
+.price_subtotal .price_currency{
+	color: #27ae60;
+}
+.description.countLeft{
+	color: #9B59B6;
+}
+
 /* Schování fieldsetů */
 /*
 fieldset{ border: none; padding: 0; }
