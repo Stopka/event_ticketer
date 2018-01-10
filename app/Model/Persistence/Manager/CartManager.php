@@ -3,6 +3,7 @@
 namespace App\Model\Persistence\Manager;
 
 use App\Model\Persistence\Dao\AdditionDao;
+use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Dao\OptionDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\ApplicationEntity;
@@ -29,6 +30,9 @@ class CartManager {
     /** @var  AdditionDao */
     private $additionDao;
 
+    /** @var InsuranceCompanyDao */
+    private $insuranceCompanyDao;
+
     /** @var callable[]  */
     public $onCartCreated = array();
 
@@ -41,17 +45,20 @@ class CartManager {
      * @param AdditionDao $additionDao
      * @param OptionDao $optionDao
      */
-    public function __construct(EntityManager $entityManager, AdditionDao $additionDao, OptionDao $optionDao) {
+    public function __construct(EntityManager $entityManager, AdditionDao $additionDao, OptionDao $optionDao, InsuranceCompanyDao $insuranceCompanyDao) {
         $this->injectEntityManager($entityManager);
         $this->additionDao = $additionDao;
         $this->optionDao = $optionDao;
+        $this->insuranceCompanyDao = $insuranceCompanyDao;
     }
 
     /**
-     * @param $values array
+     * @param array $values
      * @param EventEntity|null $event
      * @param EarlyEntity|null $early
+     * @param SubstituteEntity|null $substitute
      * @return CartEntity
+     * @throws \Exception
      */
     public function createCartFromCartForm(array $values, ?EventEntity $event = null, ?EarlyEntity $early = null, ?SubstituteEntity $substitute = null) {
         $entityManager = $this->getEntityManager();
@@ -67,6 +74,8 @@ class CartManager {
             $application = new ApplicationEntity();
             $application->setByValueArray($commonValues);
             $application->setByValueArray($childValues['child']);
+            $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($childValues['insuranceCompanyId']);
+            $application->setInsuranceCompany($insuranceCompany);
             $application->setCart($cart);
             $entityManager->persist($application);
             foreach ($childValues['addittions'] as $additionId => $optionId) {
@@ -99,6 +108,7 @@ class CartManager {
      * @param SubstituteEntity|null $substitute
      * @param CartEntity|null $cart
      * @return CartEntity|null
+     * @throws \Exception
      */
     public function editCartFromCartForm($values, ?EventEntity $event = null, ?EarlyEntity $early = null, ?SubstituteEntity $substitute = null, ?CartEntity $cart = null) {
         $entityManager = $this->getEntityManager();
@@ -114,6 +124,8 @@ class CartManager {
                 }
                 $application->setByValueArray($commonValues);
                 $application->setByValueArray($childValues['child']);
+                $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($childValues['insuranceCompanyId']);
+                $application->setInsuranceCompany($insuranceCompany);
                 //$entityManager->persist($application);
                 foreach ($childValues['addittions'] as $additionId => $optionId) {
                     foreach ($application->getChoices() as $choice) {

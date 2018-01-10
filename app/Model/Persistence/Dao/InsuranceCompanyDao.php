@@ -34,7 +34,7 @@ class InsuranceCompanyDao extends EntityDao {
         $companies = $this->getRepository()->findAll();
         $result = [null=>''];
         foreach ($companies as $company) {
-            $result[$company->getIdAlphaNumeric()] = $company->getCode() . ' - ' . $company->getName();
+            $result[$company->getId()] = $company->getCode() . ' - ' . $company->getName();
         }
         return $result;
     }

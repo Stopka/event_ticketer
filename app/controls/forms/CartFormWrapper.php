@@ -289,7 +289,7 @@ class CartFormWrapper extends FormWrapper {
         $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
             ->addRule($form::VALID, 'Vloženo chybné datum!');
-        $child->addSelect('insuranceCompany', 'Zdravotní pojišťovna',
+        $child->addSelect('insuranceCompanyId', 'Zdravotní pojišťovna',
             $this->insuranceCompanyDao->getInsuranceCompanyList())
             ->setRequired(true);
         $child->addTextArea('friend', 'Umístění')
