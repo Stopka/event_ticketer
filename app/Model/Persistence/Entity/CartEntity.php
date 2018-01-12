@@ -10,6 +10,7 @@ namespace App\Model\Persistence\Entity;
 
 use App\Model\Persistence\Attribute\TEmailAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
+use App\Model\Persistence\Attribute\TNumberAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
 use App\Model\Persistence\Attribute\TPhoneAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,10 +19,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Objednávka, seskupení naráz vydaných přihlášek
  * @package App\Model\Entities
+ * @ORM\Table(name="cart",
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="cartNumber_unique",
+ *            columns={"number","event_id"})
+ *    }
+ * )
  * @ORM\Entity
  */
 class CartEntity extends BaseEntity {
-    use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute;
+    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute;
 
     const STATE_ORDER = 0;
 

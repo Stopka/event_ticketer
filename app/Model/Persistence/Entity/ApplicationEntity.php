@@ -12,6 +12,7 @@ use App\Model\Persistence\Attribute\TAddressAttribute;
 use App\Model\Persistence\Attribute\TBirthDateAttribute;
 use App\Model\Persistence\Attribute\TGenderAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
+use App\Model\Persistence\Attribute\TNumberAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,10 +20,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Jedna konkrétní vydaná přihláška
  * @package App\Model\Entities
+ * @ORM\Table(name="application",
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="applicationNumber_unique",
+ *            columns={"number","cart_id"})
+ *    }
+ * )
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use TIdentifierAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute;
+    use TIdentifierAttribute, TNumberAttribute,  TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute;
 
     const STATE_WAITING = 1;
     const STATE_RESERVED = 2;
