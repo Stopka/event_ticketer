@@ -96,7 +96,7 @@ trait TAppendAdditionsControls {
                 continue;
             }
             $amount = $option->getPrice()->getPriceAmountByCurrency($this->getCurrency());
-            $result[$option->getIdAlphaNumeric()] = [
+            $result[$option->getId()] = [
                 'amount' => $amount->getAmount(),
                 'currency' => $amount->getCurrency()->getSymbol(),
                 'countLeft' => $option->getCapacityLeft($this->getApplicationDao()->countIssuedApplicationsWithOption($option))
@@ -113,7 +113,7 @@ trait TAppendAdditionsControls {
     protected function createAdditionOptions(AdditionEntity $addition, $prices) {
         $result = [];
         foreach ($addition->getOptions() as $option) {
-            $result[$option->getIdAlphaNumeric()] = $this->createOptionLabel($option, $prices);
+            $result[$option->getId()] = $this->createOptionLabel($option, $prices);
         }
         return $result;
     }
@@ -126,10 +126,10 @@ trait TAppendAdditionsControls {
         $result = [];
         foreach ($additionEntity->getOptions() as $option) {
             if ($option->getAutoSelect() == OptionEntity::AUTOSELECT_ALWAYS) {
-                $result[] = $option->getIdAlphaNumeric();
+                $result[] = $option->getId();
             }
             if ($option->getAutoSelect() == OptionEntity::AUTOSELECT_SECONDON && $index >= 2) {
-                $result[] = $option->getIdAlphaNumeric();
+                $result[] = $option->getId();
             }
         }
         return $result;
@@ -144,9 +144,9 @@ trait TAppendAdditionsControls {
         $result = [];
         foreach ($additionEntity->getOptions() as $option) {
             $isAutoselected = $option->getAutoSelect() != OptionEntity::AUTOSELECT_NONE;
-            $isFull = isset($prices[$option->getIdAlphaNumeric()]['countLeft']) && $prices[$option->getIdAlphaNumeric()]['countLeft'] === 0;
+            $isFull = isset($prices[$option->getId()]['countLeft']) && $prices[$option->getId()]['countLeft'] === 0;
             if ($isAutoselected || $isFull) {
-                $result[] = $option->getIdAlphaNumeric();
+                $result[] = $option->getId();
             }
         }
         return $result;
@@ -167,15 +167,15 @@ trait TAppendAdditionsControls {
                     ->setText($option->getName())
             );
         }
-        if (isset($prices[$option->getIdAlphaNumeric()]) && isset($prices[$option->getIdAlphaNumeric()]['amount']) && isset($prices[$option->getIdAlphaNumeric()]['currency'])) {
-            $price = $prices[$option->getIdAlphaNumeric()];
+        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['amount']) && isset($prices[$option->getId()]['currency'])) {
+            $price = $prices[$option->getId()];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline price'])
                     ->setText($price['amount'] . $price['currency'])
             );
         }
-        if (isset($prices[$option->getIdAlphaNumeric()]) && isset($prices[$option->getIdAlphaNumeric()]['countLeft'])) {
-            $left = $prices[$option->getIdAlphaNumeric()]['countLeft'];
+        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['countLeft'])) {
+            $left = $prices[$option->getId()]['countLeft'];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline countLeft', 'data-price-predisable' => $left == 0 && !$this->isAdmin()])
                     ->setText("Zbývá $left míst")

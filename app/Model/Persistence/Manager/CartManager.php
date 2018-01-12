@@ -2,10 +2,12 @@
 
 namespace App\Model\Persistence\Manager;
 
+use App\Model\Exception\NotFoundException;
 use App\Model\Persistence\Dao\AdditionDao;
 use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Dao\OptionDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\ChoiceEntity;
@@ -33,10 +35,10 @@ class CartManager {
     /** @var InsuranceCompanyDao */
     private $insuranceCompanyDao;
 
-    /** @var callable[]  */
+    /** @var callable[] */
     public $onCartCreated = array();
 
-    /** @var callable[]  */
+    /** @var callable[] */
     public $onCartUpdated = array();
 
     /**
@@ -50,6 +52,36 @@ class CartManager {
         $this->additionDao = $additionDao;
         $this->optionDao = $optionDao;
         $this->insuranceCompanyDao = $insuranceCompanyDao;
+    }
+
+    /**
+     * @param string $optionId
+     * @return ChoiceEntity
+     */
+    private function addChoice(string $optionId, ApplicationEntity $application): ChoiceEntity {
+        $option = $this->optionDao->getOption($optionId);
+        if (!$option) {
+            throw new NotFoundException("Option was not found.");
+        }
+        $choice = new ChoiceEntity();
+        $choice->setOption($option);
+        $choice->setApplication($application);
+        $this->getEntityManager()->persist($choice);
+        return $choice;
+    }
+
+    /**
+     * @param AdditionEntity $hiddenAddition
+     * @return string[]
+     */
+    private function selectHiddenAdditionOptionIds(AdditionEntity $hiddenAddition): array {
+        $options = $hiddenAddition->getOptions();
+        $optionIds = [];
+        for ($i = 0; $i < count($options) && $i < $hiddenAddition->getMinimum(); $i++) {
+            $option = $options[$i];
+            $optionIds[] = $option->getId();
+        }
+        return $optionIds;
     }
 
     /**
@@ -78,21 +110,19 @@ class CartManager {
             $application->setInsuranceCompany($insuranceCompany);
             $application->setCart($cart);
             $entityManager->persist($application);
-            foreach ($childValues['addittions'] as $additionId => $optionId) {
-                $option = $this->optionDao->getOption($optionId);
-                $choice = new ChoiceEntity();
-                $choice->setOption($option);
-                $choice->setApplication($application);
-                $entityManager->persist($choice);
+            foreach ($childValues['addittions'] as $additionIdAlphaNumeric => $optionIds) {
+                //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
+                if (!is_array($optionIds)) {
+                    $optionIds = [$optionIds];
+                }
+                foreach ($optionIds as $optionId) {
+                    $choice = $this->addChoice($optionId, $application);
+                }
             }
             foreach ($hiddenAdditions as $hiddenAddition) {
-                $options = $hiddenAddition->getOptions();
-                for ($i = 0; $i < count($options) && $i < $hiddenAddition->getMinimum(); $i++) {
-                    $option = $options[$i];
-                    $choice = new ChoiceEntity();
-                    $choice->setOption($option);
-                    $choice->setApplication($application);
-                    $entityManager->persist($choice);
+                $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);
+                foreach ($optionIds as $optionId) {
+                    $choice = $this->addChoice($optionId, $application);
                 }
             }
         }
@@ -127,13 +157,47 @@ class CartManager {
                 $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($childValues['insuranceCompanyId']);
                 $application->setInsuranceCompany($insuranceCompany);
                 //$entityManager->persist($application);
-                foreach ($childValues['addittions'] as $additionId => $optionId) {
-                    foreach ($application->getChoices() as $choice) {
+                foreach ($hiddenAdditions as $hiddenAddition) {
+                    $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);
+                    $processedOptionIds = [];
+                    $choices = $application->getChoices();
+                    foreach ($choices as $choice) {
+                        if ($choice->getOption()->getAddition()->getId() != $hiddenAddition->getId()) {
+                            continue;
+                        }
+                        if (!in_array($choice->getOption()->getId(), $optionIds)) {
+                            $entityManager->remove($choice);
+                        }
+                        $processedOptionIds[] = $choice->getOption()->getId();
+                    }
+                    foreach ($optionIds as $optionId) {
+                        if (in_array($optionId, $processedOptionIds)) {
+                            continue;
+                        }
+                        $choice = $this->addChoice($optionId, $application);
+                    }
+                }
+                foreach ($childValues['addittions'] as $additionIdAlphaNumeric => $optionIds) {
+                    $additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
+                    if (!is_array($optionIds)) {
+                        $optionIds = [$optionIds];
+                    }
+                    $processedOptionIds = [];
+                    $choices = $application->getChoices();
+                    foreach ($choices as $choice) {
                         if ($choice->getOption()->getAddition()->getId() != $additionId) {
                             continue;
                         }
-                        $option = $this->optionDao->getOption($optionId);
-                        $choice->setOption($option);
+                        if (!in_array($choice->getOption()->getId(), $optionIds)) {
+                            $entityManager->remove($choice);
+                        }
+                        $processedOptionIds[] = $choice->getOption()->getId();
+                    }
+                    foreach ($optionIds as $optionId) {
+                        if (in_array($optionId, $processedOptionIds)) {
+                            continue;
+                        }
+                        $choice = $this->addChoice($optionId, $application);
                     }
                 }
             }
