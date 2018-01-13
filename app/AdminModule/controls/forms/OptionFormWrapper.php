@@ -102,16 +102,16 @@ class OptionFormWrapper extends FormWrapper {
     }
 
     protected function appendOptionControls(Form $form) {
-        $form->addGroup('Entity.Addition.Option')
+        $form->addGroup('Entity.Singular.Option')
             ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addText('name', 'Entity.Name')
+        $form->addText('name', 'Attribute.Name')
             ->setRequired();
-        $form->addTextArea('description', 'Entity.Description')
+        $form->addTextArea('description', 'Attribute.Description')
             ->setRequired(false);
-        $form->addSelect('autoSelect', 'Entity.Addition.AutoSelect.AutoSelect',[
-            OptionEntity::AUTOSELECT_NONE => "Entity.Addition.AutoSelect.None",
-            OptionEntity::AUTOSELECT_ALWAYS => "Entity.Addition.AutoSelect.Always",
-            OptionEntity::AUTOSELECT_SECONDON => "Entity.Addition.AutoSelect.SecondOn",
+        $form->addSelect('autoSelect', 'Attribute.Addition.AutoSelect',[
+            OptionEntity::AUTOSELECT_NONE => "Value.Addition.AutoSelect.None",
+            OptionEntity::AUTOSELECT_ALWAYS => "Value.Addition.AutoSelect.Always",
+            OptionEntity::AUTOSELECT_SECONDON => "Value.Addition.AutoSelect.SecondOn",
         ])
             ->setRequired()
             ->setDefaultValue(OptionEntity::AUTOSELECT_NONE);
@@ -119,7 +119,7 @@ class OptionFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.LimitCapacity")
             ->addCondition($form::EQUAL, true)
             ->toggle("capacityControlGroup");
-        $form->addText('capacity', 'Entity.Event.Capacity')
+        $form->addText('capacity', 'Attribute.Event.Capacity')
             ->setDefaultValue(10)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Option.Description.Capacity')
             ->setOption($form::OPTION_KEY_TYPE, 'number')
@@ -129,7 +129,7 @@ class OptionFormWrapper extends FormWrapper {
             ->addRule($form::RANGE, null, [1, null])
             ->addConditionOn($form['limitCapacity'], $form::EQUAL, true)
             ->addRule($form::FILLED);
-        $form->addRadioList('occupancyIcon', 'Entity.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons('Entity.OccupancyIcon.None'))
+        $form->addRadioList('occupancyIcon', 'Attribute.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons('Value.OccupancyIcon.None'))
             ->setRequired(false)
             ->setDefaultValue(null);
     }
@@ -142,7 +142,7 @@ class OptionFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.SetPrice")
             ->addCondition($form::EQUAL, true)
             ->toggle("priceControlGroup");
-        $subgroup = $form->addGroup(Html::el()->addHtml(Html::el('i', ['class' => 'fa fa-money']))->addText(' '.$this->getTranslator()->translate('Entity.Price.Price')))
+        $subgroup = $form->addGroup(Html::el()->addHtml(Html::el('i', ['class' => 'fa fa-money']))->addText(' '.$this->getTranslator()->translate('Entity.Singular.Price')))
             //->setOption($form::OPTION_KEY_LOGICAL,true)
             ->setOption($form::OPTION_KEY_ID, "priceControlGroup");
 

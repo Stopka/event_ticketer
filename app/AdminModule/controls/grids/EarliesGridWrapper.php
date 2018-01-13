@@ -50,28 +50,28 @@ class EarliesGridWrapper extends GridWrapper {
     }
 
     protected function appendEarlyColumns(Grid $grid) {
-        $grid->addColumnText('firstName', 'Entity.Person.FirstName')
+        $grid->addColumnText('firstName', 'Attribute.Person.FirstName')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('lastName', 'Entity.Person.LastName')
+        $grid->addColumnText('lastName', 'Attribute.Person.LastName')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('email', 'Entity.Person.Email')
+        $grid->addColumnText('email', 'Attribute.Person.Email')
             ->setSortable()
             ->setFilterText();
     }
 
     protected function appendEarlyWaveColumns(Grid $grid) {
-        $grid->addColumnText('earlyWave.name', 'Entity.Event.EarlyWave')
+        $grid->addColumnText('earlyWave.name', 'Entity.Singular.EarlyWave')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDate('earlyWave.startDate', 'Entity.Event.StartDate')
+        $grid->addColumnDate('earlyWave.startDate', 'Attribute.Event.StartDate')
             ->setSortable()
             ->setFilterDate();
-        $grid->addColumnText('earlyWave.inviteSent', 'Entity.Event.InviteSent')
-            ->setReplacement([true=>'Entity.Boolean.Yes',false=>'Entity.Boolean.No'])
+        $grid->addColumnText('earlyWave.inviteSent', 'Attribute.Event.InviteSent')
+            ->setReplacement([true=>'Value.Boolean.Yes',false=>'Value.Boolean.No'])
             ->setSortable()
-            ->setFilterSelect([null=>'', true=>'Entity.Boolean.Yes',false=>'Entity.Boolean.No']);
+            ->setFilterSelect([null=>'', true=>'Value.Boolean.Yes',false=>'Value.Boolean.No']);
     }
 
 

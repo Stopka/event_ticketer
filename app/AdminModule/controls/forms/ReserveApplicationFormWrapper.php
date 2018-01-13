@@ -14,6 +14,7 @@ use App\Controls\Forms\FormWrapperDependencies;
 use App\Controls\Forms\TAppendAdditionsControls;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\CartManager;
@@ -37,13 +38,19 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  CartManager */
     private $cartManager;
 
-    public function __construct(FormWrapperDependencies $formWrapperDependencies, ApplicationDao $applicationDao, CurrencyDao $currencyDao, CartManager $cartManager) {
+    public function __construct(
+        FormWrapperDependencies $formWrapperDependencies,
+        ApplicationDao $applicationDao,
+        CurrencyDao $currencyDao,
+        CartManager $cartManager
+    ) {
         parent::__construct($formWrapperDependencies);
         $this->applicationDao = $applicationDao;
         $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();
         $this->cartManager = $cartManager;
-
+        $this->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION);
+        $this->setVisibleCountLeft();
     }
 
     public function setEvent(EventEntity $event) {
@@ -73,15 +80,15 @@ class ReserveApplicationFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
-        $form->addGroup('Entity.Event.Cart')
+        $form->addGroup('Entity.Singular.Cart')
             ->setOption('visual', false);
-        $form->addText('count', 'Entity.Count', null, 255)
+        $form->addText('count', 'Attribute.Count', null, 255)
             ->setType('number')
             ->setDefaultValue(1)
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, NULL, [1, 100]);
-        $form->addGroup('Entity.Addition.Choices')
+        $form->addGroup('Entity.Plural.Choice')
             ->setOption('class', 'price_subspace');
         $this->appendAdditionsControls($form, $form, 1);
         $this->appendSubmitControls($form, 'Form.Action.Reserve', [$this, 'reserveClicked']);

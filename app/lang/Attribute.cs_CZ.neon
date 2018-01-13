@@ -1,0 +1,54 @@
+Detail: Detail
+Position: Pozice
+Name: Název
+State: Stav
+Id: Id
+Created: Vytvořeno
+Default: Výchozí
+Description: Popis
+Count: Počet
+Boolean:
+    'Yes': Ano
+    'No': Ne
+Address:
+    Address: Addresa
+    AddressNumber: Adresa
+    City: Město
+    Zip: PSČ
+    Country: Stát
+Person:
+    Person: Osoba
+    FullName: Celé jméno
+    FirstName: Jméno
+    Username: Uživatelské jméno
+    LastName: Příjmení
+    Password: Heslo
+    Gender: Pohlaví
+    BirthDate: Datum narození
+    Email: Email
+    Phone: Telefon
+Addition:
+    RequiredForState: Vyžadováno pro
+    EnoughForState: Dostatečné pro
+    Visible: Viditelnost
+    Hidden: Schovat v náhledu
+    Minimum: Minimum
+    Maximum: Maximum
+    Payed: Zaplaceno
+    AutoSelect: Zvolit automaticky
+Event:
+    Capacity: Kapacita
+    CapacityFull: Kapacita naplněna
+    StartDate: Datum začátku
+    Public: Veřejný výdej
+    EndDate: Datum konce
+    Occupancy: Obsazenost
+    InviteSent: Pozvánka rozeslána
+    OccupancyIcon: Ikona obsazenosti
+Price:
+    Amount: Částka
+Currency:
+    Symbol: Symbol
+    Code: Kód
+Application:
+    Count: Počet přihlášek

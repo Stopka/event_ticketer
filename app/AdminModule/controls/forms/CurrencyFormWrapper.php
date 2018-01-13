@@ -62,13 +62,13 @@ class CurrencyFormWrapper extends FormWrapper {
 
     protected function appendCurrencyControls(Form $form) {
         //$form->addGroup("Událost");
-        $form->addText('name', 'Entity.Name')
+        $form->addText('name', 'Attribute.Name')
             ->setRequired();
-        $form->addText('code', 'Entity.Currency.Currency.Code')
+        $form->addText('code', 'Attribute.Currency.Code')
             ->setOption($form::OPTION_KEY_DESCRIPTION,"Form.Currency.Description.Code")
             ->setRequired()
             ->addRule($form::PATTERN,  "Form.Currency.Rule.Code.Pattern",'[A-Z]{3}');
-        $form->addText('symbol', 'Entity.Currency.Currency.Symbol')
+        $form->addText('symbol', 'Attribute.Currency.Symbol')
             ->setOption($form::OPTION_KEY_DESCRIPTION,"Form.Currency.Description.Symbol")
             ->setRequired();
     }

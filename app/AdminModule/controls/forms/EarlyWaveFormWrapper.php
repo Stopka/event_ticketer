@@ -72,11 +72,11 @@ class EarlyWaveFormWrapper extends FormWrapper {
     }
 
     protected function appendEarlyWaveControls(Form $form) {
-        $form->addGroup("Entity.Event.EarlyWave")
+        $form->addGroup("Entity.Singular.EarlyWave")
             ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addText('name', 'Entity.Name')
+        $form->addText('name', 'Attribute.Name')
             ->setRequired(false);
-        $form->addDate('startDate', 'Entity.Event.StartDate', DateInput::TYPE_DATE)
+        $form->addDate('startDate', 'Attribute.Event.StartDate', DateInput::TYPE_DATE)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.EarlyWave.Description.StartDate')
             ->setDefaultValue(new \DateTime())
             ->setRequired(true)

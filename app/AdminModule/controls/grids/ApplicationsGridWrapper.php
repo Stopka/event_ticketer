@@ -65,7 +65,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionEvent('detail', 'Entity.Detail', function ($id) {
+        $grid->addActionEvent('detail', 'Form.Action.Detail', function ($id) {
             $this->getPresenter()->redirect('Cart:default', $id);
         })
             ->setIcon('fa fa-eye')
@@ -78,25 +78,25 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendApplicationColumns(Grid $grid) {
-        $grid->addColumnNumber('id', 'Entity.Id')
+        $grid->addColumnNumber('id', 'Attribute.Id')
             ->setSortable()
             ->setDefaultSort('ASC')
             ->setFilterNumber();
-        $grid->addColumnText('state', 'Entity.Application.State.State')
+        $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
             ->setReplacement([
-                ApplicationEntity::STATE_WAITING => 'Entity.Application.State.Waiting',
-                ApplicationEntity::STATE_RESERVED => 'Entity.Application.State.Reserved',
-                ApplicationEntity::STATE_FULFILLED => 'Entity.Application.State.Fulfilled',
-                ApplicationEntity::STATE_CANCELLED => 'Entity.Application.State.Cancelled'
+                ApplicationEntity::STATE_WAITING => 'Value.Application.State.Waiting',
+                ApplicationEntity::STATE_RESERVED => 'Value.Application.State.Reserved',
+                ApplicationEntity::STATE_FULFILLED => 'Value.Application.State.Fulfilled',
+                ApplicationEntity::STATE_CANCELLED => 'Value.Application.State.Cancelled'
             ])
             ->setSortable()
             ->setFilterSelect([
                 NULL => '',
-                ApplicationEntity::STATE_WAITING => 'Entity.Application.State.Waiting',
-                ApplicationEntity::STATE_RESERVED => 'Entity.Application.State.Reserved',
-                ApplicationEntity::STATE_FULFILLED => 'Entity.Application.State.Fulfilled',
-                ApplicationEntity::STATE_CANCELLED => 'Entity.Application.State.Cancelled'
+                ApplicationEntity::STATE_WAITING => 'Value.Application.State.Waiting',
+                ApplicationEntity::STATE_RESERVED => 'Value.Application.State.Reserved',
+                ApplicationEntity::STATE_FULFILLED => 'Value.Application.State.Fulfilled',
+                ApplicationEntity::STATE_CANCELLED => 'Value.Application.State.Cancelled'
             ]);
 
         /*$grid->addColumnText('address','Adresa')
@@ -108,11 +108,11 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('zip','PSČ')
             ->setFilterText()
             ->setSuggestion();*/
-        $grid->addColumnText('firstName', 'Entity.Person.FirstName')
+        $grid->addColumnText('firstName', 'Attribute.Person.FirstName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnText('lastName', 'Entity.Person.LastName')
+        $grid->addColumnText('lastName', 'Attribute.Person.LastName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
@@ -126,7 +126,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('birthCode', 'Kod rodného čísla')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDateTime('cart.created', 'Entity.Created')
+        $grid->addColumnDateTime('cart.created', 'Attribute.Created')
             ->setSortable()
             ->setFilterDateRange();
         /*$grid->addColumnText('invoiced', 'Faktura')

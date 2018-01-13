@@ -55,16 +55,16 @@ class AdditionsGridWrapper extends GridWrapper {
     }
 
     protected function appendAdditionColumns(Grid $grid) {
-        $grid->addColumnText('position', 'Entity.Position')
+        $grid->addColumnText('position', 'Attribute.Position')
             ->setSortable()
             ->setDefaultSort('ASC');
-        $grid->addColumnText('name', 'Entity.Name')
+        $grid->addColumnText('name', 'Attribute.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnNumber('minimum', 'Entity.Addition.Minimum')
+        $grid->addColumnNumber('minimum', 'Attribute.Addition.Minimum')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnNumber('maximum', 'Entity.Addition.Maximum')
+        $grid->addColumnNumber('maximum', 'Attribute.Addition.Maximum')
             ->setSortable()
             ->setFilterNumber();
     }
@@ -73,7 +73,7 @@ class AdditionsGridWrapper extends GridWrapper {
     protected function appendActions(Grid $grid) {
         $grid->addActionHref('edit', 'Form.Action.Edit', 'Addition:edit')
             ->setIcon('fa fa-pencil');
-        $grid->addActionHref('options', 'Entity.Addition.Options', 'Option:')
+        $grid->addActionHref('options', 'Entity.Plural.Option', 'Option:')
             ->setIcon('fa fa-list-ul');
         $grid->addActionEvent('moveUp', 'Form.Action.MoveUp', [$this, 'onMoveUpClicked'])
             ->setIcon('fa fa-arrow-up');
@@ -99,7 +99,7 @@ class AdditionsGridWrapper extends GridWrapper {
             return;
         }
         $this->additionManager->moveAdditionUp($addition);
-        $this->flashTranslatedMessage('Entity.Message.MoveUp.Success');
+        $this->flashTranslatedMessage('Form.Message.MoveUp.Success');
         $this->redirect('this');
     }
 
@@ -114,7 +114,7 @@ class AdditionsGridWrapper extends GridWrapper {
             return;
         }
         $this->additionManager->moveAdditionDown($addition);
-        $this->flashTranslatedMessage('Entity.Message.MoveDown.Success');
+        $this->flashTranslatedMessage('Form.Message.MoveDown.Success');
         $this->redirect('this');
     }
 
@@ -124,7 +124,7 @@ class AdditionsGridWrapper extends GridWrapper {
             return;
         }
         $this->additionManager->deleteAddition($addition);
-        $this->flashTranslatedMessage('Entity.Message.Delete.Success');
+        $this->flashTranslatedMessage('Form.Message.Delete.Success');
         $this->redirect('this');
     }
 }

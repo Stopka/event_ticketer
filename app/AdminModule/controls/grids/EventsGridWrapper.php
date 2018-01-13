@@ -45,28 +45,28 @@ class EventsGridWrapper extends GridWrapper {
     }
 
     protected function appendEventColumns(Grid $grid) {
-        $grid->addColumnText('name', 'Entity.Name')
+        $grid->addColumnText('name', 'Attribute.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('state', 'Entity.Event.State.State')
+        $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
             ->setReplacement([
-                EventEntity::STATE_INACTIVE => 'Entity.Event.State.Inactive',
-                EventEntity::STATE_ACTIVE => 'Entity.Event.State.Active',
-                EventEntity::STATE_CLOSED => 'Entity.Event.State.Closed',
-                EventEntity::STATE_CANCELLED => 'Entity.Event.State.Cancelled'
+                EventEntity::STATE_INACTIVE => 'Value.Event.State.Inactive',
+                EventEntity::STATE_ACTIVE => 'Value.Event.State.Active',
+                EventEntity::STATE_CLOSED => 'Value.Event.State.Closed',
+                EventEntity::STATE_CANCELLED => 'Value.Event.State.Cancelled'
             ])
             ->setFilterSelect([
                 NULL => '',
-                EventEntity::STATE_INACTIVE => 'Entity.Event.State.Inactive',
-                EventEntity::STATE_ACTIVE => 'Entity.Event.State.Active',
-                EventEntity::STATE_CLOSED => 'Entity.Event.State.Closed',
-                EventEntity::STATE_CANCELLED => 'Entity.Event.State.Cancelled'
+                EventEntity::STATE_INACTIVE => 'Value.Event.State.Inactive',
+                EventEntity::STATE_ACTIVE => 'Value.Event.State.Active',
+                EventEntity::STATE_CLOSED => 'Value.Event.State.Closed',
+                EventEntity::STATE_CANCELLED => 'Value.Event.State.Cancelled'
             ]);
-        $grid->addColumnNumber('capacity', 'Entity.Event.Capacity', '0')
+        $grid->addColumnNumber('capacity', 'Attribute.Event.Capacity', '0')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnDate('startDate', 'Entity.Event.Public')
+        $grid->addColumnDate('startDate', 'Attribute.Event.Public')
             ->setDefaultSort('ASC')
             ->setFilterDateRange();
     }
@@ -75,7 +75,7 @@ class EventsGridWrapper extends GridWrapper {
     protected function appendActions(Grid $grid) {
         $grid->addActionHref('edit', 'Form.Action.Edit', 'Event:edit')
             ->setIcon('fa fa-pencil');
-        $grid->addActionHref('applications', 'Entity.Event.Applications', 'Application:')
+        $grid->addActionHref('applications', 'Entity.Plural.Application', 'Application:')
             ->setIcon('fa fa-ticket');
         $grid->addActionEvent('activate', 'Form.Action.Activate', [$this, 'onActivateClicked'])
             ->setIcon('fa fa-toggle-on')

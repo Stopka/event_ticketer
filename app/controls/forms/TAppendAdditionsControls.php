@@ -18,6 +18,18 @@ use Nette\Utils\Html;
 trait TAppendAdditionsControls {
     use TRecalculateControl;
 
+    /** @var string  */
+    private $visibilityPlace = AdditionEntity::VISIBLE_RESERVATION;
+
+    /** @var bool  */
+    private $visiblePrice = false;
+
+    /** @var bool  */
+    private $visiblePriceTotal = false;
+
+    /** @var bool  */
+    private $visibleCountLeft = false;
+
     /**
      * @return \App\Model\Persistence\Entity\EventEntity
      */
@@ -33,19 +45,74 @@ trait TAppendAdditionsControls {
      */
     abstract protected function getApplicationDao();
 
+    protected function setVisibilityPlace(string $place = AdditionEntity::VISIBLE_RESERVATION){
+        $this->visibilityPlace = $place;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisibilityPlace(): string {
+        return $this->visibilityPlace;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisiblePrice(): bool {
+        return $this->visiblePrice;
+    }
+
+    /**
+     * @param bool $visiblePrice
+     */
+    public function setVisiblePrice(bool $visiblePrice = true): void {
+        $this->visiblePrice = $visiblePrice;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisiblePriceTotal(): bool {
+        return $this->visiblePriceTotal;
+    }
+
+    /**
+     * @param bool $visiblePriceTotal
+     */
+    public function setVisiblePriceTotal(bool $visiblePriceTotal = true): void {
+        $this->visiblePriceTotal = $visiblePriceTotal;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisibleCountLeft(): bool {
+        return $this->visibleCountLeft;
+    }
+
+    /**
+     * @param bool $visibleCountLeft
+     */
+    public function setVisibleCountLeft(bool $visibleCountLeft = true): void {
+        $this->visibleCountLeft = $visibleCountLeft;
+    }
+
     protected function appendAdditionsControls(Form $form, Container $container, int $index = 0) {
         $subcontainer = $container->addContainer('addittions');
         foreach ($this->getEvent()->getAdditions() as $addition) {
-            if (!$addition->isVisibleIn(AdditionEntity::VISIBLE_REGISTER)) {
+            if (!$addition->isVisibleIn($this->visibilityPlace)) {
                 continue;
             }
             $this->appendAdditionContols($subcontainer, $addition, $index);
         }
-        $subcontainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Celkem za přihlášku',
-            Html::el('div', ['class' => 'price_subtotal'])
-                ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
-                ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
-        );
+        if($this->isVisiblePriceTotal()){
+            $subcontainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Form.Application.TotalPrice',
+                Html::el('div', ['class' => 'price_subtotal'])
+                    ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
+                    ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
+            );
+        }
     }
 
     protected function appendAdditionContols(Container $container, AdditionEntity $addition, int $index) {
@@ -167,14 +234,16 @@ trait TAppendAdditionsControls {
                     ->setText($option->getName())
             );
         }
-        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['amount']) && isset($prices[$option->getId()]['currency'])) {
+        if ($this->isVisiblePrice() && isset($prices[$option->getId()]) &&
+            isset($prices[$option->getId()]['amount']) && isset($prices[$option->getId()]['currency'])) {
             $price = $prices[$option->getId()];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline price'])
                     ->setText($price['amount'] . $price['currency'])
             );
         }
-        if (isset($prices[$option->getId()]) && isset($prices[$option->getId()]['countLeft'])) {
+        if ($this->isVisibleCountLeft() && isset($prices[$option->getId()]) &&
+            isset($prices[$option->getId()]['countLeft'])) {
             $left = $prices[$option->getId()]['countLeft'];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline countLeft', 'data-price-predisable' => $left == 0 && !$this->isAdmin()])

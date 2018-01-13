@@ -58,40 +58,40 @@ class SubstitutesGridWrapper extends GridWrapper {
     }
 
     protected function appendCartColumns(Grid $grid) {
-        $grid->addColumnText('state', 'Entity.Substitute.State.State')
+        $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
             ->setReplacement([
-                SubstituteEntity::STATE_WAITING => 'Entity.Substitute.State.Waiting',
-                SubstituteEntity::STATE_ACTIVE => 'Entity.Substitute.State.Active',
-                SubstituteEntity::STATE_OVERDUE => 'Entity.Substitute.State.Overdue',
-                SubstituteEntity::STATE_ORDERED => 'Entity.Substitute.State.Ordered'
+                SubstituteEntity::STATE_WAITING => 'Value.Substitute.State.Waiting',
+                SubstituteEntity::STATE_ACTIVE => 'Value.Substitute.State.Active',
+                SubstituteEntity::STATE_OVERDUE => 'Value.Substitute.State.Overdue',
+                SubstituteEntity::STATE_ORDERED => 'Value.Substitute.State.Ordered'
             ])
             ->setFilterSelect([
                 NULL => '',
-                SubstituteEntity::STATE_WAITING => 'Entity.Substitute.State.Waiting',
-                SubstituteEntity::STATE_ACTIVE => 'Entity.Substitute.State.Active',
-                SubstituteEntity::STATE_OVERDUE => 'Entity.Substitute.State.Overdue',
-                SubstituteEntity::STATE_ORDERED => 'Entity.Substitute.State.Ordered'
+                SubstituteEntity::STATE_WAITING => 'Value.Substitute.State.Waiting',
+                SubstituteEntity::STATE_ACTIVE => 'Value.Substitute.State.Active',
+                SubstituteEntity::STATE_OVERDUE => 'Value.Substitute.State.Overdue',
+                SubstituteEntity::STATE_ORDERED => 'Value.Substitute.State.Ordered'
             ]);
-        $grid->addColumnText('firstName', 'Entity.Person.FirstName')
+        $grid->addColumnText('firstName', 'Attribute.Person.FirstName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnText('lastName', 'Entity.Person.LastName')
+        $grid->addColumnText('lastName', 'Attribute.Person.LastName')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnEmail('email', 'Entity.Person.Email')
+        $grid->addColumnEmail('email', 'Attribute.Person.Email')
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnDate('created', 'Entity.Created', 'd.m.Y H:i:s')
+        $grid->addColumnDate('created', 'Attribute.Created', 'd.m.Y H:i:s')
             ->setDefaultSort('ASC')
             ->setFilterDateRange();
-        $grid->addColumnText('count', 'Entity.Application.Count')
+        $grid->addColumnText('count', 'Attribute.Application.Count')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnText('early.lastName', 'Entity.Person.Type.Substitute')
+        $grid->addColumnText('early.lastName', 'Entity.Singular.Substitute')
             ->setCustomRender(function (SubstituteEntity $susbstitute) {
                 $early = $susbstitute->getEarly();
                 if (!$early) {

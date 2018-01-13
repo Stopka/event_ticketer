@@ -1,26 +1,26 @@
 {layout '@layout.latte'}
 {block content}
-    <h1><i class="fa fa-calendar-o"></i> {_'Entity.Event.Event'} <em>{$event->getName()}</em></h1>
+    <h1><i class="fa fa-calendar-o"></i> {_'Entity.Singular.Event'} <em>{$event->getName()}</em></h1>
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Application:default')?active">
                 <a n:href="Application:default,$event->getId()">
-                    <span><i class="fa fa-ticket"></i> {_'Entity.Event.Applications'}</span>
+                    <span><i class="fa fa-ticket"></i> {_'Entity.Plural.Application'}</span>
                 </a>
             </li>
             <li n:class="$presenter->isLinkCurrent('Substitute:default')?active">
                 <a n:href="Substitute:default,$event->getId()">
-                    <span><i class="fa fa-retweet"></i> {_'Entity.Person.Type.Substitutes'}</span>
+                    <span><i class="fa fa-retweet"></i> {_'Entity.Plural.Substitute'}</span>
                 </a>
             </li>
             <li n:class=" $presenter->isLinkCurrent('Early:default')?active">
                 <a n:href="Early:default,$event->getId()">
-                    <span><i class="fa fa-star"></i> {_'Entity.Person.Type.Earlies'}</span>
+                    <span><i class="fa fa-star"></i> {_'Entity.Plural.Early'}</span>
                 </a>
             </li>
             <li n:class=" $presenter->isLinkCurrent('EarlyWave:default')?active">
                 <a n:href="EarlyWave:default,$event->getId()">
-                    <span><i class="fa fa-star-o"></i> {_'Entity.Event.EarlyWaves'}</span>
+                    <span><i class="fa fa-star-o"></i> {_'Entity.Plural.EarlyWave'}</span>
                 </a>
             </li>
         </ul>

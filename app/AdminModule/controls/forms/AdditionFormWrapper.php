@@ -91,37 +91,37 @@ class AdditionFormWrapper extends FormWrapper {
     }
 
     protected function appendAdditionControls(Form $form) {
-        $form->addGroup("Entity.Addition.Addition")
+        $form->addGroup("Entity.Singular.Addition")
             ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addText('name', 'Entity.Name')
+        $form->addText('name', 'Attribute.Name')
             ->setRequired();
-        $form->addSelect('requiredForState', 'Entity.Addition.RequiredForState', [
+        $form->addSelect('requiredForState', 'Attribute.Addition.RequiredForState', [
             null => 'Nic',
-            ApplicationEntity::STATE_RESERVED => 'Entity.Addition.ForState.Reserved',
-            ApplicationEntity::STATE_FULFILLED => 'Entity.Addition.ForState.Fulfilled'
+            ApplicationEntity::STATE_RESERVED => 'Value.ForState.Reserved',
+            ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled'
         ])
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.RequiredForState")
             ->setDefaultValue(null)
             ->setRequired(false);
-        $form->addSelect('enoughForState', 'Entity.Addition.EnoughForState', [
+        $form->addSelect('enoughForState', 'Attribute.Addition.EnoughForState', [
             null => 'Nic',
-            ApplicationEntity::STATE_RESERVED => 'Entity.Addition.ForState.Reserved',
-            ApplicationEntity::STATE_FULFILLED => 'Entity.Addition.ForState.Fulfilled'
+            ApplicationEntity::STATE_RESERVED => 'Value.ForState.Reserved',
+            ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled'
         ])
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.EnoughForState")
             ->setDefaultValue(null)
             ->setRequired(false);
-        $form->addCheckboxList('visible', 'Entity.Addition.Visible.Visible',AdditionEntity::getVisiblePlaces())
+        $form->addCheckboxList('visible', 'Attribute.Addition.Visible',AdditionEntity::getVisiblePlaces())
             ->setDefaultValue(array_keys(AdditionEntity::getVisiblePlaces()))
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Visible");
-        $form->addText('minimum', 'Entity.Addition.Minimum')
+        $form->addText('minimum', 'Attribute.Addition.Minimum')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Minimum")
             ->setOption($form::MIME_TYPE, "number")
             ->setDefaultValue(0)
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, null, [0, null]);
-        $form->addText('maximum', 'Entity.Addition.Maximum')
+        $form->addText('maximum', 'Attribute.Addition.Maximum')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Maximum")
             ->setOption($form::MIME_TYPE, "number")
             ->setDefaultValue(1)

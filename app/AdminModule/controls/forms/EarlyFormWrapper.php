@@ -101,15 +101,15 @@ class EarlyFormWrapper extends FormWrapper {
 }
 
     protected function appendEarlyControls(Form $form) {
-        $form->addGroup("Entity.Person.Type.Early")
+        $form->addGroup("Entity.Singular.Early")
             ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addText('firstName', 'Entity.Person.FirstName')
+        $form->addText('firstName', 'Attribute.Person.FirstName')
             ->setRequired(false);
-        $form->addText('lastName', 'Entity.Person.LastName')
+        $form->addText('lastName', 'Attribute.Person.LastName')
             ->setRequired(false);
-        $form->addEmail('email', 'Entity.Person.Email')
+        $form->addEmail('email', 'Attribute.Person.Email')
             ->setRequired(true);
-        $form->addSelect('earlyWaveId', 'Entity.Event.EarlyWave', $this->getEarlyFormSelectArray($this->eventEntity))
+        $form->addSelect('earlyWaveId', 'Entity.Singular.EarlyWave', $this->getEarlyFormSelectArray($this->eventEntity))
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Early.Description.EarlyWave")
             ->setDefaultValue(null)
             ->setRequired(false)
@@ -118,9 +118,9 @@ class EarlyFormWrapper extends FormWrapper {
         $form->addGroup("Form.Early.Group.NewEarlyWave")
             ->setOption($form::OPTION_KEY_ID, 'earlyWaveControlGroup');
         $wave = $form->addContainer('earlyWave');
-        $wave->addText('name', 'Entity.Name')
+        $wave->addText('name', 'Attribute.Name')
             ->setRequired(false);
-        $wave->addDate('startDate', 'Entity.Event.StartDate', DateInput::TYPE_DATE)
+        $wave->addDate('startDate', 'Attribute.Event.StartDate', DateInput::TYPE_DATE)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Early.Description.StartDate')
             ->setDefaultValue(new \DateTime())
             ->setRequired(false)

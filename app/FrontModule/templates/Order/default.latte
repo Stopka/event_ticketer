@@ -1,7 +1,7 @@
 {block content}
 <h1><i class="fa fa-shopping-cart"></i> {_'Presenter.Front.Order.Default.H1',['cart_id'=>$cart->getId()]}</h1>
 <ul>
-    <li>{_'Entity.Event.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
+    <li>{_'Entity.Singular.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
     <li>Jméno: <strong>{$cart->getFirstName()}</strong></li>
     <li>Příjmení: <strong>{$cart->getLastName()}</strong></li>
     <li>Telefon: <strong>{$cart->getPhone()}</strong></li>
@@ -12,5 +12,5 @@
     </li>
 </ul>
 
-<h2><i class="fa fa-ticket "></i> {_'Entity.Event.Applications'}</h2>
+<h2><i class="fa fa-ticket "></i> {_'Entity.Plural.Application'}</h2>
 {control applicationsGrid}

@@ -6,6 +6,7 @@ use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\InsuranceCompanyDao;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
@@ -67,6 +68,10 @@ class CartFormWrapper extends FormWrapper {
         $this->cartManager = $cartManager;
         $this->applicationDao = $applicationDao;
         $this->insuranceCompanyDao = $insuranceCompanyDao;
+        $this->setVisibilityPlace(AdditionEntity::VISIBLE_REGISTER);
+        $this->setVisiblePrice(true);
+        $this->setVisiblePriceTotal(true);
+        $this->setVisibleCountLeft(true);
     }
 
     protected function getEvent() {

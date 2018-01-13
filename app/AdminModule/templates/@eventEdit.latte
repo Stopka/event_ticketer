@@ -1,7 +1,7 @@
 {layout '@layout.latte'}
 {block content}
-    <h1 n:if="$event"><i class="fa fa-calendar-o"></i> {_'Entity.Event.Event'} <em>{$event->getName()}</em></h1>
-    <h1 n:if="!$event"><i class="fa fa-calendar-o"></i> {_'Entity.Event.Event'}</h1>
+    <h1 n:if="$event"><i class="fa fa-calendar-o"></i> {_'Entity.Singular.Event'} <em>{$event->getName()}</em></h1>
+    <h1 n:if="!$event"><i class="fa fa-calendar-o"></i> {_'Entity.Singular.Event'}</h1>
     {var $eventId = $event?$event->getId():null }
     <div class="nav-tabs">
         <ul>
@@ -13,7 +13,7 @@
             </li>
             <li n:class="$presenter->isLinkCurrent('Addition:default')?active, !$event?disabled">
                 <a n:href="Addition:default,$eventId">
-                    <span><i class="fa fa-archive"></i> {_'Entity.Addition.Additions'}</span>
+                    <span><i class="fa fa-archive"></i> {_'Entity.Plural.Addition'}</span>
                 </a>
             </li>
         </ul>

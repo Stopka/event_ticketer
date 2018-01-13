@@ -2,35 +2,35 @@
  * @param EventEntity[] $events
  *}
 {block content}
-<h1><i class="fa fa-shopping-cart"></i> {_'Entity.Event.Cart'} #{$cart->getId()}</h1>
+<h1><i class="fa fa-shopping-cart"></i> {_'Entity.Singular.Cart'} #{$cart->getId()}</h1>
 <ul>
-    <li>{_'Entity.Event.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
-    <li n:if="$cart->getFirstName()">{_'Entity.Person.FirstName'}: <strong>{$cart->getFirstName()}</strong></li>
-    <li n:if="$cart->getLastName()">{_'Entity.Person.LastName'}: <strong>{$cart->getLastName()}</strong></li>
-    <li n:if="$cart->getPhone()">{_'Entity.Person.Phone'}: <strong>{$cart->getPhone()}</strong></li>
-    <li n:if="$cart->getEmail()">{_'Entity.Person.Email'}: <strong><a href="mailto:{$cart->getEmail()}">{$cart->getEmail()}</a></strong></li>
+    <li>{_'Entity.Singular.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
+    <li n:if="$cart->getFirstName()">{_'Attribute.Person.FirstName'}: <strong>{$cart->getFirstName()}</strong></li>
+    <li n:if="$cart->getLastName()">{_'Attribute.Person.LastName'}: <strong>{$cart->getLastName()}</strong></li>
+    <li n:if="$cart->getPhone()">{_'Attribute.Person.Phone'}: <strong>{$cart->getPhone()}</strong></li>
+    <li n:if="$cart->getEmail()">{_'Attribute.Person.Email'}: <strong><a href="mailto:{$cart->getEmail()}">{$cart->getEmail()}</a></strong></li>
     {var $link = $control->link('//:Front:Cart:default',$cart->getHashId())}
-    <li>{_'Entity.Link'}: <strong><a href="{$link}">{$link}</a></strong></li>
+    <li>{_'Attribute.Link'}: <strong><a href="{$link}">{$link}</a></strong></li>
     <li n:if="$cart->getEarly()">
-        {_'Entity.Person.Type.Early'}:
+        {_'Entity.Singular.Early'}:
         {var $early = $cart->getEarly()}
         <ul>
-            <li n:if="$early->getFirstName()">{_'Entity.Person.FirstName'}: <strong>{$early->getFirstName()}</strong></li>
-            <li n:if="$early->getLastName()">{_'Entity.Person.LastName'}: <strong>{$early->getLastName()}</strong></li>
-            <li n:if="$early->getEmail()">{_'Entity.Person.Email'}: <strong><a href="mailto:{$early->getEmail()}">{$early->getEmail()}</a></strong></li>
-            <li n:if="$early->getPhone()">{_'Entity.Person.Phone'}: <strong>{$early->getPhone()}</strong></li>
+            <li n:if="$early->getFirstName()">{_'Attribute.Person.FirstName'}: <strong>{$early->getFirstName()}</strong></li>
+            <li n:if="$early->getLastName()">{_'Attribute.Person.LastName'}: <strong>{$early->getLastName()}</strong></li>
+            <li n:if="$early->getEmail()">{_'Attribute.Person.Email'}: <strong><a href="mailto:{$early->getEmail()}">{$early->getEmail()}</a></strong></li>
+            <li n:if="$early->getPhone()">{_'Attribute.Person.Phone'}: <strong>{$early->getPhone()}</strong></li>
         </ul>
     </li>
     <li n:if="$cart->getSubstitute()">
-        {_'Entity.Person.Type.Substitute'}:
+        {_'Entity.Singular.Substitute'}:
         {var $substitute = $cart->getSubstitute()}
         <ul>
-            <li n:if="$substitute->getFirstName()">{_'Entity.Person.FirstName'}: <strong>{$substitute->getFirstName()}</strong></li>
-            <li n:if="$substitute->getLastName()">{_'Entity.Person.LastName'}: <strong>{$substitute->getLastName()}</strong></li>
-            <li n:if="$substitute->getEmail()">{_'Entity.Person.Email'}: <strong><a href="mailto:{$substitute->getEmail()}">{$substitute->getEmail()}</a></strong></li>
+            <li n:if="$substitute->getFirstName()">{_'Attribute.Person.FirstName'}: <strong>{$substitute->getFirstName()}</strong></li>
+            <li n:if="$substitute->getLastName()">{_'Attribute.Person.LastName'}: <strong>{$substitute->getLastName()}</strong></li>
+            <li n:if="$substitute->getEmail()">{_'Attribute.Person.Email'}: <strong><a href="mailto:{$substitute->getEmail()}">{$substitute->getEmail()}</a></strong></li>
         </ul>
     </li>
 </ul>
 
-<h2><i class="fa fa-ticket"></i> {_'Entity.Event.Applications'}</h2>
+<h2><i class="fa fa-ticket"></i> {_'Entity.Plural.Application'}</h2>
 {control cartApplicationsGrid}

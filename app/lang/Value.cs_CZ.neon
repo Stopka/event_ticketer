@@ -1,0 +1,39 @@
+Boolean:
+    'Yes': Ano
+    'No': Ne
+Addition:
+    Visible:
+        Reservation: V rezervaci
+        Register: V registraci
+        Customer: V náhledu zákazníka
+        Preview: V náhledu
+        Export: V exportu
+    AutoSelect:
+        None: Nikdy
+        Always: Vždy
+        SecondOn: Od druhé přihlášky dál
+Event:
+    State:
+        Inactive: Neaktivní
+        Active: Aktivní
+        Closed: Dokončeno
+        Cancelled: Zrušeno
+Application:
+    State:
+        Waiting: 'Čeká'
+        Reserved: 'Rezervováno'
+        Fulfilled: 'Splněno'
+        Cancelled: 'Zrušeno'
+Substitute:
+    State:
+        Waiting: 'Ve frontě'
+        Active: 'Přijatý'
+        Overdue: 'Prošlý'
+        Ordered: 'Registrovaný'
+ForState:
+        Reserved: 'Závaznou rezervaci'
+        Fulfilled: 'Celkové dokončení'
+OccupancyIcon:
+    None: Žádná
+    Bus: Autobus
+    Bed: Postel

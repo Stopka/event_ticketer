@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 class AdditionEntity extends BaseEntity implements ISortableEntity {
     use TPositionAttribute, TIdentifierAttribute, TNameAttribute;
 
+    const VISIBLE_RESERVATION = 'reservation';
     const VISIBLE_REGISTER = 'register';
     const VISIBLE_CUSTOMER = 'customer';
     const VISIBLE_PREVIEW = 'preview';
@@ -30,10 +31,11 @@ class AdditionEntity extends BaseEntity implements ISortableEntity {
 
     public static function getVisiblePlaces(){
         return [
-            self::VISIBLE_REGISTER => 'Entity.Addition.Visible.Register',
-            self::VISIBLE_CUSTOMER => 'Entity.Addition.Visible.Customer',
-            self::VISIBLE_PREVIEW => 'Entity.Addition.Visible.Preview',
-            self::VISIBLE_EXPORT => 'Entity.Addition.Visible.Export',
+            self::VISIBLE_RESERVATION => 'Value.Addition.Visible.Reservation',
+            self::VISIBLE_REGISTER => 'Value.Addition.Visible.Register',
+            self::VISIBLE_CUSTOMER => 'Value.Addition.Visible.Customer',
+            self::VISIBLE_PREVIEW => 'Value.Addition.Visible.Preview',
+            self::VISIBLE_EXPORT => 'Value.Addition.Visible.Export',
         ];
     }
 

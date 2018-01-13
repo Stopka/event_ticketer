@@ -1,3 +1,7 @@
+Message:
+    MoveUp.Success: 'Položka byla úspšně posunuta nahoru'
+    MoveDown.Success: 'Položka byla úspšně posunuta dolu'
+    Delete.Success: 'Položka byla úspšně smazána'
 Rule:
     Equal: 'Pole %label musí být %s.'
     Filled: 'Vyplnte prosím pole %label.'
@@ -27,6 +31,7 @@ Action:
     MoveUp: 'Přesunout výš'
     MoveDown: 'Přesunout níž'
     Delete: 'Smazat'
+    Detail: Detail
 SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
 Entity:
     Message:
@@ -51,10 +56,13 @@ Addition:
     Message:
         Edit.Success: 'Přídavek byl upraven.'
         Create.Success: 'Přídavek byl vytvořen.'
+Application:
+    TotalPrice: Celkem za přihlášku
 Cart:
     Message:
         Edit.Success: 'Objednávka byla upravena.'
         Create.Success: 'Registarce byla vytvořena. Přihlášky byly odeslány emailem.'
+    TotalPrice: Celková cena
 Currency:
     Rule:
         Code.Pattern: 'Kód musí sestávat ze 3 velkých písmen'

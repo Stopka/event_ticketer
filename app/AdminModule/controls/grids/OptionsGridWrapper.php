@@ -76,38 +76,38 @@ class OptionsGridWrapper extends GridWrapper {
     }
 
     protected function appendOptionColumns(Grid $grid) {
-        $grid->addColumnText('position', 'Entity.Position')
+        $grid->addColumnText('position', 'Attribute.Position')
             ->setSortable()
             ->setDefaultSort('ASC');
-        $grid->addColumnText('name', 'Entity.Name')
+        $grid->addColumnText('name', 'Attribute.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnNumber('capacity', 'Entity.Event.Capacity')
+        $grid->addColumnNumber('capacity', 'Attribute.Event.Capacity')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnNumber('occupnacyIcon', 'Entity.Event.OccupancyIcon')
+        $grid->addColumnNumber('occupnacyIcon', 'Attribute.Event.OccupancyIcon')
             ->setSortable()
             ->setCustomRender(function (OptionEntity $option) {
                 return $this->occupancyIcons->getIconHtml($option->getOccupancyIcon());
             });
-        $grid->addColumnNumber('autoselect', 'Entity.Addition.AutoSelect.AutoSelect')
+        $grid->addColumnNumber('autoselect', 'Attribute.Addition.AutoSelect')
             ->setSortable()
             ->setReplacement([
-                OptionEntity::AUTOSELECT_NONE => "Entity.Addition.AutoSelect.None",
-                OptionEntity::AUTOSELECT_ALWAYS => "Entity.Addition.AutoSelect.Always",
-                OptionEntity::AUTOSELECT_SECONDON => "Entity.Addition.AutoSelect.SecondOn",
+                OptionEntity::AUTOSELECT_NONE => "Value.Addition.AutoSelect.None",
+                OptionEntity::AUTOSELECT_ALWAYS => "Value.Addition.AutoSelect.Always",
+                OptionEntity::AUTOSELECT_SECONDON => "Value.Addition.AutoSelect.SecondOn",
             ])
             ->setFilterSelect([
                 null => "",
-                OptionEntity::AUTOSELECT_NONE => "Entity.Addition.AutoSelect.None",
-                OptionEntity::AUTOSELECT_ALWAYS => "Entity.Addition.AutoSelect.Always",
-                OptionEntity::AUTOSELECT_SECONDON => "Entity.Addition.AutoSelect.SecondOn",
+                OptionEntity::AUTOSELECT_NONE => "Value.Addition.AutoSelect.None",
+                OptionEntity::AUTOSELECT_ALWAYS => "Value.Addition.AutoSelect.Always",
+                OptionEntity::AUTOSELECT_SECONDON => "Value.Addition.AutoSelect.SecondOn",
             ]);
     }
 
     protected function appendPriceColumns(Grid $grid) {
         foreach ($this->currencyDao->getAllCurrecies() as $currecy) {
-            $grid->addColumnNumber('price' . $currecy->getCode(), $this->getTranslator()->translate('Entity.Price.Price') . ' ' . $currecy->getCode(), 2)
+            $grid->addColumnNumber('price' . $currecy->getCode(), $this->getTranslator()->translate('Entity.Singular.Price') . ' ' . $currecy->getCode(), 2)
                 ->setCustomRender(function (OptionEntity $optionEntity) use ($currecy) {
                     $price = $optionEntity->getPrice();
                     if (!$price) {
@@ -150,7 +150,7 @@ class OptionsGridWrapper extends GridWrapper {
             return;
         }
         $this->optionManager->moveOptionUp($option);
-        $this->flashTranslatedMessage('Entity.Message.MoveUp.Success');
+        $this->flashTranslatedMessage('Form.Message.MoveUp.Success');
         $this->redirect('this');
     }
 
@@ -165,7 +165,7 @@ class OptionsGridWrapper extends GridWrapper {
             return;
         }
         $this->optionManager->moveOptionDown($option);
-        $this->flashTranslatedMessage('Entity.Message.MoveDown.Success');
+        $this->flashTranslatedMessage('Form.Message.MoveDown.Success');
         $this->redirect('this');
     }
 
@@ -180,7 +180,7 @@ class OptionsGridWrapper extends GridWrapper {
             return;
         }
         $this->optionManager->deleteOption($option);
-        $this->flashTranslatedMessage('Entity.Message.Delete.Success');
+        $this->flashTranslatedMessage('Form.Message.Delete.Success');
         $this->redirect('this');
     }
 }

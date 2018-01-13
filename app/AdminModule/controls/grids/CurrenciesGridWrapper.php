@@ -38,25 +38,25 @@ class CurrenciesGridWrapper extends GridWrapper {
     }
 
     protected function appendCurrencyColumns(Grid $grid) {
-        $grid->addColumnText('name', 'Entity.Name')
+        $grid->addColumnText('name', 'Attribute.Name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('code', 'Entity.Currency.Code')
+        $grid->addColumnText('code', 'Attribute.Currency.Code')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnText('symbol', 'Entity.Currency.Symbol')
+        $grid->addColumnText('symbol', 'Attribute.Currency.Symbol')
             ->setSortable();
-        $grid->addColumnNumber('default', 'Entity.Default')
+        $grid->addColumnNumber('default', 'Attribute.Default')
             ->setSortable()
-            ->setReplacement([true=>'Entity.Boolean.Yes',false=>"Entity.Boolean.No"])
-            ->setFilterSelect([null=>'', true=>'Entity.Boolean.Yes',false=>"Entity.Boolean.No"]);
+            ->setReplacement([true=>'Value.Boolean.Yes',false=>"Value.Boolean.No"])
+            ->setFilterSelect([null=>'', true=>'Value.Boolean.Yes',false=>"Value.Boolean.No"]);
     }
 
 
     protected function appendActions(Grid $grid) {
         $grid->addActionHref('edit','Form.Action.Edit','Currency:edit')
             ->setIcon('fa fa-pencil');
-        $grid->addActionEvent('setDefault','Entity.Default',[$this,'onSetDefaultClicked'])
+        $grid->addActionEvent('setDefault','Attribute.Default',[$this,'onSetDefaultClicked'])
             ->setIcon('fa fa-check-square');
     }
 

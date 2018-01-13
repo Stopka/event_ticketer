@@ -93,7 +93,7 @@ class OccupancyIcons {
 
     protected function getLabelText(string $key): string {
         $label = $this->icons[$key] ?? "";
-        return $this->getTranslator()->translate('Entity.OccupancyIcon.' . $label);
+        return $this->getTranslator()->translate('Value.OccupancyIcon.' . $label);
     }
 
     /**

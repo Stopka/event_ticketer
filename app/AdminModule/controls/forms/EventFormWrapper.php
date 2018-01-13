@@ -80,15 +80,15 @@ class EventFormWrapper extends FormWrapper {
 
     protected function appendEventControls(Form $form) {
         //$form->addGroup("Událost");
-        $form->addText('name', 'Entity.Name')
+        $form->addText('name', 'Attribute.Name')
             ->setRequired();
-        $form->addRadioList('occupancyIcon', 'Entity.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons())
+        $form->addRadioList('occupancyIcon', 'Attribute.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons())
             ->setRequired();
         $form->addCheckbox('limitCapacity', 'Form.Event.Attribute.LimitCapacity')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Event.Description.LimitCapacity")
             ->addCondition($form::EQUAL, true)
             ->toggle('capacityControlGroup');
-        $form->addText('capacity', 'Entity.Event.Capacity')
+        $form->addText('capacity', 'Attribute.Event.Capacity')
             ->setDefaultValue(10)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Event.Description.Capacity')
             ->setOption($form::OPTION_KEY_TYPE, 'number')
@@ -101,7 +101,7 @@ class EventFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Event.Description.Public")
             ->addCondition($form::EQUAL, true)
             ->toggle('startDateControlGroup');
-        $form->addDate('startDate', 'Entity.Event.StartDate', DateInput::TYPE_DATE)
+        $form->addDate('startDate', 'Attribute.Event.StartDate', DateInput::TYPE_DATE)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Event.Description.StartDate')
             ->setOption($form::OPTION_KEY_ID, 'startDateControlGroup')
             ->setDefaultValue(new \DateTime())

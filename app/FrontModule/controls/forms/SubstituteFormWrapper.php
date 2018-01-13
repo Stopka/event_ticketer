@@ -61,16 +61,16 @@ class SubstituteFormWrapper extends FormWrapper {
      * @param Form $form
      */
     protected function appendFormControls(Form $form) {
-        $form->addText('firstName', 'Entity.Person.FirstName', NULL, 255)
+        $form->addText('firstName', 'Attribute.Person.FirstName', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $form->addText('lastName', 'Entity.Person.LastName', NULL, 255)
+        $form->addText('lastName', 'Attribute.Person.LastName', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $form->addText('email', 'Entity.Person.Email')
+        $form->addText('email', 'Attribute.Person.Email')
             ->setRequired()
             ->addRule($form::EMAIL);
-        $form->addText('count', 'Entity.Count')
+        $form->addText('count', 'Attribute.Count')
             ->setType('number')
             ->setDefaultValue(1)
             ->setRequired()

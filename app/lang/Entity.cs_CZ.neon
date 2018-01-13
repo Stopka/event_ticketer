@@ -1,115 +1,31 @@
-Id: ID
-Name: Název
-Position: Position
-Description: Popisek
-State: Stav
-Default: Výchozí
-Created: Vytvořeno
-Count: Počet
-Link: Odkaz
-Detail: Detail
-Boolean:
-    'Yes': Ano
-    'No': Ne
-Address:
-    Address: Addresa
-    AddressNumber: Adresa
-    City: Město
-    Zip: PSČ
-    Country: Stát
-Person:
+Singular:
     Person: Osoba
-    FullName: Celé jméno
-    FirstName: Jméno
-    Username: Uživatelské jméno
-    LastName: Příjmení
-    Password: Heslo
-    Gender: Pohlaví
-    BirthDate: Datum narození
-    Email: Email
-    Phone: Telefon
-    Type:
-        User: Uživatel
-        Administrator: Administrátor
-        Customer: Zákazník
-        Early: Přednostník
-        Earlies: 'Přednostníci'
-        Substitute: Náhradník
-        Substitutes: Náhradníci
-Addition:
-    ForState:
-        Reserved: 'Závaznou rezervaci'
-        Fulfilled: 'Celkové dokončení'
+    User: Uživatel
+    Administrator: Administrátor
+    Customer: Zákazník
+    Early: Přednostník
+    Substitute: Náhradník
     Addition: Přídavek
-    Additions: Přídavky
-    RequiredForState: Vyžadováno pro
-    EnoughForState: Dostatečné pro
-    Visible:
-        Visible: Viditelnost
-        Register: V registraci
-        Customer: V náhledu zákazníka
-        Preview: V náhledu
-        Export: V exportu
-    Hidden: Schovat v náhledu
-    Minimum: Minimum
-    Maximum: Maximum
     Choice: Volba
-    Choices: Volby
-    Payed: Zaplaceno
     Option: Možnost
-    Options: Možnosti přídavku
-    AutoSelect:
-        AutoSelect: Zvolit automaticky
-        None: Nikdy
-        Always: Vždy
-        SecondOn: Od druhé přihlášky dál
-Event:
     Event: Událost
-    Events: Události
-    Capacity: Kapacita
-    CapacityFull: Kapacita naplněna
-    StartDate: Datum začátku
-    Public: Veřejný výdej
-    EndDate: Datum konce
-    Occupancy: Obsazenost
-    OccupancyIcon: Ikona obsazenosti
     EarlyWave: Přednostní vlna
-    EarlyWaves: Přednostní vlny
-    InviteSent: Poznvánka rozeslána
     Application: Přihláška
-    Applications: Přihlášky
     Cart: Objednávka
     Registration: Registrace
-    State:
-        State: Stav
-        Inactive: Neaktivní
-        Active: Aktivní
-        Closed: Dokončeno
-        Cancelled: Zrušeno
-Price:
     Price: Cena
-    Amount: Částka
-Currency:
     Currency: Měna
-    Currencies: Měny
-    Symbol: Symbol
-    Code: Kód
-Application:
-    Count: Počet přihlášek
-    State:
-        State:  'Stav'
-        Waiting: 'Čeká'
-        Reserved: 'Rezervováno'
-        Fulfilled: 'Splněno'
-        Cancelled: 'Zrušeno'
-Substitute:
-    State:
-        State: 'Stav'
-        Waiting: 'Ve frontě'
-        Active: 'Přijatý'
-        Overdue: 'Prošlý'
-        Ordered: 'Registrovaný'
-OccupancyIcon:
-    None: Žádná
-    Bus: Autobus
-    Bed: Postel
+Plural:
+    EarlyWave: Přednostní vlny
+    Currency: Měny
+    Application: Přihlášky
+    Event: Události
+    Option: Možnosti přídavku
+    Choice: Volby
+    Addition: Přídavky
+    Person: Osoby
+    User: Uživatelé
+    Administrator: Administrátoři
+    Customer: Zákazníci
+    Early: 'Přednostníci'
+    Substitute: Náhradníci

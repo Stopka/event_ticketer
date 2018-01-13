@@ -30,10 +30,10 @@ class SignInFormWrapper extends FormWrapper {
      * @param Form $form
      */
     protected function appendFormControls(Form $form) {
-        $form->addText('username','Entity.Person.Username',null,255)
+        $form->addText('username','Attribute.Person.Username',null,255)
             ->setAttribute("autocomplete","off")
             ->setRequired();
-        $form->addPassword('password','Entity.Person.Password', null, 255)
+        $form->addPassword('password','Attribute.Person.Password', null, 255)
             ->setAttribute("autocomplete","off")
             ->setRequired();
         $this->appendSubmitControls($form,'Form.Action.SignIn',[$this,'loginClicked']);
