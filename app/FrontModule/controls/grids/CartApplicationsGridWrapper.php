@@ -6,6 +6,7 @@ use App\Controls\Grids\Grid;
 use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\ChoiceDao;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CartEntity;
 use Grido\Components\Filters\Filter;
@@ -92,7 +93,7 @@ class CartApplicationsGridWrapper extends GridWrapper {
 
     protected function appendAdditionsColumns(Grid $grid) {
         foreach ($this->cart->getEvent()->getAdditions() as $addition) {
-            if ($addition->isHidden()) {
+            if (!$addition->isVisibleIn(AdditionEntity::VISIBLE_CUSTOMER)) {
                 continue;
             }
             $grid->addColumnText('addition' . $addition->getId(), $addition->getName())

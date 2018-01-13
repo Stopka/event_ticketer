@@ -44,7 +44,12 @@ Addition:
     Additions: Přídavky
     RequiredForState: Vyžadováno pro
     EnoughForState: Dostatečné pro
-    Visible: Viditelné v registraci
+    Visible:
+        Visible: Viditelnost
+        Register: V registraci
+        Customer: V náhledu zákazníka
+        Preview: V náhledu
+        Export: V exportu
     Hidden: Schovat v náhledu
     Minimum: Minimum
     Maximum: Maximum

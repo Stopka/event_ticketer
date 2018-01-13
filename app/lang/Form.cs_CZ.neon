@@ -45,8 +45,7 @@ Addition:
     Description:
         Maximum: 'Kolik možností může uživatel při registraci maximálně zvolit?'
         Minimum: 'Kolik možností musí uživatel při registraci minimálně zvolit?'
-        Hidden: 'Má být přídavek schován v uživatelském náhledu objednávky?'
-        Visible: 'Má být přídavek vidět ve veřejném registračním formuláři?'
+        Visible: 'Kde má být přídavek vidět?'
         EnoughForState: 'Splnění tohoto přídavku je dostatečné pro přechod přihlášky do zvoleného stavu.'
         RequiredForState: 'Splnění tohoto přídavku je povinné pro přechod přihlášky do zvoleného stavu.'
     Message:

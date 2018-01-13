@@ -36,7 +36,7 @@ trait TAppendAdditionsControls {
     protected function appendAdditionsControls(Form $form, Container $container, int $index = 0) {
         $subcontainer = $container->addContainer('addittions');
         foreach ($this->getEvent()->getAdditions() as $addition) {
-            if (!$addition->isVisible()) {
+            if (!$addition->isVisibleIn(AdditionEntity::VISIBLE_REGISTER)) {
                 continue;
             }
             $this->appendAdditionContols($subcontainer, $addition, $index);

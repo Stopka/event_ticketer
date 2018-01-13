@@ -44,11 +44,18 @@ class AdditionDao extends EntityDao {
      * @param EventEntity $event
      * @return AdditionEntity[]
      */
-    public function getHiddenEventAdditions(EventEntity $event): array {
-        return $this->getRepository()->findBy([
-                'visible' => false,
-                'event.id' => $event->getId()]
-        );
+    public function getEventAdditionsHiddenIn(EventEntity $event, string $place): array {
+        /** @var AdditionEntity[] $additions */
+        $additions = $this->getRepository()->findBy([
+                'event.id' => $event->getId()
+            ]);
+        $result = [];
+        foreach ($additions as $addition){
+            if(!$addition->isVisibleIn($place)){
+                $result[] = $addition;
+            }
+        }
+        return $result;
     }
 
 }

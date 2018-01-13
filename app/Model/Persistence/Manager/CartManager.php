@@ -101,7 +101,7 @@ class CartManager {
         $cart->setSubstitute($substitute);
         $entityManager->persist($cart);
         $commonValues = $values['commons'];
-        $hiddenAdditions = $this->additionDao->getHiddenEventAdditions($event);
+        $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($event, AdditionEntity::VISIBLE_REGISTER);
         foreach ($values['children'] as $childValues) {
             $application = new ApplicationEntity();
             $application->setByValueArray($commonValues);
@@ -146,7 +146,7 @@ class CartManager {
         $cart->setByValueArray($values);
         $entityManager->persist($cart);
         $commonValues = $values['commons'];
-        $hiddenAdditions = $this->additionDao->getHiddenEventAdditions($event);
+        $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($event, AdditionEntity::VISIBLE_REGISTER);
         foreach ($values['children'] as $id => $childValues) {
             foreach ($cart->getApplications() as $application) {
                 if ($application->getId() != $id) {

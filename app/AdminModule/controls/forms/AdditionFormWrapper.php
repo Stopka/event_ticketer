@@ -111,12 +111,9 @@ class AdditionFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.EnoughForState")
             ->setDefaultValue(null)
             ->setRequired(false);
-        $form->addCheckbox('visible', 'Entity.Addition.Visible')
-            ->setDefaultValue(true)
+        $form->addCheckboxList('visible', 'Entity.Addition.Visible.Visible',AdditionEntity::getVisiblePlaces())
+            ->setDefaultValue(array_keys(AdditionEntity::getVisiblePlaces()))
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Visible");
-        $form->addCheckbox('hidden', 'Entity.Addition.Hidden')
-            ->setDefaultValue(false)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Hidden");
         $form->addText('minimum', 'Entity.Addition.Minimum')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Minimum")
             ->setOption($form::MIME_TYPE, "number")

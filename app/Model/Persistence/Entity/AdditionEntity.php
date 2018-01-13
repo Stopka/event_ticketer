@@ -23,6 +23,20 @@ use Doctrine\ORM\Mapping as ORM;
 class AdditionEntity extends BaseEntity implements ISortableEntity {
     use TPositionAttribute, TIdentifierAttribute, TNameAttribute;
 
+    const VISIBLE_REGISTER = 'register';
+    const VISIBLE_CUSTOMER = 'customer';
+    const VISIBLE_PREVIEW = 'preview';
+    const VISIBLE_EXPORT = 'export';
+
+    public static function getVisiblePlaces(){
+        return [
+            self::VISIBLE_REGISTER => 'Entity.Addition.Visible.Register',
+            self::VISIBLE_CUSTOMER => 'Entity.Addition.Visible.Customer',
+            self::VISIBLE_PREVIEW => 'Entity.Addition.Visible.Preview',
+            self::VISIBLE_EXPORT => 'Entity.Addition.Visible.Export',
+        ];
+    }
+
     public function __construct() {
         $this->options = new ArrayCollection();
     }
@@ -52,16 +66,10 @@ class AdditionEntity extends BaseEntity implements ISortableEntity {
     private $maximum = 1;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @var boolean
+     * @ORM\Column(type="json_array")
+     * @var string[]
      */
-    private $visible = true;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @var boolean
-     */
-    private $hidden = false;
+    private $visible = [];
 
     /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="additions")
@@ -180,15 +188,35 @@ class AdditionEntity extends BaseEntity implements ISortableEntity {
     /**
      * @return bool
      */
-    public function isVisible(): bool {
+    public function isVisibleIn(string $place): bool {
+        return in_array($place,$this->getVisible());
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getVisible(): array{
         return $this->visible;
+    }
+
+    /**
+     * @param  string[] $places
+     */
+    public function setVisible(array $places): void{
+        $this->visible = array_values($places);
     }
 
     /**
      * @param bool $visible
      */
-    public function setVisible(bool $visible): void {
-        $this->visible = $visible;
+    public function setVisibleIn(string $place, bool $visible = true): void {
+        $index = array_search($place, $this->getVisible());
+        if($index !== false && !$visible){
+            unset($this->visible[$index]);
+        }
+        if($index === false && $visible){
+            $this->visible[] = $place;
+        }
     }
 
     /**
@@ -203,20 +231,6 @@ class AdditionEntity extends BaseEntity implements ISortableEntity {
      */
     public function setEnoughForState(?int $enoughForState): void {
         $this->enoughForState = $enoughForState;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isHidden(): bool {
-        return $this->hidden;
-    }
-
-    /**
-     * @param bool $hidden
-     */
-    public function setHidden(bool $hidden) {
-        $this->hidden = $hidden;
     }
 
 }
