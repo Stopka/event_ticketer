@@ -39,7 +39,14 @@ Entity:
         MoveDown.Success: 'Položka byla úspěšně přesunuta níž.'
         Delete.Success: 'Položka byla úspěšně smazána.'
         Delete.Confirm: 'Opravdu chcete smazat položku "%name%"?'
-
+Reservation:
+    Description:
+        Delegated: 'Chcete přihlášky rovnou delegovat konkrétní osobě? Delegovat rezervované přihlášky lze i později.'
+        DelegatedPerson: 'Osoba, které chcete přihlášky delegovat.'
+        Email: 'Na tento email bude automaticky odeslán email s instrukcemi pro vyplnění rezervované přihlášky.'
+    Label:
+        Delegated: 'Delegovat'
+        DelegatedPerson: 'Delegovaná osoba'
 EarlyWave:
     Description:
         StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace?'

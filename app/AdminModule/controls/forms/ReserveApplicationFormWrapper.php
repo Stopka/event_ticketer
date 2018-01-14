@@ -91,7 +91,33 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         $form->addGroup('Entity.Plural.Choice')
             ->setOption('class', 'price_subspace');
         $this->appendAdditionsControls($form, $form, 1);
+        $this->appendDelegateControls($form);
         $this->appendSubmitControls($form, 'Form.Action.Reserve', [$this, 'reserveClicked']);
+    }
+
+    protected function appendDelegateControls(Form $form) {
+        $form->addGroup()
+            ->setOption($form::OPTION_KEY_LOGICAL, true);
+        $form->addStandardizedCheckbox('delegated', 'Form.Reservation.Label.Delegated')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Reservation.Description.Delegated")
+            ->addCondition($form::EQUAL, true)
+            ->toggle('reservationDelegate');
+        $form->addGroup('Form.Reservation.Label.DelegatedPerson')
+            ->setOption($form::OPTION_KEY_ID, 'reservationDelegate')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.DelegatedPerson');
+        $reservation = $form->addContainer('reservation');
+        $reservation->addText("firstName", "Attribute.Person.FirstName", NULL, 255)
+            ->setRequired(false)
+            ->addRule($form::MAX_LENGTH, NULL, 255);
+        $reservation->addText("lastName", "Attribute.Person.LastName", NULL, 255)
+            ->setRequired(false)
+            ->addRule($form::MAX_LENGTH, NULL, 255);
+        $reservation->addText("email", "Attribute.Person.Email")
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.Email')
+            ->setRequired()
+            ->addRule($form::EMAIL)
+            ->setDefaultValue('@');
+
     }
 
     public function reserveClicked(SubmitButton $button) {
