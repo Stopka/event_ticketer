@@ -97,7 +97,7 @@ class AdditionFormWrapper extends FormWrapper {
             ->setRequired();
         $form->addSelect('requiredForState', 'Attribute.Addition.RequiredForState', [
             null => 'Nic',
-            ApplicationEntity::STATE_RESERVED => 'Value.ForState.Reserved',
+            ApplicationEntity::STATE_OCCUPIED => 'Value.ForState.Occupied',
             ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled'
         ])
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.RequiredForState")
@@ -105,7 +105,7 @@ class AdditionFormWrapper extends FormWrapper {
             ->setRequired(false);
         $form->addSelect('enoughForState', 'Attribute.Addition.EnoughForState', [
             null => 'Nic',
-            ApplicationEntity::STATE_RESERVED => 'Value.ForState.Reserved',
+            ApplicationEntity::STATE_OCCUPIED => 'Value.ForState.Occupied',
             ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled'
         ])
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.EnoughForState")

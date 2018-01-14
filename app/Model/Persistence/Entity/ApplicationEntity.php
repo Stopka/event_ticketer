@@ -29,12 +29,23 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use TIdentifierAttribute, TNumberAttribute,  TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute;
+    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute;
 
-    const STATE_WAITING = 1;
-    const STATE_RESERVED = 2;
-    const STATE_FULFILLED = 3;
-    const STATE_CANCELLED = 4;
+    const STATE_RESERVED = 1;
+    const STATE_WAITING = 2;
+    const STATE_OCCUPIED = 3;
+    const STATE_FULFILLED = 4;
+    const STATE_CANCELLED = 5;
+
+    public static function getAllStates(): array {
+        return [
+            self::STATE_RESERVED => "Value.Application.State.Reserved",
+            self::STATE_WAITING => "Value.Application.State.Waiting",
+            self::STATE_OCCUPIED => "Value.Application.State.Occupied",
+            self::STATE_FULFILLED => "Value.Application.State.Fulfilled",
+            self::STATE_CANCELLED => "Value.Application.State.Cancelled"
+        ];
+    }
 
     /**
      * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="application"))
@@ -183,7 +194,7 @@ class ApplicationEntity extends BaseEntity {
     }
 
     public static function getStatesReserved(): array {
-        return [self::STATE_RESERVED, self::STATE_FULFILLED];
+        return [self::STATE_OCCUPIED, self::STATE_FULFILLED];
     }
 
     public static function getStatesNotIssued(): array {

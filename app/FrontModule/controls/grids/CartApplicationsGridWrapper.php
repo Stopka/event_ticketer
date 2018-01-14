@@ -77,7 +77,7 @@ class CartApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnText('state', 'Stav')
             ->setReplacement([
                 ApplicationEntity::STATE_WAITING => 'Nové',
-                ApplicationEntity::STATE_RESERVED => 'Rezervováno',
+                ApplicationEntity::STATE_OCCUPIED => 'Rezervováno',
                 ApplicationEntity::STATE_FULFILLED => 'Doplaceno',
                 ApplicationEntity::STATE_CANCELLED => 'Zrušeno'
             ]);

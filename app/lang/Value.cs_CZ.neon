@@ -20,8 +20,9 @@ Event:
         Cancelled: Zrušeno
 Application:
     State:
-        Waiting: 'Čeká'
         Reserved: 'Rezervováno'
+        Waiting: 'Čeká'
+        Occupied: 'Obsazeno'
         Fulfilled: 'Splněno'
         Cancelled: 'Zrušeno'
 Substitute:
@@ -31,7 +32,7 @@ Substitute:
         Overdue: 'Prošlý'
         Ordered: 'Registrovaný'
 ForState:
-        Reserved: 'Závaznou rezervaci'
+        Occupied: 'Závazné obsazení'
         Fulfilled: 'Celkové dokončení'
 OccupancyIcon:
     None: Žádná

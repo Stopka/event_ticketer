@@ -28,7 +28,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var  EventEntity */
     private $event;
 
-    /** @var int  */
+    /** @var int */
     private $counter = 0;
 
     /**
@@ -84,20 +84,9 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setFilterNumber();
         $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
-            ->setReplacement([
-                ApplicationEntity::STATE_WAITING => 'Value.Application.State.Waiting',
-                ApplicationEntity::STATE_RESERVED => 'Value.Application.State.Reserved',
-                ApplicationEntity::STATE_FULFILLED => 'Value.Application.State.Fulfilled',
-                ApplicationEntity::STATE_CANCELLED => 'Value.Application.State.Cancelled'
-            ])
+            ->setReplacement(ApplicationEntity::getAllStates())
             ->setSortable()
-            ->setFilterSelect([
-                NULL => '',
-                ApplicationEntity::STATE_WAITING => 'Value.Application.State.Waiting',
-                ApplicationEntity::STATE_RESERVED => 'Value.Application.State.Reserved',
-                ApplicationEntity::STATE_FULFILLED => 'Value.Application.State.Fulfilled',
-                ApplicationEntity::STATE_CANCELLED => 'Value.Application.State.Cancelled'
-            ]);
+            ->setFilterSelect(array_merge([NULL => ''], ApplicationEntity::getAllStates()));
 
         /*$grid->addColumnText('address','Adresa')
             ->setFilterText()
@@ -158,7 +147,7 @@ class ApplicationsGridWrapper extends GridWrapper {
         */
     }
 
-    protected function getCounterNumber():int{
+    protected function getCounterNumber(): int {
         return $this->counter++;
     }
 

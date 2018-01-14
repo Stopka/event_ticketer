@@ -71,7 +71,7 @@ class ApplicationsExportResponse implements IResponse {
                 $states = [
                     ApplicationEntity::STATE_CANCELLED => 'Zrušeno',
                     ApplicationEntity::STATE_WAITING => 'Nové',
-                    ApplicationEntity::STATE_RESERVED => 'Rezervováno',
+                    ApplicationEntity::STATE_OCCUPIED => 'Rezervováno',
                     ApplicationEntity::STATE_FULFILLED => 'Splněno'
                 ];
                 return $states[$applicaiton->getState()];
