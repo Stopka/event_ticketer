@@ -58,6 +58,6 @@ class ReservationDelegatedNotifier implements Subscriber {
     }
 
     public function getSubscribedEvents() {
-        return ['CartManager::onCartCreated'];
+        return ['ReservationManager::onReservationDelegated'];
     }
 }

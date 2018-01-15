@@ -39,12 +39,16 @@ class CartEntity extends BaseEntity {
      */
     public function __construct($reservation) {
         $this->applications = new ArrayCollection();
-        if($reservation){
+        if ($reservation) {
             $this->setState(self::STATE_RESERVED);
         }
         $this->setCreated();
-        $this->setUpdated();
     }
+
+    function getLastNumberSearchCriteria(): array {
+        return ["event.id" => $this->getEvent()->getId()];
+    }
+
 
     /**
      * @ORM\Column(type="integer")
@@ -130,11 +134,11 @@ class CartEntity extends BaseEntity {
      * @param EventEntity|NULL $event
      */
     public function setEvent(?EventEntity $event) {
-        if($this->event){
+        if ($this->event) {
             $event->removeIversedCart($this);
         }
         $this->event = $event;
-        if($event) {
+        if ($event) {
             $event->addIversedCart($this);
         }
     }
@@ -178,11 +182,11 @@ class CartEntity extends BaseEntity {
      * @param SubstituteEntity $substitute
      */
     public function setSubstitute(?SubstituteEntity $substitute): void {
-        if($this->substitute){
+        if ($this->substitute) {
             $this->substitute->setInversedCart(NULL);
         }
         $this->substitute = $substitute;
-        if($this->substitute){
+        if ($this->substitute) {
             $this->substitute->setInversedCart($this);
         }
     }
@@ -198,11 +202,11 @@ class CartEntity extends BaseEntity {
      * @param ReservationEntity $reservation
      */
     public function setReservation(?ReservationEntity $reservation): void {
-        if($this->reservation){
+        if ($this->reservation) {
             $this->reservation->setInversedCart(NULL);
         }
         $this->reservation = $reservation;
-        if($this->reservation){
+        if ($this->reservation) {
             $this->reservation->setInversedCart($this);
         }
     }

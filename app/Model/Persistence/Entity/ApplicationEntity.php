@@ -90,8 +90,14 @@ class ApplicationEntity extends BaseEntity {
         }
         $this->choices = new ArrayCollection();
         $this->setCreated();
-        $this->setUpdated();
     }
+
+    function getLastNumberSearchCriteria(): array {
+        return [
+            'cart.event.id'=> $this->getCart()->getEvent()->getId()
+        ];
+    }
+
 
     /**
      * @return null|string

@@ -24,7 +24,7 @@ use Nette\SmartObject;
  * Time: 17:37
  */
 class CartManager {
-    use SmartObject, TDoctrineEntityManager;
+    use SmartObject, TDoctrineEntityManager, TUpdateNumber;
 
     /** @var  OptionDao */
     private $optionDao;
@@ -107,6 +107,7 @@ class CartManager {
         $cart->setEarly($early);
         $cart->setEvent($event);
         $cart->setSubstitute($substitute);
+        $cart->setNextNumber($entityManager);
         $entityManager->persist($cart);
         $commonValues = $values['commons'];
         $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($event, AdditionEntity::VISIBLE_REGISTER);
@@ -117,6 +118,7 @@ class CartManager {
             $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($childValues['insuranceCompanyId']);
             $application->setInsuranceCompany($insuranceCompany);
             $application->setCart($cart);
+            $application->setNextNumber($entityManager);
             $entityManager->persist($application);
             foreach ($childValues['addittions'] as $additionIdAlphaNumeric => $optionIds) {
                 //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
@@ -142,19 +144,20 @@ class CartManager {
     /**
      * @param array $values
      * @param EventEntity|null $event
-     * @param EarlyEntity|null $early
-     * @param SubstituteEntity|null $substitute
      * @return CartEntity
      * @throws \Exception
      */
-    public function createCartFromReservationForm(array $values): void {
+    public function createCartFromReservationForm(array $values, EventEntity $event): void {
         $entityManager = $this->getEntityManager();
         $cart = new CartEntity(true);
+        $cart->setEvent($event);
+        $cart->setNextNumber($entityManager);
         $entityManager->persist($cart);
         for ($i = 0; $i < $values['count']; $i++) {
             $application = new ApplicationEntity(true);
             $cart->addApplication($application);
             $application->setByValueArray($values);
+            $application->setNextNumber($entityManager);
             $entityManager->persist($application);
             foreach ($values['addittions'] as $additionIdAlphaNumeric => $optionIds) {
                 //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);

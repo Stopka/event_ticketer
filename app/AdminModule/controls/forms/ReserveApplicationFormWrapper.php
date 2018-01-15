@@ -114,16 +114,18 @@ class ReserveApplicationFormWrapper extends FormWrapper {
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $reservation->addText("email", "Attribute.Person.Email")
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.Email')
-            ->setRequired()
-            ->addRule($form::EMAIL)
-            ->setDefaultValue('@');
+            ->setDefaultValue('@')
+            ->setRequired(false)
+            ->addConditionOn($form['delegated'],$form::EQUAL,true)
+            ->addRule($form::FILLED)
+            ->addRule($form::EMAIL);
 
     }
 
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->cartManager->createCartFromCartForm($values, $this->event);
+        $this->cartManager->createCartFromReservationForm($values, $this->event);
         $this->getPresenter()->flashTranslatedMessage('Form.Reserve.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Application:', $this->event->getId());
     }

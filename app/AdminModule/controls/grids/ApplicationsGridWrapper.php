@@ -78,7 +78,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendApplicationColumns(Grid $grid) {
-        $grid->addColumnNumber('id', 'Attribute.Id')
+        $grid->addColumnNumber('number', 'Attribute.Number')
             ->setSortable()
             ->setDefaultSort('ASC')
             ->setFilterNumber();
@@ -112,9 +112,6 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnDate('birthDate', 'Datum narození')
             ->setSortable()
             ->setFilterDateRange();
-        $grid->addColumnText('birthCode', 'Kod rodného čísla')
-            ->setSortable()
-            ->setFilterText();
         $grid->addColumnDateTime('cart.created', 'Attribute.Created')
             ->setSortable()
             ->setFilterDateRange();
