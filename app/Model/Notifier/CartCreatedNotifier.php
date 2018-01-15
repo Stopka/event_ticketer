@@ -60,7 +60,7 @@ class CartCreatedNotifier implements Subscriber {
 <p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na následující adrese: <br />
  <a href='$link'>$link</a></p>
 <p>V případě dotazu pište na ldtmpp@email.cz.</p>
-<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>");
+<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě registrace přihlášky.</em></p>");
         foreach ($cartEntity->getApplications() as $application) {
             $file_path = $this->applicationPdfManager->getPdfPath($application);
             $message->addAttachment('přihláška_' . $application->getId() . '.pdf', @file_get_contents($file_path));

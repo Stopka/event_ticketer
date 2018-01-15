@@ -36,7 +36,7 @@ class ApplicationDao extends EntityDao {
      * @return integer
      */
     public function countReservedApplications(EventEntity $event): int {
-        $states = ApplicationEntity::getStatesReserved();
+        $states = ApplicationEntity::getStatesOccupied();
         return $this->getRepository()->countBy([
             'cart.event.id' => $event->getId(),
             'state' => $states
@@ -60,7 +60,7 @@ class ApplicationDao extends EntityDao {
      * @return integer
      */
     public function countReservedApplicationsWithOption(OptionEntity $option): int {
-        $states = ApplicationEntity::getStatesReserved();
+        $states = ApplicationEntity::getStatesOccupied();
         return $this->getRepository()->countBy([
             'choices.option.id' => $option->getId(),
             'state' => $states

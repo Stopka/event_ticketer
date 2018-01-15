@@ -8,6 +8,7 @@
 
 namespace App\Model\Persistence\Entity;
 
+use App\Model\Persistence\Attribute\TCreatedAttribute;
 use App\Model\Persistence\Attribute\TEmailAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TNumberAttribute;
@@ -28,23 +29,28 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class CartEntity extends BaseEntity {
-    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute;
+    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute, TCreatedAttribute;
 
-    const STATE_ORDER = 0;
+    const STATE_RESERVED = 0;
+    const STATE_ORDERED = 0;
 
     /**
      * CartEntity constructor
      */
-    public function __construct() {
+    public function __construct($reservation) {
         $this->applications = new ArrayCollection();
-        $this->created = new \DateTime();
+        if($reservation){
+            $this->setState(self::STATE_RESERVED);
+        }
+        $this->setCreated();
+        $this->setUpdated();
     }
 
     /**
      * @ORM\Column(type="integer")
      * @var int
      */
-    private $state = self::STATE_ORDER;
+    private $state = self::STATE_ORDERED;
 
     /**
      * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="cart"))
@@ -71,10 +77,10 @@ class CartEntity extends BaseEntity {
     private $substitute;
 
     /**
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
+     * @ORM\OneToOne(targetEntity="ReservationEntity", inversedBy="cart")
+     * @var ReservationEntity
      */
-    private $created;
+    private $reservation;
 
     /**
      * @return ApplicationEntity[]
@@ -148,13 +154,6 @@ class CartEntity extends BaseEntity {
     }
 
     /**
-     * @return \DateTime
-     */
-    public function getCreated(): \DateTime {
-        return $this->created;
-    }
-
-    /**
      * @return int
      */
     public function getState(): int {
@@ -164,7 +163,7 @@ class CartEntity extends BaseEntity {
     /**
      * @param int $state
      */
-    public function setState(int $state): void {
+    protected function setState(int $state): void {
         $this->state = $state;
     }
 
@@ -185,6 +184,26 @@ class CartEntity extends BaseEntity {
         $this->substitute = $substitute;
         if($this->substitute){
             $this->substitute->setInversedCart($this);
+        }
+    }
+
+    /**
+     * @return ReservationEntity
+     */
+    public function getReservation(): ?ReservationEntity {
+        return $this->reservation;
+    }
+
+    /**
+     * @param ReservationEntity $reservation
+     */
+    public function setReservation(?ReservationEntity $reservation): void {
+        if($this->reservation){
+            $this->reservation->setInversedCart(NULL);
+        }
+        $this->reservation = $reservation;
+        if($this->reservation){
+            $this->reservation->setInversedCart($this);
         }
     }
 

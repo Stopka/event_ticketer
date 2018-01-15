@@ -10,6 +10,7 @@ namespace App\Model\Persistence\Entity;
 
 use App\Model\Persistence\Attribute\TAddressAttribute;
 use App\Model\Persistence\Attribute\TBirthDateAttribute;
+use App\Model\Persistence\Attribute\TCreatedAttribute;
 use App\Model\Persistence\Attribute\TGenderAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TNumberAttribute;
@@ -29,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute;
+    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute, TCreatedAttribute;
 
     const STATE_RESERVED = 1;
     const STATE_WAITING = 2;
@@ -83,8 +84,13 @@ class ApplicationEntity extends BaseEntity {
      */
     private $info;
 
-    public function __construct() {
+    public function __construct($reserved = false) {
+        if($reserved){
+            $this->state = self::STATE_RESERVED;
+        }
         $this->choices = new ArrayCollection();
+        $this->setCreated();
+        $this->setUpdated();
     }
 
     /**
@@ -193,8 +199,8 @@ class ApplicationEntity extends BaseEntity {
         return $this->state;
     }
 
-    public static function getStatesReserved(): array {
-        return [self::STATE_OCCUPIED, self::STATE_FULFILLED];
+    public static function getStatesOccupied(): array {
+        return [self::STATE_OCCUPIED, self::STATE_FULFILLED, self::STATE_RESERVED];
     }
 
     public static function getStatesNotIssued(): array {

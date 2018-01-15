@@ -84,6 +84,7 @@ services:
     - App\Model\Persistence\Manager\CurrencyManager
     - App\Model\Persistence\Manager\OptionManager
     - App\Model\Persistence\Manager\EarlyManager
+    - App\Model\Persistence\Manager\ReservationManager
     -
         class: App\Model\Persistence\Manager\EarlyWaveManager
         tags: [kdyby.subscriber]
@@ -100,6 +101,9 @@ services:
         tags: [kdyby.subscriber]
     -
         class: App\Model\Notifier\SubstituteActivatedNotifier
+        tags: [kdyby.subscriber]
+    -
+        class: App\Model\Notifier\ReservationDelegatedNotifier
         tags: [kdyby.subscriber]
     -
         class: App\Model\OccupancyIcons

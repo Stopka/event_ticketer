@@ -8,6 +8,7 @@
 
 namespace App\Model\Persistence\Entity;
 
+use App\Model\Persistence\Attribute\TCreatedAttribute;
 use App\Model\Persistence\Attribute\TEmailAttribute;
 use App\Model\Persistence\Attribute\TEndDateAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
@@ -20,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class SubstituteEntity extends BaseEntity {
-    use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute, TEndDateAttribute;
+    use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute, TEndDateAttribute, TCreatedAttribute;
 
     const STATE_WAITING = 0;
     const STATE_ACTIVE = 1;
@@ -31,7 +32,7 @@ class SubstituteEntity extends BaseEntity {
      * CartEntity constructor
      */
     public function __construct() {
-        $this->created = new \DateTime();
+        $this->setCreated();
     }
 
     /**
@@ -51,12 +52,6 @@ class SubstituteEntity extends BaseEntity {
      * @var EarlyEntity
      */
     private $early;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @var \DateTime
-     */
-    private $created;
 
     /**
      * @ORM\Column(type="integer")
@@ -102,13 +97,6 @@ class SubstituteEntity extends BaseEntity {
      */
     public function setEarly(EarlyEntity $early) {
         $this->early = $early;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreated(): \DateTime {
-        return $this->created;
     }
 
     /**

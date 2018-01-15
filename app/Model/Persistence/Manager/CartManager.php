@@ -35,11 +35,17 @@ class CartManager {
     /** @var InsuranceCompanyDao */
     private $insuranceCompanyDao;
 
+    /** @var ReservationManager */
+    private $reservationManager;
+
     /** @var callable[] */
     public $onCartCreated = array();
 
     /** @var callable[] */
     public $onCartUpdated = array();
+
+    /** @var callable[] */
+    public $onReservationCreated = array();
 
     /**
      * CartManager constructor.
@@ -47,11 +53,13 @@ class CartManager {
      * @param AdditionDao $additionDao
      * @param OptionDao $optionDao
      */
-    public function __construct(EntityManager $entityManager, AdditionDao $additionDao, OptionDao $optionDao, InsuranceCompanyDao $insuranceCompanyDao) {
+    public function __construct(EntityManager $entityManager, AdditionDao $additionDao, OptionDao $optionDao,
+                                InsuranceCompanyDao $insuranceCompanyDao, ReservationManager $reservationManager) {
         $this->injectEntityManager($entityManager);
         $this->additionDao = $additionDao;
         $this->optionDao = $optionDao;
         $this->insuranceCompanyDao = $insuranceCompanyDao;
+        $this->reservationManager = $reservationManager;
     }
 
     /**
@@ -129,6 +137,40 @@ class CartManager {
         $entityManager->flush();
         $this->onCartCreated($cart);
         return $cart;
+    }
+
+    /**
+     * @param array $values
+     * @param EventEntity|null $event
+     * @param EarlyEntity|null $early
+     * @param SubstituteEntity|null $substitute
+     * @return CartEntity
+     * @throws \Exception
+     */
+    public function createCartFromReservationForm(array $values): void {
+        $entityManager = $this->getEntityManager();
+        $cart = new CartEntity(true);
+        $entityManager->persist($cart);
+        for ($i = 0; $i < $values['count']; $i++) {
+            $application = new ApplicationEntity(true);
+            $cart->addApplication($application);
+            $application->setByValueArray($values);
+            $entityManager->persist($application);
+            foreach ($values['addittions'] as $additionIdAlphaNumeric => $optionIds) {
+                //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
+                if (!is_array($optionIds)) {
+                    $optionIds = [$optionIds];
+                }
+                foreach ($optionIds as $optionId) {
+                    $choice = $this->addChoice($optionId, $application);
+                }
+            }
+        }
+        $entityManager->flush();
+        $this->onReservationCreated($cart);
+        if ($values['delegated']) {
+            $this->reservationManager->delegateNewReservations($cart->getApplications(), $values['reservation']);
+        }
     }
 
     /**

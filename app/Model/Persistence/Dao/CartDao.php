@@ -22,7 +22,7 @@ class CartDao extends EntityDao {
      */
     public function getViewableCart(?string $id): ?CartEntity {
         $cart = $this->getCart($id);
-        if ($cart && $cart->getState() == CartEntity::STATE_ORDER)
+        if ($cart && $cart->getState() == CartEntity::STATE_ORDERED)
             return $cart;
         return NULL;
     }
