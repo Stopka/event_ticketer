@@ -45,7 +45,7 @@ class CartEntity extends BaseEntity {
         $this->setCreated();
     }
 
-    function getLastNumberSearchCriteria(): array {
+    protected function getLastNumberSearchCriteria(): array {
         return ["event.id" => $this->getEvent()->getId()];
     }
 

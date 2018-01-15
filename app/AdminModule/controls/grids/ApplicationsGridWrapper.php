@@ -80,7 +80,6 @@ class ApplicationsGridWrapper extends GridWrapper {
     protected function appendApplicationColumns(Grid $grid) {
         $grid->addColumnNumber('number', 'Attribute.Number')
             ->setSortable()
-            ->setDefaultSort('ASC')
             ->setFilterNumber();
         $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()

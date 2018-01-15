@@ -22,7 +22,7 @@ trait TNumberAttribute {
 
     private static $nextNumber;
 
-    abstract function getLastNumberSearchCriteria(): array;
+    abstract protected function getLastNumberSearchCriteria(): array;
 
     function setNextNumber(EntityManager $entityManager): int {
         $repository = $entityManager->getRepository(self::class);

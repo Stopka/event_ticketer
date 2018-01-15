@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait TCreatedAttribute {
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
     private $created;

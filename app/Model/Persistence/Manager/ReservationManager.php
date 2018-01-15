@@ -7,6 +7,7 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\ReservationEntity;
+use Doctrine\ORM\EntityManager;
 use Nette\SmartObject;
 
 /**
@@ -17,6 +18,15 @@ use Nette\SmartObject;
  */
 class ReservationManager {
     use SmartObject, TDoctrineEntityManager;
+
+    /**
+     * ReservationManager constructor.
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager) {
+        $this->injectEntityManager($entityManager);
+    }
+
 
     /** @var callable[]  */
     public $onReservationDelegated = array();
@@ -32,6 +42,7 @@ class ReservationManager {
         $entityManager->persist($reservation);
         $cart = new CartEntity(true);
         $cart->setReservation($reservation);
+        $cart->setNextNumber($entityManager);
         $entityManager->persist($cart);
         foreach ($applications as $application){
             $oldCart = $application->getCart();

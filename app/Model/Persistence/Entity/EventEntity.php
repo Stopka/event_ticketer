@@ -235,7 +235,7 @@ class EventEntity extends BaseEntity {
         return $this->isActive() && $this->isStarted($date);
     }
 
-    function getLastNumberSearchCriteria(): array {
+    protected function getLastNumberSearchCriteria(): array {
         return [];
     }
 

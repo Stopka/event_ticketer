@@ -85,19 +85,18 @@ class ApplicationEntity extends BaseEntity {
     private $info;
 
     public function __construct($reserved = false) {
-        if($reserved){
+        if ($reserved) {
             $this->state = self::STATE_RESERVED;
         }
         $this->choices = new ArrayCollection();
         $this->setCreated();
     }
 
-    function getLastNumberSearchCriteria(): array {
+    protected function getLastNumberSearchCriteria(): array {
         return [
-            'cart.event.id'=> $this->getCart()->getEvent()->getId()
+            'cart.event.id' => $this->getCart()->getEvent()->getId()
         ];
     }
-
 
     /**
      * @return null|string
