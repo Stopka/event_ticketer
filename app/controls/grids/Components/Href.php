@@ -11,4 +11,5 @@ namespace App\Controls\Grids\Components;
 
 class Href extends \Grido\Components\Actions\Href {
     use TElementPrototype;
+
 }

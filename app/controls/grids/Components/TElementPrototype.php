@@ -26,10 +26,25 @@ trait TElementPrototype {
     abstract public function getLabel();
 
     /**
+     * @return string
+     */
+    abstract function getName();
+
+    /**
      * @return Html
      */
     public function getElementPrototype() {
         $element = parent::getElementPrototype();
+        $classes = $this->getOption('class', []);
+        if (!is_array($classes)) {
+            $classes = [$classes];
+        }
+        $classes = array_merge([
+            'grid-action',
+            'grid-action-' . self::ID,
+            'grid-action-name-' . $this->getName()
+        ], $classes);
+        $element->setClass($classes);
         $innerHtml = Html::el();
         if ($iconOption = $this->getOption('icon')) {
             $innerHtml->addHtml(

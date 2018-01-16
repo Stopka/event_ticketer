@@ -9,6 +9,7 @@
 namespace App\Controls\Grids;
 
 
+use App\Controls\Grids\Components\Button;
 use App\Controls\Grids\Components\Event;
 use App\Controls\Grids\Components\Href;
 use App\Model\DateFormatter;
@@ -62,6 +63,10 @@ class Grid extends \Grido\Grid {
 
     public function addActionEvent($name, $label, $onClick = NULL) {
         return new Event($this, $name, $label, $onClick);
+    }
+
+    public function addButton($name, $label = NULL, $destination = NULL, array $arguments = []) {
+        return new Button($this, $name, $label, $destination, $arguments);
     }
 
 

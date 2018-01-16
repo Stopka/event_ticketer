@@ -86,6 +86,8 @@ class AdditionsGridWrapper extends GridWrapper {
                     'name' => $additionEntity->getName()
                 ]);
             });
+        $grid->addButton('add', "Presenter.Admin.Addition.Add.H1", "Addition:add", ['id' => $event->getId()])
+            ->setIcon('fa fa-plus-circle');
     }
 
     /**

@@ -10,6 +10,7 @@ use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\ChoiceManager;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,16 +66,24 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendActions(Grid $grid) {
+        $grid->setOperation(['delegate' => "Delegate"], function () {
+            Debugger::barDump(func_get_args());
+        })
+            ->setPrimaryKey('idAlphaNumeric');
         $grid->addActionEvent('detail', 'Form.Action.Detail', function ($id) {
             $this->getPresenter()->redirect('Cart:default', $id);
         })
             ->setIcon('fa fa-eye')
             ->setPrimaryKey('cart.id');
-        $grid->addActionEvent('upravit', 'Form.Action.Edit', function ($id) {
+        $grid->addActionEvent('edit', 'Form.Action.Edit', function ($id) {
             $this->getPresenter()->redirect('Cart:edit', $id);
         })
             ->setPrimaryKey('cart.id')
             ->setIcon('fa fa-pencil');
+        $grid->addButton('reserve', 'Presenter.Admin.Application.Reserve.H1', "Application:reserve", ['id' => $this->event->getId()])
+            ->setIcon('fa fa-address-book-o');
+        $grid->addButton('export', 'Presenter.Admin.Application.Export.H1', "Application:export", ['id' => $this->event->getId()])
+            ->setIcon('fa fa-download');
     }
 
     protected function appendApplicationColumns(Grid $grid) {
@@ -156,17 +165,21 @@ class ApplicationsGridWrapper extends GridWrapper {
                         if ($choice->getOption()->getAddition()->getId() != $addition->getId()) {
                             continue;
                         }
-                        $isPayedLink = Html::el('a', [
-                            'id' => 'choice_' . $choice->getId(),
-                            'class' => 'ajax',
-                            'data-ajax-off' => 'unique',
-                            'title' => $this->getTranslator()->translate('Form.Action.Switch'),
-                            'href' => $this->link('inverseChoicePayed!#choice_' . $choice->getId(), $choice->getId()),])
-                            ->addHtml(Html::el('i', ['class' => 'fa ' . ($choice->isPayed() ? 'fa-check-square-o' : 'fa-square-o')]));
-                        $name = Html::el('span')->setText($choice->getOption()->getName());
+                        $isPayedIcon = Html::el('i', [
+                            'class' => ['fa', ($choice->isPayed() ? 'fa-check-square-o' : 'fa-square-o')]
+                        ]);
+                        $name = Html::el('span', ['class' => 'addition-name'])
+                            ->setText($choice->getOption()->getName());
                         $result->addHtml(
-                            Html::el('div')
-                                ->addHtml($isPayedLink)
+                            Html::el('a', [
+                                'class' => ['addition-link', 'ajax'],
+                                'id' => 'choice_' . $choice->getId(),
+                                'data-ajax-off' => 'unique',
+                                'title' => $this->getTranslator()->translate('Form.Action.Switch'),
+                                'href' => $this->link('inverseChoicePayed!#choice_' . $choice->getId(), $choice->getId())
+                            ])
+                                ->addHtml($isPayedIcon)
+                                ->addText(' ')
                                 ->addHtml($name)
                         );
                     }

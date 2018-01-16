@@ -1,8 +1,4 @@
 {layout '../@event.latte'}
 {block subcontent}
 <h2><i class="fa fa-ticket"></i> {_'Entity.Plural.Application'}</h2>
-<p>
-    <a n:href="Application:reserve,$event->getId()"><i class="fa fa-address-book-o"></i> {_'Presenter.Admin.Application.Reserve.H1'}</a>
-    <a n:href="Application:export,$event->getId()"><i class="fa fa-download"></i> {_'Presenter.Admin.Application.Export.H1'}</a>
-</p>
 {control applicationsGrid}

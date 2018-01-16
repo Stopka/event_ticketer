@@ -15,7 +15,6 @@ class CartApplicationsGridWrapper extends \App\FrontModule\Controls\Grids\CartAp
     protected function appendApplicationColumns(Grid $grid) {
         parent::appendApplicationColumns($grid);
         $grid->addColumnDate('birthDate','Datum narození');
-        $grid->addColumnText('birthCode','Kod rodného čísla');
         $grid->addColumnText('gender','Pohlaví')
             ->setReplacement([0=>'Muž',1=>'Žena']);
     }

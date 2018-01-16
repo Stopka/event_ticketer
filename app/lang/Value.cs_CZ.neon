@@ -21,6 +21,7 @@ Event:
 Application:
     State:
         Reserved: 'Rezervováno'
+        Delegated: 'Delegováno'
         Waiting: 'Čeká'
         Occupied: 'Obsazeno'
         Fulfilled: 'Splněno'

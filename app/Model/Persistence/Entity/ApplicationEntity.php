@@ -33,14 +33,16 @@ class ApplicationEntity extends BaseEntity {
     use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute, TCreatedAttribute;
 
     const STATE_RESERVED = 1;
-    const STATE_WAITING = 2;
-    const STATE_OCCUPIED = 3;
-    const STATE_FULFILLED = 4;
-    const STATE_CANCELLED = 5;
+    const STATE_DELEGATED = 2;
+    const STATE_WAITING = 3;
+    const STATE_OCCUPIED = 4;
+    const STATE_FULFILLED = 5;
+    const STATE_CANCELLED = 6;
 
     public static function getAllStates(): array {
         return [
             self::STATE_RESERVED => "Value.Application.State.Reserved",
+            self::STATE_DELEGATED => "Value.Application.State.Delegated",
             self::STATE_WAITING => "Value.Application.State.Waiting",
             self::STATE_OCCUPIED => "Value.Application.State.Occupied",
             self::STATE_FULFILLED => "Value.Application.State.Fulfilled",
@@ -204,8 +206,12 @@ class ApplicationEntity extends BaseEntity {
         return $this->state;
     }
 
+    public static function getStatesReserved(): array {
+        return [self::STATE_RESERVED, self::STATE_DELEGATED];
+    }
+
     public static function getStatesOccupied(): array {
-        return [self::STATE_OCCUPIED, self::STATE_FULFILLED, self::STATE_RESERVED];
+        return [self::STATE_OCCUPIED, self::STATE_FULFILLED, self::STATE_RESERVED, self::STATE_DELEGATED];
     }
 
     public static function getStatesNotIssued(): array {
@@ -217,7 +223,15 @@ class ApplicationEntity extends BaseEntity {
     }
 
     public function updateState(): void {
-        if (in_array($this->state, self::getStatesNotIssued())) {
+        if (in_array($this->getState(), self::getStatesNotIssued())) {
+            return;
+        }
+        if(in_array($this->getState(), self::getStatesReserved())){
+            if($this->getCart()->getReservation()){
+                $this->state = self::STATE_DELEGATED;
+            }else{
+                $this->state = self::STATE_RESERVED;
+            }
             return;
         }
         $this->state = self::STATE_WAITING;

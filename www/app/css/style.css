@@ -544,3 +544,8 @@ a.price_recalculate{
 		padding: 7px 5px;
 	}
 }
+.grid-action,
+.addition-link{
+	display: block;
+	white-space: nowrap;
+}

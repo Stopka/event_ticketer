@@ -11,4 +11,5 @@ namespace App\Controls\Grids\Components;
 
 class Event extends \Grido\Components\Actions\Event {
     use TElementPrototype;
+
 }

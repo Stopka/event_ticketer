@@ -51,6 +51,7 @@ class ReservationManager {
                 throw new InvalidStateException("Error.Reservation.Application.InvalidState");
             }
             $application->setCart($cart);
+            $application->updateState();
             if(!count($oldCart->getApplications())){
                 $entityManager->remove($oldCart);
             }
