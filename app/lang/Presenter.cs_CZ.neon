@@ -2,6 +2,8 @@ AdminLayout:
     Setting:
         H1: 'Nastavení systému'
 Admin:
+    Reservation:
+        Delegate.H1: 'Delegovat rezervaci'
     Addition:
         Add.H1: Vytvořit přídavek
         Edit.H1: Upravit přídavek

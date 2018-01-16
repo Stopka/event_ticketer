@@ -66,7 +66,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendActions(Grid $grid) {
-        $grid->setOperation(['delegate' => "Delegate"], function () {
+        $grid->setOperation(['delegate' => "Presenter.Admin.Reservation.Delegate.H1"], function () {
             Debugger::barDump(func_get_args());
         })
             ->setPrimaryKey('idAlphaNumeric');
