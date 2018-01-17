@@ -167,6 +167,7 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setCustomRender(function (ApplicationEntity $applicationEntity) {
                 $html = Html::el();
                 if ($reservation = $applicationEntity->getReservation()) {
+                    $html = Html::el('a', ['href' => $this->getPresenter()->link(':Front:Reservation:register', $reservation->getId())]);
                     $html->addHtml(Html::el('div', ['class' => 'reservation-fullName fullName'])->addText($reservation->getFullName()));
                     $html->addHtml(Html::el('div', ['class' => 'reservation-email email'])->addText($reservation->getEmail()));
                 }
