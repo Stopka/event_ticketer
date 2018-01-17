@@ -143,7 +143,7 @@ class CartFormWrapper extends FormWrapper {
         $this->appendCommonControls($form);
         $this->appendChildrenControls($form);
         $this->appendFinalControls($form);
-        $this->appendSubmitControls($form, $this->cart?'Uložit':'Rezervovat', [$this, 'registerClicked']);
+        $this->appendSubmitControls($form, $this->cart ? 'Form.Action.Save' : 'Form.Action.Register', [$this, 'registerClicked']);
         $this->loadData($form);
     }
 
@@ -157,10 +157,22 @@ class CartFormWrapper extends FormWrapper {
         if($this->cart){
             $form->setDefaults($this->cart->getValueArray());
             foreach ($this->cart->getApplications() as $application){
-                $form['children'][$application->getId()]['child']->setDefaults($application->getValueArray());
+                $form['children'][$application->getIdAlphaNumeric()]['child']->setDefaults($application->getValueArray());
                 $form['commons']->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice){
                     $form['children'][$application->getId()]['addittions']->setDefaults([
+                        $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
+                    ]);
+                }
+            }
+        }
+        if ($this->reservation) {
+            $form->setDefaults($this->reservation->getValueArray());
+            foreach ($this->reservation->getApplications() as $application) {
+                $form['children'][$application->getIdAlphaNumeric()]['child']->setDefaults($application->getValueArray());
+                $form['commons']->setDefaults($application->getValueArray());
+                foreach ($application->getChoices() as $choice) {
+                    $form['children'][$application->getIdAlphaNumeric()]['addittions']->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
                 }
@@ -234,7 +246,7 @@ class CartFormWrapper extends FormWrapper {
         $form->addGroup('Přihlášky');
         $removeEvent = [$this, 'removeChild'];
         $count_left = $this->event->getCapacityLeft($this->applicationDao->countIssuedApplications($this->event));
-        if(!$this->substitute&&!$this->cart) {
+        if (!$this->substitute && !$this->cart && !$this->reservation) {
             $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
                 ->setOption($form::OPTION_KEY_DESCRIPTION,
                     Html::el('span',[
@@ -271,6 +283,9 @@ class CartFormWrapper extends FormWrapper {
         if($this->cart){
             return 0;
         }
+        if ($this->reservation) {
+            return 0;
+        }
         if($this->substitute){
             return $this->substitute->getCount();
         }
@@ -279,6 +294,9 @@ class CartFormWrapper extends FormWrapper {
 
     private function isApplicationCountFixed(){
         if($this->cart){
+            return false;
+        }
+        if ($this->reservation) {
             return false;
         }
         if($this->substitute){

@@ -145,7 +145,7 @@ class ApplicationEntity extends BaseEntity {
     /**
      * @return InsuranceCompanyEntity
      */
-    public function getInsuranceCompany(): InsuranceCompanyEntity {
+    public function getInsuranceCompany(): ?InsuranceCompanyEntity {
         return $this->insuranceCompany;
     }
 
