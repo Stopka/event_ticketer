@@ -28,9 +28,12 @@ class ReservationManager {
 
     /** @var ReservationDao */
     private $reservationDao;
+
     /**
      * ReservationManager constructor.
      * @param EntityManager $entityManager
+     * @param OptionDao $optionDao
+     * @param ReservationDao $reservationDao
      */
     public function __construct(EntityManager $entityManager, OptionDao $optionDao, ReservationDao $reservationDao) {
         $this->injectEntityManager($entityManager);
@@ -88,6 +91,7 @@ class ReservationManager {
 
     /**
      * @param string $optionId
+     * @param ApplicationEntity $application
      * @return ChoiceEntity
      */
     private function addChoice(string $optionId, ApplicationEntity $application): ChoiceEntity {
