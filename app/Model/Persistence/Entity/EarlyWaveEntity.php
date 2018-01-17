@@ -33,7 +33,7 @@ class EarlyWaveEntity extends BaseEntity {
     private $event;
 
     /**
-     * @ORM\OneToMany(targetEntity="EarlyEntity", mappedBy="earlyWave")
+     * @ORM\OneToMany(targetEntity="EarlyEntity", mappedBy="earlyWave", cascade={"persist","remove"})
      * @var EarlyEntity[]
      */
     private $earlies;

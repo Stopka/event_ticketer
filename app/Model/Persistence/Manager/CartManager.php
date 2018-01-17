@@ -2,7 +2,6 @@
 
 namespace App\Model\Persistence\Manager;
 
-use App\Model\Exception\NotFoundException;
 use App\Model\Persistence\Dao\AdditionDao;
 use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Dao\OptionDao;
@@ -10,7 +9,6 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CartEntity;
-use App\Model\Persistence\Entity\ChoiceEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
@@ -44,9 +42,6 @@ class CartManager {
     /** @var callable[] */
     public $onCartUpdated = array();
 
-    /** @var callable[] */
-    public $onReservationCreated = array();
-
     /**
      * CartManager constructor.
      * @param EntityManager $entityManager
@@ -60,22 +55,6 @@ class CartManager {
         $this->optionDao = $optionDao;
         $this->insuranceCompanyDao = $insuranceCompanyDao;
         $this->reservationManager = $reservationManager;
-    }
-
-    /**
-     * @param string $optionId
-     * @return ChoiceEntity
-     */
-    private function addChoice(string $optionId, ApplicationEntity $application): ChoiceEntity {
-        $option = $this->optionDao->getOption($optionId);
-        if (!$option) {
-            throw new NotFoundException("Option was not found.");
-        }
-        $choice = new ChoiceEntity();
-        $choice->setOption($option);
-        $choice->setApplication($application);
-        $this->getEntityManager()->persist($choice);
-        return $choice;
     }
 
     /**

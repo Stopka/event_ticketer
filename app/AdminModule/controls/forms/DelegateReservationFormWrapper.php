@@ -52,17 +52,17 @@ class DelegateReservationFormWrapper extends FormWrapper {
      * @param ApplicationEntity[] $applications
      */
     public function setApplications(array $applications): void {
-        if(!count($applications)){
+        if (!count($applications)) {
             throw new EmptyException("Error.Reservation.Application.Empty");
         }
-        foreach ($applications as $application){
-            if(!$this->event){
+        foreach ($applications as $application) {
+            if (!$this->event) {
                 $this->event = $application->getCart()->getEvent();
             }
-            if($this->event->getId() !== $application->getCart()->getEvent()->getId()){
+            if ($this->event->getId() !== $application->getCart()->getEvent()->getId()) {
                 throw new InvalidInputException("Error.Reservation.Application.InvalidInput");
             }
-            if(!in_array($application->getState(), ApplicationEntity::getStatesReserved())){
+            if (!in_array($application->getState(), ApplicationEntity::getStatesReserved())) {
                 throw new InvalidInputException("Error.Reservation.Application.InvalidState");
             }
         }
@@ -97,12 +97,13 @@ class DelegateReservationFormWrapper extends FormWrapper {
         $form->addGroup('Form.Reservation.Label.DelegatedPerson')
             ->setOption($form::OPTION_KEY_ID, 'reservationDelegate')
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.DelegatedPerson')
-            ->setOption($form::OPTION_KEY_EMBED,'New person');
+            ->setOption($form::OPTION_KEY_EMBED, 'New person');
         $form->addSelect('delegateTo', 'Osoba', [
             NULL => '',
             '*' => 'New person',
             'Existující osoby' => $this->reservationDao->getEventReservationList($this->event)
         ])
+            ->setRequired()
             ->addCondition($form::EQUAL, '*')
             ->toggle('delegateNewPerson');
         $form->addGroup('New person')
@@ -131,7 +132,7 @@ class DelegateReservationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->reservationManager->delegateNewReservations($this->applications,$values);
+        $this->reservationManager->delegateNewReservations($this->applications, $values);
         $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Delegate.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Application:', $this->event->getId());
     }

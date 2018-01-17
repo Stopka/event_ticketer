@@ -44,38 +44,38 @@ class EventEntity extends BaseEntity {
     private $state = self::STATE_INACTIVE;
 
     /**
-     * @ORM\OneToMany(targetEntity="EarlyWaveEntity", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="EarlyWaveEntity", mappedBy="event", cascade={"persist","remove"})
      * @var EarlyWaveEntity[]
      */
     private $earlyWaves;
 
     /**
-     * @ORM\OneToMany(targetEntity="CartEntity", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="CartEntity", mappedBy="event", cascade={"persist","remove"})
      * @var CartEntity[]
      */
     private $carts;
 
     /**
-     * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="event", cascade={"persist","remove"})
      * @var ApplicationEntity[]
      */
     private $applications;
 
     /**
-     * @ORM\OneToMany(targetEntity="SubstituteEntity", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="SubstituteEntity", mappedBy="event", cascade={"persist","remove"})
      * @var SubstituteEntity[]
      */
     private $substitutes;
 
     /**
-     * @ORM\OneToMany(targetEntity="AdditionEntity", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="AdditionEntity", mappedBy="event", cascade={"persist","remove"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var AdditionEntity[]
      */
     private $additions;
 
     /**
-     * @ORM\OneToMany(targetEntity="ReservationEntity", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="ReservationEntity", mappedBy="event", cascade={"persist","remove"})
      * @var ReservationEntity[];
      */
     private $reservations;

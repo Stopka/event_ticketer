@@ -52,7 +52,7 @@ class ApplicationEntity extends BaseEntity {
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="application"))
+     * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="application", cascade={"persist","remove"}))
      * @var ChoiceEntity[]
      */
     private $choices;
