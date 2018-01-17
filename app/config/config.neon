@@ -51,6 +51,7 @@ services:
     - App\AdminModule\Controls\Forms\IOptionFormWrapperFactory
     - App\AdminModule\Controls\Forms\IEarlyFormWrapperFactory
     - App\AdminModule\Controls\Forms\IEarlyWaveFormWrapperFactory
+    - App\AdminModule\Controls\Forms\IDelegateReservationFormWrapperFactory
     - App\AdminModule\Controls\Grids\IEarlyWavesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
     - App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
@@ -77,6 +78,7 @@ services:
     - App\Model\Persistence\Dao\AdministratorDao
     - App\Model\Persistence\Dao\ChoiceDao
     - App\Model\Persistence\Dao\InsuranceCompanyDao
+    - App\Model\Persistence\Dao\ReservationDao
     - App\Model\Persistence\Manager\SubstituteManager
     - App\Model\Persistence\Manager\CartManager
     - App\Model\Persistence\Manager\ChoiceManager

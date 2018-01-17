@@ -31,17 +31,13 @@ use Doctrine\ORM\Mapping as ORM;
 class CartEntity extends BaseEntity {
     use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute, TCreatedAttribute;
 
-    const STATE_RESERVED = 0;
-    const STATE_ORDERED = 0;
+    const STATE_ORDERED = 1;
 
     /**
      * CartEntity constructor
      */
-    public function __construct($reservation) {
+    public function __construct() {
         $this->applications = new ArrayCollection();
-        if ($reservation) {
-            $this->setState(self::STATE_RESERVED);
-        }
         $this->setCreated();
     }
 
@@ -81,12 +77,6 @@ class CartEntity extends BaseEntity {
     private $substitute;
 
     /**
-     * @ORM\OneToOne(targetEntity="ReservationEntity", inversedBy="cart")
-     * @var ReservationEntity
-     */
-    private $reservation;
-
-    /**
      * @return ApplicationEntity[]
      */
     public function getApplications(): array {
@@ -112,6 +102,11 @@ class CartEntity extends BaseEntity {
      * @internal
      */
     public function addInversedApplication(ApplicationEntity $application): void {
+        if($event = $this->getEvent()){
+            $application->setEvent($event);
+        }else if($event = $application->getEvent()){
+            $this->setEvent($event);
+        }
         $this->applications->add($application);
     }
 
@@ -135,11 +130,13 @@ class CartEntity extends BaseEntity {
      */
     public function setEvent(?EventEntity $event) {
         if ($this->event) {
-            $event->removeIversedCart($this);
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $event->removeInversedCart($this);
         }
         $this->event = $event;
         if ($event) {
-            $event->addIversedCart($this);
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $event->addInversedCart($this);
         }
     }
 
@@ -188,26 +185,6 @@ class CartEntity extends BaseEntity {
         $this->substitute = $substitute;
         if ($this->substitute) {
             $this->substitute->setInversedCart($this);
-        }
-    }
-
-    /**
-     * @return ReservationEntity
-     */
-    public function getReservation(): ?ReservationEntity {
-        return $this->reservation;
-    }
-
-    /**
-     * @param ReservationEntity $reservation
-     */
-    public function setReservation(?ReservationEntity $reservation): void {
-        if ($this->reservation) {
-            $this->reservation->setInversedCart(NULL);
-        }
-        $this->reservation = $reservation;
-        if ($this->reservation) {
-            $this->reservation->setInversedCart($this);
         }
     }
 

@@ -8,6 +8,7 @@
 
 namespace App\Model\Persistence\Entity;
 
+use App\Model\Exception\InvalidStateException;
 use App\Model\Persistence\Attribute\TAddressAttribute;
 use App\Model\Persistence\Attribute\TBirthDateAttribute;
 use App\Model\Persistence\Attribute\TCreatedAttribute;
@@ -61,6 +62,18 @@ class ApplicationEntity extends BaseEntity {
      * @var CartEntity
      */
     private $cart;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="applications")
+     * @var EventEntity
+     */
+    private $event;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ReservationEntity", inversedBy="applications")
+     * @var ReservationEntity
+     */
+    private $reservation;
 
     /**
      * @ORM\Column(type="integer")
@@ -191,12 +204,15 @@ class ApplicationEntity extends BaseEntity {
      */
     public function setCart(CartEntity $cart) {
         if ($this->cart) {
+            /** @noinspection PhpInternalEntityUsedInspection */
             $this->cart->removeInversedApplication($this);
         }
         $this->cart = $cart;
         if ($cart) {
+            /** @noinspection PhpInternalEntityUsedInspection */
             $cart->addInversedApplication($this);
         }
+        $this->updateState();
     }
 
     /**
@@ -227,11 +243,13 @@ class ApplicationEntity extends BaseEntity {
             return;
         }
         if(in_array($this->getState(), self::getStatesReserved())){
-            if($this->getCart()->getReservation()){
+            if($this->getReservation()){
                 $this->state = self::STATE_DELEGATED;
             }else{
                 $this->state = self::STATE_RESERVED;
             }
+        }
+        if(!$this->getCart()){
             return;
         }
         $this->state = self::STATE_WAITING;
@@ -280,5 +298,53 @@ class ApplicationEntity extends BaseEntity {
             }
             $this->state = $state;
         }
+    }
+
+    /**
+     * @param EventEntity|NULL $event
+     */
+    public function setEvent(?EventEntity $event): void {
+        if ($this->event) {
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $event->removeInversedApplication($this);
+        }
+        $this->event = $event;
+        if ($event) {
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $event->addInversedApplication($this);
+        }
+    }
+
+    /**
+     * @return EventEntity|NULL
+     */
+    public function getEvent(): ?EventEntity {
+        return $this->event;
+    }
+
+    /**
+     * @return ReservationEntity
+     */
+    public function getReservation(): ?ReservationEntity {
+        return $this->reservation;
+    }
+
+    /**
+     * @param ReservationEntity $reservation
+     */
+    public function setReservation(?ReservationEntity $reservation): void {
+        if(!in_array($this->getState(),self::getStatesReserved())){
+            throw new InvalidStateException("Error.Reservation.Application.InvalidState");
+        }
+        if ($this->reservation) {
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $this->reservation->removeInversedApplication($this);
+        }
+        $this->reservation = $reservation;
+        if ($this->reservation) {
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $this->reservation->addInversedApplication($this);
+        }
+        $this->updateState();
     }
 }

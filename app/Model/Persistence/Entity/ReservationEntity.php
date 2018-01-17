@@ -12,6 +12,7 @@ use App\Model\Persistence\Attribute\TCreatedAttribute;
 use App\Model\Persistence\Attribute\TEmailAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,37 +33,65 @@ class ReservationEntity extends BaseEntity {
     private $state = self::STATE_WAITING;
 
     /**
-     * @ORM\OneToOne(targetEntity="CartEntity", mappedBy="reservation")
-     * @var CartEntity
+     * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="reservation")
+     * @var ApplicationEntity[]
      */
-    private $cart;
+    private $applications;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="reservations")
+     * @var EventEntity
+     */
+    private $event;
 
     /**
      * CartEntity constructor
      */
     public function __construct() {
+        $this->applications = new ArrayCollection();
         $this->setCreated();
     }
 
     /**
-     * @return CartEntity
+     * @return ApplicationEntity[]
      */
-    public function getCart(): ?CartEntity {
-        return $this->cart;
+    public function getApplications(): array {
+        return $this->applications->toArray();
     }
 
     /**
-     * @param CartEntity $cart
+     * @param ApplicationEntity $application
      */
-    public function setCart(?CartEntity $cart) {
-        $cart->setSubstitute($this);
+    public function addApplication(ApplicationEntity $application): void {
+        $application->setReservation($this);
     }
 
     /**
-     * @param CartEntity $cart
+     * @internal
+     * @param ApplicationEntity $application
      */
-    public function setInversedCart(?CartEntity $cart) {
-        $this->cart = $cart;
+    public function addInversedApplication(ApplicationEntity $application): void {
+        if($event = $this->getEvent()){
+            $application->setEvent($event);
+        }else if($event = $application->getEvent()){
+            $this->setEvent($event);
+        }
+        $this->applications->add($application);
+    }
+
+    /**
+     * @param ApplicationEntity $application
+     */
+    public function removeApplication(ApplicationEntity $application): void {
+        $application->setEvent(NULL);
+    }
+
+    /**
+     * @internal
+     * @param ApplicationEntity $application
+     */
+    public function removeInversedApplication(ApplicationEntity $application): void {
+        $this->applications->removeElement($application);
     }
 
     /**
@@ -77,6 +106,28 @@ class ReservationEntity extends BaseEntity {
      */
     public function setState(int $state): void {
         $this->state = $state;
+    }
+
+    /**
+     * @return EventEntity
+     */
+    public function getEvent(): ?EventEntity {
+        return $this->event;
+    }
+
+    /**
+     * @param EventEntity|NULL $event
+     */
+    public function setEvent(?EventEntity $event) {
+        if ($this->event) {
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $event->removeInversedReservation($this);
+        }
+        $this->event = $event;
+        if ($event) {
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $event->addInversedReservation($this);
+        }
     }
 
 }

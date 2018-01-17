@@ -10,7 +10,6 @@ use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\ChoiceManager;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,6 +18,8 @@ use Tracy\Debugger;
  * Time: 16:20
  */
 class ApplicationsGridWrapper extends GridWrapper {
+
+    const OPERATION_DELEGATE = "delegate";
 
     /** @var  ApplicationDao */
     private $applicationDao;
@@ -53,10 +54,18 @@ class ApplicationsGridWrapper extends GridWrapper {
         return $this;
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function loadModel(Grid $grid) {
         $grid->setModel($this->applicationDao->getEventApplicationsGridModel($this->event));
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendCartColumns($grid);
@@ -66,8 +75,17 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendActions(Grid $grid) {
-        $grid->setOperation(['delegate' => "Presenter.Admin.Reservation.Delegate.H1"], function () {
-            Debugger::barDump(func_get_args());
+        $grid->setOperation([
+            self::OPERATION_DELEGATE => "Presenter.Admin.Reservation.Delegate.H1"
+        ], function ($operation,$application_ids) {
+            array_walk($application_ids,function (string &$id){
+                $id = ApplicationEntity::getIdFromAplhaNumeric($id);
+            });
+            switch ($operation){
+                case self::OPERATION_DELEGATE:
+                    $this->getPresenter()->redirect('Reservation:delegate',['ids'=>$application_ids]);
+                    break;
+            }
         })
             ->setPrimaryKey('idAlphaNumeric');
         $grid->addActionEvent('detail', 'Form.Action.Detail', function ($id) {
@@ -188,6 +206,10 @@ class ApplicationsGridWrapper extends GridWrapper {
         }
     }
 
+    /**
+     * @param $choiceId
+     * @throws \Nette\Application\AbortException
+     */
     public function handleInverseChoicePayed($choiceId) {
         $this->choiceManager->inverseChoicePayed($choiceId);
         if ($this->getPresenter()->isAjax()) {

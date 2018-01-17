@@ -32,6 +32,7 @@ Action:
     MoveDown: 'Přesunout níž'
     Delete: 'Smazat'
     Detail: Detail
+    Delegate: Delegovat
 SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
 Entity:
     Message:
@@ -42,11 +43,14 @@ Entity:
 Reservation:
     Description:
         Delegated: 'Chcete přihlášky rovnou delegovat konkrétní osobě? Delegovat rezervované přihlášky lze i později.'
-        DelegatedPerson: 'Osoba, které chcete přihlášky delegovat.'
+        DelegatedPerson: 'Osoba, které chcete rezervované přihlášky delegovat.'
         Email: 'Na tento email bude automaticky odeslán email s instrukcemi pro vyplnění rezervované přihlášky.'
     Label:
         Delegated: 'Delegovat'
         DelegatedPerson: 'Delegovaná osoba'
+    Message:
+        Create.Success: 'Přihlášky byly vytvořeny'
+        Delegate.Success: 'Přihlášky byly delegovány'
 EarlyWave:
     Description:
         StartDate: 'Kdy se rozešlou přihlášky a uživatelé se vpustí do registrace?'
@@ -116,9 +120,6 @@ Option:
     Message:
         Edit.Success: 'Možnost byla upravena'
         Create.Success: 'Možnost byla vytvořena'
-Reserve:
-    Message:
-        Create.Success: 'Přihlášky byly vytvořeny'
 Substitute:
     Message:
         Create.Success: 'Byl(a) jste úspěšně zapsán(a) mezi náhradníky'

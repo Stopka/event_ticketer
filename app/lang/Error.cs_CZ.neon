@@ -11,4 +11,8 @@ Cart.NotFound: 'Objednávka nebyla nalezena'
 Addition.NotFound: 'Přídavek nenalezen'
 Early.NotReady: 'Přístup k registraci nebyl povolen'
 Substitute.NotFound: 'Náhradníkovo místo vypršelo nebo nebylo nalezeno'
-Reservation.Application.InvalidState: 'Jedna z přihlášek není ve stavu vhodném pro delegaci rezervace.'
+Reservation:
+    Application:
+        InvalidInput: 'Přihlášky musí být ze stejné události'
+        InvalidState: 'Jedna z přihlášek není ve stavu vhodném pro delegaci rezervace.'
+        Empty: 'Chybí přihlášky.'

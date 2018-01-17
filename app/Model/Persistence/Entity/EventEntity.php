@@ -37,13 +37,6 @@ class EventEntity extends BaseEntity {
     const STATE_CLOSED = 2;
     const STATE_CANCELLED = 3;
 
-    public function __construct() {
-        $this->earlyWaves = new ArrayCollection();
-        $this->carts = new ArrayCollection();
-        $this->additions = new ArrayCollection();
-        $this->substitutes = new ArrayCollection();
-    }
-
     /**
      * @ORM\Column(type="integer")
      * @var integer
@@ -63,6 +56,12 @@ class EventEntity extends BaseEntity {
     private $carts;
 
     /**
+     * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="event")
+     * @var ApplicationEntity[]
+     */
+    private $applications;
+
+    /**
      * @ORM\OneToMany(targetEntity="SubstituteEntity", mappedBy="event")
      * @var SubstituteEntity[]
      */
@@ -74,6 +73,21 @@ class EventEntity extends BaseEntity {
      * @var AdditionEntity[]
      */
     private $additions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ReservationEntity", mappedBy="event")
+     * @var ReservationEntity[];
+     */
+    private $reservations;
+
+    public function __construct() {
+        $this->earlyWaves = new ArrayCollection();
+        $this->carts = new ArrayCollection();
+        $this->additions = new ArrayCollection();
+        $this->substitutes = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -141,9 +155,10 @@ class EventEntity extends BaseEntity {
     }
 
     /**
+     * @internal
      * @param CartEntity $cart
      */
-    public function addIversedCart(CartEntity $cart): void {
+    public function addInversedCart(CartEntity $cart): void {
         $this->carts->add($cart);
     }
 
@@ -155,10 +170,48 @@ class EventEntity extends BaseEntity {
     }
 
     /**
+     * @internal
      * @param CartEntity $cart
      */
-    public function removeIversedCart(CartEntity $cart): void {
+    public function removeInversedCart(CartEntity $cart): void {
         $this->carts->removeElement($cart);
+    }
+
+    /**
+     * @return ApplicationEntity[]
+     */
+    public function getApplications(): array {
+        return $this->applications->toArray();
+    }
+
+    /**
+     * @param ApplicationEntity $application
+     */
+    public function addApplication(ApplicationEntity $application): void {
+        $application->setEvent($this);
+    }
+
+    /**
+     * @internal
+     * @param ApplicationEntity $application
+     */
+    public function addInversedApplication(ApplicationEntity $application): void {
+        $this->applications->add($application);
+    }
+
+    /**
+     * @param ApplicationEntity $application
+     */
+    public function removeApplication(ApplicationEntity $application): void {
+        $application->setEvent(NULL);
+    }
+
+    /**
+     * @internal
+     * @param ApplicationEntity $application
+     */
+    public function removeInversedApplication(ApplicationEntity $application): void {
+        $this->applications->removeElement($application);
     }
 
 
@@ -177,6 +230,7 @@ class EventEntity extends BaseEntity {
     }
 
     /**
+     * @internal
      * @param SubstituteEntity $substitute
      */
     public function addIversedSubstitute(SubstituteEntity $substitute): void {
@@ -191,9 +245,10 @@ class EventEntity extends BaseEntity {
     }
 
     /**
+     * @internal
      * @param SubstituteEntity $substitute
      */
-    public function removeIversedSubstitute(SubstituteEntity $substitute): void {
+    public function removeInversedSubstitute(SubstituteEntity $substitute): void {
         $this->substitutes->removeElement($substitute);
     }
 
@@ -205,7 +260,7 @@ class EventEntity extends BaseEntity {
     }
 
     /**
-     * @param AdditionEntity $additions
+     * @param AdditionEntity $addition
      * @internal
      */
     public function addInversedAddition(AdditionEntity $addition): void {
@@ -213,7 +268,7 @@ class EventEntity extends BaseEntity {
     }
 
     /**
-     * @param AdditionEntity $additions
+     * @param AdditionEntity $addition
      * @internal
      */
     public function removeInversedAddition(AdditionEntity $addition): void {
@@ -239,5 +294,40 @@ class EventEntity extends BaseEntity {
         return [];
     }
 
+    /**
+     * @return ReservationEntity[]
+     */
+    public function getReservations(): array {
+        return $this->reservations->toArray();
+    }
 
+    /**
+     * @param ReservationEntity $reservation
+     */
+    public function addReservation(ReservationEntity $reservation): void {
+        $reservation->setEvent($this);
+    }
+
+    /**
+     * @internal
+     * @param ReservationEntity $reservation
+     */
+    public function addInversedReservation(ReservationEntity $reservation): void {
+        $this->reservations->add($reservation);
+    }
+
+    /**
+     * @param ReservationEntity $reservation
+     */
+    public function removeReservation(ReservationEntity $reservation): void {
+        $reservation->setEvent(NULL);
+    }
+
+    /**
+     * @internal
+     * @param ReservationEntity $reservation
+     */
+    public function removeInversedReservation(ReservationEntity $reservation): void {
+        $this->reservations->removeElement($reservation);
+    }
 }

@@ -8,8 +8,6 @@
 
 namespace App\Model\Notifier;
 
-
-use App\Model\ApplicationPdfManager;
 use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Entity\ReservationEntity;
 use Kdyby\Events\Subscriber;
@@ -23,7 +21,6 @@ class ReservationDelegatedNotifier implements Subscriber {
     /**
      * CartCreatedNotifier constructor.
      * @param EmailService $emailService
-     * @param ApplicationPdfManager $applicationPdfManager
      */
     public function __construct(EmailService $emailService) {
         $this->injectEmailService($emailService);
@@ -32,6 +29,7 @@ class ReservationDelegatedNotifier implements Subscriber {
     /**
      * Event callback
      * @param ReservationEntity $reservationEntity
+     * @throws InvalidLinkException
      */
     public function onReservationDelegated(ReservationEntity $reservationEntity){
         $this->sendNotification($reservationEntity);
@@ -48,9 +46,9 @@ class ReservationDelegatedNotifier implements Subscriber {
         $link = $emailService->generateLink('Front:Reservation:', ['id' => $reservationEntity->getId()]);
         $message = $emailService->createMessage();
         $message->addTo($reservationEntity->getEmail(), $reservationEntity->getFullName());
-        $message->setSubject('Rezervace místa na ' . $reservationEntity->getCart()->getEvent()->getName());
+        $message->setSubject('Rezervace místa na ' . $reservationEntity->getEvent()->getName());
         $message->setHtmlBody("<p>Dobrý den,</p>
-<p>Rádi bychom Vám oznámili, že Vám bylo rezervováno místo na <strong>" . $reservationEntity->getCart()->getEvent()->getName() . "</strong>. Přihlášku získáte po registraci na následující adrese: <br />
+<p>Rádi bychom Vám oznámili, že Vám bylo rezervováno místo na <strong>" . $reservationEntity->getEvent()->getName() . "</strong>. Přihlášku získáte po registraci na následující adrese: <br />
 <a href='$link'>$link</a></p>
 <p>Vyplňte prosím registraci co nejdříve.</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa.</em></p>");

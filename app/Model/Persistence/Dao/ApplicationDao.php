@@ -93,17 +93,42 @@ class ApplicationDao extends EntityDao {
     }
 
     /**
+     * @param  EventEntity $event
      * @return ApplicationEntity[]
      */
     public function getAllEventApplications(EventEntity $event): array {
-
-        //TODO filtr podle eventu
-        return $this->getRepository()->findAll();
+        return $this->getRepository()->findBy([
+            'event.id' => $event->getId()
+        ]);
     }
 
     public function getApplication(?string $id): ?ApplicationEntity {
         /** @var ApplicationEntity $result */
         $result = $this->get($id);
+        return $result;
+    }
+
+    /**
+     * @param string[] $applicationIds
+     * @return ApplicationEntity[]
+     */
+    public function getApplicationsForReservationDelegation(array $applicationIds): array {
+        /** @var ApplicationEntity[] $applications */
+        $applications = $this->getRepository()->findBy(['id IN'=>$applicationIds]);
+        $result = [];
+        $eventId = null;
+        foreach ($applications as $application){
+            if(!in_array($application->getState(),ApplicationEntity::getStatesReserved())){
+                continue;
+            }
+            if(!$eventId){
+                $eventId = $application->getCart()->getEvent()->getId();
+            }
+            if($application->getCart()->getEvent()->getId() !== $eventId){
+                continue;
+            }
+            $result[] = $application;
+        }
         return $result;
     }
 

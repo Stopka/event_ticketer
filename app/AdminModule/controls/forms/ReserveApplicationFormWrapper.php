@@ -112,6 +112,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         $reservation->addText("lastName", "Attribute.Person.LastName", NULL, 255)
             ->setRequired(false)
             ->addRule($form::MAX_LENGTH, NULL, 255);
+        /** @noinspection PhpParamsInspection */
         $reservation->addText("email", "Attribute.Person.Email")
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.Email')
             ->setDefaultValue('@')
@@ -122,11 +123,16 @@ class ReserveApplicationFormWrapper extends FormWrapper {
 
     }
 
+    /**
+     * @param SubmitButton $button
+     * @throws \Exception
+     * @throws \Nette\Application\AbortException
+     */
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
         $this->cartManager->createCartFromReservationForm($values, $this->event);
-        $this->getPresenter()->flashTranslatedMessage('Form.Reserve.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
+        $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Application:', $this->event->getId());
     }
 

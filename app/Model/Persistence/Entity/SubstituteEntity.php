@@ -77,10 +77,12 @@ class SubstituteEntity extends BaseEntity {
      */
     public function setEvent(EventEntity $event) {
         if($this->event){
-            $event->removeIversedSubstitute($this);
+            /** @noinspection PhpInternalEntityUsedInspection */
+            $event->removeInversedSubstitute($this);
         }
         $this->event = $event;
         if($event) {
+            /** @noinspection PhpInternalEntityUsedInspection */
             $event->addIversedSubstitute($this);
         }
     }
