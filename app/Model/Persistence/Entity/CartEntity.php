@@ -102,11 +102,6 @@ class CartEntity extends BaseEntity {
      * @internal
      */
     public function addInversedApplication(ApplicationEntity $application): void {
-        if($event = $this->getEvent()){
-            $application->setEvent($event);
-        }else if($event = $application->getEvent()){
-            $this->setEvent($event);
-        }
         $this->applications->add($application);
     }
 

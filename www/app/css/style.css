@@ -103,7 +103,7 @@ a[href^=error] {
 
 .layout_row_content {
 	max-width: 1080px;
-	margin: 0px auto;
+	margin: 0 auto;
 	position: relative;
 	text-align: left;
 }
@@ -268,7 +268,6 @@ label.radio, label.checkbox{
 	line-height: 25px;
 	font-weight: normal;
 	display: block;
-	padding-left: 25px;
 	padding-left: 30px;
 	text-indent: -30px;
 }
@@ -346,7 +345,6 @@ input[type=submit].btn-primary:hover,input[type=button].btn-primary:hover,button
 
 input[type=file]{
 	padding: 0;
-	height: auto;
 	height: initial;
 }
 
@@ -548,4 +546,6 @@ a.price_recalculate{
 .addition-link{
 	display: block;
 	white-space: nowrap;
+	font-size: 16px;
+	font-weight: normal;
 }

@@ -11,6 +11,7 @@ use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Entity\ReservationEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use App\Model\Persistence\Manager\CartManager;
 use Nette\Forms\Container;
@@ -48,6 +49,9 @@ class CartFormWrapper extends FormWrapper {
 
     /** @var  CartEntity */
     private $cart;
+
+    /** @var ReservationEntity */
+    private $reservation;
 
     /**
      * CartFormWrapper constructor.
@@ -91,6 +95,11 @@ class CartFormWrapper extends FormWrapper {
         $this->event = $cart->getEvent();
         $this->early = $cart->getEarly();
         $this->substitute = $cart->getSubstitute();
+    }
+
+    public function setReservation(ReservationEntity $reservation) {
+        $this->reservation = $reservation;
+        $this->event = $reservation->getEvent();
     }
 
     public function isAdmin() {

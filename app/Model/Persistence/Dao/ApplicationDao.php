@@ -27,7 +27,7 @@ class ApplicationDao extends EntityDao {
      */
     public function getCartApplicationsGridModel(CartEntity $cartEntity): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->whereCriteria(['a.cart'=>$cartEntity]);
+        $qb->whereCriteria(['a.cart' => $cartEntity]);
         return new Doctrine($qb);
     }
 
@@ -86,8 +86,8 @@ class ApplicationDao extends EntityDao {
     public function getEventApplicationsGridModel(EventEntity $event): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('a');
         $qb->whereCriteria([
-            'a.cart.event'=>$event,
-            'a.state !='=>ApplicationEntity::getStatesNotIssued()
+            'a.event' => $event,
+            'a.state !=' => ApplicationEntity::getStatesNotIssued()
         ]);
         return new Doctrine($qb);
     }
@@ -98,7 +98,7 @@ class ApplicationDao extends EntityDao {
      */
     public function getAllEventApplications(EventEntity $event): array {
         return $this->getRepository()->findBy([
-            'event.id' => $event->getId()
+            'event' => $event
         ]);
     }
 
@@ -110,26 +110,15 @@ class ApplicationDao extends EntityDao {
 
     /**
      * @param string[] $applicationIds
+     * @param EventEntity $event
      * @return ApplicationEntity[]
      */
-    public function getApplicationsForReservationDelegation(array $applicationIds): array {
-        /** @var ApplicationEntity[] $applications */
-        $applications = $this->getRepository()->findBy(['id IN'=>$applicationIds]);
-        $result = [];
-        $eventId = null;
-        foreach ($applications as $application){
-            if(!in_array($application->getState(),ApplicationEntity::getStatesReserved())){
-                continue;
-            }
-            if(!$eventId){
-                $eventId = $application->getCart()->getEvent()->getId();
-            }
-            if($application->getCart()->getEvent()->getId() !== $eventId){
-                continue;
-            }
-            $result[] = $application;
-        }
-        return $result;
+    public function getApplicationsForReservationDelegation(array $applicationIds, EventEntity $event): array {
+        return $this->getRepository()->findBy([
+            'id IN' => $applicationIds,
+            'state IN' => ApplicationEntity::getStatesReserved(),
+            'event' => $event
+        ]);
     }
 
 }

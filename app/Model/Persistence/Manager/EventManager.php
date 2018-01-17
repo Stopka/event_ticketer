@@ -39,6 +39,7 @@ class EventManager implements Subscriber {
     /**
      * Event callback
      * @param CartEntity $cartEntity
+     * @throws \Exception
      */
     public function onCartCreated(CartEntity $cartEntity) {
         $event = $cartEntity->getEvent();
@@ -48,6 +49,10 @@ class EventManager implements Subscriber {
         $this->updateEventCapacityFull($event);
     }
 
+    /**
+     * @param EventEntity $event
+     * @throws \Exception
+     */
     public function updateEventCapacityFull(EventEntity $event): void {
         $isFull = $event->isCapacityFull($this->applicationDao->countIssuedApplications($event));
         $event->setCapacityFull($isFull);
@@ -55,9 +60,15 @@ class EventManager implements Subscriber {
     }
 
     public function getSubscribedEvents() {
-        return ['CartManager::onCartCreated'];
+        return [CartManager::class . '::onCartCreated'];
     }
 
+    /**
+     * @param array $values
+     * @param EventEntity $eventEntity
+     * @return EventEntity
+     * @throws \Exception
+     */
     public function editEventFromEventForm(array $values, EventEntity $eventEntity):EventEntity{
         $em = $this->getEntityManager();
         $eventEntity->setByValueArray($values);
@@ -65,6 +76,11 @@ class EventManager implements Subscriber {
         return $eventEntity;
     }
 
+    /**
+     * @param array $values
+     * @return EventEntity
+     * @throws \Exception
+     */
     public function createEventFromEventForm(array $values):EventEntity{
         $em = $this->getEntityManager();
         $eventEntity = new EventEntity();
@@ -74,6 +90,11 @@ class EventManager implements Subscriber {
         return $eventEntity;
     }
 
+    /**
+     * @param EventEntity|null $eventEntity
+     * @param int $state
+     * @throws \Exception
+     */
     public function setEventState(?EventEntity $eventEntity, int $state = EventEntity::STATE_ACTIVE): void {
         if(!$eventEntity){
             throw new NotFoundException("Error.Event.NotFound");

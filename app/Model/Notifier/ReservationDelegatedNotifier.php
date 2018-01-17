@@ -10,6 +10,7 @@ namespace App\Model\Notifier;
 
 use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Entity\ReservationEntity;
+use App\Model\Persistence\Manager\ReservationManager;
 use Kdyby\Events\Subscriber;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Mail\SendException;
@@ -56,6 +57,6 @@ class ReservationDelegatedNotifier implements Subscriber {
     }
 
     public function getSubscribedEvents() {
-        return ['ReservationManager::onReservationDelegated'];
+        return [ReservationManager::class . '::onReservationDelegated'];
     }
 }

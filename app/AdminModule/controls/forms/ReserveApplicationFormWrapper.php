@@ -14,14 +14,19 @@ use App\Controls\Forms\FormWrapperDependencies;
 use App\Controls\Forms\TAppendAdditionsControls;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
+use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use App\Model\Persistence\Manager\CartManager;
+use App\Model\Persistence\Manager\ReservationManager;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 
 class ReserveApplicationFormWrapper extends FormWrapper {
-    use TAppendAdditionsControls;
+    use TAppendAdditionsControls,
+        TAppendDelegateReservation {
+        appendDelegateControls as protected appendParentDelegateControls;
+    }
 
     /** @var  EventEntity */
     private $event;
@@ -35,20 +40,25 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  ApplicationDao */
     private $applicationDao;
 
-    /** @var  CartManager */
-    private $cartManager;
+    /** @var  ReservationManager */
+    private $reservationManager;
+
+    /** @var ReservationDao */
+    private $reservationDao;
 
     public function __construct(
         FormWrapperDependencies $formWrapperDependencies,
         ApplicationDao $applicationDao,
         CurrencyDao $currencyDao,
-        CartManager $cartManager
+        ReservationManager $reservationManager,
+        ReservationDao $reservationDao
     ) {
         parent::__construct($formWrapperDependencies);
         $this->applicationDao = $applicationDao;
         $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();
-        $this->cartManager = $cartManager;
+        $this->reservationManager = $reservationManager;
+        $this->reservationDao = $reservationDao;
         $this->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION);
         $this->setVisibleCountLeft();
     }
@@ -74,6 +84,10 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         return $this->applicationDao;
     }
 
+    protected function getReservationDao(): ReservationDao {
+        return $this->reservationDao;
+    }
+
 
     /**
      * @param Form $form
@@ -96,31 +110,14 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     }
 
     protected function appendDelegateControls(Form $form) {
-        $form->addGroup()
-            ->setOption($form::OPTION_KEY_LOGICAL, true);
-        $form->addStandardizedCheckbox('delegated', 'Form.Reservation.Label.Delegated')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Reservation.Description.Delegated")
-            ->addCondition($form::EQUAL, true)
-            ->toggle('reservationDelegate');
-        $form->addGroup('Form.Reservation.Label.DelegatedPerson')
-            ->setOption($form::OPTION_KEY_ID, 'reservationDelegate')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.DelegatedPerson');
-        $reservation = $form->addContainer('reservation');
-        $reservation->addText("firstName", "Attribute.Person.FirstName", NULL, 255)
-            ->setRequired(false)
-            ->addRule($form::MAX_LENGTH, NULL, 255);
-        $reservation->addText("lastName", "Attribute.Person.LastName", NULL, 255)
-            ->setRequired(false)
-            ->addRule($form::MAX_LENGTH, NULL, 255);
-        /** @noinspection PhpParamsInspection */
-        $reservation->addText("email", "Attribute.Person.Email")
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.Email')
-            ->setDefaultValue('@')
-            ->setRequired(false)
-            ->addConditionOn($form['delegated'],$form::EQUAL,true)
-            ->addRule($form::FILLED)
-            ->addRule($form::EMAIL);
-
+        $this->appendParentDelegateControls($form);
+        /** @var SelectBox $delegateSelect */
+        $delegateSelect = $form['delegateTo'];
+        $delegateSelect->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Reservation.Description.Delegated")
+            ->setRequired(false);
+        $items = $delegateSelect->getItems();
+        $items[NULL] = "Form.Reservation.Label.DoNotDelegate";
+        $delegateSelect->setItems($items);
     }
 
     /**
@@ -131,7 +128,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->cartManager->createCartFromReservationForm($values, $this->event);
+        $this->reservationManager->createReservedApplicationsFromReservationForm($values, $this->event);
         $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Application:', $this->event->getId());
     }

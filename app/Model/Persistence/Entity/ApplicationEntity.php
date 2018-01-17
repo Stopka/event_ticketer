@@ -8,6 +8,7 @@
 
 namespace App\Model\Persistence\Entity;
 
+use App\Model\Exception\InvalidInputException;
 use App\Model\Exception\InvalidStateException;
 use App\Model\Persistence\Attribute\TAddressAttribute;
 use App\Model\Persistence\Attribute\TBirthDateAttribute;
@@ -25,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="application",
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="applicationNumber_unique",
- *            columns={"number","cart_id"})
+ *            columns={"number","event_id"})
  *    }
  * )
  * @ORM\Entity
@@ -109,7 +110,7 @@ class ApplicationEntity extends BaseEntity {
 
     protected function getLastNumberSearchCriteria(): array {
         return [
-            'cart.event.id' => $this->getCart()->getEvent()->getId()
+            'event.id' => $this->getEvent()->getId()
         ];
     }
 
@@ -203,6 +204,14 @@ class ApplicationEntity extends BaseEntity {
      * @param CartEntity $cart
      */
     public function setCart(CartEntity $cart) {
+        if ($event = $cart->getEvent() && !$this->getEvent()) {
+            $this->setEvent($cart->getEvent());
+        } else if ($this->getEvent() && !$cart->getEvent()) {
+            $cart->setEvent($this->getEvent());
+        }
+        if ($this->getEvent()->getId() !== $cart->getEvent()->getId()) {
+            throw new InvalidInputException("Error.Application.InvalidInput");
+        }
         if ($this->cart) {
             /** @noinspection PhpInternalEntityUsedInspection */
             $this->cart->removeInversedApplication($this);
@@ -242,14 +251,14 @@ class ApplicationEntity extends BaseEntity {
         if (in_array($this->getState(), self::getStatesNotIssued())) {
             return;
         }
-        if(in_array($this->getState(), self::getStatesReserved())){
-            if($this->getReservation()){
+        if (in_array($this->getState(), self::getStatesReserved())) {
+            if ($this->getReservation()) {
                 $this->state = self::STATE_DELEGATED;
-            }else{
+            } else {
                 $this->state = self::STATE_RESERVED;
             }
         }
-        if(!$this->getCart()){
+        if (!$this->getCart()) {
             return;
         }
         $this->state = self::STATE_WAITING;
@@ -331,10 +340,20 @@ class ApplicationEntity extends BaseEntity {
 
     /**
      * @param ReservationEntity $reservation
+     * @throws InvalidInputException
+     * @throws InvalidStateException
      */
     public function setReservation(?ReservationEntity $reservation): void {
-        if(!in_array($this->getState(),self::getStatesReserved())){
+        if (!in_array($this->getState(), self::getStatesReserved())) {
             throw new InvalidStateException("Error.Reservation.Application.InvalidState");
+        }
+        if ($event = $reservation->getEvent() && !$this->getEvent()) {
+            $this->setEvent($reservation->getEvent());
+        } else if ($this->getEvent() && !$reservation->getEvent()) {
+            $reservation->setEvent($this->getEvent());
+        }
+        if ($this->getEvent()->getId() !== $reservation->getEvent()->getId()) {
+            throw new InvalidInputException("Error.Application.InvalidInput");
         }
         if ($this->reservation) {
             /** @noinspection PhpInternalEntityUsedInspection */

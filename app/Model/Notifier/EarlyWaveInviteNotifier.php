@@ -8,6 +8,7 @@
 
 namespace App\Model\Notifier;
 
+use App\Model\CronService;
 use App\Model\Exception\AlreadyDoneException;
 use App\Model\Exception\NotFoundException;
 use App\Model\Exception\NotReadyException;
@@ -15,8 +16,9 @@ use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EarlyWaveEntity;
-use Doctrine\ORM\EntityManager;
+use App\Model\Persistence\Manager\EarlyWaveManager;
 use Kdyby\Events\Subscriber;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Mail\SendException;
 use Nette\SmartObject;
 
@@ -33,16 +35,15 @@ class EarlyWaveInviteNotifier implements Subscriber {
      * EarlyWaveInviteNotifier constructor.
      * @param EmailService $emailService
      * @param EarlyWaveDao $earlyWaveDao
-     * @param EntityManager $entityManager
      */
-    public function __construct(EmailService $emailService, EarlyWaveDao $earlyWaveDao, EntityManager $entityManager) {
+    public function __construct(EmailService $emailService, EarlyWaveDao $earlyWaveDao) {
         $this->earlyWaveDao = $earlyWaveDao;
         $this->injectEmailService($emailService);
-        $this->injectEntityManager($entityManager);
     }
 
     /**
      * event callback
+     * @throws InvalidLinkException
      */
     public function onCronRun(){
         $this->sendUnsentInvites();
@@ -50,6 +51,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
 
     /**
      * @throws SendException
+     * @throws InvalidLinkException
      */
     public function sendUnsentInvites(): void {
         $waves = $this->earlyWaveDao->getUnsentInviteEarlyWaves();
@@ -58,9 +60,13 @@ class EarlyWaveInviteNotifier implements Subscriber {
         }
     }
 
+    /**
+     * @param EarlyWaveEntity $earlyWave
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function onEarlyWaveCreated(EarlyWaveEntity $earlyWave): void{
         try {
-            $this->sendEarlyInvite($earlyWave);
+            $this->sendEarlyWaveInvites($earlyWave->getId());
         }catch(NotReadyException $exception){
 
         }
@@ -72,6 +78,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
      * @throws AlreadyDoneException
      * @throws NotReadyException
      * @throws SendException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function sendEarlyWaveInvites(string $waveId): void {
         $wave = $this->earlyWaveDao->getEarlyWave($waveId);
@@ -98,11 +105,13 @@ class EarlyWaveInviteNotifier implements Subscriber {
      * @param EarlyEntity $early
      * @throws NotReadyException
      * @throws SendException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     protected function sendEarlyInvite(EarlyEntity $early): void {
         if (!$early->getEmail()) {
             throw new NotReadyException("Early has no email address");
         }
+        $wave = $early->getEarlyWave();
         $emailService = $this->getEmailService();
         $link = $emailService->generateLink('Front:Early:', ['id' => $early->getId()]);
         $message = $emailService->createMessage();
@@ -117,8 +126,8 @@ $link</p>
 
     function getSubscribedEvents() {
         return [
-            "CronService::onCronRun",
-            'EarlyWaveManager::onEarlyWaveCreated'
+            CronService::class . "::onCronRun",
+            EarlyWaveManager::class . '::onEarlyWaveCreated'
         ];
     }
 }

@@ -46,8 +46,12 @@ Reservation:
         DelegatedPerson: 'Osoba, které chcete rezervované přihlášky delegovat.'
         Email: 'Na tento email bude automaticky odeslán email s instrukcemi pro vyplnění rezervované přihlášky.'
     Label:
+        Person: 'Osoba'
         Delegated: 'Delegovat'
         DelegatedPerson: 'Delegovaná osoba'
+        DoNotDelegate: 'Zatím nedelegovat'
+        NewPerson: 'Nová osoba'
+        ExistingPerson: 'Existující osoba'
     Message:
         Create.Success: 'Přihlášky byly vytvořeny'
         Delegate.Success: 'Přihlášky byly delegovány'

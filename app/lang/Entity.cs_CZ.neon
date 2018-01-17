@@ -15,6 +15,7 @@ Singular:
     Registration: Registrace
     Price: Cena
     Currency: Měna
+    Reservation: Rezervace
 Plural:
     EarlyWave: Přednostní vlny
     Currency: Měny
@@ -29,3 +30,4 @@ Plural:
     Customer: Zákazníci
     Early: 'Přednostníci'
     Substitute: Náhradníci
+    Reservation: Rezervace

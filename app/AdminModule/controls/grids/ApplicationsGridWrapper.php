@@ -69,6 +69,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendCartColumns($grid);
+        $this->appendReservationColumns($grid);
         $this->appendApplicationColumns($grid);
         $this->appendAdditionsColumns($grid);
         $this->appendActions($grid);
@@ -77,27 +78,42 @@ class ApplicationsGridWrapper extends GridWrapper {
     protected function appendActions(Grid $grid) {
         $grid->setOperation([
             self::OPERATION_DELEGATE => "Presenter.Admin.Reservation.Delegate.H1"
-        ], function ($operation,$application_ids) {
-            array_walk($application_ids,function (string &$id){
+        ], function ($operation, $application_ids) {
+            array_walk($application_ids, function (string &$id) {
                 $id = ApplicationEntity::getIdFromAplhaNumeric($id);
             });
-            switch ($operation){
+            switch ($operation) {
                 case self::OPERATION_DELEGATE:
-                    $this->getPresenter()->redirect('Reservation:delegate',['ids'=>$application_ids]);
+                    $this->getPresenter()->redirect('Reservation:delegate', [
+                        'id' => $this->event->getId(),
+                        'ids' => $application_ids
+                    ]);
                     break;
             }
         })
             ->setPrimaryKey('idAlphaNumeric');
-        $grid->addActionEvent('detail', 'Form.Action.Detail', function ($id) {
-            $this->getPresenter()->redirect('Cart:default', $id);
+        $grid->addActionEvent('detailCart', 'Form.Action.Detail', function ($id) {
+            $application = $this->applicationDao->getApplication($id);
+            if (!$application || !$application->getCart()) {
+                return;
+            }
+            $this->getPresenter()->redirect('Cart:default', $application->getCart()->getId());
         })
             ->setIcon('fa fa-eye')
-            ->setPrimaryKey('cart.id');
-        $grid->addActionEvent('edit', 'Form.Action.Edit', function ($id) {
-            $this->getPresenter()->redirect('Cart:edit', $id);
+            ->setDisable(function (ApplicationEntity $applicationEntity) {
+                return $applicationEntity->getCart() === null;
+            });
+        $grid->addActionEvent('editCart', 'Form.Action.Edit', function ($id) {
+            $application = $this->applicationDao->getApplication($id);
+            if (!$application || !$application->getCart()) {
+                return;
+            }
+            $this->getPresenter()->redirect('Cart:edit', $application->getCart()->getId());
         })
-            ->setPrimaryKey('cart.id')
-            ->setIcon('fa fa-pencil');
+            ->setIcon('fa fa-pencil')
+            ->setDisable(function (ApplicationEntity $applicationEntity) {
+                return $applicationEntity->getCart() === null;
+            });
         $grid->addButton('reserve', 'Presenter.Admin.Application.Reserve.H1', "Application:reserve", ['id' => $this->event->getId()])
             ->setIcon('fa fa-address-book-o');
         $grid->addButton('export', 'Presenter.Admin.Application.Export.H1', "Application:export", ['id' => $this->event->getId()])
@@ -113,16 +129,6 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setReplacement(ApplicationEntity::getAllStates())
             ->setSortable()
             ->setFilterSelect(array_merge([NULL => ''], ApplicationEntity::getAllStates()));
-
-        /*$grid->addColumnText('address','Adresa')
-            ->setFilterText()
-            ->setSuggestion();
-        $grid->addColumnText('city','Město')
-            ->setFilterText()
-            ->setSuggestion();
-        $grid->addColumnText('zip','PSČ')
-            ->setFilterText()
-            ->setSuggestion();*/
         $grid->addColumnText('firstName', 'Attribute.Person.FirstName')
             ->setSortable()
             ->setFilterText()
@@ -138,36 +144,34 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->addColumnDate('birthDate', 'Datum narození')
             ->setSortable()
             ->setFilterDateRange();
-        $grid->addColumnDateTime('cart.created', 'Attribute.Created')
+        $grid->addColumnDateTime('created', 'Attribute.Created')
             ->setSortable()
             ->setFilterDateRange();
-        /*$grid->addColumnText('invoiced', 'Faktura')
-            ->setCustomRender(function (ApplicationEntity $application) {
-                return $isPayedLink = Html::el('a', ['title' => 'Přepnout','href' => $this->link('inverseValue!', 'invoiced', $application->getId()),])
-                    ->addHtml(Html::el('i',['class'=>'fa '.($application->isInvoiced()?'fa-check-square-o':'fa-square-o')]));;
-            })
-            ->setSortable()
-            ->setReplacement([true => 'Ano', false => 'Ne'])
-            ->setFilterSelect([null => '', true => 'Ano', false => 'Ne']);*/
     }
 
     protected function appendCartColumns(Grid $grid) {
-        $grid->addColumnText('cart.firstName', 'Jméno rodiče')
-            ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
-        $grid->addColumnText('cart.lastName', 'Příjmení rodiče')
-            ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
-        /*
-        $grid->addColumnText('cart.phone','Telefon rodiče')
-            ->setFilterText()
-            ->setSuggestion();
-        $grid->addColumnEmail('cart.email','Email rodiče')
-            ->setFilterText()
-            ->setSuggestion();
-        */
+        $grid->addColumnText('cart', 'Entity.Singular.Cart')
+            ->setCustomRender(function (ApplicationEntity $applicationEntity) {
+                $html = Html::el();
+                if ($cart = $applicationEntity->getCart()) {
+                    $html->addHtml(Html::el('div', ['class' => 'cart-id id'])->addText($cart->getId()));
+                    $html->addHtml(Html::el('div', ['class' => 'cart-fullName fillName'])->addText($cart->getFullName()));
+                    $html->addHtml(Html::el('div', ['class' => 'cart-email email'])->addText('(' . $cart->getEmail() . ')'));
+                }
+                return $html;
+            });
+    }
+
+    protected function appendReservationColumns(Grid $grid) {
+        $grid->addColumnText('reservation', 'Entity.Singular.Reservation')
+            ->setCustomRender(function (ApplicationEntity $applicationEntity) {
+                $html = Html::el();
+                if ($reservation = $applicationEntity->getReservation()) {
+                    $html->addHtml(Html::el('div', ['class' => 'reservation-fullName fullName'])->addText($reservation->getFullName()));
+                    $html->addHtml(Html::el('div', ['class' => 'reservation-email email'])->addText($reservation->getEmail()));
+                }
+                return $html;
+            });
     }
 
     protected function getCounterNumber(): int {

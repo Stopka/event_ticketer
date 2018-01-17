@@ -12,6 +12,7 @@ namespace App\Model\Notifier;
 use App\Model\ApplicationPdfManager;
 use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Entity\CartEntity;
+use App\Model\Persistence\Manager\CartManager;
 use Kdyby\Events\Subscriber;
 use Nette\Mail\SendException;
 use Nette\SmartObject;
@@ -35,6 +36,7 @@ class CartCreatedNotifier implements Subscriber {
     /**
      * Event callback
      * @param CartEntity $cartEntity
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function onCartCreated(CartEntity $cartEntity){
         $this->sendNotification($cartEntity);
@@ -44,13 +46,14 @@ class CartCreatedNotifier implements Subscriber {
      * @param CartEntity $cartEntity
      * @throws NotReadyException
      * @throws SendException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function sendNotification(CartEntity $cartEntity): void {
         if (!$cartEntity->getEmail()) {
             throw new NotReadyException("Cart has no email address");
         }
         $emailService =$this->getEmailService();
-        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getHashId()]);
+        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getId()]);
         $message = $emailService->createMessage();
         $message->addTo($cartEntity->getEmail(), $cartEntity->getFullName());
         $message->setSubject('Přihláška na ' . $cartEntity->getEvent()->getName());
@@ -72,6 +75,6 @@ class CartCreatedNotifier implements Subscriber {
     }
 
     public function getSubscribedEvents() {
-        return ['CartManager::onCartCreated'];
+        return [CartManager::class . '::onCartCreated'];
     }
 }

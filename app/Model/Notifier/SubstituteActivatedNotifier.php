@@ -11,6 +11,7 @@ namespace App\Model\Notifier;
 
 use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Entity\SubstituteEntity;
+use App\Model\Persistence\Manager\SubstituteManager;
 use Kdyby\Events\Subscriber;
 use Nette\Mail\SendException;
 use Nette\SmartObject;
@@ -30,6 +31,7 @@ class SubstituteActivatedNotifier implements Subscriber {
     /**
      * Event callback
      * @param SubstituteEntity $substituteEntity
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function onSubstituteActivated(SubstituteEntity $substituteEntity): void {
         try {
@@ -43,6 +45,7 @@ class SubstituteActivatedNotifier implements Subscriber {
      * @param SubstituteEntity $substitute
      * @throws NotReadyException
      * @throws SendException
+     * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function sendNotification(SubstituteEntity $substitute): void {
         if (!$substitute->getEmail()) {
@@ -69,6 +72,6 @@ class SubstituteActivatedNotifier implements Subscriber {
     }
 
     public function getSubscribedEvents() {
-        return ['SubstituteManager::onSubstituteActivated'];
+        return [SubstituteManager::class . '::onSubstituteActivated'];
     }
 }

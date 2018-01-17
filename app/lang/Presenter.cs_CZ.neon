@@ -58,3 +58,6 @@ Front:
         Default:
             H1: 'Objednávka #%cart_id%'
             EarlyLabel: 'Přednostně na jméno'
+    Reservation:
+        Register:
+            H1: 'Registrace rezervovaného místa'

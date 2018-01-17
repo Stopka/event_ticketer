@@ -21,6 +21,8 @@ use App\Model\Persistence\Manager\ReservationManager;
 use Nette\Forms\Controls\SubmitButton;
 
 class DelegateReservationFormWrapper extends FormWrapper {
+    use TAppendDelegateReservation;
+
     /** @var  ApplicationDao */
     private $applicationDao;
 
@@ -35,6 +37,11 @@ class DelegateReservationFormWrapper extends FormWrapper {
 
     /** @var EventEntity */
     private $event;
+
+    protected function getReservationDao(): ReservationDao {
+        return $this->reservationDao;
+    }
+
 
     public function __construct(
         FormWrapperDependencies $formWrapperDependencies,
@@ -57,9 +64,9 @@ class DelegateReservationFormWrapper extends FormWrapper {
         }
         foreach ($applications as $application) {
             if (!$this->event) {
-                $this->event = $application->getCart()->getEvent();
+                $this->event = $application->getEvent();
             }
-            if ($this->event->getId() !== $application->getCart()->getEvent()->getId()) {
+            if ($this->event->getId() !== $application->getEvent()->getId()) {
                 throw new InvalidInputException("Error.Reservation.Application.InvalidInput");
             }
             if (!in_array($application->getState(), ApplicationEntity::getStatesReserved())) {
@@ -93,41 +100,10 @@ class DelegateReservationFormWrapper extends FormWrapper {
 
     }
 
-    protected function appendDelegateControls(Form $form) {
-        $form->addGroup('Form.Reservation.Label.DelegatedPerson')
-            ->setOption($form::OPTION_KEY_ID, 'reservationDelegate')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.DelegatedPerson')
-            ->setOption($form::OPTION_KEY_EMBED, 'New person');
-        $form->addSelect('delegateTo', 'Osoba', [
-            NULL => '',
-            '*' => 'New person',
-            'Existující osoby' => $this->reservationDao->getEventReservationList($this->event)
-        ])
-            ->setRequired()
-            ->addCondition($form::EQUAL, '*')
-            ->toggle('delegateNewPerson');
-        $form->addGroup('New person')
-            ->setOption($form::OPTION_KEY_ID, 'delegateNewPerson');
-        $new = $form->addContainer('delegateNew');
-        $new->addText("firstName", "Attribute.Person.FirstName", NULL, 255)
-            ->setRequired(false)
-            ->addRule($form::MAX_LENGTH, NULL, 255);
-        $new->addText("lastName", "Attribute.Person.LastName", NULL, 255)
-            ->setRequired(false)
-            ->addRule($form::MAX_LENGTH, NULL, 255);
-        /** @noinspection PhpParamsInspection */
-        $new->addText("email", "Attribute.Person.Email")
-            ->setRequired(false)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.Email')
-            ->setDefaultValue('@')
-            ->addConditionOn($form['delegateTo'], $form::EQUAL, '*')
-            ->addRule($form::FILLED)
-            ->addRule($form::EMAIL);
-    }
-
     /**
      * @param SubmitButton $button
      * @throws \Nette\Application\AbortException
+     * @throws \Exception
      */
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();

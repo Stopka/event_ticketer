@@ -28,6 +28,29 @@ class ReservationDao extends EntityDao {
     }
 
     /**
+     * @param null|string $id
+     * @return ReservationEntity|null
+     */
+    public function getReservation(?string $id): ?ReservationEntity {
+        /** @var ReservationEntity $result */
+        $result = $this->get($id);
+        return $result;
+    }
+
+    /**
+     * Returns reservation ready to register
+     * @param string $id
+     * @return ReservationEntity|null
+     */
+    public function getRegisterReadyReservation(string $id): ?ReservationEntity {
+        $reservation = $this->getReservation($id);
+        if ($reservation && $reservation->isRegisterReady()) {
+            return $reservation;
+        }
+        return null;
+    }
+
+    /**
      * @param EventEntity $event
      * @return ReservationEntity[]
      */

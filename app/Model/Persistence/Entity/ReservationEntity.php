@@ -71,11 +71,6 @@ class ReservationEntity extends BaseEntity {
      * @param ApplicationEntity $application
      */
     public function addInversedApplication(ApplicationEntity $application): void {
-        if($event = $this->getEvent()){
-            $application->setEvent($event);
-        }else if($event = $application->getEvent()){
-            $this->setEvent($event);
-        }
         $this->applications->add($application);
     }
 
@@ -128,6 +123,10 @@ class ReservationEntity extends BaseEntity {
             /** @noinspection PhpInternalEntityUsedInspection */
             $event->addInversedReservation($this);
         }
+    }
+
+    public function isRegisterReady() {
+        return count($this->getApplications()) && $this->getState() == self::STATE_WAITING;
     }
 
 }

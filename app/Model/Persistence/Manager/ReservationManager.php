@@ -4,6 +4,8 @@ namespace App\Model\Persistence\Manager;
 
 use App\Model\Exception\EmptyException;
 use App\Model\Exception\NotFoundException;
+use App\Model\Persistence\Dao\OptionDao;
+use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\ChoiceEntity;
@@ -21,36 +23,54 @@ use Nette\SmartObject;
 class ReservationManager {
     use SmartObject, TDoctrineEntityManager;
 
+    /** @var OptionDao */
+    private $optionDao;
+
+    /** @var ReservationDao */
+    private $reservationDao;
     /**
      * ReservationManager constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManager $entityManager, OptionDao $optionDao, ReservationDao $reservationDao) {
         $this->injectEntityManager($entityManager);
+        $this->optionDao = $optionDao;
+        $this->reservationDao = $reservationDao;
     }
 
     /** @var callable[]  */
     public $onReservationDelegated = array();
 
     /**
-     * @param array $applications
+     * @param ApplicationEntity[] $applications
      * @param array $values
      * @throws \Exception
      * @throws EmptyException
      */
     public function delegateNewReservations(array $applications, array $values){
         $entityManager = $this->getEntityManager();
-        $reservation = new ReservationEntity();
-        $reservation->setByValueArray($values);
-        $entityManager->persist($reservation);
         if(!count($applications)){
             throw new EmptyException("Error.Reservation.Application.Empty");
         }
+        if (!$values['delegateTo']) {
+            return;
+        }
+        if ($values['delegateTo'] == '*') {
+            $reservation = new ReservationEntity();
+            $reservation->setByValueArray($values['delegateNew']);
+            $entityManager->persist($reservation);
+        } else {
+            $reservation = $this->reservationDao->getReservation($values['delegateTo']);
+        }
         foreach ($applications as $application){
+            $oldReservation = $application->getReservation();
             $reservation->addApplication($application);
+            if ($oldReservation && !count($oldReservation->getApplications())) {
+                $entityManager->remove($oldReservation);
+            }
         }
         $entityManager->flush();
-        $this->onReservationDelegated();
+        $this->onReservationDelegated($reservation);
     }
 
     /**
@@ -90,13 +110,13 @@ class ReservationManager {
                     $optionIds = [$optionIds];
                 }
                 foreach ($optionIds as $optionId) {
-                    $choice = $this->addChoice($optionId, $application);
+                    $this->addChoice($optionId, $application);
                 }
             }
         }
         $entityManager->flush();
-        if ($values['delegated']) {
-            $this->delegateNewReservations($applications, $values['reservation']);
+        if ($values['delegateTo']) {
+            $this->delegateNewReservations($applications, $values);
         }
     }
 }
