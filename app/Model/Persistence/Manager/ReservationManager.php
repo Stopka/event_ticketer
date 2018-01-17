@@ -49,23 +49,36 @@ class ReservationManager {
      */
     public function delegateNewReservations(array $applications, array $values){
         $entityManager = $this->getEntityManager();
-        if(!count($applications)){
+        if (!count($applications)) { //if no applications to delegate
             throw new EmptyException("Error.Reservation.Application.Empty");
         }
-        if (!$values['delegateTo']) {
+        if (!$values['delegateTo']) { //If delegated to nobody
+            // nothing to do
             return;
         }
-        if ($values['delegateTo'] == '*') {
+        if ($values['delegateTo'] == '*') { //If delegateed to new person
+            //Create reservation
             $reservation = new ReservationEntity();
             $reservation->setByValueArray($values['delegateNew']);
             $entityManager->persist($reservation);
-        } else {
+        } else { //else means delegated to existing person
+            //find reservation
             $reservation = $this->reservationDao->getReservation($values['delegateTo']);
+            if (!$reservation->isRegisterReady()) { //If reservation is already ordered
+                //Create new one with same values
+                $newReservation = new ReservationEntity();
+                $reservationValues = $reservation->getValueArray(null, 'applications');
+                $newReservation->setByValueArray($reservationValues);
+                $entityManager->persist($newReservation);
+                $reservation = $newReservation;
+            }
         }
         foreach ($applications as $application){
             $oldReservation = $application->getReservation();
             $reservation->addApplication($application);
+            // if application was delegated previously and now reservation is empty
             if ($oldReservation && !count($oldReservation->getApplications())) {
+                // remove old reservation
                 $entityManager->remove($oldReservation);
             }
         }
