@@ -55,9 +55,11 @@ class CartFormWrapper extends FormWrapper {
 
     /**
      * CartFormWrapper constructor.
+     * @param FormWrapperDependencies $formWrapperDependencies
      * @param CurrencyDao $currencyDao
      * @param CartManager $cartManager
      * @param ApplicationDao $applicationDao
+     * @param InsuranceCompanyDao $insuranceCompanyDao
      */
     public function __construct(
         FormWrapperDependencies $formWrapperDependencies,
@@ -157,10 +159,16 @@ class CartFormWrapper extends FormWrapper {
         if($this->cart){
             $form->setDefaults($this->cart->getValueArray());
             foreach ($this->cart->getApplications() as $application){
-                $form['children'][$application->getIdAlphaNumeric()]['child']->setDefaults($application->getValueArray());
-                $form['commons']->setDefaults($application->getValueArray());
+                /** @var Container $childContainer */
+                $childContainer = $form['children'][$application->getIdAlphaNumeric()]['child'];
+                $childContainer->setDefaults($application->getValueArray());
+                /** @var Container $commonContainer */
+                $commonContainer = $form['commons'];
+                $commonContainer->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice){
-                    $form['children'][$application->getId()]['addittions']->setDefaults([
+                    /** @var Container $additionsContainer */
+                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['addittions'];
+                    $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
                 }
@@ -169,10 +177,16 @@ class CartFormWrapper extends FormWrapper {
         if ($this->reservation) {
             $form->setDefaults($this->reservation->getValueArray());
             foreach ($this->reservation->getApplications() as $application) {
-                $form['children'][$application->getIdAlphaNumeric()]['child']->setDefaults($application->getValueArray());
-                $form['commons']->setDefaults($application->getValueArray());
+                /** @var Container $childContainer */
+                $childContainer = $form['children'][$application->getIdAlphaNumeric()]['child'];
+                $childContainer->setDefaults($application->getValueArray());
+                /** @var Container $commonContainer */
+                $commonContainer = $form['commons'];
+                $commonContainer->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice) {
-                    $form['children'][$application->getIdAlphaNumeric()]['addittions']->setDefaults([
+                    /** @var Container $additionsContainer */
+                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['addittions'];
+                    $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
                 }
@@ -183,6 +197,7 @@ class CartFormWrapper extends FormWrapper {
     /**
      * @param SubmitButton $button
      * @throws \Nette\Application\AbortException
+     * @throws \Exception
      */
     protected function registerClicked(SubmitButton $button) {
         $form = $button->getForm();
@@ -192,7 +207,7 @@ class CartFormWrapper extends FormWrapper {
             $this->getPresenter()->flashTranslatedMessage('Form.Cart.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Application:',$this->event->getId());
         }else{
-            $this->cartManager->createCartFromCartForm($values, $this->event, $this->early, $this->substitute);
+            $this->cartManager->createCartFromCartForm($values, $this->event, $this->early, $this->substitute, $this->reservation);
             $this->getPresenter()->flashTranslatedMessage('Form.Cart.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Homepage:');
         }
@@ -255,11 +270,15 @@ class CartFormWrapper extends FormWrapper {
                         ->setText("Zbývá $count_left přihlášek")
                     )
                 ->setValidationScope(FALSE);
+            /** @noinspection PhpUndefinedFieldInspection */
             $add_button->getControlPrototype()->class = 'ajax';
             $add_button->onClick[] = [$this, 'addChild'];
         }
-        $children = $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
-            $childIndex = count($form['children']->getComponents());
+        /** @noinspection PhpUndefinedMethodInspection */
+        $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
+            /** @var \Kdyby\Replicator\Container $childrenContainer */
+            $childrenContainer = $form['children'];
+            $childIndex = iterator_count($childrenContainer->getComponents());
             $group = $form->addGroup()
                 ->setOption($form::OPTION_KEY_CLASS, 'price_subspace');
             $parent_group = $form->getGroup('Přihlášky');
@@ -274,6 +293,7 @@ class CartFormWrapper extends FormWrapper {
                 $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')
                     ->setValidationScope(FALSE); # disables validation
                 $remove_button->onClick[] = $removeEvent;
+                /** @noinspection PhpUndefinedFieldInspection */
                 $remove_button->getControlPrototype()->class = 'ajax';
             }
         }, $this->getApplicationCount(), $this->isApplicationCountFixed());
@@ -318,6 +338,7 @@ class CartFormWrapper extends FormWrapper {
             IGender::FEMALE => 'Žena',
         ])
             ->setRequired();
+        /** @noinspection PhpUndefinedMethodInspection */
         $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
             ->addRule($form::VALID, 'Vloženo chybné datum!');
@@ -338,14 +359,18 @@ class CartFormWrapper extends FormWrapper {
 
     public function addChild(SubmitButton $button) {
         $form = $button->getForm();
-        $form['children']->createOne();
+        /** @var \Kdyby\Replicator\Container $childrenContainer */
+        $childrenContainer = $form['children'];
+        $childrenContainer->createOne();
         $this->redrawControl('form');
     }
 
     public function removeChild(SubmitButton $button) {
+        /** @var Container $child */
         $child = $button->getParent();
-        $children = $child->getParent();
-        $children->remove($child, TRUE);
+        /** @var \Kdyby\Replicator\Container $childrenContainer */
+        $childrenContainer = $child->getParent();
+        $childrenContainer->remove($child, TRUE);
         $this->redrawControl('form');
     }
 

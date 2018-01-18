@@ -3,14 +3,14 @@
 namespace App\Model\Persistence\Manager;
 
 use App\Model\Persistence\Dao\AdditionDao;
+use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Dao\OptionDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
-use App\Model\Persistence\Entity\AdditionEntity;
-use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Entity\ReservationEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
@@ -33,8 +33,11 @@ class CartManager {
     /** @var InsuranceCompanyDao */
     private $insuranceCompanyDao;
 
-    /** @var ReservationManager */
-    private $reservationManager;
+    /** @var ApplicationManager */
+    private $applicationManager;
+
+    /** @var ApplicationDao */
+    private $applicationDao;
 
     /** @var callable[] */
     public $onCartCreated = array();
@@ -47,28 +50,24 @@ class CartManager {
      * @param EntityManager $entityManager
      * @param AdditionDao $additionDao
      * @param OptionDao $optionDao
+     * @param InsuranceCompanyDao $insuranceCompanyDao
+     * @param ApplicationManager $applicationManager
+     * @param ApplicationDao $applicationDao
      */
-    public function __construct(EntityManager $entityManager, AdditionDao $additionDao, OptionDao $optionDao,
-                                InsuranceCompanyDao $insuranceCompanyDao, ReservationManager $reservationManager) {
+    public function __construct(
+        EntityManager $entityManager,
+        AdditionDao $additionDao,
+        OptionDao $optionDao,
+        InsuranceCompanyDao $insuranceCompanyDao,
+        ApplicationManager $applicationManager,
+        ApplicationDao $applicationDao
+    ) {
         $this->injectEntityManager($entityManager);
         $this->additionDao = $additionDao;
         $this->optionDao = $optionDao;
         $this->insuranceCompanyDao = $insuranceCompanyDao;
-        $this->reservationManager = $reservationManager;
-    }
-
-    /**
-     * @param AdditionEntity $hiddenAddition
-     * @return string[]
-     */
-    private function selectHiddenAdditionOptionIds(AdditionEntity $hiddenAddition): array {
-        $options = $hiddenAddition->getOptions();
-        $optionIds = [];
-        for ($i = 0; $i < count($options) && $i < $hiddenAddition->getMinimum(); $i++) {
-            $option = $options[$i];
-            $optionIds[] = $option->getId();
-        }
-        return $optionIds;
+        $this->applicationManager = $applicationManager;
+        $this->applicationDao = $applicationDao;
     }
 
     /**
@@ -76,83 +75,74 @@ class CartManager {
      * @param EventEntity|null $event
      * @param EarlyEntity|null $early
      * @param SubstituteEntity|null $substitute
+     * @param ReservationEntity|null $reservation
+     * @param CartEntity|null $cart
      * @return CartEntity
      * @throws \Exception
      */
-    public function createCartFromCartForm(array $values, ?EventEntity $event = null, ?EarlyEntity $early = null, ?SubstituteEntity $substitute = null) {
+    private function processCartForm(
+        array $values,
+        ?EventEntity $event = null,
+        ?EarlyEntity $early = null,
+        ?SubstituteEntity $substitute = null,
+        ?ReservationEntity $reservation = null,
+        ?CartEntity $cart = null
+    ): CartEntity {
         $entityManager = $this->getEntityManager();
-        $cart = new CartEntity();
+        if (!$cart) {
+            $cart = new CartEntity();
+            $entityManager->persist($cart);
+            $cart->setEarly($early);
+            $cart->setEvent($event);
+            $cart->setSubstitute($substitute);
+            //$cart->setReservation($reservation);
+            $cart->setNextNumber($entityManager);
+        }
         $cart->setByValueArray($values);
-        $cart->setEarly($early);
-        $cart->setEvent($event);
-        $cart->setSubstitute($substitute);
-        $cart->setNextNumber($entityManager);
         $entityManager->persist($cart);
         $commonValues = $values['commons'];
-        $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($event, AdditionEntity::VISIBLE_REGISTER);
-        foreach ($values['children'] as $childValues) {
-            $application = new ApplicationEntity();
-            $application->setByValueArray($commonValues);
-            $application->setByValueArray($childValues['child']);
-            $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($childValues['insuranceCompanyId']);
-            $application->setInsuranceCompany($insuranceCompany);
+        // go through all applications from form
+        foreach ($values['children'] as $id => $childValues) {
+            // find application by id
+            $application = $this->applicationDao->getApplication($id);
+            // if exisitning application is not matched with event
+            if ($application->getEvent()->getId() != $event->getId()) {
+                $application = null;
+            }
+            // if application exists
+            if ($application) {
+                //update it
+                $application = $this->applicationManager->editApplicationFromCartForm($commonValues, $childValues['child'], $application);
+            } else {
+                // create new one
+                $application = $this->applicationManager->createApplicationFromCartForm($commonValues, $childValues['child'], $event);
+            }
             $application->setCart($cart);
-            $application->setNextNumber($entityManager);
-            $entityManager->persist($application);
-            foreach ($childValues['addittions'] as $additionIdAlphaNumeric => $optionIds) {
-                //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
-                if (!is_array($optionIds)) {
-                    $optionIds = [$optionIds];
-                }
-                foreach ($optionIds as $optionId) {
-                    $choice = $this->addChoice($optionId, $application);
-                }
-            }
-            foreach ($hiddenAdditions as $hiddenAddition) {
-                $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);
-                foreach ($optionIds as $optionId) {
-                    $choice = $this->addChoice($optionId, $application);
-                }
-            }
         }
         $entityManager->flush();
-        $this->onCartCreated($cart);
         return $cart;
     }
 
     /**
      * @param array $values
      * @param EventEntity|null $event
+     * @param EarlyEntity|null $early
+     * @param SubstituteEntity|null $substitute
+     * @param ReservationEntity|null $reservation
      * @return CartEntity
      * @throws \Exception
      */
-    public function createCartFromReservationForm(array $values, EventEntity $event): void {
-        $entityManager = $this->getEntityManager();
-        $cart = new CartEntity(true);
-        $cart->setEvent($event);
-        $cart->setNextNumber($entityManager);
-        $entityManager->persist($cart);
-        for ($i = 0; $i < $values['count']; $i++) {
-            $application = new ApplicationEntity(true);
-            $cart->addApplication($application);
-            $application->setByValueArray($values);
-            $application->setNextNumber($entityManager);
-            $entityManager->persist($application);
-            foreach ($values['addittions'] as $additionIdAlphaNumeric => $optionIds) {
-                //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
-                if (!is_array($optionIds)) {
-                    $optionIds = [$optionIds];
-                }
-                foreach ($optionIds as $optionId) {
-                    $choice = $this->addChoice($optionId, $application);
-                }
-            }
-        }
-        $entityManager->flush();
-        $this->onReservationCreated($cart);
-        if ($values['delegated']) {
-            $this->reservationManager->delegateNewReservations($cart->getApplications(), $values['reservation']);
-        }
+    public function createCartFromCartForm(
+        array $values,
+        ?EventEntity $event = null,
+        ?EarlyEntity $early = null,
+        ?SubstituteEntity $substitute = null,
+        ?ReservationEntity $reservation = null
+    ) {
+        $cart = $this->processCartForm($values, $event, $early, $substitute, $reservation);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->onCartCreated($cart);
+        return $cart;
     }
 
     /**
@@ -164,69 +154,15 @@ class CartManager {
      * @return CartEntity|null
      * @throws \Exception
      */
-    public function editCartFromCartForm($values, ?EventEntity $event = null, ?EarlyEntity $early = null, ?SubstituteEntity $substitute = null, ?CartEntity $cart = null) {
-        $entityManager = $this->getEntityManager();
-        //$cart = new CartEntity();
-        $cart->setByValueArray($values);
-        $entityManager->persist($cart);
-        $commonValues = $values['commons'];
-        $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($event, AdditionEntity::VISIBLE_REGISTER);
-        foreach ($values['children'] as $id => $childValues) {
-            foreach ($cart->getApplications() as $application) {
-                if ($application->getId() != $id) {
-                    continue;
-                }
-                $application->setByValueArray($commonValues);
-                $application->setByValueArray($childValues['child']);
-                $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($childValues['insuranceCompanyId']);
-                $application->setInsuranceCompany($insuranceCompany);
-                //$entityManager->persist($application);
-                foreach ($hiddenAdditions as $hiddenAddition) {
-                    $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);
-                    $processedOptionIds = [];
-                    $choices = $application->getChoices();
-                    foreach ($choices as $choice) {
-                        if ($choice->getOption()->getAddition()->getId() != $hiddenAddition->getId()) {
-                            continue;
-                        }
-                        if (!in_array($choice->getOption()->getId(), $optionIds)) {
-                            $entityManager->remove($choice);
-                        }
-                        $processedOptionIds[] = $choice->getOption()->getId();
-                    }
-                    foreach ($optionIds as $optionId) {
-                        if (in_array($optionId, $processedOptionIds)) {
-                            continue;
-                        }
-                        $choice = $this->addChoice($optionId, $application);
-                    }
-                }
-                foreach ($childValues['addittions'] as $additionIdAlphaNumeric => $optionIds) {
-                    $additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
-                    if (!is_array($optionIds)) {
-                        $optionIds = [$optionIds];
-                    }
-                    $processedOptionIds = [];
-                    $choices = $application->getChoices();
-                    foreach ($choices as $choice) {
-                        if ($choice->getOption()->getAddition()->getId() != $additionId) {
-                            continue;
-                        }
-                        if (!in_array($choice->getOption()->getId(), $optionIds)) {
-                            $entityManager->remove($choice);
-                        }
-                        $processedOptionIds[] = $choice->getOption()->getId();
-                    }
-                    foreach ($optionIds as $optionId) {
-                        if (in_array($optionId, $processedOptionIds)) {
-                            continue;
-                        }
-                        $choice = $this->addChoice($optionId, $application);
-                    }
-                }
-            }
-        }
-        $entityManager->flush();
+    public function editCartFromCartForm(
+        array $values,
+        ?EventEntity $event = null,
+        ?EarlyEntity $early = null,
+        ?SubstituteEntity $substitute = null,
+        ?CartEntity $cart = null
+    ) {
+        $cart = $this->processCartForm($values, $event, $early, $substitute, null, $cart);
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->onCartUpdated($cart);
         return $cart;
     }

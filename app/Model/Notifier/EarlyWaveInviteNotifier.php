@@ -98,6 +98,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
                 continue;
             }
         }
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->onEarlyWaveInvitesSent($wave);
     }
 

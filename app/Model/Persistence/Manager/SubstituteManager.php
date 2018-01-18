@@ -40,7 +40,8 @@ class SubstituteManager {
 
 
     /**
-     * @param $substituteId string|null
+     * @param null|string $substituteId
+     * @throws \Exception
      */
     public function activateSubstitute(?string $substituteId): void {
         $substitute = $this->substituteDao->getSubstitute($substituteId);
@@ -49,6 +50,7 @@ class SubstituteManager {
         }
         $substitute->setState(SubstituteEntity::STATE_ACTIVE);
         $this->getEntityManager()->flush();
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->onSubtituteActivated($substitute);
     }
 
@@ -56,6 +58,8 @@ class SubstituteManager {
      * @param array $values
      * @param EventEntity $event
      * @param EarlyEntity|null $early
+     * @return SubstituteEntity
+     * @throws \Exception
      */
     public function createSubtituteFromForm(array $values, EventEntity $event, ?EarlyEntity $early = null): SubstituteEntity{
         $entityManager = $this->getEntityManager();
@@ -65,6 +69,7 @@ class SubstituteManager {
         $substitute->setEvent($event);
         $entityManager->persist($substitute);
         $entityManager->flush();
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->onSubtituteCreated($substitute);
         return $substitute;
     }

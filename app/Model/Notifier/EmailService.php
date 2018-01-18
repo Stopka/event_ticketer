@@ -68,7 +68,8 @@ class EmailService {
     public function sendMessage(Message $message): void {
         Debugger::barDump($message);
         $this->mailer->send($message);
-        $this->onEmailSent();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->onEmailSent($message);
     }
 
 }

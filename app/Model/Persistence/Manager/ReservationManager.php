@@ -86,6 +86,7 @@ class ReservationManager {
             }
         }
         $entityManager->flush();
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->onReservationDelegated($reservation);
     }
 
