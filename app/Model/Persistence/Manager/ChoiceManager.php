@@ -152,30 +152,11 @@ class ChoiceManager {
         $this->updateVisibleAdditions($values, $application);
     }
 
-    public function createAdditionChoicesToApplication(array $values, ApplicationEntity $application) {
-        foreach ($values as $additionIdAlphaNumeric => $optionIds) {
-            //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
-            if (!is_array($optionIds)) {
-                $optionIds = [$optionIds];
-            }
-            foreach ($optionIds as $optionId) {
-                $this->addChoice($optionId, $application);
-            }
-        }
-        $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($application->getEvent(), AdditionEntity::VISIBLE_REGISTER);
-        foreach ($hiddenAdditions as $hiddenAddition) {
-            $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);
-            foreach ($optionIds as $optionId) {
-                $this->addChoice($optionId, $application);
-            }
-        }
+    public function createAdditionChoicesToApplication(array $values, ApplicationEntity $application, bool $simplified = false) {
+        $this->processAdditionChoicesFrom($values, $application, $simplified);
     }
 
     public function editAdditionChoicesInApplication(array $values, ApplicationEntity $application) {
         $this->processAdditionChoicesFrom($values, $application);
-    }
-
-    public function createReservedApplicationsFromReservationForm(array $values, ApplicationEntity $application): void {
-        $this->processAdditionChoicesFrom($values, $application, true);
     }
 }

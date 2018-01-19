@@ -64,7 +64,7 @@ class ApplicationManager {
             $application->setInsuranceCompany($insuranceCompany);
         }
         if ($created) {
-            $this->choiceManager->createAdditionChoicesToApplication($values['additions'], $application);
+            $this->choiceManager->createAdditionChoicesToApplication($values['additions'], $application, $reserve);
         } else {
             $this->choiceManager->editAdditionChoicesInApplication($values['additions'], $application);
         }
