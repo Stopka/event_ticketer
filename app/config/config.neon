@@ -87,6 +87,7 @@ services:
     - App\Model\Persistence\Manager\OptionManager
     - App\Model\Persistence\Manager\EarlyManager
     - App\Model\Persistence\Manager\ReservationManager
+    - App\Model\Persistence\Manager\ApplicationManager
     -
         class: App\Model\Persistence\Manager\EarlyWaveManager
         tags: [kdyby.subscriber]
