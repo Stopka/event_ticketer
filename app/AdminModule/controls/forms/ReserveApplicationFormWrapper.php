@@ -18,7 +18,7 @@ use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use App\Model\Persistence\Manager\ReservationManager;
+use App\Model\Persistence\Manager\ApplicationManager;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 
@@ -40,8 +40,8 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  ApplicationDao */
     private $applicationDao;
 
-    /** @var  ReservationManager */
-    private $reservationManager;
+    /** @var  ApplicationManager */
+    private $applicationManager;
 
     /** @var ReservationDao */
     private $reservationDao;
@@ -50,15 +50,15 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         FormWrapperDependencies $formWrapperDependencies,
         ApplicationDao $applicationDao,
         CurrencyDao $currencyDao,
-        ReservationManager $reservationManager,
-        ReservationDao $reservationDao
+        ReservationDao $reservationDao,
+        ApplicationManager $applicationManager
     ) {
         parent::__construct($formWrapperDependencies);
         $this->applicationDao = $applicationDao;
         $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();
-        $this->reservationManager = $reservationManager;
         $this->reservationDao = $reservationDao;
+        $this->applicationManager = $applicationManager;
         $this->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION);
         $this->setVisibleCountLeft();
     }
@@ -128,7 +128,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->reservationManager->createReservedApplicationsFromReservationForm($values, $this->event);
+        $this->applicationManager->createReservedApplicationsFromReservationForm($values, $this->event);
         $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Application:', $this->event->getId());
     }
