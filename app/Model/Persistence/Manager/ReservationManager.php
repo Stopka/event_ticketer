@@ -3,10 +3,10 @@
 namespace App\Model\Persistence\Manager;
 
 use App\Model\Exception\EmptyException;
-use App\Model\Persistence\Dao\OptionDao;
 use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\ApplicationEntity;
+use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\ReservationEntity;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
@@ -23,18 +23,22 @@ class ReservationManager {
     /** @var ReservationDao */
     private $reservationDao;
 
+    /** @var ApplicationManager */
+    private $applicationManager;
+
     /**
      * ReservationManager constructor.
      * @param EntityManager $entityManager
-     * @param OptionDao $optionDao
      * @param ReservationDao $reservationDao
+     * @param ApplicationManager $applicationManager
      */
-    public function __construct(EntityManager $entityManager, ReservationDao $reservationDao) {
+    public function __construct(EntityManager $entityManager, ReservationDao $reservationDao, ApplicationManager $applicationManager) {
         $this->injectEntityManager($entityManager);
         $this->reservationDao = $reservationDao;
+        $this->applicationManager = $applicationManager;
     }
 
-    /** @var callable[]  */
+    /** @var callable[] */
     public $onReservationDelegated = array();
 
     /**
@@ -43,7 +47,7 @@ class ReservationManager {
      * @throws \Exception
      * @throws EmptyException
      */
-    public function delegateNewReservations(array $applications, array $values){
+    public function delegateNewReservations(array $applications, array $values) {
         $entityManager = $this->getEntityManager();
         if (!count($applications)) { //if no applications to delegate
             throw new EmptyException("Error.Reservation.Application.Empty");
@@ -69,7 +73,7 @@ class ReservationManager {
                 $reservation = $newReservation;
             }
         }
-        foreach ($applications as $application){
+        foreach ($applications as $application) {
             $oldReservation = $application->getReservation();
             $reservation->addApplication($application);
             // if application was delegated previously and now reservation is empty
@@ -81,5 +85,22 @@ class ReservationManager {
         $entityManager->flush();
         /** @noinspection PhpUndefinedMethodInspection */
         $this->onReservationDelegated($reservation);
+    }
+
+    /**
+     * @param array $values
+     * @param EventEntity|null $event
+     * @throws \Exception
+     */
+    public function createReservedApplicationsFromReservationForm(array $values, EventEntity $event): void {
+        $entityManager = $this->getEntityManager();
+        $applications = [];
+        for ($i = 0; $i < $values['count']; $i++) {
+            $applications[] = $this->applicationManager->createReservedApplicationFromReservationForm($values, $event);
+        }
+        $entityManager->flush();
+        if ($values['delegateTo']) {
+            $this->delegateNewReservations($applications, $values);
+        }
     }
 }

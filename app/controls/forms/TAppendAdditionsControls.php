@@ -98,16 +98,20 @@ trait TAppendAdditionsControls {
         $this->visibleCountLeft = $visibleCountLeft;
     }
 
-    protected function appendAdditionsControls(Form $form, Container $container, int $index = 0) {
-        $subcontainer = $container->addContainer('addittions');
+    /**
+     * @param Container $container
+     * @param int $index
+     */
+    protected function appendAdditionsControls(Container $container, int $index = 0) {
+        $additionsContainer = $container->addContainer('additions');
         foreach ($this->getEvent()->getAdditions() as $addition) {
             if (!$addition->isVisibleIn($this->visibilityPlace)) {
                 continue;
             }
-            $this->appendAdditionContols($subcontainer, $addition, $index);
+            $this->appendAdditionContols($additionsContainer, $addition, $index);
         }
         if($this->isVisiblePriceTotal()){
-            $subcontainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Form.Application.TotalPrice',
+            $additionsContainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Form.Application.TotalPrice',
                 Html::el('div', ['class' => 'price_subtotal'])
                     ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
                     ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
@@ -145,6 +149,7 @@ trait TAppendAdditionsControls {
                 ->setAttribute('data-price-predisabled', json_encode($predisabledOptions));
         }
         if ($prices) {
+            /** @noinspection PhpUndefinedMethodInspection */
             $control->getControlPrototype()
                 ->addClass('price_item')
                 ->setAttribute('data-price-value', json_encode($prices));
@@ -187,6 +192,7 @@ trait TAppendAdditionsControls {
 
     /**
      * @param AdditionEntity $additionEntity
+     * @param int $index
      * @return array
      */
     protected function getPreselectedOptions(AdditionEntity $additionEntity, int $index = 1): array {

@@ -95,6 +95,63 @@ class ChoiceManager {
         return $optionIds;
     }
 
+    private function updateHiddenChoices(ApplicationEntity $application) {
+        $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($application->getEvent(), AdditionEntity::VISIBLE_REGISTER);
+        foreach ($hiddenAdditions as $hiddenAddition) {
+            $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);
+            $processedOptionIds = [];
+            $choices = $application->getChoices();
+            foreach ($choices as $choice) {
+                if ($choice->getOption()->getAddition()->getId() != $hiddenAddition->getId()) {
+                    continue;
+                }
+                if (!in_array($choice->getOption()->getId(), $optionIds)) {
+                    $this->getEntityManager()->remove($choice);
+                }
+                $processedOptionIds[] = $choice->getOption()->getId();
+            }
+            foreach ($optionIds as $optionId) {
+                if (in_array($optionId, $processedOptionIds)) {
+                    continue;
+                }
+                $this->addChoice($optionId, $application);
+            }
+        }
+    }
+
+    private function updateVisibleAdditions(array $values, ApplicationEntity $application) {
+        foreach ($values as $additionIdAlphaNumeric => $optionIds) {
+            $additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
+            if (!is_array($optionIds)) {
+                $optionIds = [$optionIds];
+            }
+            $processedOptionIds = [];
+            $choices = $application->getChoices();
+            foreach ($choices as $choice) {
+                if ($choice->getOption()->getAddition()->getId() != $additionId) {
+                    continue;
+                }
+                if (!in_array($choice->getOption()->getId(), $optionIds)) {
+                    $this->getEntityManager()->remove($choice);
+                }
+                $processedOptionIds[] = $choice->getOption()->getId();
+            }
+            foreach ($optionIds as $optionId) {
+                if (in_array($optionId, $processedOptionIds)) {
+                    continue;
+                }
+                $this->addChoice($optionId, $application);
+            }
+        }
+    }
+
+    private function processAdditionChoicesFrom(array $values, ApplicationEntity $application, bool $simplified = false) {
+        if (!$simplified) {
+            $this->updateHiddenChoices($application);
+        }
+        $this->updateVisibleAdditions($values, $application);
+    }
+
     public function createAdditionChoicesToApplication(array $values, ApplicationEntity $application) {
         foreach ($values as $additionIdAlphaNumeric => $optionIds) {
             //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
@@ -115,52 +172,10 @@ class ChoiceManager {
     }
 
     public function editAdditionChoicesInApplication(array $values, ApplicationEntity $application) {
-        $entityManager = $this->getEntityManager();
-        // update hidden additions of application
-        $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn($application->getEvent(), AdditionEntity::VISIBLE_REGISTER);
-        foreach ($hiddenAdditions as $hiddenAddition) {
-            $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);
-            $processedOptionIds = [];
-            $choices = $application->getChoices();
-            foreach ($choices as $choice) {
-                if ($choice->getOption()->getAddition()->getId() != $hiddenAddition->getId()) {
-                    continue;
-                }
-                if (!in_array($choice->getOption()->getId(), $optionIds)) {
-                    $entityManager->remove($choice);
-                }
-                $processedOptionIds[] = $choice->getOption()->getId();
-            }
-            foreach ($optionIds as $optionId) {
-                if (in_array($optionId, $processedOptionIds)) {
-                    continue;
-                }
-                $this->addChoice($optionId, $application);
-            }
-        }
-        // update visible additions
-        foreach ($values as $additionIdAlphaNumeric => $optionIds) {
-            $additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
-            if (!is_array($optionIds)) {
-                $optionIds = [$optionIds];
-            }
-            $processedOptionIds = [];
-            $choices = $application->getChoices();
-            foreach ($choices as $choice) {
-                if ($choice->getOption()->getAddition()->getId() != $additionId) {
-                    continue;
-                }
-                if (!in_array($choice->getOption()->getId(), $optionIds)) {
-                    $entityManager->remove($choice);
-                }
-                $processedOptionIds[] = $choice->getOption()->getId();
-            }
-            foreach ($optionIds as $optionId) {
-                if (in_array($optionId, $processedOptionIds)) {
-                    continue;
-                }
-                $this->addChoice($optionId, $application);
-            }
-        }
+        $this->processAdditionChoicesFrom($values, $application);
+    }
+
+    public function createReservedApplicationsFromReservationForm(array $values, ApplicationEntity $application): void {
+        $this->processAdditionChoicesFrom($values, $application, true);
     }
 }

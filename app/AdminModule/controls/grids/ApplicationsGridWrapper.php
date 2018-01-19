@@ -6,6 +6,7 @@ use App\Controls\Grids\Grid;
 use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
+use App\Model\Persistence\Dao\IOrder;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\ChoiceManager;
@@ -123,6 +124,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     protected function appendApplicationColumns(Grid $grid) {
         $grid->addColumnNumber('number', 'Attribute.Number')
             ->setSortable()
+            ->setDefaultSort(IOrder::ORDER_ASC)
             ->setFilterNumber();
         $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
@@ -214,6 +216,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     /**
      * @param $choiceId
      * @throws \Nette\Application\AbortException
+     * @throws \Exception
      */
     public function handleInverseChoicePayed($choiceId) {
         $this->choiceManager->inverseChoicePayed($choiceId);

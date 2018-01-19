@@ -167,7 +167,7 @@ class CartFormWrapper extends FormWrapper {
                 $commonContainer->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice){
                     /** @var Container $additionsContainer */
-                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['addittions'];
+                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['additions'];
                     $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
@@ -185,7 +185,7 @@ class CartFormWrapper extends FormWrapper {
                 $commonContainer->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice) {
                     /** @var Container $additionsContainer */
-                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['addittions'];
+                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['additions'];
                     $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
@@ -287,7 +287,7 @@ class CartFormWrapper extends FormWrapper {
             $child->setCurrentGroup($group);
 
             $this->appendChildControls($form, $child);
-            $this->appendAdditionsControls($form, $child, $childIndex);
+            $this->appendAdditionsControls($child, $childIndex);
 
             if(!$this->cart) {
                 $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')

@@ -24,82 +24,82 @@ class ApplicationManager {
     /** @var ChoiceManager */
     private $choiceManager;
 
-    /** @var ReservationManager */
-    private $reservationManager;
-
     /**
      * ApplicationManager constructor.
      * @param EntityManager $entityManager
      * @param InsuranceCompanyDao $insuranceCompanyDao
      * @param ChoiceManager $choiceManager
-     * @param ReservationManager $reservationManager
      */
     public function __construct(
         EntityManager $entityManager,
         InsuranceCompanyDao $insuranceCompanyDao,
-        ChoiceManager $choiceManager,
-        ReservationManager $reservationManager
+        ChoiceManager $choiceManager
     ) {
         $this->injectEntityManager($entityManager);
         $this->insuranceCompanyDao = $insuranceCompanyDao;
         $this->choiceManager = $choiceManager;
-        $this->reservationManager = $reservationManager;
     }
 
-    public function createApplicationFromCartForm(array $values, array $commonValues = [], EventEntity $event): ApplicationEntity {
+    private function processApplicationForm(
+        array $values,
+        array $commonValues = [],
+        EventEntity $event,
+        ?ApplicationEntity $application = null,
+        bool $reserve = false
+    ): ApplicationEntity {
         $entityManager = $this->getEntityManager();
-        $application = new ApplicationEntity();
-        $application->setEvent($event);
+        $created = false;
+        if (!$application) {
+            $application = new ApplicationEntity($reserve);
+            $application->setEvent($event);
+            $application->setNextNumber($entityManager);
+            $entityManager->persist($application);
+        }
         $application->setByValueArray($commonValues);
-        $application->setByValueArray($values['child']);
-        $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($values['insuranceCompanyId']);
-        $application->setInsuranceCompany($insuranceCompany);
-        $application->setNextNumber($entityManager);
-        $entityManager->persist($application);
-        $this->choiceManager->createAdditionChoicesToApplication($values['additions'], $application);
-        return $application;
-    }
-
-    public function editApplicationFromCartForm(array $values, array $commonValues = [], ApplicationEntity $application): ApplicationEntity {
-        //update existing application data
-        $application->setByValueArray($commonValues);
-        $application->setByValueArray($values['child']);
-        $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($values['insuranceCompanyId']);
-        $application->setInsuranceCompany($insuranceCompany);
-        //$entityManager->persist($application);
-        $this->choiceManager->editAdditionChoicesInApplication($values['addittions'], $application);
+        if (isset($values['child'])) {
+            $application->setByValueArray($values['child']);
+        }
+        if (isset($values['insuranceCompanyId'])) {
+            $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($values['insuranceCompanyId']);
+            $application->setInsuranceCompany($insuranceCompany);
+        }
+        if ($created) {
+            $this->choiceManager->createAdditionChoicesToApplication($values['additions'], $application);
+        } else {
+            $this->choiceManager->editAdditionChoicesInApplication($values['additions'], $application);
+        }
         return $application;
     }
 
     /**
      * @param array $values
-     * @param EventEntity|null $event
-     * @throws \Exception
+     * @param array $commonValues
+     * @param EventEntity $event
+     * @return ApplicationEntity
      */
-    public function createReservedApplicationsFromReservationForm(array $values, EventEntity $event): void {
-        $entityManager = $this->getEntityManager();
-        $applications = [];
-        for ($i = 0; $i < $values['count']; $i++) {
-            $application = new ApplicationEntity(true);
-            $applications[] = $application;
-            $event->addApplication($application);
-            $application->setByValueArray($values);
-            $application->setNextNumber($entityManager);
-            $entityManager->persist($application);
-            $this->choiceManager->createAdditionChoicesToApplication($values['addittions'], $application);
-            /*foreach ($values['addittions'] as $additionIdAlphaNumeric => $optionIds) {
-                //$additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
-                if (!is_array($optionIds)) {
-                    $optionIds = [$optionIds];
-                }
-                foreach ($optionIds as $optionId) {
-                    $this->addChoice($optionId, $application);
-                }
-            }*/
-        }
-        $entityManager->flush();
-        if ($values['delegateTo']) {
-            $this->reservationManager->delegateNewReservations($applications, $values);
-        }
+    public function createApplicationFromCartForm(array $values, array $commonValues = [], EventEntity $event): ApplicationEntity {
+        $application = $this->processApplicationForm($values, $commonValues, $event);
+        return $application;
+    }
+
+    /**
+     * @param array $values
+     * @param array $commonValues
+     * @param ApplicationEntity $application
+     * @return ApplicationEntity
+     */
+    public function editApplicationFromCartForm(array $values, array $commonValues = [], ApplicationEntity $application): ApplicationEntity {
+        $application = $this->processApplicationForm($values, $commonValues, $application->getEvent(), $application);
+        return $application;
+    }
+
+    /**
+     * @param array $values
+     * @param EventEntity $event
+     * @return ApplicationEntity
+     */
+    public function createReservedApplicationFromReservationForm(array $values, EventEntity $event): ApplicationEntity {
+        $application = $this->processApplicationForm($values, [], $event, null, true);
+        return $application;
     }
 }
