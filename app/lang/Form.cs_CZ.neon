@@ -33,6 +33,8 @@ Action:
     Delete: 'Smazat'
     Detail: Detail
     Delegate: Delegovat
+    Register: Registrovat
+    Recalculate: Přepočítat
 SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
 Entity:
     Message:
