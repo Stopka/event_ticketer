@@ -13,18 +13,12 @@ use App\Controls\Forms\Form;
 use App\Controls\Forms\FormWrapperDependencies;
 use App\Model\Exception\EmptyException;
 use App\Model\Exception\InvalidInputException;
-use App\Model\Persistence\Dao\ApplicationDao;
-use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\ReservationManager;
 use Nette\Forms\Controls\SubmitButton;
 
 class DelegateReservationFormWrapper extends FormWrapper {
-    use TAppendDelegateReservation;
-
-    /** @var  ApplicationDao */
-    private $applicationDao;
 
     /** @var  ReservationManager */
     private $reservationManager;
@@ -32,28 +26,37 @@ class DelegateReservationFormWrapper extends FormWrapper {
     /** @var ApplicationEntity[] */
     private $applications;
 
-    /** @var ReservationDao */
-    private $reservationDao;
-
     /** @var EventEntity */
     private $event;
 
-    protected function getReservationDao(): ReservationDao {
-        return $this->reservationDao;
-    }
+    /** @var IDelegateReservationControlsBuilderFactory */
+    private $delegateReservationControlsBuilderFactory;
 
+    /** @var DelegateReservationControlsBuilder */
+    private $delegateReservationControlsBuilder;
 
     public function __construct(
         FormWrapperDependencies $formWrapperDependencies,
-        ApplicationDao $applicationDao,
         ReservationManager $reservationManager,
-        ReservationDao $reservationDao
+        IDelegateReservationControlsBuilderFactory $delegateReservationControlsBuilderFactory
     ) {
         parent::__construct($formWrapperDependencies);
         $this->reservationManager = $reservationManager;
-        $this->applicationDao = $applicationDao;
-        $this->reservationDao = $reservationDao;
+        $this->delegateReservationControlsBuilderFactory = $delegateReservationControlsBuilderFactory;
     }
+
+    /**
+     * @return DelegateReservationControlsBuilder
+     */
+    public function getDelegateReservationControlsBuilder(): DelegateReservationControlsBuilder {
+        if (!$this->delegateReservationControlsBuilder) {
+            $builder = $this->delegateReservationControlsBuilderFactory->create($this->event);
+            $this->delegateReservationControlsBuilder = $builder;
+        }
+        return $this->delegateReservationControlsBuilder;
+    }
+
+
 
     /**
      * @param ApplicationEntity[] $applications
@@ -83,7 +86,8 @@ class DelegateReservationFormWrapper extends FormWrapper {
         $form->addGroup('Entity.Singular.Reservation')
             ->setOption('visual', false);
         $this->appendApplicationList($form);
-        $this->appendDelegateControls($form);
+        $this->getDelegateReservationControlsBuilder()
+            ->appendDelegateControls($form);
         $this->appendSubmitControls($form, 'Form.Action.Delegate', [$this, 'reserveClicked']);
     }
 

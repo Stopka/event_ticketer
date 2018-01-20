@@ -2,6 +2,7 @@
 
 namespace App\Controls\Forms;
 
+use App\Model\Exception\ApplicationException;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
@@ -17,11 +18,16 @@ use App\Model\Persistence\Manager\CartManager;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 use Vodacek\Forms\Controls\DateInput;
 
 
 class CartFormWrapper extends FormWrapper {
-    use TAppendAdditionsControls;
+    use TRecalculateControl;
+
+    const CONTAINER_NAME_APPLICATIONS = 'applications';
+    const CONTAINER_NAME_APPLICATION = 'application';
+    const CONTAINER_NAME_COMMONS = 'commons';
 
     /** @var  CartManager */
     private $cartManager;
@@ -53,6 +59,12 @@ class CartFormWrapper extends FormWrapper {
     /** @var ReservationEntity */
     private $reservation;
 
+    /** @var IAdditionsControlsBuilderFactory */
+    private $additionsControlsBuilderFactory;
+
+    /** @var AdditionsControlsBuilder */
+    private $additionsControlsBuilder;
+
     /**
      * CartFormWrapper constructor.
      * @param FormWrapperDependencies $formWrapperDependencies
@@ -60,13 +72,15 @@ class CartFormWrapper extends FormWrapper {
      * @param CartManager $cartManager
      * @param ApplicationDao $applicationDao
      * @param InsuranceCompanyDao $insuranceCompanyDao
+     * @param IAdditionsControlsBuilderFactory $additionsControlsBuilderFactory
      */
     public function __construct(
         FormWrapperDependencies $formWrapperDependencies,
         CurrencyDao $currencyDao,
         CartManager $cartManager,
         ApplicationDao $applicationDao,
-        InsuranceCompanyDao $insuranceCompanyDao
+        InsuranceCompanyDao $insuranceCompanyDao,
+        IAdditionsControlsBuilderFactory $additionsControlsBuilderFactory
     ) {
         parent::__construct($formWrapperDependencies);
         $this->currencyDao = $currencyDao;
@@ -74,25 +88,29 @@ class CartFormWrapper extends FormWrapper {
         $this->cartManager = $cartManager;
         $this->applicationDao = $applicationDao;
         $this->insuranceCompanyDao = $insuranceCompanyDao;
-        $this->setVisibilityPlace(AdditionEntity::VISIBLE_REGISTER);
-        $this->setVisiblePrice(true);
-        $this->setVisiblePriceTotal(true);
-        $this->setVisibleCountLeft(true);
+        $this->additionsControlsBuilderFactory = $additionsControlsBuilderFactory;
     }
 
-    protected function getEvent() {
-        return $this->event;
+    /**
+     * @return AdditionsControlsBuilder
+     */
+    public function getAdditionsControlsBuilder(): AdditionsControlsBuilder {
+        if (!$this->additionsControlsBuilder) {
+            $builder = $this->additionsControlsBuilderFactory->create(
+                $this->event,
+                $this->currency
+            )
+                ->setAdmin($this->cart ? true : false)
+                ->setVisibilityPlace(AdditionEntity::VISIBLE_REGISTER)
+                ->setVisiblePrice(true)
+                ->setVisiblePriceTotal(true)
+                ->setVisibleCountLeft(true);
+            $this->additionsControlsBuilder = $builder;
+        }
+        return $this->additionsControlsBuilder;
     }
 
-    protected function getCurrency() {
-        return $this->currency;
-    }
-
-    protected function getApplicationDao() {
-        return $this->applicationDao;
-    }
-
-    public function setCart(CartEntity $cart){
+    public function setCart(CartEntity $cart) {
         $this->cart = $cart;
         $this->event = $cart->getEvent();
         $this->early = $cart->getEarly();
@@ -103,11 +121,6 @@ class CartFormWrapper extends FormWrapper {
         $this->reservation = $reservation;
         $this->event = $reservation->getEvent();
     }
-
-    public function isAdmin() {
-        return $this->cart?true:false;
-    }
-
 
     /**
      * @param \App\Model\Persistence\Entity\EarlyEntity $early
@@ -143,7 +156,7 @@ class CartFormWrapper extends FormWrapper {
         $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
         $this->appendParentControls($form);
         $this->appendCommonControls($form);
-        $this->appendChildrenControls($form);
+        $this->appendApplicationsControls($form);
         $this->appendFinalControls($form);
         $this->appendSubmitControls($form, $this->cart ? 'Form.Action.Save' : 'Form.Action.Register', [$this, 'registerClicked']);
         $this->loadData($form);
@@ -156,18 +169,18 @@ class CartFormWrapper extends FormWrapper {
         if ($this->substitute) {
             $form->setDefaults($this->substitute->getValueArray());
         }
-        if($this->cart){
+        if ($this->cart) {
             $form->setDefaults($this->cart->getValueArray());
-            foreach ($this->cart->getApplications() as $application){
-                /** @var Container $childContainer */
-                $childContainer = $form['children'][$application->getId()]['child'];
-                $childContainer->setDefaults($application->getValueArray());
+            foreach ($this->cart->getApplications() as $application) {
+                /** @var Container $applicationContainer */
+                $applicationContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][self::CONTAINER_NAME_APPLICATION];
+                $applicationContainer->setDefaults($application->getValueArray());
                 /** @var Container $commonContainer */
-                $commonContainer = $form['commons'];
+                $commonContainer = $form[self::CONTAINER_NAME_COMMONS];
                 $commonContainer->setDefaults($application->getValueArray());
-                foreach ($application->getChoices() as $choice){
+                foreach ($application->getChoices() as $choice) {
                     /** @var Container $additionsContainer */
-                    $additionsContainer = $form['children'][$application->getId()]['additions'];
+                    $additionsContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS];
                     $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
@@ -177,21 +190,34 @@ class CartFormWrapper extends FormWrapper {
         if ($this->reservation) {
             $form->setDefaults($this->reservation->getValueArray());
             foreach ($this->reservation->getApplications() as $application) {
-                /** @var Container $childContainer */
-                $childContainer = $form['children'][$application->getId()]['child'];
-                $childContainer->setDefaults($application->getValueArray());
+                /** @var Container $applicationContainer */
+                $applicationContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][self::CONTAINER_NAME_APPLICATION];
+                $applicationContainer->setDefaults($application->getValueArray());
                 /** @var Container $commonContainer */
-                $commonContainer = $form['commons'];
+                $commonContainer = $form[self::CONTAINER_NAME_COMMONS];
                 $commonContainer->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice) {
                     /** @var Container $additionsContainer */
-                    $additionsContainer = $form['children'][$application->getId()]['additions'];
+                    $additionsContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS];
                     $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
                 }
             }
         }
+    }
+
+    protected function preprocessValues(array $values): array {
+        $index = 1;
+        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $key => $applicationValues) {
+            $applicationValues = $this->getAdditionsControlsBuilder()->preprocessAdditionsValues($applicationValues, $index);
+            $values[self::CONTAINER_NAME_APPLICATIONS][$key] = $applicationValues;
+            $index++;
+        }
+        Debugger::$maxDepth = 5;
+        Debugger::barDump($values, 'Values');
+        throw new ApplicationException("stop");
+        return $values;
     }
 
     /**
@@ -202,11 +228,12 @@ class CartFormWrapper extends FormWrapper {
     protected function registerClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        if($this->cart) {
+        $values = $this->preprocessValues($values);
+        if ($this->cart) {
             $this->cartManager->editCartFromCartForm($values, $this->event, $this->early, $this->substitute, $this->cart);
             $this->getPresenter()->flashTranslatedMessage('Form.Cart.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
-            $this->getPresenter()->redirect('Application:',$this->event->getId());
-        }else{
+            $this->getPresenter()->redirect('Application:', $this->event->getId());
+        } else {
             $this->cartManager->createCartFromCartForm($values, $this->event, $this->early, $this->substitute, $this->reservation);
             $this->getPresenter()->flashTranslatedMessage('Form.Cart.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Homepage:');
@@ -225,7 +252,7 @@ class CartFormWrapper extends FormWrapper {
 
     protected function appendParentControls(Form $form) {
         $form->addGroup('Zákonný zástupce dětí')
-            ->setOption(Form::OPTION_KEY_DESCRIPTION,"Mají-li děti různé zákonné zástupce, vyplňte pro každé dítě formulář samostatně.");
+            ->setOption(Form::OPTION_KEY_DESCRIPTION, "Mají-li děti různé zákonné zástupce, vyplňte pro každé dítě formulář samostatně.");
         $form->addText('firstName', 'Jméno', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
@@ -245,7 +272,7 @@ class CartFormWrapper extends FormWrapper {
 
     protected function appendCommonControls(Form $form) {
         $form->addGroup('Bydliště dětí');
-        $comons = $form->addContainer('commons');
+        $comons = $form->addContainer(self::CONTAINER_NAME_COMMONS);
         $comons->addText('street', 'Ulice č.p.', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
@@ -257,40 +284,40 @@ class CartFormWrapper extends FormWrapper {
             ->addRule($form::MAX_LENGTH, NULL, 255);
     }
 
-    protected function appendChildrenControls(Form $form) {
+    protected function appendApplicationsControls(Form $form) {
         $form->addGroup('Přihlášky');
-        $removeEvent = [$this, 'removeChild'];
+        $removeEvent = [$this, 'removeApplication'];
         $count_left = $this->event->getCapacityLeft($this->applicationDao->countIssuedApplications($this->event));
         if (!$this->substitute && !$this->cart && !$this->reservation) {
             $add_button = $form->addSubmit('add', 'Přidat další přihlášku')
                 ->setOption($form::OPTION_KEY_DESCRIPTION,
-                    Html::el('span',[
-                        'class'=>'description control-description countLeft'
+                    Html::el('span', [
+                        'class' => 'description control-description countLeft'
                     ])
                         ->setText("Zbývá $count_left přihlášek")
-                    )
+                )
                 ->setValidationScope(FALSE);
             /** @noinspection PhpUndefinedFieldInspection */
             $add_button->getControlPrototype()->class = 'ajax';
-            $add_button->onClick[] = [$this, 'addChild'];
+            $add_button->onClick[] = [$this, 'addApplication'];
         }
         /** @noinspection PhpUndefinedMethodInspection */
-        $form->addDynamic('children', function (Container $child) use ($removeEvent, $form) {
-            /** @var \Kdyby\Replicator\Container $childrenContainer */
-            $childrenContainer = $form['children'];
-            $childIndex = iterator_count($childrenContainer->getComponents());
+        $form->addDynamic(self::CONTAINER_NAME_APPLICATIONS, function (Container $application) use ($removeEvent, $form) {
+            /** @var \Kdyby\Replicator\Container $applicationsContainer */
+            $applicationsContainer = $form[self::CONTAINER_NAME_APPLICATIONS];
+            $applicationIndex = iterator_count($applicationsContainer->getComponents());
             $group = $form->addGroup()
                 ->setOption($form::OPTION_KEY_CLASS, 'price_subspace');
             $parent_group = $form->getGroup('Přihlášky');
             $count = $parent_group->getOption($form::OPTION_KEY_EMBED_NEXT);
             $parent_group->setOption($form::OPTION_KEY_EMBED_NEXT, $count ? $count + 1 : 1);
-            $child->setCurrentGroup($group);
+            $application->setCurrentGroup($group);
 
-            $this->appendChildControls($form, $child);
-            $this->appendAdditionsControls($child, $childIndex);
+            $this->appendApplicationControls($form, $application);
+            $this->getAdditionsControlsBuilder()->appendAdditionsControls($application, $applicationIndex);
 
-            if(!$this->cart) {
-                $remove_button = $child->addSubmit('remove', 'Zrušit tuto přihlášku')
+            if (!$this->cart) {
+                $remove_button = $application->addSubmit('remove', 'Zrušit tuto přihlášku')
                     ->setValidationScope(FALSE); # disables validation
                 $remove_button->onClick[] = $removeEvent;
                 /** @noinspection PhpUndefinedFieldInspection */
@@ -299,78 +326,77 @@ class CartFormWrapper extends FormWrapper {
         }, $this->getApplicationCount(), $this->isApplicationCountFixed());
     }
 
-    private function getApplicationCount(){
-        if($this->cart){
+    private function getApplicationCount() {
+        if ($this->cart) {
             return 0;
         }
         if ($this->reservation) {
             return 0;
         }
-        if($this->substitute){
+        if ($this->substitute) {
             return $this->substitute->getCount();
         }
         return 1;
     }
 
-    private function isApplicationCountFixed(){
-        if($this->cart){
+    private function isApplicationCountFixed() {
+        if ($this->cart) {
             return false;
         }
         if ($this->reservation) {
             return false;
         }
-        if($this->substitute){
+        if ($this->substitute) {
             return false;
         }
         return true;
     }
 
-    protected function appendChildControls(Form $form, Container $container) {
-        $child = $container->addContainer('child');
-        $child->addText('firstName', 'Jméno', NULL, 255)
+    protected function appendApplicationControls(Form $form, Container $container) {
+        $applicationContainer = $container->addContainer(self::CONTAINER_NAME_APPLICATION);
+        $applicationContainer->addText('firstName', 'Jméno', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $child->addText('lastName', 'Příjmení', NULL, 255)
+        $applicationContainer->addText('lastName', 'Příjmení', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
-        $child->addRadioList('gender', 'Pohlaví', [
+        $applicationContainer->addRadioList('gender', 'Pohlaví', [
             IGender::MALE => 'Muž',
             IGender::FEMALE => 'Žena',
         ])
             ->setRequired();
         /** @noinspection PhpUndefinedMethodInspection */
-        $child->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
+        $applicationContainer->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
             ->addRule($form::VALID, 'Vloženo chybné datum!');
-        $child->addSelect('insuranceCompanyId', 'Zdravotní pojišťovna',
+        $applicationContainer->addSelect('insuranceCompanyId', 'Zdravotní pojišťovna',
             $this->insuranceCompanyDao->getInsuranceCompanyList())
             ->setRequired(true);
-        $child->addTextArea('friend', 'Umístění')
-            ->setOption(Form::OPTION_KEY_DESCRIPTION,"S kým máte zájem umístit dítě do oddílu. Uveďte maximálně jedno jméno. Umístění můžeme garantovat pouze u té dvojice dětí, jejichž jména budou vzájemně uvedena na obou přihláškách. Vzhledem ke snaze o sestavení vyrovnaných oddílů nemůžeme zaručit společné umístění většího počtu dětí. U sourozenců uveďte, zda je chcete společně do oddílu.")
+        $applicationContainer->addTextArea('friend', 'Umístění')
+            ->setOption(Form::OPTION_KEY_DESCRIPTION, "S kým máte zájem umístit dítě do oddílu. Uveďte maximálně jedno jméno. Umístění můžeme garantovat pouze u té dvojice dětí, jejichž jména budou vzájemně uvedena na obou přihláškách. Vzhledem ke snaze o sestavení vyrovnaných oddílů nemůžeme zaručit společné umístění většího počtu dětí. U sourozenců uveďte, zda je chcete společně do oddílu.")
             ->setRequired(false)
             ->addRule($form::MAX_LENGTH, null, 256);
-        $child->addTextArea('info', 'Další informace')
-            ->setOption(Form::OPTION_KEY_DESCRIPTION,"Fobie, stravovací návyky a podobně")
+        $applicationContainer->addTextArea('info', 'Další informace')
+            ->setOption(Form::OPTION_KEY_DESCRIPTION, "Fobie, stravovací návyky a podobně")
             ->setRequired(false)
             ->addRule($form::MAX_LENGTH, null, 512);
     }
 
 
-
-    public function addChild(SubmitButton $button) {
+    public function addApplication(SubmitButton $button) {
         $form = $button->getForm();
-        /** @var \Kdyby\Replicator\Container $childrenContainer */
-        $childrenContainer = $form['children'];
-        $childrenContainer->createOne();
+        /** @var \Kdyby\Replicator\Container $applicationsContainer */
+        $applicationsContainer = $form[self::CONTAINER_NAME_APPLICATIONS];
+        $applicationsContainer->createOne();
         $this->redrawControl('form');
     }
 
-    public function removeChild(SubmitButton $button) {
-        /** @var Container $child */
-        $child = $button->getParent();
-        /** @var \Kdyby\Replicator\Container $childrenContainer */
-        $childrenContainer = $child->getParent();
-        $childrenContainer->remove($child, TRUE);
+    public function removeApplication(SubmitButton $button) {
+        /** @var Container $applicationContainer */
+        $applicationContainer = $button->getParent();
+        /** @var \Kdyby\Replicator\Container $applicationsContainer */
+        $applicationsContainer = $applicationContainer->getParent();
+        $applicationsContainer->remove($applicationContainer, TRUE);
         $this->redrawControl('form');
     }
 

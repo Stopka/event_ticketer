@@ -2,12 +2,13 @@
 
 namespace App\Model\Persistence\Manager;
 
+use App\Controls\Forms\AdditionsControlsBuilder;
+use App\Controls\Forms\CartFormWrapper;
 use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\EntityManagerWrapper;
-use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
 /**
@@ -27,7 +28,7 @@ class ApplicationManager {
 
     /**
      * ApplicationManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      * @param InsuranceCompanyDao $insuranceCompanyDao
      * @param ChoiceManager $choiceManager
      */
@@ -57,17 +58,17 @@ class ApplicationManager {
             $entityManager->persist($application);
         }
         $application->setByValueArray($commonValues);
-        if (isset($values['child'])) {
-            $application->setByValueArray($values['child']);
+        if (isset($values[CartFormWrapper::CONTAINER_NAME_APPLICATION])) {
+            $application->setByValueArray($values[CartFormWrapper::CONTAINER_NAME_APPLICATION]);
         }
         if (isset($values['insuranceCompanyId'])) {
             $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($values['insuranceCompanyId']);
             $application->setInsuranceCompany($insuranceCompany);
         }
         if ($created) {
-            $this->choiceManager->createAdditionChoicesToApplication($values['additions'], $application, $reserve);
+            $this->choiceManager->createAdditionChoicesToApplication($values[AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS], $application, $reserve);
         } else {
-            $this->choiceManager->editAdditionChoicesInApplication($values['additions'], $application);
+            $this->choiceManager->editAdditionChoicesInApplication($values[AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS], $application);
         }
         return $application;
     }

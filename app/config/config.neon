@@ -39,6 +39,7 @@ services:
     - App\Controls\Forms\FormWrapperDependencies
     - App\Controls\Grids\GridWrapperDependencies
     - App\Controls\Forms\ICartFormWrapperFactory
+    - App\Controls\Forms\IAdditionsControlsBuilderFactory
     - App\FrontModule\Controls\IOccupancyControlFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
     - App\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory
@@ -61,6 +62,7 @@ services:
     - App\AdminModule\Controls\Grids\ICurrenciesGridWrapperFactory
     - App\AdminModule\Controls\Grids\IOptionsGridWrapperFactory
     - App\AdminModule\Controls\Grids\IEarliesGridWrapperFactory
+    - App\AdminModule\Controls\Forms\IDelegateReservationControlsBuilderFactory
     - App\Model\CronService
     - App\Model\AdminAuthenticator
     - App\Model\FileStorage(%appDir%/files)

@@ -9,10 +9,10 @@
 namespace App\AdminModule\Controls\Forms;
 
 
+use App\Controls\Forms\AdditionsControlsBuilder;
 use App\Controls\Forms\Form;
 use App\Controls\Forms\FormWrapperDependencies;
-use App\Controls\Forms\TAppendAdditionsControls;
-use App\Model\Persistence\Dao\ApplicationDao;
+use App\Controls\Forms\IAdditionsControlsBuilderFactory;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Entity\AdditionEntity;
@@ -23,10 +23,8 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 
 class ReserveApplicationFormWrapper extends FormWrapper {
-    use TAppendAdditionsControls,
-        TAppendDelegateReservation {
-        appendDelegateControls as protected appendParentDelegateControls;
-    }
+
+    const FIELD_COUNT = "count";
 
     /** @var  EventEntity */
     private $event;
@@ -37,55 +35,67 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     /** @var  CurrencyDao */
     private $currencyDao;
 
-    /** @var  ApplicationDao */
-    private $applicationDao;
-
     /** @var  ReservationManager */
     private $reservationManager;
 
-    /** @var ReservationDao */
-    private $reservationDao;
+    /** @var IAdditionsControlsBuilderFactory */
+    private $additionsControlsBuilderFactory;
+
+    /** @var AdditionsControlsBuilder */
+    private $additionsControlsBuilder;
+
+    /** @var IDelegateReservationControlsBuilderFactory */
+    private $delegateReservationControlsBuilderFactory;
+
+    /** @var DelegateReservationControlsBuilder */
+    private $delegateReservationControlsBuilder;
 
     public function __construct(
         FormWrapperDependencies $formWrapperDependencies,
-        ApplicationDao $applicationDao,
         CurrencyDao $currencyDao,
         ReservationDao $reservationDao,
-        ReservationManager $reservationManager
+        ReservationManager $reservationManager,
+        IAdditionsControlsBuilderFactory $additionsControlsBuilderFactory,
+        IDelegateReservationControlsBuilderFactory $delegateReservationControlsBuilderFactory
     ) {
         parent::__construct($formWrapperDependencies);
-        $this->applicationDao = $applicationDao;
         $this->currencyDao = $currencyDao;
         $this->currency = $this->currencyDao->getDefaultCurrency();
-        $this->reservationDao = $reservationDao;
         $this->reservationManager = $reservationManager;
-        $this->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION);
-        $this->setVisibleCountLeft();
+        $this->additionsControlsBuilderFactory = $additionsControlsBuilderFactory;
+        $this->delegateReservationControlsBuilderFactory = $delegateReservationControlsBuilderFactory;
+    }
+
+    /**
+     * @return DelegateReservationControlsBuilder
+     */
+    public function getDelegateReservationControlsBuilder(): DelegateReservationControlsBuilder {
+        if (!$this->delegateReservationControlsBuilder) {
+            $builder = $this->delegateReservationControlsBuilderFactory->create($this->event);
+            $this->delegateReservationControlsBuilder = $builder;
+        }
+        return $this->delegateReservationControlsBuilder;
+    }
+
+    /**
+     * @return AdditionsControlsBuilder
+     */
+    public function getAdditionsControlsBuilder(): AdditionsControlsBuilder {
+        if (!$this->additionsControlsBuilder) {
+            $builder = $this->additionsControlsBuilderFactory->create(
+                $this->event,
+                $this->currency
+            )
+                ->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION)
+                ->setVisibleCountLeft()
+                ->setAdmin();
+            $this->additionsControlsBuilder = $builder;
+        }
+        return $this->additionsControlsBuilder;
     }
 
     public function setEvent(EventEntity $event) {
         $this->event = $event;
-    }
-
-    public function isAdmin() {
-        return true;
-    }
-
-
-    protected function getEvent() {
-        return $this->event;
-    }
-
-    protected function getCurrency() {
-        return $this->currency;
-    }
-
-    protected function getApplicationDao() {
-        return $this->applicationDao;
-    }
-
-    protected function getReservationDao(): ReservationDao {
-        return $this->reservationDao;
     }
 
 
@@ -96,23 +106,25 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
         $form->addGroup('Entity.Singular.Cart')
             ->setOption('visual', false);
-        $form->addText('count', 'Attribute.Count', null, 255)
+        $form->addText(self::FIELD_COUNT, 'Attribute.Count', null, 255)
             ->setType('number')
             ->setDefaultValue(1)
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, NULL, [1, 100]);
         $form->addGroup('Entity.Plural.Choice')
-            ->setOption('class', 'price_subspace');
-        $this->appendAdditionsControls($form, 1);
+            ->setOption($form::OPTION_KEY_CLASS, 'price_subspace');
+        $this->getAdditionsControlsBuilder()
+            ->appendAdditionsControls($form);
         $this->appendDelegateControls($form);
         $this->appendSubmitControls($form, 'Form.Action.Reserve', [$this, 'reserveClicked']);
     }
 
     protected function appendDelegateControls(Form $form) {
-        $this->appendParentDelegateControls($form);
+        $this->getDelegateReservationControlsBuilder()
+            ->appendDelegateControls($form);
         /** @var SelectBox $delegateSelect */
-        $delegateSelect = $form['delegateTo'];
+        $delegateSelect = $form[DelegateReservationControlsBuilder::FIELD_DELEGATE];
         $delegateSelect->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Reservation.Description.Delegated")
             ->setRequired(false);
         $items = $delegateSelect->getItems();

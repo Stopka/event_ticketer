@@ -11,42 +11,98 @@ namespace App\Controls\Forms;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
+use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OptionEntity;
+use Kdyby\Translation\ITranslator;
 use Nette\Forms\Container;
 use Nette\Utils\Html;
 
-trait TAppendAdditionsControls {
+class AdditionsControlsBuilder {
     use TRecalculateControl;
 
-    /** @var string  */
+    const CONTAINER_NAME_ADDITIONS = 'additions';
+
+    /** @var string */
     private $visibilityPlace = AdditionEntity::VISIBLE_RESERVATION;
 
-    /** @var bool  */
+    /** @var bool */
     private $visiblePrice = false;
 
-    /** @var bool  */
+    /** @var bool */
     private $visiblePriceTotal = false;
 
-    /** @var bool  */
+    /** @var bool */
     private $visibleCountLeft = false;
 
+    /** @var EventEntity */
+    private $eventEntity;
+
+    /** @var CurrencyEntity */
+    private $currencyEntity;
+
+    /** @var ApplicationDao */
+    private $applicationDao;
+
+    /** @var ITranslator */
+    private $translator;
+
+    /** @var bool */
+    private $admin = false;
+
+    public function __construct(
+        EventEntity $eventEntity,
+        CurrencyEntity $currencyEntity,
+        ApplicationDao $applicationDao,
+        ITranslator $translator
+    ) {
+        $this->eventEntity = $eventEntity;
+        $this->currencyEntity = $currencyEntity;
+        $this->applicationDao = $applicationDao;
+        $this->translator = $translator;
+    }
+
+
+    protected function getTranslator(): ?ITranslator {
+        return $this->translator;
+    }
+
     /**
-     * @return \App\Model\Persistence\Entity\EventEntity
+     * @return EventEntity
      */
-    abstract protected function getEvent();
+    protected function getEvent(): EventEntity {
+        return $this->eventEntity;
+    }
 
     /**
      * @return CurrencyEntity
      */
-    abstract protected function getCurrency();
+    protected function getCurrency(): CurrencyEntity {
+        return $this->currencyEntity;
+    }
+
+    /**
+     * @param bool $admin
+     * @return $this
+     */
+    public function setAdmin(bool $admin = true): self {
+        $this->admin = $admin;
+        return $this;
+    }
 
     /**
      * @return ApplicationDao
      */
-    abstract protected function getApplicationDao();
+    protected function getApplicationDao(): ApplicationDao {
+        return $this->applicationDao;
+    }
 
-    protected function setVisibilityPlace(string $place = AdditionEntity::VISIBLE_RESERVATION){
+    /**
+     * @param string $place
+     * @return AdditionsControlsBuilder
+     */
+    public function setVisibilityPlace(string $place = AdditionEntity::VISIBLE_RESERVATION): self {
         $this->visibilityPlace = $place;
+        return $this;
     }
 
     /**
@@ -65,9 +121,11 @@ trait TAppendAdditionsControls {
 
     /**
      * @param bool $visiblePrice
+     * @return $this
      */
-    public function setVisiblePrice(bool $visiblePrice = true): void {
+    public function setVisiblePrice(bool $visiblePrice = true): self {
         $this->visiblePrice = $visiblePrice;
+        return $this;
     }
 
     /**
@@ -79,9 +137,11 @@ trait TAppendAdditionsControls {
 
     /**
      * @param bool $visiblePriceTotal
+     * @return $this
      */
-    public function setVisiblePriceTotal(bool $visiblePriceTotal = true): void {
+    public function setVisiblePriceTotal(bool $visiblePriceTotal = true): self {
         $this->visiblePriceTotal = $visiblePriceTotal;
+        return $this;
     }
 
     /**
@@ -93,30 +153,72 @@ trait TAppendAdditionsControls {
 
     /**
      * @param bool $visibleCountLeft
+     * @return $this
      */
-    public function setVisibleCountLeft(bool $visibleCountLeft = true): void {
+    public function setVisibleCountLeft(bool $visibleCountLeft = true): self {
         $this->visibleCountLeft = $visibleCountLeft;
+        return $this;
     }
+
 
     /**
      * @param Container $container
      * @param int $index
      */
-    protected function appendAdditionsControls(Container $container, int $index = 0) {
-        $additionsContainer = $container->addContainer('additions');
+    public function appendAdditionsControls(Container $container, int $index = 1) {
+        $additionsContainer = $container->addContainer(self::CONTAINER_NAME_ADDITIONS);
         foreach ($this->getEvent()->getAdditions() as $addition) {
             if (!$addition->isVisibleIn($this->visibilityPlace)) {
                 continue;
             }
             $this->appendAdditionContols($additionsContainer, $addition, $index);
         }
-        if($this->isVisiblePriceTotal()){
+        if ($this->isVisiblePriceTotal()) {
             $additionsContainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Form.Application.TotalPrice',
                 Html::el('div', ['class' => 'price_subtotal'])
                     ->addHtml(Html::el('span', ['class' => 'price_amount'])->setText('…'))
                     ->addHtml(Html::el('span', ['class' => 'price_currency']))->addHtml($this->createRecalculateHtml())
             );
         }
+    }
+
+    protected function preprocessAdditionValues($values, AdditionEntity $addition, int $index = 1): array {
+        if (is_integer($values)) {
+            $values = [$values];
+        }
+        $prices = $this->createAdditionPrices($addition);
+        $preselected = $this->getPreselectedOptions($addition, $index);
+        $predisabled = $this->getPredisabledOptions($addition, $prices);
+        foreach ($addition->getOptions() as $option) {
+            if (
+                !in_array($option->getId(), $values) &&
+                in_array($option->getId(), $preselected) &&
+                in_array($option->getId(), $predisabled)
+            ) {
+                $values[] = $option->getId();
+            }
+            if (
+                in_array($option->getId(), $values) &&
+                !in_array($option->getId(), $preselected) &&
+                in_array($option->getId(), $predisabled)
+            ) {
+                $i = array_search($option->getId(), $values);
+                unset($values[$i]);
+            }
+        }
+        return $values;
+    }
+
+    public function preprocessAdditionsValues(array $values, int $index = 1): array {
+        $additionsValues = $values[self::CONTAINER_NAME_ADDITIONS];
+        foreach ($this->getEvent()->getAdditions() as $addition) {
+            if (!$addition->isVisibleIn($this->visibilityPlace)) {
+                continue;
+            }
+            $additionsValues[$addition->getId()] = $this->preprocessAdditionValues($additionsValues[$addition->getId()] ?? [], $addition, $index);
+        }
+        $values[self::CONTAINER_NAME_ADDITIONS] = $additionsValues;
+        return $values;
     }
 
     protected function appendAdditionContols(Container $container, AdditionEntity $addition, int $index) {
@@ -129,12 +231,12 @@ trait TAppendAdditionsControls {
         }
         if ($addition->getMinimum() !== 1 || $addition->getMaximum() > 1 || $addition->getMaximum() == count($options)) {
             $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
-                ->setRequired($addition->getMinimum() > 0)
+                ->setRequired(false)
                 ->setTranslator()
                 ->setDefaultValue($preselectedOptions);
         } else {
             $control = $container->addRadioList($addition->getId(), $addition->getName(), $options)
-                ->setRequired()
+                ->setRequired(false)
                 ->setTranslator();
             if ($preselectedOptions) {
                 $control->setDefaultValue($preselectedOptions[0]);
@@ -225,7 +327,9 @@ trait TAppendAdditionsControls {
         return $result;
     }
 
-    abstract protected function isAdmin();
+    protected function isAdmin(): bool {
+        return $this->admin;
+    }
 
     /**
      * @param \App\Model\Persistence\Entity\OptionEntity $option

@@ -2,6 +2,7 @@
 
 namespace App\Model\Persistence\Manager;
 
+use App\Controls\Forms\CartFormWrapper;
 use App\Model\Persistence\Dao\AdditionDao;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\InsuranceCompanyDao;
@@ -13,7 +14,6 @@ use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\ReservationEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use App\Model\Persistence\EntityManagerWrapper;
-use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
 /**
@@ -48,7 +48,7 @@ class CartManager {
 
     /**
      * CartManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      * @param AdditionDao $additionDao
      * @param OptionDao $optionDao
      * @param InsuranceCompanyDao $insuranceCompanyDao
@@ -101,9 +101,9 @@ class CartManager {
         }
         $cart->setByValueArray($values);
         $entityManager->persist($cart);
-        $commonValues = $values['commons'];
+        $commonValues = $values[CartFormWrapper::CONTAINER_NAME_COMMONS];
         // go through all applications from form
-        foreach ($values['children'] as $id => $childValues) {
+        foreach ($values[CartFormWrapper::CONTAINER_NAME_APPLICATIONS] as $id => $applicationValues) {
             // find application by id
             $application = $this->applicationDao->getApplication($id);
             // if exisitning application is not matched with event
@@ -113,10 +113,10 @@ class CartManager {
             // if application exists
             if ($application) {
                 //update it
-                $application = $this->applicationManager->editApplicationFromCartForm($commonValues, $childValues['child'], $application);
+                $application = $this->applicationManager->editApplicationFromCartForm($commonValues, $applicationValues[CartFormWrapper::CONTAINER_NAME_APPLICATION], $application);
             } else {
-                // create new one
-                $application = $this->applicationManager->createApplicationFromCartForm($commonValues, $childValues['child'], $event);
+                // create new onecom
+                $application = $this->applicationManager->createApplicationFromCartForm($commonValues, $applicationValues[CartFormWrapper::CONTAINER_NAME_APPLICATION], $event);
             }
             $application->setCart($cart);
         }

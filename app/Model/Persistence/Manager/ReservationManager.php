@@ -2,6 +2,8 @@
 
 namespace App\Model\Persistence\Manager;
 
+use App\AdminModule\Controls\Forms\DelegateReservationControlsBuilder;
+use App\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use App\Model\Exception\EmptyException;
 use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
@@ -9,7 +11,6 @@ use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\ReservationEntity;
 use App\Model\Persistence\EntityManagerWrapper;
-use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
 /**
@@ -29,7 +30,7 @@ class ReservationManager {
 
     /**
      * ReservationManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      * @param ReservationDao $reservationDao
      * @param ApplicationManager $applicationManager
      */
@@ -53,18 +54,18 @@ class ReservationManager {
         if (!count($applications)) { //if no applications to delegate
             throw new EmptyException("Error.Reservation.Application.Empty");
         }
-        if (!$values['delegateTo']) { //If delegated to nobody
+        if (!$values[DelegateReservationControlsBuilder::FIELD_DELEGATE]) { //If delegated to nobody
             // nothing to do
             return;
         }
-        if ($values['delegateTo'] == '*') { //If delegateed to new person
+        if ($values[DelegateReservationControlsBuilder::FIELD_DELEGATE] == DelegateReservationControlsBuilder::VALUE_DELEGATE_NEW) { //If delegateed to new person
             //Create reservation
             $reservation = new ReservationEntity();
-            $reservation->setByValueArray($values['delegateNew']);
+            $reservation->setByValueArray($values[DelegateReservationControlsBuilder::CONTAINER_NAME_NEW]);
             $entityManager->persist($reservation);
         } else { //else means delegated to existing person
             //find reservation
-            $reservation = $this->reservationDao->getReservation($values['delegateTo']);
+            $reservation = $this->reservationDao->getReservation($values[DelegateReservationControlsBuilder::FIELD_DELEGATE]);
             if (!$reservation->isRegisterReady()) { //If reservation is already ordered
                 //Create new one with same values
                 $newReservation = new ReservationEntity();
@@ -96,11 +97,11 @@ class ReservationManager {
     public function createReservedApplicationsFromReservationForm(array $values, EventEntity $event): void {
         $entityManager = $this->getEntityManager();
         $applications = [];
-        for ($i = 0; $i < $values['count']; $i++) {
+        for ($i = 0; $i < $values[ReserveApplicationFormWrapper::FIELD_COUNT]; $i++) {
             $applications[] = $this->applicationManager->createReservedApplicationFromReservationForm($values, $event);
         }
         $entityManager->flush();
-        if ($values['delegateTo']) {
+        if ($values[DelegateReservationControlsBuilder::FIELD_DELEGATE]) {
             $this->delegateNewReservations($applications, $values);
         }
     }
