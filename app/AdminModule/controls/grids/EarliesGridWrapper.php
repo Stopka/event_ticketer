@@ -35,13 +35,21 @@ class EarliesGridWrapper extends GridWrapper {
      * @param EventEntity $eventEntity
      */
     public function setEventEntity(EventEntity $eventEntity): void {
-         $this->eventEntity = $eventEntity;
+        $this->eventEntity = $eventEntity;
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function loadModel(Grid $grid) {
         $grid->setModel($this->earlyDao->getEventEarliesGridModel($this->eventEntity));
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendEarlyWaveColumns($grid);
@@ -69,14 +77,16 @@ class EarliesGridWrapper extends GridWrapper {
             ->setSortable()
             ->setFilterDate();
         $grid->addColumnText('earlyWave.inviteSent', 'Attribute.Event.InviteSent')
-            ->setReplacement([true=>'Value.Boolean.Yes',false=>'Value.Boolean.No'])
+            ->setReplacement([true => 'Value.Boolean.Yes', false => 'Value.Boolean.No'])
             ->setSortable()
-            ->setFilterSelect([null=>'', true=>'Value.Boolean.Yes',false=>'Value.Boolean.No']);
+            ->setFilterSelect([null => '', true => 'Value.Boolean.Yes', false => 'Value.Boolean.No']);
     }
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit','Form.Action.Edit', 'Early:edit')
+        $grid->addActionHref('edit', 'Form.Action.Edit', 'Early:edit')
             ->setIcon('fa fa-pencil');
+        $grid->addButton('add', 'Presenter.Admin.Early.Add.H1', 'Early:add', [$this->eventEntity->getId()])
+            ->setIcon('fa fa-plus-circle');
     }
 }

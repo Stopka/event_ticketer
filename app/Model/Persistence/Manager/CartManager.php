@@ -12,6 +12,7 @@ use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\ReservationEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
@@ -22,7 +23,7 @@ use Nette\SmartObject;
  * Time: 17:37
  */
 class CartManager {
-    use SmartObject, TDoctrineEntityManager, TUpdateNumber;
+    use SmartObject, TDoctrineEntityManager;
 
     /** @var  OptionDao */
     private $optionDao;
@@ -55,7 +56,7 @@ class CartManager {
      * @param ApplicationDao $applicationDao
      */
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerWrapper $entityManager,
         AdditionDao $additionDao,
         OptionDao $optionDao,
         InsuranceCompanyDao $insuranceCompanyDao,
@@ -96,7 +97,7 @@ class CartManager {
             $cart->setEvent($event);
             $cart->setSubstitute($substitute);
             //$cart->setReservation($reservation);
-            $cart->setNextNumber($entityManager);
+            //$cart->setNextNumber($entityManager);
         }
         $cart->setByValueArray($values);
         $entityManager->persist($cart);

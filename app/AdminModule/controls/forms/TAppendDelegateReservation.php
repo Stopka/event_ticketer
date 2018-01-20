@@ -21,11 +21,15 @@ trait TAppendDelegateReservation {
             ->setOption($form::OPTION_KEY_ID, 'reservationDelegate')
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Reservation.Description.DelegatedPerson')
             ->setOption($form::OPTION_KEY_EMBED, 'Form.Reservation.Label.NewPerson');
-        $form->addSelect('delegateTo', 'Form.Reservation.Label.Person', [
+        $reservations = $this->getReservationDao()->getEventReservationList($this->event);
+        $delegateToSelection = [
             NULL => '',
-            '*' => 'Form.Reservation.Label.NewPerson',
-            'Form.Reservation.Label.ExistingPerson' => $this->getReservationDao()->getEventReservationList($this->event)
-        ])
+            '*' => 'Form.Reservation.Label.NewPerson'
+        ];
+        if ($reservations) {
+            $delegateToSelection['Form.Reservation.Label.ExistingPerson'] = $reservations;
+        }
+        $form->addSelect('delegateTo', 'Form.Reservation.Label.Person', $delegateToSelection)
             ->setRequired()
             ->addCondition($form::EQUAL, '*')
             ->toggle('delegateNewPerson');

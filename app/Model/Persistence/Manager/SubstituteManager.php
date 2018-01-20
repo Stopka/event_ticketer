@@ -7,6 +7,7 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
@@ -33,7 +34,7 @@ class SubstituteManager {
      * @param EntityManager $entityManager
      * @param SubstituteDao $substituteDao
      */
-    public function __construct(EntityManager $entityManager, SubstituteDao $substituteDao) {
+    public function __construct(EntityManagerWrapper $entityManager, SubstituteDao $substituteDao) {
         $this->injectEntityManager($entityManager);
         $this->substituteDao = $substituteDao;
     }

@@ -40,8 +40,11 @@ class ApplicationPresenter extends BasePresenter {
         $this->applicationDao = $applicationDao;
     }
 
-
-    public function actionDefault($id) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(int $id) {
         $event = $this->eventDao->getEvent($id);
         if (!$event) {
             $this->redirect('Homepage:');
@@ -52,7 +55,11 @@ class ApplicationPresenter extends BasePresenter {
         $this->template->event = $event;
     }
 
-    public function actionReserve($id) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionReserve(int $id) {
         $event = $this->eventDao->getEvent($id);
         if (!$event) {
             $this->redirect('Homepage:');
@@ -63,7 +70,11 @@ class ApplicationPresenter extends BasePresenter {
         $this->template->event = $event;
     }
 
-    public function renderExport($id) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderExport(int $id) {
         $event = $this->eventDao->getEvent($id);
         if (!$event) {
             $this->redirect('Homepage:');

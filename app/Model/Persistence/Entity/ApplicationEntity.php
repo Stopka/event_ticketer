@@ -15,7 +15,6 @@ use App\Model\Persistence\Attribute\TBirthDateAttribute;
 use App\Model\Persistence\Attribute\TCreatedAttribute;
 use App\Model\Persistence\Attribute\TGenderAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
-use App\Model\Persistence\Attribute\TNumberAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,16 +22,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Jedna konkrétní vydaná přihláška
  * @package App\Model\Entities
- * @ORM\Table(name="application",
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="applicationNumber_unique",
- *            columns={"number","event_id"})
- *    }
- * )
+ * @ORM\Table(name="application")
  * @ORM\Entity
  */
 class ApplicationEntity extends BaseEntity {
-    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute, TCreatedAttribute;
+    use TIdentifierAttribute, TPersonNameAttribute, TGenderAttribute, TAddressAttribute, TBirthDateAttribute, TCreatedAttribute;
 
     const STATE_RESERVED = 1;
     const STATE_DELEGATED = 2;
@@ -101,6 +95,7 @@ class ApplicationEntity extends BaseEntity {
     private $info;
 
     public function __construct($reserved = false) {
+        parent::__construct();
         if ($reserved) {
             $this->state = self::STATE_RESERVED;
         }

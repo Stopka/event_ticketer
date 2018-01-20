@@ -36,8 +36,11 @@ class AdminAuthenticator implements IAuthenticator {
     public function authenticate(array $credentials) {
         list($username,$password) = $credentials;
         $admin = $this->administratorDao->getAdministratorByUsername($username);
-        if(!$admin||!$admin->verifyPassword($password)){
-            throw new AuthenticationException('Neplatné přihlašovací údaje');
+        if (!$admin) {
+            throw new AuthenticationException('Admin does not exist');
+        }
+        if (!$admin->verifyPassword($password)) {
+            throw new AuthenticationException('Wrong password');
         }
         return new Identity($admin->getId(), 'administrator', $admin->getValueArray());
     }

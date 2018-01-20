@@ -23,6 +23,7 @@ class EarlyEntity extends BaseEntity {
     use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute;
 
     public function __construct() {
+        parent::__construct();
         $this->carts = new ArrayCollection();
     }
 

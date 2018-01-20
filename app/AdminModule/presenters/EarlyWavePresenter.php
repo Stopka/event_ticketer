@@ -33,9 +33,10 @@ class EarlyWavePresenter extends BasePresenter {
     }
 
     /**
-     * @param null|string $id entityId
+     * @param int $id
+     * @throws \Nette\Application\AbortException
      */
-    public function actionDefault($id = null){
+    public function actionDefault(int $id) {
         $event = $this->eventDao->getEvent($id);
         if(!$event){
             $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
@@ -49,10 +50,10 @@ class EarlyWavePresenter extends BasePresenter {
     }
 
     /**
-     * @param string $id eventId
+     * @param int $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionAdd($id = null){
+    public function actionAdd(int $id) {
         $event = $this->eventDao->getEvent($id);
         if(!$event){
             $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
@@ -67,10 +68,10 @@ class EarlyWavePresenter extends BasePresenter {
     }
 
     /**
-     * @param string $id earlyWaveId
+     * @param int $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionEdit($id = null){
+    public function actionEdit(int $id) {
         $earlyWave = $this->earlyWaveDao->getEarlyWave($id);
         if(!$earlyWave){
             $this->flashTranslatedMessage('Error.EarlyWave.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);

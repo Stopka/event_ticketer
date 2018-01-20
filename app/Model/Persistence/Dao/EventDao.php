@@ -60,10 +60,10 @@ class EventDao extends EntityDao {
     }
 
     /**
-     * @param null|string $id
+     * @param int|null $id
      * @return EventEntity|null
      */
-    public function getEvent(?string $id): ?EventEntity{
+    public function getEvent(?int $id): ?EventEntity {
         /** @var EventEntity $result */
         $result = $this->get($id);
         return $result;

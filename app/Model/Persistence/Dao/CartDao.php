@@ -17,10 +17,10 @@ class CartDao extends EntityDao {
     }
 
     /**
-     * @param $hash string
+     * @param $id int
      * @return \App\Model\Persistence\Entity\CartEntity|null
      */
-    public function getViewableCart(?string $id): ?CartEntity {
+    public function getViewableCart(?int $id): ?CartEntity {
         $cart = $this->getCart($id);
         if ($cart && $cart->getState() == CartEntity::STATE_ORDERED)
             return $cart;

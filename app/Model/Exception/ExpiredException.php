@@ -6,7 +6,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class ExpiredException extends ApplicationException {
+class ExpiredException extends TranslatedException {
 
 }
 

@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class AdditionEntity extends BaseEntity implements ISortableEntity {
-    use TPositionAttribute, TIdentifierAttribute, TNameAttribute;
+    use TIdentifierAttribute, TPositionAttribute, TNameAttribute;
 
     const VISIBLE_RESERVATION = 'reservation';
     const VISIBLE_REGISTER = 'register';
@@ -40,6 +40,7 @@ class AdditionEntity extends BaseEntity implements ISortableEntity {
     }
 
     public function __construct() {
+        parent::__construct();
         $this->options = new ArrayCollection();
     }
 

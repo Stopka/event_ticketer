@@ -32,7 +32,11 @@ class OptionPresenter extends BasePresenter {
         $this->optionFormWrapperFactory = $optionFormWrapperFactory;
     }
 
-    public function actionDefault($id = null) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(int $id) {
         $addition = $this->additionDao->getAddition($id);
         if(!$addition){
             $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
@@ -44,7 +48,11 @@ class OptionPresenter extends BasePresenter {
         $this->template->addition = $addition;
     }
 
-    public function actionAdd($id){
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionAdd(int $id) {
         $addition = $this->additionDao->getAddition($id);
         if(!$addition){
             $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
@@ -57,7 +65,11 @@ class OptionPresenter extends BasePresenter {
         $this->template->addition = $addition;
     }
 
-    public function actionEdit($id = null){
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEdit(int $id) {
         $option = $this->optionDao->getOption($id);
         if(!$option){
             $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);

@@ -27,10 +27,18 @@ class CurrenciesGridWrapper extends GridWrapper {
         $this->currencyDao = $currencyDao;
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function loadModel(Grid $grid) {
         $grid->setModel($this->currencyDao->getAllCurrenciesGridModel());
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendCurrencyColumns($grid);
@@ -58,6 +66,8 @@ class CurrenciesGridWrapper extends GridWrapper {
             ->setIcon('fa fa-pencil');
         $grid->addActionEvent('setDefault','Attribute.Default',[$this,'onSetDefaultClicked'])
             ->setIcon('fa fa-check-square');
+        $grid->addButton('add', 'Presenter.Admin.Currency.Add.H1', 'Currency:add')
+            ->setIcon('fa fa-plus-circle');
     }
 
     public function onSetDefaultClicked(string $id){

@@ -8,6 +8,9 @@ namespace App\AdminModule\Presenters;
  */
 abstract class BasePresenter extends \App\Presenters\BasePresenter {
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function startup() {
         parent::startup();
         $this->checkUser();
@@ -16,6 +19,7 @@ abstract class BasePresenter extends \App\Presenters\BasePresenter {
     /**
      * Provede kontrolu, zda je uživatel přihlášen
      * pokud není přesměruje ho na přihlášení
+     * @throws \Nette\Application\AbortException
      */
     protected function checkUser() {
         if (!$this->getUser()->isLoggedIn()) {

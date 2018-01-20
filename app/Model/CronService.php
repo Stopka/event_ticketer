@@ -20,6 +20,7 @@ class CronService {
     public $onCronRun = Array();
 
     public function run(){
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->onCronRun();
     }
 }

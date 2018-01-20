@@ -13,6 +13,7 @@ use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
@@ -29,7 +30,7 @@ class EarlyManager {
      * EarlyWaveManager constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager, EarlyWaveDao $earlyWaveDao, EarlyWaveManager $earlyWaveManager) {
+    public function __construct(EntityManagerWrapper $entityManager, EarlyWaveDao $earlyWaveDao, EarlyWaveManager $earlyWaveManager) {
         $this->injectEntityManager($entityManager);
         $this->earlyWaveDao = $earlyWaveDao;
         $this->earlyWaveManager = $earlyWaveManager;

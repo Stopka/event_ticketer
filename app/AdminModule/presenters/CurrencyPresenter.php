@@ -31,11 +31,18 @@ class CurrencyPresenter extends BasePresenter {
 
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionAdd() {
         $this->redirect("edit");
     }
 
-    public function actionEdit($id = null) {
+    /**
+     * @param int|null $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEdit(?int $id = null) {
         $currency = $this->currencyDao->getCurrency($id);
         if (!$currency && $id) {
             $this->redirect('edit');

@@ -6,7 +6,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class NotFoundException extends ApplicationException {
+class NotFoundException extends TranslatedException {
 
 }
 

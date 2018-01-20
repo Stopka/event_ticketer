@@ -25,22 +25,22 @@ class SubstituteDao extends EntityDao {
      */
     public function getAllSubstitutesGridModel(EventEntity $event): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('s');
-        $qb->whereCriteria(['s.event'=>$event]);
+        $qb->whereCriteria(['s.event' => $event]);
         return new Doctrine($qb);
     }
 
-    public function getSubstitute(?string $id):?SubstituteEntity {
+    public function getSubstitute(?int $id): ?SubstituteEntity {
         /** @var SubstituteEntity $result */
         $result = $this->get($id);
         return $result;
     }
 
     /**
-     * @param string $id
+     * @param string $uid
      * @return SubstituteEntity|null
      */
-    public function getReadySubstitute(?string $id): ?SubstituteEntity {
-        $substitute = $this->getSubstitute($id);
+    public function getReadySubstituteByUid(string $uid): ?SubstituteEntity {
+        $substitute = $this->getRepository()->findOneBy(['uid' => $uid]);
         if (!$substitute || !$substitute->isActive()) {
             return NULL;
         }

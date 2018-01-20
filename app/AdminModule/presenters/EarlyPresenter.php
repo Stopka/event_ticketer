@@ -32,7 +32,11 @@ class EarlyPresenter extends BasePresenter {
         $this->earlyFormWrapperFactory = $earlyFormWrapperFactory;
     }
 
-    public function actionDefault($id = null) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(int $id) {
         $event = $this->eventDao->getEvent($id);
         if(!$event){
             $this->redirect("Event:edit");
@@ -43,7 +47,11 @@ class EarlyPresenter extends BasePresenter {
         $this->template->event = $event;
     }
 
-    public function actionAdd($id){
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionAdd(int $id) {
         $event = $this->eventDao->getEvent($id);
         if(!$event){
             $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
@@ -56,7 +64,11 @@ class EarlyPresenter extends BasePresenter {
         $this->template->event = $event;
     }
 
-    public function actionEdit($id = null){
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEdit(int $id) {
         $early = $this->earlyDao->getEarly($id);
         if(!$early){
             $this->flashTranslatedMessage('Error.Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);

@@ -35,7 +35,10 @@ Action:
     Delegate: Delegovat
     Register: Registrovat
     Recalculate: Přepočítat
-SignIn.Message.Success: 'Přihlášení bylo úspěšné.'
+SignIn:
+    Message:
+        Success: 'Přihlášení bylo úspěšné.'
+        AdministratorCreated: 'Vytvořen administrátorský účet'
 Entity:
     Message:
         MoveUp.Success: 'Položka byla úspěšně přesunuta výš.'

@@ -4,7 +4,7 @@ namespace App\AdminModule\Controls\Grids;
 
 use App\Controls\Grids\Grid;
 use App\Controls\Grids\GridWrapperDependencies;
-use App\Model\Exception\Exception;
+use App\Model\Exception\TranslatedException;
 use App\Model\Persistence\Dao\EventDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\EventManager;
@@ -27,6 +27,7 @@ class EventsGridWrapper extends GridWrapper {
      * EventsGridWrapper constructor.
      * @param GridWrapperDependencies $gridWrapperDependencies
      * @param EventDao $additionDao
+     * @param EventManager $eventManager
      */
     public function __construct(GridWrapperDependencies $gridWrapperDependencies, EventDao $additionDao, EventManager $eventManager) {
         parent::__construct($gridWrapperDependencies);
@@ -34,10 +35,18 @@ class EventsGridWrapper extends GridWrapper {
         $this->eventManager = $eventManager;
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function loadModel(Grid $grid) {
         $grid->setModel($this->eventDao->getAllEventsGridModel());
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendEventColumns($grid);
@@ -104,47 +113,67 @@ class EventsGridWrapper extends GridWrapper {
             ->setConfirm(function (EventEntity $eventEntity) {
                 return $this->getTranslator()->translate('Grid.Event.Confirm.Close',['event'=>$eventEntity->getName()]);
             });
+        $grid->addButton('add', 'Presenter.Admin.Event.Add.H1', 'Event:add')
+            ->setIcon('fa fa-plus-circle');
+        $grid->addButton('setting', 'Presenter.AdminLayout.Setting.H1', 'Currency:default')
+            ->setIcon('fa fa-wrench');
     }
 
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
     public function onActivateClicked(string $id) {
         try {
             $event = $this->eventDao->getEvent($id);
             $this->eventManager->setEventState($event, EventEntity::STATE_ACTIVE);
             $this->flashTranslatedMessage("Grid.Event.Message.Activate.Success");
-        } catch (Exception $e) {
+        } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
         }
         $this->redirect('this');
     }
 
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
     public function onDeactivateClicked(string $id) {
         try {
             $event = $this->eventDao->getEvent($id);
             $this->eventManager->setEventState($event, EventEntity::STATE_INACTIVE);
             $this->flashTranslatedMessage("Grid.Event.Message.Dectivate.Success");
-        } catch (Exception $e) {
+        } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
         }
         $this->redirect('this');
     }
 
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
     public function onCancelClicked(string $id) {
         try {
             $event = $this->eventDao->getEvent($id);
             $this->eventManager->setEventState($event, EventEntity::STATE_CANCELLED);
             $this->flashTranslatedMessage("Grid.Event.Message.Cancel.Success");
-        } catch (Exception $e) {
+        } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
         }
         $this->redirect('this');
     }
 
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
     public function onCloseClicked(string $id) {
         try {
             $event = $this->eventDao->getEvent($id);
             $this->eventManager->setEventState($event, EventEntity::STATE_CLOSED);
             $this->flashTranslatedMessage("Grid.Event.Message.Close.Success");
-        } catch (Exception $e) {
+        } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
         }
         $this->redirect('this');

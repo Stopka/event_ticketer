@@ -12,7 +12,6 @@ use App\Model\Persistence\Attribute\TCapacityAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
 use App\Model\Persistence\Attribute\TInternalInfoAttribute;
 use App\Model\Persistence\Attribute\TNameAttribute;
-use App\Model\Persistence\Attribute\TNumberAttribute;
 use App\Model\Persistence\Attribute\TOccupancyIconAttribute;
 use App\Model\Persistence\Attribute\TStartDateAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,16 +20,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Událost, ke které se přihlášky vydávají
  * @package App\Model\Entities
- * @ORM\Table(name="event",
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="eventNumber_unique",
- *            columns={"number"})
- *    }
- * )
+ * @ORM\Table(name="event")
  * @ORM\Entity
  */
 class EventEntity extends BaseEntity {
-    use TIdentifierAttribute, TNumberAttribute, TNameAttribute, TCapacityAttribute, TStartDateAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
+    use TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TStartDateAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
 
     const STATE_INACTIVE = 0;
     const STATE_ACTIVE = 1;
@@ -81,6 +75,7 @@ class EventEntity extends BaseEntity {
     private $reservations;
 
     public function __construct() {
+        parent::__construct();
         $this->earlyWaves = new ArrayCollection();
         $this->carts = new ArrayCollection();
         $this->additions = new ArrayCollection();

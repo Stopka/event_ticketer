@@ -12,7 +12,7 @@ use App\Model\Notifier\EarlyWaveInviteNotifier;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyWaveEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use Kdyby\Doctrine\EntityManager;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Events\Subscriber;
 use Nette\SmartObject;
 
@@ -24,9 +24,9 @@ class EarlyWaveManager implements Subscriber {
 
     /**
      * EarlyWaveManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      */
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManagerWrapper $entityManager) {
         $this->injectEntityManager($entityManager);
     }
 
@@ -55,7 +55,6 @@ class EarlyWaveManager implements Subscriber {
      * @param array $values
      * @param EventEntity $eventEntity
      * @return EarlyWaveEntity
-     * @throws \Exception
      */
     public function createWaveFromWaveForm(array $values, EventEntity $eventEntity): EarlyWaveEntity {
         $em = $this->getEntityManager();
@@ -64,7 +63,19 @@ class EarlyWaveManager implements Subscriber {
         $earlyWaveEntity->setByValueArray($values);
         $em->persist($earlyWaveEntity);
         $em->flush();
-        $this->onEarlyWaveCreated();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->onEarlyWaveCreated($earlyWaveEntity);
+        return $earlyWaveEntity;
+    }
+
+    /**
+     * @param array $values
+     * @param EventEntity $eventEntity
+     * @return EarlyWaveEntity
+     */
+    public function editWaveFromWaveForm(array $values, EarlyWaveEntity $earlyWaveEntity): EarlyWaveEntity {
+        $earlyWaveEntity->setByValueArray($values);
+        $this->getEntityManager()->flush();
         return $earlyWaveEntity;
     }
 }

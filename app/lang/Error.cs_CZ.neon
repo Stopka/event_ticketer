@@ -17,3 +17,5 @@ Reservation:
     InvalidState: 'Jedna z přihlášek není ve stavu vhodném pro delegaci rezervace.'
     Empty: 'Chybí přihlášky.'
     NotFound: 'Rezervace nenalezena'
+Authentication:
+    InvalidCredentials: 'Neplatné přihlašovací údaje'

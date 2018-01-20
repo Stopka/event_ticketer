@@ -31,11 +31,18 @@ class EventPresenter extends BasePresenter {
 
     }
 
+    /**
+     * @throws \Nette\Application\AbortException
+     */
     public function actionAdd() {
         $this->redirect("edit");
     }
 
-    public function actionEdit($id = null) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEdit(?int $id = null) {
         $event = $this->eventDao->getEvent($id);
         if (!$event && $id) {
             $this->redirect('edit');

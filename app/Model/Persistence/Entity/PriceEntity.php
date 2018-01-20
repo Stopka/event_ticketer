@@ -21,6 +21,7 @@ class PriceEntity extends BaseEntity {
     use TIdentifierAttribute;
 
     public function __construct() {
+        parent::__construct();
         $this->priceAmounts = new ArrayCollection();
     }
 

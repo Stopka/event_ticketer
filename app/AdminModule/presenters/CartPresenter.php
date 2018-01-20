@@ -33,8 +33,11 @@ class CartPresenter extends BasePresenter {
         $this->cartApplicationsGridFactory = $cartApplicationsGridWrapperFactory;
     }
 
-
-    public function actionDefault($id) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(int $id) {
         $cart = $this->cartDao->getCart($id);
         if(!$cart){
             $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
@@ -46,7 +49,11 @@ class CartPresenter extends BasePresenter {
         $this->template->cart = $cart;
     }
 
-    public function actionEdit($id) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEdit(int $id) {
         $cart = $this->cartDao->getCart($id);
         if(!$cart){
             $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);

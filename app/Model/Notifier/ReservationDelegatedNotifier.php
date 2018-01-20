@@ -44,7 +44,7 @@ class ReservationDelegatedNotifier implements Subscriber {
      */
     public function sendNotification(ReservationEntity $reservationEntity): void {
         $emailService =$this->getEmailService();
-        $link = $emailService->generateLink('Front:Reservation:', ['id' => $reservationEntity->getId()]);
+        $link = $emailService->generateLink('Front:Reservation:', ['id' => $reservationEntity->getUid()]);
         $message = $emailService->createMessage();
         $message->addTo($reservationEntity->getEmail(), $reservationEntity->getFullName());
         $message->setSubject('Rezervace místa na ' . $reservationEntity->getEvent()->getName());

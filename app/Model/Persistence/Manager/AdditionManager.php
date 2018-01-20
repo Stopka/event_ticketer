@@ -12,7 +12,7 @@ use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use Kdyby\Doctrine\EntityManager;
+use App\Model\Persistence\EntityManagerWrapper;
 use Nette\SmartObject;
 
 class AdditionManager {
@@ -23,10 +23,10 @@ class AdditionManager {
 
     /**
      * AdditionManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      * @param CurrencyDao $currencyDao
      */
-    public function __construct(EntityManager $entityManager, CurrencyDao $currencyDao) {
+    public function __construct(EntityManagerWrapper $entityManager, CurrencyDao $currencyDao) {
         $this->injectEntityManager($entityManager);
         $this->currencyDao = $currencyDao;
     }
@@ -85,7 +85,6 @@ class AdditionManager {
 
     /**
      * @param AdditionEntity $additionEntity
-     * @throws \Exception
      */
     public function deleteAddition(AdditionEntity $additionEntity): void {
         $em = $this->getEntityManager();

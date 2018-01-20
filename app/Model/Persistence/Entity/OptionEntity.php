@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class OptionEntity extends BaseEntity implements ISortableEntity {
-    use TPositionAttribute, TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TPriceAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
+    use TIdentifierAttribute, TPositionAttribute, TNameAttribute, TCapacityAttribute, TPriceAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
 
     const AUTOSELECT_NONE = 0;
     const AUTOSELECT_ALWAYS = 1;
@@ -57,6 +57,7 @@ class OptionEntity extends BaseEntity implements ISortableEntity {
     private $choices;
 
     public function __construct() {
+        parent::__construct();
         $this->choices = new ArrayCollection();
     }
 

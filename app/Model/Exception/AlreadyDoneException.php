@@ -6,7 +6,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class AlreadyDoneException extends ApplicationException {
+class AlreadyDoneException extends TranslatedException {
 
 }
 

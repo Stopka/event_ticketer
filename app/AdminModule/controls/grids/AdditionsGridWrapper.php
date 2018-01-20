@@ -29,6 +29,7 @@ class AdditionsGridWrapper extends GridWrapper {
     /**
      * AdditionsGridWrapper constructor.
      * @param GridWrapperDependencies $gridWrapperDependencies
+     * @param AdditionManager $additionManager
      * @param AdditionDao $additionDao
      */
     public function __construct(GridWrapperDependencies $gridWrapperDependencies, AdditionManager $additionManager, AdditionDao $additionDao) {
@@ -44,10 +45,18 @@ class AdditionsGridWrapper extends GridWrapper {
         $this->eventEntity = $eventEntity;
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function loadModel(Grid $grid) {
         $grid->setModel($this->additionDao->getEventAdditionsGridModel($this->eventEntity));
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendAdditionColumns($grid);
@@ -86,7 +95,7 @@ class AdditionsGridWrapper extends GridWrapper {
                     'name' => $additionEntity->getName()
                 ]);
             });
-        $grid->addButton('add', "Presenter.Admin.Addition.Add.H1", "Addition:add", ['id' => $event->getId()])
+        $grid->addButton('add', "Presenter.Admin.Addition.Add.H1", "Addition:add", ['id' => $this->eventEntity->getId()])
             ->setIcon('fa fa-plus-circle');
     }
 
@@ -120,6 +129,10 @@ class AdditionsGridWrapper extends GridWrapper {
         $this->redirect('this');
     }
 
+    /**
+     * @param string $addditionId
+     * @throws \Nette\Application\AbortException
+     */
     public function onDeleteClicked(string $addditionId) {
         $addition = $this->additionDao->getAddition($addditionId);
         if (!$addition) {

@@ -16,7 +16,7 @@ use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\OptionEntity;
 use App\Model\Persistence\Entity\PriceAmountEntity;
 use App\Model\Persistence\Entity\PriceEntity;
-use Kdyby\Doctrine\EntityManager;
+use App\Model\Persistence\EntityManagerWrapper;
 use Nette\SmartObject;
 
 class OptionManager {
@@ -26,10 +26,11 @@ class OptionManager {
     private $currencyDao;
 
     /**
-     * EventManager constructor.
-     * @param EntityManager $entityManager
+     * OptionManager constructor.
+     * @param EntityManagerWrapper $entityManager
+     * @param CurrencyDao $currencyDao
      */
-    public function __construct(EntityManager $entityManager, CurrencyDao $currencyDao) {
+    public function __construct(EntityManagerWrapper $entityManager, CurrencyDao $currencyDao) {
         $this->injectEntityManager($entityManager);
         $this->currencyDao = $currencyDao;
     }
@@ -64,8 +65,8 @@ class OptionManager {
 
     /**
      * @param array $values
-     * @return AdditionEntity
-     * @throws \Exception
+     * @param AdditionEntity $additionEntity
+     * @return OptionEntity
      */
     public function createOptionFromEventForm(array $values, AdditionEntity $additionEntity): OptionEntity {
         $em = $this->getEntityManager();

@@ -39,13 +39,20 @@ class EarlyPresenter extends BasePresenter {
         $this->earlyDao = $earlyDao;
     }
 
-
-    public function actionDefault($id = null) {
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(string $id) {
         $this->redirect('register', $id);
     }
 
-    public function actionRegister($id = null) {
-        $early = $this->earlyDao->getReadyEarlyByHash($id);
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionRegister(string $id) {
+        $early = $this->earlyDao->getReadyEarlyByUid($id);
         if (!$early) {
             $this->flashTranslatedMessage('Error.Cart.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
@@ -61,8 +68,12 @@ class EarlyPresenter extends BasePresenter {
         $this->template->event = $event;
     }
 
-    public function actionSubstitute($id = null) {
-        $early = $this->earlyDao->getReadyEarlyByHash($id);
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionSubstitute(string $id) {
+        $early = $this->earlyDao->getReadyEarlyByUid($id);
         if (!$early) {
             $this->flashTranslatedMessage('Early.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');

@@ -137,6 +137,8 @@ class OptionsGridWrapper extends GridWrapper {
                     'name' => $optionEntity->getName()
                 ]);
             });
+        $grid->addButton('add', 'Presenter.Admin.Option.Add.H1', 'Option:add', [$this->additionEntity->getId()])
+            ->setIcon('fa fa-plus-circle');
     }
 
     /**

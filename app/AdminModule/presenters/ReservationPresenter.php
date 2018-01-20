@@ -28,11 +28,11 @@ class ReservationPresenter extends BasePresenter {
     }
 
     /**
-     * @param string $id event id
-     * @param string[] $ids applications
+     * @param int $id event id
+     * @param int[] $ids applications
      * @throws AbortException
      */
-    public function actionDelegate($id, array $ids = []) {
+    public function actionDelegate(int $id, array $ids = []) {
         $event = $this->eventDao->getEvent($id);
         if (!$event) {
             $this->flashTranslatedMessage("Error.Event.NotFound", self::FLASH_MESSAGE_TYPE_ERROR);

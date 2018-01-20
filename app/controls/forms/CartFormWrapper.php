@@ -160,14 +160,14 @@ class CartFormWrapper extends FormWrapper {
             $form->setDefaults($this->cart->getValueArray());
             foreach ($this->cart->getApplications() as $application){
                 /** @var Container $childContainer */
-                $childContainer = $form['children'][$application->getIdAlphaNumeric()]['child'];
+                $childContainer = $form['children'][$application->getId()]['child'];
                 $childContainer->setDefaults($application->getValueArray());
                 /** @var Container $commonContainer */
                 $commonContainer = $form['commons'];
                 $commonContainer->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice){
                     /** @var Container $additionsContainer */
-                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['additions'];
+                    $additionsContainer = $form['children'][$application->getId()]['additions'];
                     $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);
@@ -178,14 +178,14 @@ class CartFormWrapper extends FormWrapper {
             $form->setDefaults($this->reservation->getValueArray());
             foreach ($this->reservation->getApplications() as $application) {
                 /** @var Container $childContainer */
-                $childContainer = $form['children'][$application->getIdAlphaNumeric()]['child'];
+                $childContainer = $form['children'][$application->getId()]['child'];
                 $childContainer->setDefaults($application->getValueArray());
                 /** @var Container $commonContainer */
                 $commonContainer = $form['commons'];
                 $commonContainer->setDefaults($application->getValueArray());
                 foreach ($application->getChoices() as $choice) {
                     /** @var Container $additionsContainer */
-                    $additionsContainer = $form['children'][$application->getIdAlphaNumeric()]['additions'];
+                    $additionsContainer = $form['children'][$application->getId()]['additions'];
                     $additionsContainer->setDefaults([
                         $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
                     ]);

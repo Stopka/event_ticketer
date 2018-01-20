@@ -8,9 +8,7 @@ use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use App\FrontModule\Controls\IOccupancyControlFactory;
 use App\FrontModule\Controls\OccupancyControl;
-use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\EventDao;
-use App\Model\Persistence\Dao\OptionDao;
 
 
 class EventPresenter extends BasePresenter {
@@ -30,8 +28,6 @@ class EventPresenter extends BasePresenter {
     /**
      * EventPresenter constructor.
      * @param EventDao $additionDao
-     * @param ApplicationDao $applicationDao
-     * @param OptionDao $optionDao
      * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
      * @param IOccupancyControlFactory $occupancyControlFactory
@@ -44,18 +40,39 @@ class EventPresenter extends BasePresenter {
         $this->occupancyControlFactory = $occupancyControlFactory;
     }
 
-
-    public function actionDefault($id = null){
-        $this->redirect('register',$id);
+    /**
+     * @param int|null $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(?int $id = null) {
+        if (!$id) {
+            $events = $this->eventDao->getPublicAvailibleEvents();
+            $eventsCount = count($events);
+            if ($eventsCount < 1) {
+                $this->flashTranslatedMessage("Presenter.Front.Event.Default.Message.NoEvents", self::FLASH_MESSAGE_TYPE_WARNING);
+            }
+            if ($eventsCount > 1) {
+                $this->flashTranslatedMessage("Presenter.Front.Event.Default.Message.MultipleEvents", self::FLASH_MESSAGE_TYPE_INFO);
+            }
+            if ($eventsCount !== 1) {
+                $this->redirect('Homepage:default');
+            }
+            $id = $events[0]->getId();
+        }
+        $this->redirect('register', $id);
     }
 
+    /**
+     * @param null $id
+     * @throws \Nette\Application\AbortException
+     */
     public function actionRegister($id = null) {
         $event = $this->eventDao->getEvent($id);
-        if(!$event||!$event->isActive()){
-            $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
+        if (!$event || !$event->isActive()) {
+            $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
-        if(!$event->isStarted()){
+        if (!$event->isStarted()) {
             $this->flashTranslatedMessage('Error.Event.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
@@ -69,10 +86,14 @@ class EventPresenter extends BasePresenter {
         $this->template->event = $event;
     }
 
+    /**
+     * @param null $id
+     * @throws \Nette\Application\AbortException
+     */
     public function actionSubstitute($id = null) {
         $event = $this->eventDao->getPublicAvailibleEvent($id);
-        if(!$event){
-            $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
+        if (!$event) {
+            $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
         if (!$event->isCapacityFull()) {
@@ -87,7 +108,7 @@ class EventPresenter extends BasePresenter {
     /**
      * @return CartFormWrapper
      */
-    protected function createComponentCartForm(){
+    protected function createComponentCartForm() {
         return $this->cartFormWrapperFactory->create();
     }
 
@@ -101,26 +122,30 @@ class EventPresenter extends BasePresenter {
     /**
      * @return \App\FrontModule\Controls\OccupancyControl
      */
-    protected function createComponentOccupancy(){
+    protected function createComponentOccupancy() {
         return $this->occupancyControlFactory->create();
     }
 
-    public function renderOccupancy($id = null){
-        if(!$id){
+    /**
+     * @param null|int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderOccupancy(?int $id = null) {
+        if (!$id) {
             $events = $this->eventDao->getPublicAvailibleEvents();
-            if($events){
-                $this->redirect('this',$events[0]->getId());
+            if ($events) {
+                $this->redirect('this', $events[0]->getId());
                 return;
             }
             $events = $this->eventDao->getPublicFutureEvents();
-            if($events){
-                $this->redirect('this',$events[0]->getId());
+            if ($events) {
+                $this->redirect('this', $events[0]->getId());
                 return;
             }
         }
         $event = $this->eventDao->getEvent($id);
         $this->template->event = $event;
-        if($event){
+        if ($event) {
             /** @var OccupancyControl $occupancy */
             $occupancy = $this->getComponent('occupancy');
             $occupancy->setEvent($event);

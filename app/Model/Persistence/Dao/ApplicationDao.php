@@ -102,7 +102,7 @@ class ApplicationDao extends EntityDao {
         ]);
     }
 
-    public function getApplication(?string $id): ?ApplicationEntity {
+    public function getApplication(?int $id): ?ApplicationEntity {
         /** @var ApplicationEntity $result */
         $result = $this->get($id);
         return $result;

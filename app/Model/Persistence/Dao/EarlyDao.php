@@ -20,21 +20,21 @@ class EarlyDao extends EntityDao {
     }
 
     /**
-     * @param null|string $id
+     * @param null|int $id
      * @return EarlyEntity|null
      */
-    public function getEarly(?string $id): ?EarlyEntity {
+    public function getEarly(?int $id): ?EarlyEntity {
         /** @var EarlyEntity $result */
         $result = $this->get($id);
         return $result;
     }
 
     /**
-     * @param null|string $id
+     * @param string $uid
      * @return EarlyEntity|null
      */
-    public function getReadyEarly(?string $id): ?EarlyEntity {
-        $early = $this->getEarly($id);
+    public function getReadyEarlyByUid(string $uid): ?EarlyEntity {
+        $early = $this->getRepository()->findOneBy(['uid' => $uid]);
         if ($early && $early->isReadyToRegister()) {
             return $early;
         }
@@ -47,7 +47,7 @@ class EarlyDao extends EntityDao {
      */
     public function getEventEarliesGridModel(?EventEntity $eventEntity): IDataSource {
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->whereCriteria(['a.earlyWave.event'=>$eventEntity]);
+        $qb->whereCriteria(['a.earlyWave.event' => $eventEntity]);
         return new Doctrine($qb);
     }
 

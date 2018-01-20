@@ -26,8 +26,11 @@ class SubstitutePresenter extends BasePresenter {
         $this->eventDao = $additionDao;
     }
 
-
-    public function actionDefault($id) {
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(int $id) {
         $event = $this->eventDao->getEvent($id);
         if(!$event){
             $this->flashTranslatedMessage("Error.Event.NotFound",self::FLASH_MESSAGE_TYPE_ERROR);

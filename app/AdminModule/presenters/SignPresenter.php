@@ -30,6 +30,9 @@ class SignPresenter extends BasePresenter {
 
     }
 
+    /**
+     * @throws Nette\Application\AbortException
+     */
     public function actionIn(){
         if($this->getUser()->isLoggedIn()){
             if($this->backlink){
@@ -41,15 +44,16 @@ class SignPresenter extends BasePresenter {
         }
     }
 
-
+    /**
+     * @throws Nette\Application\AbortException
+     */
     public function actionOut() {
         $this->getUser()->logout();
         $this->redirect('Homepage:');
     }
 
     /**
-     * Sign-in form factory.
-     * @return Nette\Application\UI\Form
+     * @return \App\AdminModule\Controls\Forms\SignInFormWrapper
      */
     protected function createComponentSignInForm() {
         return $this->signInFromWrapperFactory->create();

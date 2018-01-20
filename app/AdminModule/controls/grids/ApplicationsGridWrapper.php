@@ -80,9 +80,6 @@ class ApplicationsGridWrapper extends GridWrapper {
         $grid->setOperation([
             self::OPERATION_DELEGATE => "Presenter.Admin.Reservation.Delegate.H1"
         ], function ($operation, $application_ids) {
-            array_walk($application_ids, function (string &$id) {
-                $id = ApplicationEntity::getIdFromAplhaNumeric($id);
-            });
             switch ($operation) {
                 case self::OPERATION_DELEGATE:
                     $this->getPresenter()->redirect('Reservation:delegate', [
@@ -122,7 +119,7 @@ class ApplicationsGridWrapper extends GridWrapper {
     }
 
     protected function appendApplicationColumns(Grid $grid) {
-        $grid->addColumnNumber('number', 'Attribute.Number')
+        $grid->addColumnNumber('id', 'Attribute.Id')
             ->setSortable()
             ->setDefaultSort(IOrder::ORDER_ASC)
             ->setFilterNumber();

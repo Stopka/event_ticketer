@@ -11,6 +11,7 @@ namespace App\AdminModule\Controls\Forms;
 
 use App\Controls\Forms\Form;
 use App\Controls\Forms\FormWrapperDependencies;
+use App\Model\Persistence\Manager\AdministratorManager;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
@@ -20,9 +21,13 @@ class SignInFormWrapper extends FormWrapper {
     /** @var  User */
     private $user;
 
-    public function __construct(FormWrapperDependencies $formWrapperDependencies, User $user) {
+    /** @var AdministratorManager */
+    private $administratorManager;
+
+    public function __construct(FormWrapperDependencies $formWrapperDependencies, User $user, AdministratorManager $administratorManager) {
         parent::__construct($formWrapperDependencies);
         $this->user = $user;
+        $this->administratorManager = $administratorManager;
     }
 
 
@@ -39,6 +44,11 @@ class SignInFormWrapper extends FormWrapper {
         $this->appendSubmitControls($form,'Form.Action.SignIn',[$this,'loginClicked']);
     }
 
+    /**
+     * @param SubmitButton $button
+     * @throws \Nette\Application\AbortException
+     * @throws \Exception
+     */
     public function loginClicked(SubmitButton $button){
         $values = $button->getForm()->getValues();
         $user = $this->user;
@@ -47,7 +57,12 @@ class SignInFormWrapper extends FormWrapper {
             $user->login($values['username'],$values['password']);
             $this->getPresenter()->flashTranslatedMessage("Form.SignIn.Message.Success",self::FLASH_MESSAGE_TYPE_SUCCESS);
         }catch (AuthenticationException $e){
-            throw new \App\Model\Exception\AuthenticationException($e->getMessage(),$e);
+            $created = $this->administratorManager->checkFirstAdministrator($values['username'], $values['password']);
+            if ($created) {
+                $this->getPresenter()->flashTranslatedMessage("Form.SignIn.Message.AdministratorCreated", self::FLASH_MESSAGE_TYPE_INFO);
+                return;
+            }
+            throw new \App\Model\Exception\AuthenticationException("Error.Authentication.InvalidCredentials", null, [], 0, $e);
         }
         $this->redirect('this');
     }

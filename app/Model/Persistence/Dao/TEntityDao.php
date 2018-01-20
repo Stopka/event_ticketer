@@ -9,7 +9,7 @@
 namespace App\Model\Persistence\Dao;
 
 use App\Model\Persistence\Entity\BaseEntity;
-use Kdyby\Doctrine\EntityManager;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityRepository;
 
 trait TEntityDao {
@@ -18,7 +18,7 @@ trait TEntityDao {
      */
     abstract protected function getEntityClass(): string;
 
-    abstract protected function getEntityManager(): EntityManager;
+    abstract protected function getEntityManager(): EntityManagerWrapper;
 
     /**
      * @return EntityRepository
@@ -28,10 +28,11 @@ trait TEntityDao {
     }
 
     /**
-     * @param string|null $id
-     * @return null|BaseEntity
+     * @param int|null $id
+     * @return BaseEntity|null
+     * @throws \App\Model\Exception\ORMException
      */
-    protected function get(?string $id): ?BaseEntity {
+    protected function get(?int $id): ?BaseEntity {
         if (!isset($id)) {
             return NULL;
         }

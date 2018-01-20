@@ -6,7 +6,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class EmptyException extends ApplicationException {
+class EmptyException extends TranslatedException {
 
 }
 

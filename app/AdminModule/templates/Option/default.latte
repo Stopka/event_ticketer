@@ -1,7 +1,5 @@
 {layout "../@additionEdit.latte"}
 {block subcontent}
     <h2><i class="fa fa-list-ul"></i> {_'Entity.Plural.Option'}</h2>
-    <p>
-        <a n:href="Option:add,$addition->getId()"><i class="fa fa-plus-circle"></i> {_'Presenter.Admin.Option.Add.H1'}</a>
-    </p>
-    {control optionsGrid}
+
+{control optionsGrid}

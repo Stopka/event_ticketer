@@ -11,13 +11,44 @@ namespace App\Model\Persistence\Manager;
 
 use App\Model\Persistence\Attribute\ISortableEntity;
 use App\Model\Persistence\Attribute\TPositionAttribute;
+use App\Model\Persistence\Dao\IOrder;
+use Kdyby\Doctrine\EntityRepository;
 
 class PositionSorter {
 
+    /** @var EntityRepository */
+    private $entityRepository;
+
+    /** @var int */
+    private $lastPosition;
+
+    public function __construct() {
+    }
+
     /**
-     * @param TPositionAttribute[]|\Traversable $entities
+     * @param TPositionAttribute $positionable
+     * @return int
+     */
+    public function setEndPosition(TPositionAttribute $positionable): int {
+        if (!$this->lastPosition) {
+            /** @var TPositionAttribute $last */
+            $last = $this->entityRepository->findOneBy([], ['position' => IOrder::ORDER_DESC]);
+            if (!$last) {
+                $this->lastPosition = 0;
+            } else {
+                $this->lastPosition = $last->getPosition();
+            }
+        }
+        $newPosition = $this->lastPosition++;
+        $positionable->setPosition($newPosition);
+        return $newPosition;
+    }
+
+    /**
+     * @param TPositionAttribute[]|iterable $entities
      */
     public function recalculatePositions(iterable $entities): void{
+        $this->lastPosition = null;
         $position = 1;
         foreach ($entities as $entity){
             $entity->setPosition($position);
@@ -27,9 +58,10 @@ class PositionSorter {
 
     /**
      * @param ISortableEntity $item
-     * @param ISortableEntity[]|\Traversable $entities
+     * @param ISortableEntity[]|iterable $entities
      */
     public function moveEntityUp(ISortableEntity $item, iterable $entities): void{
+        $this->lastPosition = null;
         $position = 1;
         /** @var ISortableEntity $previousEntity */
         $previousEntity = null;
@@ -47,9 +79,10 @@ class PositionSorter {
 
     /**
      * @param ISortableEntity $item
-     * @param ISortableEntity[]|\Traversable $entities
+     * @param ISortableEntity[]|iterable $entities
      */
     public function moveEntityDown(ISortableEntity $item, iterable $entities): void{
+        $this->lastPosition = null;
         $position = 1;
         $shift=0;
         foreach ($entities as $entity){
@@ -68,9 +101,10 @@ class PositionSorter {
 
     /**
      * @param ISortableEntity $item
-     * @param ISortableEntity[]|\Traversable $entities
+     * @param ISortableEntity[]|iterable $entities
      */
     public function moveEntityToEnd(ISortableEntity $item, iterable $entities): void{
+        $this->lastPosition = null;
         $position = 1;
         foreach ($entities as $entity){
             if($item->getID() == $entity->getID()){
@@ -85,9 +119,10 @@ class PositionSorter {
 
     /**
      * @param ISortableEntity $item
-     * @param ISortableEntity[]|\Traversable $entities
+     * @param ISortableEntity[]|iterable $entities
      */
     public function moveEntityToStart(ISortableEntity $item, iterable $entities): void{
+        $this->lastPosition = null;
         $item->setPosition(1);
         $position = 2;
         foreach ($entities as $entity){

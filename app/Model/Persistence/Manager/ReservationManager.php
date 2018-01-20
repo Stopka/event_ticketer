@@ -8,6 +8,7 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\ReservationEntity;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
@@ -32,7 +33,7 @@ class ReservationManager {
      * @param ReservationDao $reservationDao
      * @param ApplicationManager $applicationManager
      */
-    public function __construct(EntityManager $entityManager, ReservationDao $reservationDao, ApplicationManager $applicationManager) {
+    public function __construct(EntityManagerWrapper $entityManager, ReservationDao $reservationDao, ApplicationManager $applicationManager) {
         $this->injectEntityManager($entityManager);
         $this->reservationDao = $reservationDao;
         $this->applicationManager = $applicationManager;

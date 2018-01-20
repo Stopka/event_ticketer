@@ -6,7 +6,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class InvalidInputException extends ApplicationException {
+class InvalidInputException extends TranslatedException {
 
 }
 

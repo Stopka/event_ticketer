@@ -10,7 +10,7 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\ChoiceEntity;
-use Kdyby\Doctrine\EntityManager;
+use App\Model\Persistence\EntityManagerWrapper;
 use Nette\SmartObject;
 
 /**
@@ -33,13 +33,13 @@ class ChoiceManager {
 
     /**
      * ChoiceManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      * @param ChoiceDao $choiceDao
      * @param AdditionDao $additionDao
      * @param OptionDao $optionDao
      */
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerWrapper $entityManager,
         ChoiceDao $choiceDao,
         AdditionDao $additionDao,
         OptionDao $optionDao
@@ -120,8 +120,7 @@ class ChoiceManager {
     }
 
     private function updateVisibleAdditions(array $values, ApplicationEntity $application) {
-        foreach ($values as $additionIdAlphaNumeric => $optionIds) {
-            $additionId = AdditionEntity::getIdFromAplhaNumeric($additionIdAlphaNumeric);
+        foreach ($values as $additionId => $optionIds) {
             if (!is_array($optionIds)) {
                 $optionIds = [$optionIds];
             }

@@ -114,7 +114,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
         }
         $wave = $early->getEarlyWave();
         $emailService = $this->getEmailService();
-        $link = $emailService->generateLink('Front:Early:', ['id' => $early->getId()]);
+        $link = $emailService->generateLink('Front:Early:', ['id' => $early->getUid()]);
         $message = $emailService->createMessage();
         $message->addTo($early->getEmail())
             ->setSubject('Přednostní výdej přihlášek')

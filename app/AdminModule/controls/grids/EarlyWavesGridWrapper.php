@@ -33,10 +33,18 @@ class EarlyWavesGridWrapper extends GridWrapper {
          $this->eventEntity = $eventEntity;
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function loadModel(Grid $grid) {
         $grid->setModel($this->earlyWaveDao->getEventEarlyWavesGridModel($this->eventEntity));
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendEarlyWaveColumns($grid);
@@ -60,5 +68,7 @@ class EarlyWavesGridWrapper extends GridWrapper {
     protected function appendActions(Grid $grid) {
         $grid->addActionHref('edit','Form.Action.Edit', 'Early:edit')
             ->setIcon('fa fa-pencil');
+        $grid->addButton('add', 'Presenter.Admin.EarlyWave.Add.H1', 'EarlyWave:add', [$this->eventEntity->getId()])
+            ->setIcon('fa fa-plus-circle');
     }
 }

@@ -27,19 +27,19 @@ class ReservationPresenter extends BasePresenter {
     }
 
     /**
-     * @param null $id
+     * @param string $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionDefault($id = null) {
+    public function actionDefault(string $id) {
         $this->redirect('register', $id);
     }
 
     /**
-     * @param null $id
+     * @param string $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionRegister($id = null) {
-        $reservation = $this->reservationDao->getRegisterReadyReservation($id);
+    public function actionRegister(string $id) {
+        $reservation = $this->reservationDao->getRegisterReadyReservationByUid($id);
         if (!$reservation) {
             $this->flashTranslatedMessage('Error.Reservation.NotFound', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');

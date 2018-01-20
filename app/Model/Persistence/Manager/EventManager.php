@@ -16,7 +16,7 @@ use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\EventEntity;
-use Kdyby\Doctrine\EntityManager;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Events\Subscriber;
 use Nette\SmartObject;
 
@@ -28,10 +28,10 @@ class EventManager implements Subscriber {
 
     /**
      * EventManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      * @param ApplicationDao $applicationDao
      */
-    public function __construct(EntityManager $entityManager, ApplicationDao $applicationDao) {
+    public function __construct(EntityManagerWrapper $entityManager, ApplicationDao $applicationDao) {
         $this->injectEntityManager($entityManager);
         $this->applicationDao = $applicationDao;
     }
@@ -93,7 +93,6 @@ class EventManager implements Subscriber {
     /**
      * @param EventEntity|null $eventEntity
      * @param int $state
-     * @throws \Exception
      */
     public function setEventState(?EventEntity $eventEntity, int $state = EventEntity::STATE_ACTIVE): void {
         if(!$eventEntity){

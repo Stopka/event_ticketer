@@ -31,10 +31,10 @@ class AdditionDao extends EntityDao {
     }
 
     /**
-     * @param null|string $id
+     * @param null|int $id
      * @return AdditionEntity|null
      */
-    public function getAddition(?string $id): ?AdditionEntity {
+    public function getAddition(?int $id): ?AdditionEntity {
         /** @var AdditionEntity $result */
         $result = $this->get($id);
         return $result;
@@ -42,6 +42,7 @@ class AdditionDao extends EntityDao {
 
     /**
      * @param EventEntity $event
+     * @param string $place
      * @return AdditionEntity[]
      */
     public function getEventAdditionsHiddenIn(EventEntity $event, string $place): array {

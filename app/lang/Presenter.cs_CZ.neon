@@ -38,6 +38,10 @@ Front:
             EventFull: 'Všechny přihlášky již byly vydány. Může se stát, že se nějaká místa ještě uvolní. Máte-li zájem se uscházet o uvolněná místa, registrujte se mezi náhradníky. O uvolněném místě vás budme informovat emailem.'
     Event:
         Occupancy:
+        Default:
+            Message:
+                MultipleEvents: 'K dispozici je několik událostí'
+                NoEvents: 'K dispozici nejsou žádné události'
         Register:
             H2: 'Registrace'
         Substitute:
@@ -48,9 +52,10 @@ Front:
             H1: 'Události na které lze získat přihlášku'
             EventCapacityLeft: 'Zbývá %count% volná přihláška|Zbývají %count% volné přihlášky|Zbývá %count% volných přihlášek'
             NoEvents: 'Aktuálně nejsou žádné aktivní události, do kterých by se dalo registrovat'
-            FutureEventsH2: 'Chystané události'
-            FutureEvents: 'Události, které budou teprve zpřístupněny veřejnosti'
-            StartDate: 'K dispozici od %start_date%'
+            FutureEvents:
+                H2: 'Chystané události'
+                Description: 'Události, které budou teprve zpřístupněny veřejnosti'
+                StartDate: 'K dispozici od %start_date%'
     Substitute:
         Register:
             H1: 'Registrace náhradníka'
@@ -58,6 +63,7 @@ Front:
         Default:
             H1: 'Objednávka #%cart_id%'
             EarlyLabel: 'Přednostně na jméno'
+            NoEvents: 'Nejsou zveřejněny žádné události'
     Reservation:
         Register:
             H1: 'Registrace rezervovaného místa'

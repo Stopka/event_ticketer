@@ -11,8 +11,9 @@
                     <span n:if="!$event"><i class="fa fa-plus-circle"></i> {_'Presenter.Admin.Event.Add.H1'}</span>
                 </a>
             </li>
-            <li n:class="$presenter->isLinkCurrent('Addition:default')?active, !$event?disabled">
-                <a n:href="Addition:default,$eventId">
+            <li n:class="$presenter->isLinkCurrent('Addition:default')?active">
+                <span n:if="!$event"><i class="fa fa-archive"></i> {_'Entity.Plural.Addition'}</span>
+                <a n:if="$event" n:href="Addition:default,$event->getId()">
                     <span><i class="fa fa-archive"></i> {_'Entity.Plural.Addition'}</span>
                 </a>
             </li>

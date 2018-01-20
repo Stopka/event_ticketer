@@ -33,8 +33,9 @@ Substitute:
         Overdue: 'Prošlý'
         Ordered: 'Registrovaný'
 ForState:
-        Occupied: 'Závazné obsazení'
-        Fulfilled: 'Celkové dokončení'
+    None: Nic
+    Occupied: 'Závazné obsazení'
+    Fulfilled: 'Celkové dokončení'
 OccupancyIcon:
     None: Žádná
     Bus: Autobus

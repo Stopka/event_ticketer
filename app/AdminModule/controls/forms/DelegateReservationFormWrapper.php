@@ -90,7 +90,7 @@ class DelegateReservationFormWrapper extends FormWrapper {
     protected function appendApplicationList(Form $form) {
         $list = [];
         foreach ($this->applications as $application) {
-            $list[$application->getId()] = $application->getNumber();
+            $list[$application->getId()] = $application->getId();
         }
         $form->addCheckboxList('applications', 'Entity.Plural.Application', $list)
             ->setDefaultValue(array_keys($list))

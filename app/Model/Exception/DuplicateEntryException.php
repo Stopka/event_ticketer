@@ -6,7 +6,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class DuplicateEntryException extends ApplicationException {
+class DuplicateEntryException extends TranslatedException {
 
 }
 

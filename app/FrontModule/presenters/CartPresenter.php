@@ -21,8 +21,11 @@ class CartPresenter extends BasePresenter {
         $this->cartApplicationsGridWrapperFactory = $cartApplicationsGridWrapperFactory;
     }
 
-
-    public function actionDefault($id = null) {
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(string $id) {
         $cart = $this->cartDao->getViewableCart($id);
         if(!$cart){
             $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);

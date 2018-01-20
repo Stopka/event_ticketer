@@ -9,7 +9,6 @@
 namespace App\Model\Persistence\Dao;
 
 
-use App\Model\Facades\EntityFacade;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OptionEntity;
@@ -23,10 +22,10 @@ class OptionDao extends EntityDao {
     }
 
     /**
-     * @param null|string $id
+     * @param null|int $id
      * @return OptionEntity|null
      */
-    public function getOption(?string $id): ?OptionEntity{
+    public function getOption(?int $id): ?OptionEntity {
         /** @var OptionEntity $result */
         $result = $this->get($id);
         return $result;

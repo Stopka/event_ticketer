@@ -8,8 +8,6 @@
 
 namespace App\Model\Persistence\Dao;
 
-
-use App\Model\Facades\EntityFacade;
 use App\Model\Persistence\Entity\EarlyWaveEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use Grido\DataSources\Doctrine;
@@ -21,7 +19,7 @@ class EarlyWaveDao extends EntityDao {
         return EarlyWaveEntity::class;
     }
 
-    public function getEarlyWave(?string $id): ?EarlyWaveEntity{
+    public function getEarlyWave(?int $id): ?EarlyWaveEntity {
         /** @var EarlyWaveEntity $result */
         $result = $this->get($id);
         return $result;

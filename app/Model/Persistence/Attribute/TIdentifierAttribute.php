@@ -8,16 +8,24 @@
 
 namespace App\Model\Persistence\Attribute;
 
-use Nette\InvalidArgumentException;
+use Doctrine\ORM\Mapping as ORM;
 
 trait TIdentifierAttribute {
-    use \Kdyby\Doctrine\Entities\Attributes\UniversallyUniqueIdentifier;
+    use \Kdyby\Doctrine\Entities\Attributes\Identifier;
+
+    /**
+     * @ORM\Column(type="string",unique=true)
+     * @var string
+     */
+    private $uid;
+
 
     /**
      * Resets id to null
      */
     protected function resetId(): void {
         $this->id = null;
+        $this->uid = self::generateUid();
     }
 
     /**
@@ -32,17 +40,18 @@ trait TIdentifierAttribute {
         return str_replace("-", "", $this->getId());
     }
 
-    public static function getIdFromAplhaNumeric(?string $stringId): ?string {
-        if($stringId === null){
-            return null;
-        }
-        if (!preg_match("/[a-z0-9]{12}/", $stringId)) {
-            throw new InvalidArgumentException("String '$stringId' is not a valid alpha numeric id!");
-        }
-        return substr($stringId,0,8).'-'.
-            substr($stringId,8,4).'-'.
-            substr($stringId,8+4,4).'-'.
-            substr($stringId,8+4+4,4).'-'.
-            substr($stringId,8+4+4+4, 12);
+    /**
+     * @return string
+     */
+    public function getUid(): string {
+        return $this->uid;
+    }
+
+    public static function generateUid(): string {
+        $random = random_int(0, 1000000000);
+        $hash = hash('sha256', $random);
+        $string = substr($hash, 0, 16);
+        $prefix = $string . '.';
+        return uniqid($prefix, true);
     }
 }

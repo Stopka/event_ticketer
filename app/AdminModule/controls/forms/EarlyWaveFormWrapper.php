@@ -76,6 +76,7 @@ class EarlyWaveFormWrapper extends FormWrapper {
             ->setOption($form::OPTION_KEY_LOGICAL, true);
         $form->addText('name', 'Attribute.Name')
             ->setRequired(false);
+        /** @noinspection PhpUndefinedMethodInspection */
         $form->addDate('startDate', 'Attribute.Event.StartDate', DateInput::TYPE_DATE)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.EarlyWave.Description.StartDate')
             ->setDefaultValue(new \DateTime())
@@ -85,17 +86,18 @@ class EarlyWaveFormWrapper extends FormWrapper {
 
     /**
      * @param SubmitButton $button
+     * @throws \Nette\Application\AbortException
      */
     protected function submitClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
         $values = $this->preprocessData($values);
         if ($this->earlyWaveEntity) {
-            $this->earlyWaveManager->editEarlyFromEarlyForm($values, $this->earlyWaveEntity, $this->eventEntity);
+            $this->earlyWaveManager->editWaveFromWaveForm($values, $this->earlyWaveEntity);
             $this->getPresenter()->flashTranslatedMessage('Form.EarlyWave.Message.Edit.Success', 'success');
             $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
         } else {
-            $addition = $this->earlyWaveManager->createEarlyFromEarlyForm($values, $this->eventEntity);
+            $this->earlyWaveManager->createWaveFromWaveForm($values, $this->eventEntity);
             $this->getPresenter()->flashTranslatedMessage('Form.EarlyWave.Message.Create.Success', 'success');
             $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
         }

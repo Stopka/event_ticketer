@@ -66,6 +66,7 @@ services:
     - App\Model\FileStorage(%appDir%/files)
     - App\Model\ApplicationPdfManager
     - App\Model\DateFormatter(%dateFormat.date%,%dateFormat.time%,%dateFormat.dateTime%)
+    - App\Model\Persistence\EntityManagerWrapper
     - App\Model\Persistence\Dao\AdditionDao
     - App\Model\Persistence\Dao\EventDao
     - App\Model\Persistence\Dao\EarlyDao
@@ -88,6 +89,7 @@ services:
     - App\Model\Persistence\Manager\EarlyManager
     - App\Model\Persistence\Manager\ReservationManager
     - App\Model\Persistence\Manager\ApplicationManager
+    - App\Model\Persistence\Manager\AdministratorManager
     -
         class: App\Model\Persistence\Manager\EarlyWaveManager
         tags: [kdyby.subscriber]
@@ -113,6 +115,12 @@ services:
         setup:
             - addIcon('bed')
             - addIcon('bus')
+    -
+        class: App\Console\CronCommand
+        tags: [kdyby.console.command]
+    -
+        class: App\Console\GenerateUidCommand
+        tags: [kdyby.console.command]
     router: App\RouterFactory::createRouter
 
 extensions:

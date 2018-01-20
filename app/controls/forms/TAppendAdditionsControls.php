@@ -128,12 +128,12 @@ trait TAppendAdditionsControls {
             return;
         }
         if ($addition->getMinimum() !== 1 || $addition->getMaximum() > 1 || $addition->getMaximum() == count($options)) {
-            $control = $container->addCheckboxList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
+            $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
                 ->setRequired($addition->getMinimum() > 0)
                 ->setTranslator()
                 ->setDefaultValue($preselectedOptions);
         } else {
-            $control = $container->addRadioList($addition->getIdAlphaNumeric(), $addition->getName(), $options)
+            $control = $container->addRadioList($addition->getId(), $addition->getName(), $options)
                 ->setRequired()
                 ->setTranslator();
             if ($preselectedOptions) {

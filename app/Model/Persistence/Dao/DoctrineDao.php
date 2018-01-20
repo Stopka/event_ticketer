@@ -9,12 +9,12 @@
 namespace App\Model\Persistence\Dao;
 
 
-use Kdyby\Doctrine\EntityManager;
+use App\Model\Persistence\EntityManagerWrapper;
 
 abstract class DoctrineDao extends Dao {
     use TDoctrineEntityManager;
 
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManagerWrapper $entityManager) {
         $this->injectEntityManager($entityManager);
     }
 }

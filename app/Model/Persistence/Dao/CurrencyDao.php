@@ -9,6 +9,7 @@
 namespace App\Model\Persistence\Dao;
 
 use App\Model\Exception\EmptyException;
+use App\Model\Exception\ORMException;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use Grido\DataSources\Doctrine;
 use Grido\DataSources\IDataSource;
@@ -20,17 +21,17 @@ class CurrencyDao extends EntityDao {
     }
 
     /**
-     * @param null|string $currencyId
+     * @param null|int $currencyId
      * @return CurrencyEntity|null
      */
-    public function getCurrency(?string $currencyId): ?CurrencyEntity{
+    public function getCurrency(?int $currencyId): ?CurrencyEntity {
         /** @var CurrencyEntity $result */
         $result = $this->get($currencyId);
         return $result;
     }
 
     /**
-     * @param null|string $currencyId
+     * @param null|string $currencyCode
      * @return CurrencyEntity|null
      */
     public function getCurrencyByCode(?string $currencyCode): ?CurrencyEntity{
@@ -67,8 +68,9 @@ class CurrencyDao extends EntityDao {
     }
 
     /**
-     * @param CurrencyEntity $currency
-     * @throws EmptyException
+     * @param CurrencyEntity|null $currency
+     * @return CurrencyEntity
+     * @throws ORMException
      */
     public function setDefaultCurrency(?CurrencyEntity $currency = null):CurrencyEntity{
         /** @var CurrencyEntity[] $currencies */

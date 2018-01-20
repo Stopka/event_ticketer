@@ -30,9 +30,6 @@ class AdditionFormWrapper extends FormWrapper {
     /** @var  AdditionEntity */
     private $additionEntity;
 
-    /** @var int */
-    private $counter = 0;
-
     /** @var  OccupancyIcons */
     private $occupancyIcons;
 
@@ -40,9 +37,11 @@ class AdditionFormWrapper extends FormWrapper {
     private $currecyDao;
 
     /**
-     * EventFormWrapper constructor.
+     * AdditionFormWrapper constructor.
+     * @param FormWrapperDependencies $formWrapperDependencies
      * @param AdditionManager $additionManager
-     * @param $occupancyIcons OccupancyIcons
+     * @param OccupancyIcons $occupancyIcons
+     * @param CurrencyDao $currencyDao
      */
     public function __construct(FormWrapperDependencies $formWrapperDependencies, AdditionManager $additionManager, OccupancyIcons $occupancyIcons,CurrencyDao $currencyDao) {
         parent::__construct($formWrapperDependencies);
@@ -96,7 +95,7 @@ class AdditionFormWrapper extends FormWrapper {
         $form->addText('name', 'Attribute.Name')
             ->setRequired();
         $form->addSelect('requiredForState', 'Attribute.Addition.RequiredForState', [
-            null => 'Nic',
+            null => 'Value.ForState.None',
             ApplicationEntity::STATE_OCCUPIED => 'Value.ForState.Occupied',
             ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled'
         ])
@@ -104,7 +103,7 @@ class AdditionFormWrapper extends FormWrapper {
             ->setDefaultValue(null)
             ->setRequired(false);
         $form->addSelect('enoughForState', 'Attribute.Addition.EnoughForState', [
-            null => 'Nic',
+            null => 'Value.ForState.None',
             ApplicationEntity::STATE_OCCUPIED => 'Value.ForState.Occupied',
             ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled'
         ])
@@ -132,6 +131,8 @@ class AdditionFormWrapper extends FormWrapper {
 
     /**
      * @param SubmitButton $button
+     * @throws \Exception
+     * @throws \Nette\Application\AbortException
      */
     protected function submitClicked(SubmitButton $button) {
         $form = $button->getForm();
@@ -144,7 +145,7 @@ class AdditionFormWrapper extends FormWrapper {
         } else {
             $addition = $this->additionManager->createAdditionFromEventForm($values,$this->eventEntity);
             $this->getPresenter()->flashTranslatedMessage('Form.Addition.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
-            $this->getPresenter()->redirect('Addition:default', [$this->eventEntity->getId()]);
+            $this->getPresenter()->redirect('Option:default', [$addition->getId()]);
         }
     }
 

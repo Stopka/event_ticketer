@@ -16,7 +16,7 @@ class ChoiceDao extends EntityDao {
         return ChoiceEntity::class;
     }
 
-    public function getChoice(?string $id): ?ChoiceEntity {
+    public function getChoice(?int $id): ?ChoiceEntity {
         /** @var ChoiceEntity $result */
         $result = $this->get($id);
         return $result;

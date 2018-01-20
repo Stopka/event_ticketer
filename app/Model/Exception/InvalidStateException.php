@@ -6,7 +6,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class InvalidStateException extends ApplicationException {
+class InvalidStateException extends TranslatedException {
 
 }
 

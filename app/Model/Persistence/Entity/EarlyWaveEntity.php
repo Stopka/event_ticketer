@@ -23,6 +23,7 @@ class EarlyWaveEntity extends BaseEntity {
     use TIdentifierAttribute, TStartDateAttribute, TNameAttribute;
 
     public function __construct() {
+        parent::__construct();
         $this->earlies = new ArrayCollection();
     }
 

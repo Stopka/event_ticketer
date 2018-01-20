@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Exception;
 
 /**
@@ -6,7 +7,7 @@ namespace App\Model\Exception;
  *
  * @author stopka
  */
-class ApplicationException extends TranslatedException {
+class ORMException extends Exception {
 
 }
 

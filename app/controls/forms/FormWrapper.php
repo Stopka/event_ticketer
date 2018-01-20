@@ -3,7 +3,7 @@
 namespace App\Controls\Forms;
 
 use App\Controls\Control;
-use App\Model\Exception\Exception;
+use App\Model\Exception\TranslatedException;
 use Nette;
 use Stopka\NetteFormRenderer\Forms\Rendering\BetterFormRenderer;
 
@@ -75,8 +75,8 @@ abstract class FormWrapper extends Control {
         return function (Nette\Forms\Controls\SubmitButton $button) use ($callback) {
             try{
                 call_user_func($callback,$button);
-            }catch (Exception $e){
-                $button->getForm()->addError($e->getMessage());
+            } catch (TranslatedException $e) {
+                $button->getForm()->addError($e->getTranslatedMessage($this->getTranslator()));
             }
         };
     }
@@ -87,6 +87,7 @@ abstract class FormWrapper extends Control {
     public function render(...$args) {
         $template = $this->getTemplate();
         $template->setFile($this->template_path);
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
         $template->render(...$args);
     }
 

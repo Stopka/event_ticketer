@@ -17,10 +17,10 @@ class InsuranceCompanyDao extends EntityDao {
     }
 
     /**
-     * @param null|string $id
+     * @param null|int $id
      * @return InsuranceCompanyEntity|null
      */
-    public function getInsuranceCompany(?string $id): ?InsuranceCompanyEntity {
+    public function getInsuranceCompany(?int $id): ?InsuranceCompanyEntity {
         /** @var InsuranceCompanyEntity $result */
         $result = $this->get($id);
         return $result;

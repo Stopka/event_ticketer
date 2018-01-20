@@ -9,25 +9,26 @@
 namespace App\Model\Persistence\Dao;
 
 
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityManager;
 
 trait TDoctrineEntityManager {
 
-    /** @var  EntityManager */
+    /** @var  EntityManagerWrapper */
     private $entityManager;
 
     /**
      * Dao constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      */
-    protected function injectEntityManager(EntityManager $entityManager): void {
+    protected function injectEntityManager(EntityManagerWrapper $entityManager): void {
         $this->entityManager = $entityManager;
     }
 
     /**
      * @return EntityManager
      */
-    protected function getEntityManager(): EntityManager{
+    protected function getEntityManager(): EntityManagerWrapper {
         return $this->entityManager;
     }
 }

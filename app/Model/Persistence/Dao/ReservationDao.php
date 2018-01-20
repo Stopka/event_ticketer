@@ -28,10 +28,10 @@ class ReservationDao extends EntityDao {
     }
 
     /**
-     * @param null|string $id
+     * @param null|int $id
      * @return ReservationEntity|null
      */
-    public function getReservation(?string $id): ?ReservationEntity {
+    public function getReservation(?int $id): ?ReservationEntity {
         /** @var ReservationEntity $result */
         $result = $this->get($id);
         return $result;
@@ -42,8 +42,8 @@ class ReservationDao extends EntityDao {
      * @param string $id
      * @return ReservationEntity|null
      */
-    public function getRegisterReadyReservation(string $id): ?ReservationEntity {
-        $reservation = $this->getReservation($id);
+    public function getRegisterReadyReservationByUid(string $id): ?ReservationEntity {
+        $reservation = $this->getRepository()->findOneBy(['uid' => $id]);
         if ($reservation && $reservation->isRegisterReady()) {
             return $reservation;
         }

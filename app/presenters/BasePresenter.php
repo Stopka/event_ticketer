@@ -7,6 +7,7 @@ use App\Controls\TFlashTranslatedMessage;
 use App\Controls\TInjectTranslator;
 use App\Model\Persistence\Dao\AdministratorDao;
 use App\Model\Persistence\Entity\AdministratorEntity;
+use Kdyby\Translation\Translator;
 use Nette;
 
 
@@ -41,7 +42,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter implements I
     protected function createTemplate() {
         /** @var Nette\Bridges\ApplicationLatte\Template $template Latte templet of current presenter */
         $template = parent::createTemplate();
-        $this->getTranslator()->createTemplateHelpers()
+        /** @var Translator $translator */
+        $translator = $this->getTranslator();
+        $translator->createTemplateHelpers()
             ->register($template->getLatte());
         return $template;
     }

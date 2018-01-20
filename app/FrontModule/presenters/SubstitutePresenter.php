@@ -26,13 +26,20 @@ class SubstitutePresenter extends BasePresenter {
         $this->substituteDao = $substituteDao;
     }
 
-
-    public function actionDefault($id = null) {
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionDefault(string $id) {
         $this->redirect('register', $id);
     }
 
-    public function actionRegister($id = null) {
-        $substitute = $this->substituteDao->getReadySubstitute($id);
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionRegister(string $id) {
+        $substitute = $this->substituteDao->getReadySubstituteByUid($id);
         if (!$substitute) {
             $this->flashTranslatedMessage('Error.Substitute.NotFound', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');

@@ -22,9 +22,9 @@
     {_'Presenter.Front.Order.Default.NoEvents'}
 </p>
 
-<h2 n:if="$future_events">{_'Presenter.Front.Order.Default.FutureEventsH2'}</h2>
+<h2 n:if="$future_events">{_'Presenter.Front.Homepage.Default.FutureEvents.H2'}</h2>
 <p n:if="$future_events">
-    {_'Presenter.Front.Order.Default.FutureEvents'}
+    {_'Presenter.Front.Homepage.Default.FutureEvents.Description'}
 </p>
 <ul n:if="$future_events">
     <li n:foreach="$future_events as $event">
@@ -35,8 +35,11 @@
             </strong>
         </div>
         <div>
-            {$date = $event->getStartDate()|date:'%d.%m.%Y'}
-            <em>{_'Presenter.Front.Order.Default.StartDate',['start_date'=>$date]}</em>
+            <em>
+                {_'Presenter.Front.Homepage.Default.FutureEvents.StartDate',[
+                    'start_date' => $control->formatDate($event->getStartDate())
+                ]}
+            </em>
         </div>
     </li>
 </ul>

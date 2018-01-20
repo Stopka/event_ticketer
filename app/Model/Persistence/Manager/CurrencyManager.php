@@ -12,6 +12,7 @@ namespace App\Model\Persistence\Manager;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\CurrencyEntity;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
@@ -26,7 +27,7 @@ class CurrencyManager {
      * @param EntityManager $entityManager
      * @param CurrencyDao $currencyDao
      */
-    public function __construct(EntityManager $entityManager, CurrencyDao $currencyDao) {
+    public function __construct(EntityManagerWrapper $entityManager, CurrencyDao $currencyDao) {
         $this->injectEntityManager($entityManager);
         $this->currencyDao = $currencyDao;
     }

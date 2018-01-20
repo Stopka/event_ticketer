@@ -11,7 +11,6 @@ namespace App\Model\Persistence\Entity;
 use App\Model\Persistence\Attribute\TCreatedAttribute;
 use App\Model\Persistence\Attribute\TEmailAttribute;
 use App\Model\Persistence\Attribute\TIdentifierAttribute;
-use App\Model\Persistence\Attribute\TNumberAttribute;
 use App\Model\Persistence\Attribute\TPersonNameAttribute;
 use App\Model\Persistence\Attribute\TPhoneAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,16 +19,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Objednávka, seskupení naráz vydaných přihlášek
  * @package App\Model\Entities
- * @ORM\Table(name="cart",
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="cartNumber_unique",
- *            columns={"number","event_id"})
- *    }
- * )
+ * @ORM\Table(name="cart")
  * @ORM\Entity
  */
 class CartEntity extends BaseEntity {
-    use TIdentifierAttribute, TNumberAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute, TCreatedAttribute;
+    use TIdentifierAttribute, TPersonNameAttribute, TEmailAttribute, TPhoneAttribute, TCreatedAttribute;
 
     const STATE_ORDERED = 1;
 
@@ -37,6 +31,7 @@ class CartEntity extends BaseEntity {
      * CartEntity constructor
      */
     public function __construct() {
+        parent::__construct();
         $this->applications = new ArrayCollection();
         $this->setCreated();
     }

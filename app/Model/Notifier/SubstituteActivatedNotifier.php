@@ -55,7 +55,7 @@ class SubstituteActivatedNotifier implements Subscriber {
             throw new NotReadyException('Náhradník není aktivní.');
         }
         $emailService = $this->getEmailService();
-        $link = $emailService->generateLink('Front:Substitute:', ['id' => $substitute->getId()]);
+        $link = $emailService->generateLink('Front:Substitute:', ['id' => $substitute->getUid()]);
         $message = $emailService->createMessage();
         $message->addTo($substitute->getEmail(), $substitute->getFullName());
         $message->setSubject('Uvolněné místo na ' . $substitute->getEvent()->getName());

@@ -21,7 +21,7 @@ class AdministratorDao extends EntityDao {
      * @param integer|NULL $id
      * @return AdministratorEntity|NULL
      */
-    public function getAdministrator(?string $id): ?AdministratorEntity {
+    public function getAdministrator(?int $id): ?AdministratorEntity {
         /** @var AdministratorEntity $result */
         $result = $this->get($id);
         return $result;
@@ -36,5 +36,9 @@ class AdministratorDao extends EntityDao {
         return $this->getRepository()->findOneBy([
             'username' => $username
         ]);
+    }
+
+    public function countAdministrators(): int {
+        return $this->getRepository()->count([]);
     }
 }

@@ -6,6 +6,7 @@ use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\EntityManagerWrapper;
 use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
@@ -31,7 +32,7 @@ class ApplicationManager {
      * @param ChoiceManager $choiceManager
      */
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerWrapper $entityManager,
         InsuranceCompanyDao $insuranceCompanyDao,
         ChoiceManager $choiceManager
     ) {
@@ -52,7 +53,7 @@ class ApplicationManager {
         if (!$application) {
             $application = new ApplicationEntity($reserve);
             $application->setEvent($event);
-            $application->setNextNumber($entityManager);
+            //$application->setNextNumber($entityManager);
             $entityManager->persist($application);
         }
         $application->setByValueArray($commonValues);
