@@ -38,9 +38,6 @@ class HomepagePresenter extends BasePresenter {
     public function renderDefault() {
         $events = $this->eventDao->getPublicAvailibleEvents();
         $future_events = $this->eventDao->getPublicFutureEvents();
-        if(count($events)==1 && !$future_events){
-            $this->redirect('Event:',$events[0]->getId());
-        }
         $this->template->events = $events;
         $this->template->future_events = $future_events;
     }

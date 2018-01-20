@@ -6,12 +6,12 @@
 
 <ul n:if="$events">
     <li n:foreach="$events as $event">
-        <div>
+        <strong>
             <a n:href="Event:,$event->getId()">
                 <i class="fa fa-calendar-check-o"></i>
                 <span>{$event->getName()}</span>
             </a>
-        </div>
+        </strong>
         <div n:if="$event->isCapacitySet()">
             <em>{_'Presenter.Front.Homepage.Default.EventCapacityLeft',$event->getCapacityLeft($control->countApplications($event))}</em>
         </div>

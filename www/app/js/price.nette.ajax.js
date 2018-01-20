@@ -32,7 +32,8 @@
         restorePrechecked: function(){
             $('[data-price-value][data-price-prechecked]').each(function (index,elem) {
                 var el = $(elem);
-                if(!el.data('price-prechecked').includes(el.val())) {
+                var val = parseInt(el.val());
+                if (!val || !el.data('price-prechecked').includes(val)) {
                     return;
                 }
                 elem.checked = true;
@@ -41,7 +42,8 @@
         restorePredisabled: function(){
             $('[data-price-value][data-price-predisabled]').each(function (index,elem) {
                 var el = $(elem);
-                if(!el.data('price-predisabled').includes(el.val())) {
+                var val = parseInt(el.val());
+                if (!val || !el.data('price-predisabled').includes(val)) {
                     return;
                 }
                 elem.disabled = true;
