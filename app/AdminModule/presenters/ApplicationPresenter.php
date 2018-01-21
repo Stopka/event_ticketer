@@ -79,7 +79,7 @@ class ApplicationPresenter extends BasePresenter {
         if (!$event) {
             $this->redirect('Homepage:');
         }
-        $response = new ApplicationsExportResponse($event, $this->applicationDao->getAllEventApplications($event));
+        $response = new ApplicationsExportResponse($event, $this->applicationDao->getAllEventApplications($event), $this->getTranslator());
         $this->sendResponse($response);
     }
 
