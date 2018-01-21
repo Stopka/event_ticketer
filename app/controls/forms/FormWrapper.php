@@ -3,6 +3,7 @@
 namespace App\Controls\Forms;
 
 use App\Controls\Control;
+use App\Model\Exception\FormControlException;
 use App\Model\Exception\TranslatedException;
 use Nette;
 use Stopka\NetteFormRenderer\Forms\Rendering\BetterFormRenderer;
@@ -12,7 +13,7 @@ abstract class FormWrapper extends Control {
     /**
      * @var null|string path to template
      */
-    private $template_path = __DIR__.'/FormWrapper.latte';
+    private $template_path = __DIR__ . '/FormWrapper.latte';
 
     /**
      * FormWrapper constructor.
@@ -73,8 +74,30 @@ abstract class FormWrapper extends Control {
      */
     private function getButtonClickCallback($callback) {
         return function (Nette\Forms\Controls\SubmitButton $button) use ($callback) {
-            try{
-                call_user_func($callback,$button);
+            try {
+                call_user_func($callback, $button);
+            } catch (FormControlException $e) {
+                $controlName = $e->getControlPath();
+                /** @var \Throwable $exception */
+                $exception = $e->getPrevious();
+                if (is_subclass_of($exception, TranslatedException::class)) {
+                    /** @var TranslatedException $exception */
+                    $errorPublished = false;
+                    foreach ($button->getForm()->getComponents(true, Nette\Forms\Controls\BaseControl::class) as $component) {
+                        /** @var Nette\Forms\Controls\BaseControl $component */
+                        $path = $component->lookupPath(Form::class);
+                        if ($controlName == $path) {
+                            $errorPublished = true;
+                            $component->addError($exception->getTranslatedMessage($this->getTranslator()));
+                            break;
+                        }
+                    }
+                    if (!$errorPublished) {
+                        $button->getForm()->addError($exception->getTranslatedMessage($this->getTranslator()));
+                    }
+                } else {
+                    throw $exception;
+                }
             } catch (TranslatedException $e) {
                 $button->getForm()->addError($e->getTranslatedMessage($this->getTranslator()));
             }

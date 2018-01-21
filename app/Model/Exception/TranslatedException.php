@@ -72,7 +72,7 @@ class TranslatedException extends Exception {
             $submessage = $e->getTranslatedMessage($translator);
             $parameters['reason'] = $submessage;
         }
-        return $translator->translate($message, $count, $parameters, 'Error');
+        return $translator->translate($message, $count, $parameters);
     }
 }
 

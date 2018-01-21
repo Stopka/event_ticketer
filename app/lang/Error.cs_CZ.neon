@@ -8,7 +8,10 @@ Event:
     AlreadyCancelled: 'Událost byla zrušena'
     AlreadyClosed: 'Událost již byla uzavřena'
 Cart.NotFound: 'Objednávka nebyla nalezena'
-Addition.NotFound: 'Přídavek nenalezen'
+Addition:
+    NotFound: 'Přídavek nenalezen'
+    Minimum.InvalidInput: 'Musíte zvolit minimálně %count% položku|Musíte zvolit minimálně %count% položky|Musíte zvolit minimálně %count% položek'
+    Maximum.InvalidInput: 'Můžete zvolit maximálně %count% položku|Můžete zvolit maximálně %count% položky|Můžete zvolit maximálně %count% položek'
 Early.NotReady: 'Přístup k registraci nebyl povolen'
 Substitute.NotFound: 'Náhradníkovo místo vypršelo nebo nebylo nalezeno'
 Application:

@@ -8,6 +8,10 @@
 
 namespace App\Controls\Forms;
 
+use App\Model\Exception\FormControlException;
+use App\Model\Exception\InvalidInputException;
+use App\Model\Exception\InvalidStateException;
+use App\Model\Exception\TranslatedException;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
@@ -171,7 +175,7 @@ class AdditionsControlsBuilder {
             if (!$addition->isVisibleIn($this->visibilityPlace)) {
                 continue;
             }
-            $this->appendAdditionContols($additionsContainer, $addition, $index);
+            $this->appendAdditionControls($additionsContainer, $addition, $index);
         }
         if ($this->isVisiblePriceTotal()) {
             $additionsContainer['total'] = new \Stopka\NetteFormRenderer\Forms\Controls\Html('Form.Application.TotalPrice',
@@ -182,6 +186,13 @@ class AdditionsControlsBuilder {
         }
     }
 
+    /**
+     * @param $values
+     * @param AdditionEntity $addition
+     * @param int $index
+     * @return array
+     * @throws InvalidStateException
+     */
     protected function preprocessAdditionValues($values, AdditionEntity $addition, int $index = 1): array {
         if (is_integer($values)) {
             $values = [$values];
@@ -206,22 +217,39 @@ class AdditionsControlsBuilder {
                 unset($values[$i]);
             }
         }
+        $count = count($values);
+        if ($count < $addition->getMinimum()) {
+            throw new InvalidInputException("Error.Addition.Minimum.InvalidInput", $addition->getMinimum());
+        }
+        if ($count > $addition->getMaximum()) {
+            throw new InvalidInputException("Error.Addition.Maximum.InvalidInput", $addition->getMaximum());
+        }
         return $values;
     }
 
+    /**
+     * @param array $values
+     * @param int $index
+     * @return array
+     * @throws FormControlException
+     */
     public function preprocessAdditionsValues(array $values, int $index = 1): array {
         $additionsValues = $values[self::CONTAINER_NAME_ADDITIONS];
         foreach ($this->getEvent()->getAdditions() as $addition) {
             if (!$addition->isVisibleIn($this->visibilityPlace)) {
                 continue;
             }
-            $additionsValues[$addition->getId()] = $this->preprocessAdditionValues($additionsValues[$addition->getId()] ?? [], $addition, $index);
+            try {
+                $additionsValues[$addition->getId()] = $this->preprocessAdditionValues($additionsValues[$addition->getId()] ?? [], $addition, $index);
+            } catch (TranslatedException $e) {
+                throw new FormControlException($e, [self::CONTAINER_NAME_ADDITIONS, $addition->getId()]);
+            }
         }
         $values[self::CONTAINER_NAME_ADDITIONS] = $additionsValues;
         return $values;
     }
 
-    protected function appendAdditionContols(Container $container, AdditionEntity $addition, int $index) {
+    protected function appendAdditionControls(Container $container, AdditionEntity $addition, int $index) {
         $prices = $this->createAdditionPrices($addition);
         $options = $this->createAdditionOptions($addition, $prices);
         $preselectedOptions = $this->getPreselectedOptions($addition, $index);

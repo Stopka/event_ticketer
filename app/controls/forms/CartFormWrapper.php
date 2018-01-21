@@ -2,7 +2,7 @@
 
 namespace App\Controls\Forms;
 
-use App\Model\Exception\ApplicationException;
+use App\Model\Exception\FormControlException;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
@@ -18,7 +18,6 @@ use App\Model\Persistence\Manager\CartManager;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 use Vodacek\Forms\Controls\DateInput;
 
 
@@ -210,13 +209,14 @@ class CartFormWrapper extends FormWrapper {
     protected function preprocessValues(array $values): array {
         $index = 1;
         foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $key => $applicationValues) {
-            $applicationValues = $this->getAdditionsControlsBuilder()->preprocessAdditionsValues($applicationValues, $index);
+            try {
+                $applicationValues = $this->getAdditionsControlsBuilder()->preprocessAdditionsValues($applicationValues, $index);
+            } catch (FormControlException $e) {
+                throw $e->prependControlPath($key)->prependControlPath(self::CONTAINER_NAME_APPLICATIONS);
+            }
             $values[self::CONTAINER_NAME_APPLICATIONS][$key] = $applicationValues;
             $index++;
         }
-        Debugger::$maxDepth = 5;
-        Debugger::barDump($values, 'Values');
-        throw new ApplicationException("stop");
         return $values;
     }
 
