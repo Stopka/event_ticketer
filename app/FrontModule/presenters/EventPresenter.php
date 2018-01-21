@@ -66,7 +66,7 @@ class EventPresenter extends BasePresenter {
      * @param null $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionRegister($id = null) {
+    public function actionRegister(int $id) {
         $event = $this->eventDao->getEvent($id);
         if (!$event || !$event->isActive()) {
             $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
@@ -90,7 +90,7 @@ class EventPresenter extends BasePresenter {
      * @param null $id
      * @throws \Nette\Application\AbortException
      */
-    public function actionSubstitute($id = null) {
+    public function actionSubstitute(int $id) {
         $event = $this->eventDao->getPublicAvailibleEvent($id);
         if (!$event) {
             $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);

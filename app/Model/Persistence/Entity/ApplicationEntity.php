@@ -246,7 +246,7 @@ class ApplicationEntity extends BaseEntity {
     }
 
     public static function getStatesOccupied(): array {
-        return [self::STATE_OCCUPIED, self::STATE_FULFILLED, self::STATE_RESERVED, self::STATE_DELEGATED];
+        return [self::STATE_OCCUPIED, self::STATE_FULFILLED, /*self::STATE_RESERVED, self::STATE_DELEGATED*/];
     }
 
     public static function getStatesNotIssued(): array {

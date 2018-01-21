@@ -22,6 +22,8 @@ class OccupancyIcons {
 
     private $icons = [];
 
+    private $classes = [];
+
     public function __construct(ITranslator $translator) {
         $this->injectTranslator($translator);
     }
@@ -31,19 +33,28 @@ class OccupancyIcons {
      * @param string $key
      * @param string $label
      */
-    public function addIcon(string $key, ?string $label = null): void {
+    public function addIcon(string $key, ?string $label = null, ?string $class = null): void {
         $label = $label ?? Strings::firstUpper($key);
+        $class = $class ?? 'occupancy-icon-' . $key;
         if (isset($this->icons[$key])) {
             throw new DuplicateEntryException("There is already icon with key " . $key);
         }
         $this->icons[$key] = $label;
+        $this->classes[$key] = $class;
     }
 
     /**
      * @return string[]
      */
     public function getIcons(): array {
-        $this->icons;
+        return $this->icons;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIconClasses(): array {
+        return $this->classes;
     }
 
     /**
@@ -66,7 +77,11 @@ class OccupancyIcons {
      * @param bool $occupied
      * @return Html
      */
-    public function getIconHtml(?string $key, bool $occupied = true): Html {
+    public function getIconHtml(?string $key, int $occupied = 2): Html {
+        $icons = $this->getIconClasses();
+        if (!isset($icons[$key])) {
+            $key = null;
+        }
         if (!$key) {
             foreach ($this->icons as $k => $label) {
                 $key = $k;
@@ -76,8 +91,8 @@ class OccupancyIcons {
         return Html::el("i", [
             'class' => [
                 "occupancy-icon",
-                "occupancy-icon-$key",
-                $occupied ? 'occupied' : 'free'
+                $icons[$key],
+                $occupied ? ($occupied == 2 ? 'issued' : 'occupied') : 'free'
             ]
         ]);
     }

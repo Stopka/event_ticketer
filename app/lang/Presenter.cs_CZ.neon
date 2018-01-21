@@ -37,7 +37,6 @@ Front:
             H2: 'Registrovat se mezi náhradníky'
             EventFull: 'Všechny přihlášky již byly vydány. Může se stát, že se nějaká místa ještě uvolní. Máte-li zájem se uscházet o uvolněná místa, registrujte se mezi náhradníky. O uvolněném místě vás budme informovat emailem.'
     Event:
-        Occupancy:
         Default:
             Message:
                 MultipleEvents: 'K dispozici je několik událostí'

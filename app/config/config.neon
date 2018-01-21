@@ -115,8 +115,10 @@ services:
     -
         class: App\Model\OccupancyIcons
         setup:
-            - addIcon('bed')
-            - addIcon('bus')
+            - addIcon('dot', null, 'fa fa-circle')
+            - addIcon('ticket', null, 'fa fa-ticket')
+            - addIcon('bed', null, 'fa fa-bed')
+            - addIcon('bus', null, 'fa fa-bus')
     -
         class: App\Console\CronCommand
         tags: [kdyby.console.command]

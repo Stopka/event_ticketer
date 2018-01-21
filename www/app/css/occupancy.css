@@ -1,3 +1,7 @@
+html {
+	margin: 0;
+	padding: 0;
+}
 body{
 	padding: 5px;
 }
@@ -87,23 +91,19 @@ fieldset{
 	margin-bottom: 5px;
 	padding: 0 5px 5px 5px;
 }
-.occupancy_visual .item{
-	width: 25px;
-	height: 25px;
-	background-position: center;
-	background-size: contain;
-	background-repeat: no-repeat;
+
+.occupancy_visual .occupancy-item {
 	display: inline-block;
+	margin: 2px;
+	color: #BF360C;
 }
-.occupancy_visual .item.free{
-	background-image: url("../images/occupancy/bed_0.jpg");
+
+.occupancy_visual .occupancy-item.issued .occupancy-icon {
+	opacity: 0.6;
+	color: #0D47A1;
 }
-.occupancy_visual .item.reserved{
-	background-image: url("../images/occupancy/bed_1.jpg");
-}
-.option_12 .occupancy_visual .item.free{
-	background-image: url("../images/occupancy/bus_0.jpg");
-}
-.option_12 .occupancy_visual .item.reserved{
-	background-image: url("../images/occupancy/bus_1.jpg");
+
+.occupancy_visual .occupancy-item.free .occupancy-icon {
+	opacity: 0.2;
+	color: #1B5E20;
 }

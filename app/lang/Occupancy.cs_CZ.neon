@@ -1,0 +1,6 @@
+Occupied: 'Obsazeno %count% z %total% míst|Obsazena %count% z %total% míst| Obsazeno %count% z %total% míst'
+Issued: Byla vydána %count% přihláška z %total%.|Byly vydány %count% přihlášky z %total%.|Bylo vydáno %count% přihlášek z %total%.
+State:
+    Free: 'Volné místo'
+    Issued: 'Vydaná přihláška'
+    Occupied: 'Obsazeno'

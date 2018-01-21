@@ -1,22 +1,34 @@
-<!--<p>Bylo vydáno {$event_issued} přihlášek</p>-->
-<fieldset>
-    <legend>Rezervováno {$event_reserved} z {$event->getCapacity()} míst</legend>
+<p>
+    {_'Occupancy.Issued',$event_issued,['total'=>$event->getCapacity()]}
+</p>
+<fieldset n:if="$event->getCapacity()">
+    <legend>{_'Occupancy.Occupied',$event_occupied,['total'=>$event->getCapacity()]}</legend>
     <div class="occupancy_visual">
-        {*}
-        $icons->getIconHtml(key,occupied);
-        {/*}
-        <div n:for="$i=0; $i<$event_reserved; $i++" class="item reserved"></div>
-        <div n:for="$i=$event_reserved; $i<$event->getCapacity(); $i++" class="item free"></div>
+        {for $i=0; $i<$event_occupied; $i++}
+            {control $control:icon $event,2}
+        {/for}
+        {for $i=$event_occupied; $i<$event_issued; $i++}
+            {control $control:icon $event,1}
+        {/for}
+        {for $i=$event_issued; $i<$event->getCapacity(); $i++}
+            {control $control:icon $event,0}
+        {/for}
     </div>
 </fieldset>
 <fieldset n:foreach="$options as $option" n:class="'option_'.$option->getId()">
-    {var $reserved = $control->countOptionsReserved($option)}
-    <legend>{$option->getAddition()->getName()}: {$option->getName()} obsazeno {$reserved} z {$option->getCapacity()} míst</legend>
+    {var $occupied = $control->countOptionsOccupied($option)}
+    {var $issued = $control->countOptionsIssued($option)}
+    <legend>{$option->getAddition()->getName()}: {$option->getName()}
+        - {_'Occupancy.Occupied',$occupied,['total'=>$option->getCapacity()]}</legend>
     <div class="occupancy_visual">
-        {*}
-        $icons->getIconHtml(key,occupied);
-        {/*}
-        <div n:for="$i=0; $i<$reserved; $i++" class="item reserved"></div>
-        <div n:for="$i=$reserved; $i<$option->getCapacity(); $i++" class="item free"></div>
+        {for $i=0; $i<$occupied; $i++}
+            {control $control:icon $option,2}
+        {/for}
+        {for $i=$occupied; $i<$issued; $i++}
+            {control $control:icon $option,1}
+        {/for}
+        {for $i=$issued; $i<$option->getCapacity(); $i++}
+            {control $control:icon $option,0}
+        {/for}
     </div>
 </fieldset>
