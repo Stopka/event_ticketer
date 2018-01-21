@@ -274,7 +274,7 @@ class CartFormWrapper extends FormWrapper {
     protected function appendCommonControls(Form $form) {
         $form->addGroup('Bydliště dětí');
         $comons = $form->addContainer(self::CONTAINER_NAME_COMMONS);
-        $comons->addText('street', 'Ulice č.p.', NULL, 255)
+        $comons->addText('address', 'Ulice č.p.', NULL, 255)
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $comons->addText('city', 'Město', NULL, 255)
