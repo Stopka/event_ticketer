@@ -2,6 +2,7 @@
 
 namespace App\Controls\Forms;
 
+use App\Model\Exception\EmptyException;
 use App\Model\Exception\FormControlException;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
@@ -65,8 +66,12 @@ class CartFormWrapper extends FormWrapper {
     /** @var AdditionsControlsBuilder */
     private $additionsControlsBuilder;
 
+    /** @var bool */
+    private $admin;
+
     /**
      * CartFormWrapper constructor.
+     * @param bool $admin
      * @param FormWrapperDependencies $formWrapperDependencies
      * @param CurrencyDao $currencyDao
      * @param CartManager $cartManager
@@ -75,6 +80,7 @@ class CartFormWrapper extends FormWrapper {
      * @param IAdditionsControlsBuilderFactory $additionsControlsBuilderFactory
      */
     public function __construct(
+        bool $admin = false,
         FormWrapperDependencies $formWrapperDependencies,
         CurrencyDao $currencyDao,
         CartManager $cartManager,
@@ -89,6 +95,7 @@ class CartFormWrapper extends FormWrapper {
         $this->applicationDao = $applicationDao;
         $this->insuranceCompanyDao = $insuranceCompanyDao;
         $this->additionsControlsBuilderFactory = $additionsControlsBuilderFactory;
+        $this->admin = $admin;
     }
 
     /**
@@ -100,7 +107,7 @@ class CartFormWrapper extends FormWrapper {
                 $this->event,
                 $this->currency
             )
-                ->setAdmin($this->cart ? true : false)
+                ->setAdmin($this->admin)
                 ->setVisibilityPlace(AdditionEntity::VISIBLE_REGISTER)
                 ->setVisiblePrice(true)
                 ->setVisiblePriceTotal(true)
@@ -175,6 +182,9 @@ class CartFormWrapper extends FormWrapper {
                 /** @var Container $applicationContainer */
                 $applicationContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][self::CONTAINER_NAME_APPLICATION];
                 $applicationContainer->setDefaults($application->getValueArray());
+                if ($insuranceCompany = $application->getInsuranceCompany()) {
+                    $applicationContainer->setDefaults(['insuranceCompanyId' => $insuranceCompany->getId()]);
+                }
                 /** @var Container $commonContainer */
                 $commonContainer = $form[self::CONTAINER_NAME_COMMONS];
                 $commonContainer->setDefaults($application->getValueArray());
@@ -209,6 +219,9 @@ class CartFormWrapper extends FormWrapper {
 
     protected function preprocessValues(array $values): array {
         $index = 1;
+        if (!count($values[self::CONTAINER_NAME_APPLICATIONS])) {
+            throw new EmptyException("Error.Application.Empty");
+        }
         foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $key => $applicationValues) {
             try {
                 $applicationValues = $this->getAdditionsControlsBuilder()->preprocessAdditionsValues($applicationValues, $index);
@@ -295,7 +308,7 @@ class CartFormWrapper extends FormWrapper {
                     Html::el('span', [
                         'class' => 'description control-description countLeft'
                     ])
-                        ->setText("Zbývá $count_left přihlášek")
+                        ->setText($this->getTranslator()->translate('Occupancy.Left.Applications', $count_left))
                 )
                 ->setValidationScope(FALSE);
             /** @noinspection PhpUndefinedFieldInspection */

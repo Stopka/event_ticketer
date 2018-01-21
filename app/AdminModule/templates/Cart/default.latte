@@ -18,8 +18,8 @@
         <ul>
             <li n:if="$early->getFirstName()">{_'Attribute.Person.FirstName'}: <strong>{$early->getFirstName()}</strong></li>
             <li n:if="$early->getLastName()">{_'Attribute.Person.LastName'}: <strong>{$early->getLastName()}</strong></li>
-            <li n:if="$early->getEmail()">{_'Attribute.Person.Email'}: <strong><a href="mailto:{$early->getEmail()}">{$early->getEmail()}</a></strong></li>
-            <li n:if="$early->getPhone()">{_'Attribute.Person.Phone'}: <strong>{$early->getPhone()}</strong></li>
+            {var $link = $control->link('//:Front:Early:default',$cart->getUid())}
+            <li>{_'Attribute.Link'}: <strong><a href="{$link}">{$link}</a></strong></li>
         </ul>
     </li>
     <li n:if="$cart->getSubstitute()">

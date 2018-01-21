@@ -54,7 +54,7 @@ class EarlyPresenter extends BasePresenter {
     public function actionRegister(string $id) {
         $early = $this->earlyDao->getReadyEarlyByUid($id);
         if (!$early) {
-            $this->flashTranslatedMessage('Error.Cart.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
+            $this->flashTranslatedMessage('Error.Early.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
         /** @var CartFormWrapper $cartFormWrapper */
@@ -75,7 +75,7 @@ class EarlyPresenter extends BasePresenter {
     public function actionSubstitute(string $id) {
         $early = $this->earlyDao->getReadyEarlyByUid($id);
         if (!$early) {
-            $this->flashTranslatedMessage('Early.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
+            $this->flashTranslatedMessage('Error.Early.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
         /** @var SubstituteFormWrapper $substituteFormWrapper */

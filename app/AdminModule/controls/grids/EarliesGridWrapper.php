@@ -5,6 +5,7 @@ namespace App\AdminModule\Controls\Grids;
 use App\Controls\Grids\Grid;
 use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Dao\EarlyDao;
+use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 
 /**
@@ -86,6 +87,14 @@ class EarliesGridWrapper extends GridWrapper {
     protected function appendActions(Grid $grid) {
         $grid->addActionHref('edit', 'Form.Action.Edit', 'Early:edit')
             ->setIcon('fa fa-pencil');
+        $grid->addActionEvent('link', 'Attribute.Link', function (string $uid) {
+            $this->getPresenter()->redirect(':Front:Early:default', [$uid]);
+        })
+            ->setPrimaryKey('uid')
+            ->setIcon('fa fa-link')
+            ->setDisable(function (EarlyEntity $earlyEntity) {
+                return !$earlyEntity->isReadyToRegister();
+            });
         $grid->addButton('add', 'Presenter.Admin.Early.Add.H1', 'Early:add', [$this->eventEntity->getId()])
             ->setIcon('fa fa-plus-circle');
     }

@@ -348,7 +348,7 @@ class AdditionsControlsBuilder {
         foreach ($additionEntity->getOptions() as $option) {
             $isAutoselected = $option->getAutoSelect() != OptionEntity::AUTOSELECT_NONE;
             $isFull = isset($prices[$option->getId()]['countLeft']) && $prices[$option->getId()]['countLeft'] === 0;
-            if ($isAutoselected || $isFull) {
+            if (!$this->isAdmin() && ($isAutoselected || $isFull)) {
                 $result[] = $option->getId();
             }
         }
@@ -384,8 +384,8 @@ class AdditionsControlsBuilder {
             isset($prices[$option->getId()]['countLeft'])) {
             $left = $prices[$option->getId()]['countLeft'];
             $result->addHtml(
-                Html::el('span', ['class' => 'description inline countLeft', 'data-price-predisable' => $left == 0 && !$this->isAdmin()])
-                    ->setText("Zbývá $left míst")
+                Html::el('span', ['class' => 'description inline countLeft'])
+                    ->setText($this->getTranslator()->translate('Occupancy.Left.Options', $left))
             );
         }
         if ($option->getDescription()) {

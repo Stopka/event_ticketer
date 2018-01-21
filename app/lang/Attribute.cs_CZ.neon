@@ -8,6 +8,7 @@ Created: Vytvořeno
 Default: Výchozí
 Description: Popis
 Count: Počet
+Link: Odkaz
 Boolean:
     'Yes': Ano
     'No': Ne

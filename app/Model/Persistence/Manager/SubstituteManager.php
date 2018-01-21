@@ -42,7 +42,6 @@ class SubstituteManager {
 
     /**
      * @param null|string $substituteId
-     * @throws \Exception
      */
     public function activateSubstitute(?string $substituteId): void {
         $substitute = $this->substituteDao->getSubstitute($substituteId);

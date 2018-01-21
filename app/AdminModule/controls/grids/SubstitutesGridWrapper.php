@@ -47,10 +47,18 @@ class SubstitutesGridWrapper extends GridWrapper {
         return $this;
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function loadModel(Grid $grid) {
         $grid->setModel($this->substituteDao->getAllSubstitutesGridModel($this->event));
     }
 
+    /**
+     * @param Grid $grid
+     * @throws \Grido\Exception
+     */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
         $this->appendCartColumns($grid);
@@ -103,14 +111,25 @@ class SubstitutesGridWrapper extends GridWrapper {
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionEvent('activate', 'Form.Action.Activate',[$this,'onActivate'])
-            ->setDisable(function(SubstituteEntity $substitute){
-                return $substitute->isOrdered()||$substitute->isActive();
+        $grid->addActionEvent('activate', 'Form.Action.Activate', [$this, 'onActivate'])
+            ->setDisable(function (SubstituteEntity $substitute) {
+                return $substitute->isOrdered() || $substitute->isActive();
             })
             ->setIcon('fa fa-check-square');
+        $grid->addActionEvent('link', 'Attribute.Link', function (string $uid) {
+            $this->getPresenter()->redirect(':Front:Substitute:default', [$uid]);
+        })
+            ->setPrimaryKey('uid')
+            ->setIcon('fa fa-link')
+            ->setDisable(function (SubstituteEntity $substituteEntity) {
+                return !$substituteEntity->isActive() || $substituteEntity->isOrdered();
+            });
     }
 
-    public function onActivate($substituteId){
+    /**
+     * @param $substituteId
+     */
+    public function onActivate($substituteId) {
         $this->substituteManager->activateSubstitute($substituteId);
     }
 }

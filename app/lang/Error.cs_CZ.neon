@@ -16,6 +16,7 @@ Early.NotReady: 'Přístup k registraci nebyl povolen'
 Substitute.NotFound: 'Náhradníkovo místo vypršelo nebo nebylo nalezeno'
 Application:
     InvalidInput: 'Přihlášky musí být ze stejné události'
+    Empty: 'Musíte přidat alespoň jednu přihlášku'
 Reservation:
     InvalidState: 'Jedna z přihlášek není ve stavu vhodném pro delegaci rezervace.'
     Empty: 'Chybí přihlášky.'

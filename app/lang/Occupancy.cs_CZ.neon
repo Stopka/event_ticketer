@@ -4,3 +4,6 @@ State:
     Free: 'Volné místo'
     Issued: 'Vydaná přihláška'
     Occupied: 'Obsazeno'
+Left:
+    Options: 'Zbývá %count% místo|Zbývají %count% místa|Zbývá %count% míst'
+    Applications: 'Zbývá %count% přihláška|Zbývají %count% přihlášky|Zbývá %count% přihlášek'

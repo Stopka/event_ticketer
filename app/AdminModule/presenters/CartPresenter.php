@@ -74,7 +74,7 @@ class CartPresenter extends BasePresenter {
      * @return \App\Controls\Forms\CartFormWrapper
      */
     protected function createComponentCartForm(){
-        return $this->cartFormFactory->create();
+        return $this->cartFormFactory->create(true);
     }
 
     protected function createComponentCartApplicationsGrid(){
