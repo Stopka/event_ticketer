@@ -7,6 +7,7 @@ use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\IOrder;
+use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\ChoiceManager;
@@ -90,7 +91,7 @@ class ApplicationsGridWrapper extends GridWrapper {
             }
         })
             ->setPrimaryKey('idAlphaNumeric');
-        $grid->addActionEvent('detailCart', 'Form.Action.Detail', function ($id) {
+        /*$grid->addActionEvent('detailCart', 'Form.Action.Detail', function ($id) {
             $application = $this->applicationDao->getApplication($id);
             if (!$application || !$application->getCart()) {
                 return;
@@ -100,7 +101,7 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setIcon('fa fa-eye')
             ->setDisable(function (ApplicationEntity $applicationEntity) {
                 return $applicationEntity->getCart() === null;
-            });
+            });*/
         $grid->addActionEvent('editCart', 'Form.Action.Edit', function ($id) {
             $application = $this->applicationDao->getApplication($id);
             if (!$application || !$application->getCart()) {
@@ -153,9 +154,12 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setCustomRender(function (ApplicationEntity $applicationEntity) {
                 $html = Html::el();
                 if ($cart = $applicationEntity->getCart()) {
+                    $html = Html::el('a', [
+                        'href' => $this->getPresenter()->link('Cart:default', $applicationEntity->getCart()->getId())
+                    ]);
                     $html->addHtml(Html::el('div', ['class' => 'cart-id id'])->addText($cart->getId()));
                     $html->addHtml(Html::el('div', ['class' => 'cart-fullName fillName'])->addText($cart->getFullName()));
-                    $html->addHtml(Html::el('div', ['class' => 'cart-email email'])->addText('(' . $cart->getEmail() . ')'));
+                    $html->addHtml(Html::el('div', ['class' => 'cart-email email'])->addText($cart->getEmail()));
                 }
                 return $html;
             });
@@ -180,6 +184,9 @@ class ApplicationsGridWrapper extends GridWrapper {
 
     protected function appendAdditionsColumns(Grid $grid) {
         foreach ($this->event->getAdditions() as $addition) {
+            if (!$addition->isVisibleIn(AdditionEntity::VISIBLE_PREVIEW)) {
+                continue;
+            }
             $grid->addColumnText('addition' . $this->getCounterNumber(), $addition->getName())
                 ->setCustomRender(function (ApplicationEntity $application) use ($addition) {
                     $result = Html::el();

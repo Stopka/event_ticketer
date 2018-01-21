@@ -15,6 +15,7 @@ use App\Model\Persistence\Entity\ReservationEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use App\Model\Persistence\EntityManagerWrapper;
 use Nette\SmartObject;
+use Nette\Utils\Strings;
 
 /**
  * Created by IntelliJ IDEA.
@@ -104,19 +105,23 @@ class CartManager {
         $commonValues = $values[CartFormWrapper::CONTAINER_NAME_COMMONS];
         // go through all applications from form
         foreach ($values[CartFormWrapper::CONTAINER_NAME_APPLICATIONS] as $id => $applicationValues) {
-            // find application by id
-            $application = $this->applicationDao->getApplication($id);
+            $application = null;
+            // is existing application?
+            if (!Strings::startsWith($id, CartFormWrapper::VALUE_APPLICATION_NEW)) {
+                // find application by id
+                $application = $this->applicationDao->getApplication($id);
+            }
             // if exisitning application is not matched with event
-            if ($application->getEvent()->getId() != $event->getId()) {
+            if ($application && $application->getEvent()->getId() != $event->getId()) {
                 $application = null;
             }
             // if application exists
             if ($application) {
                 //update it
-                $application = $this->applicationManager->editApplicationFromCartForm($commonValues, $applicationValues[CartFormWrapper::CONTAINER_NAME_APPLICATION], $application);
+                $application = $this->applicationManager->editApplicationFromCartForm($applicationValues, $commonValues, $application);
             } else {
                 // create new onecom
-                $application = $this->applicationManager->createApplicationFromCartForm($commonValues, $applicationValues[CartFormWrapper::CONTAINER_NAME_APPLICATION], $event);
+                $application = $this->applicationManager->createApplicationFromCartForm($applicationValues, $commonValues, $event);
             }
             $application->setCart($cart);
         }

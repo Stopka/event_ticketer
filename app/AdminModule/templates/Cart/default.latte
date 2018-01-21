@@ -7,9 +7,10 @@
     <li>{_'Entity.Singular.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
     <li n:if="$cart->getFirstName()">{_'Attribute.Person.FirstName'}: <strong>{$cart->getFirstName()}</strong></li>
     <li n:if="$cart->getLastName()">{_'Attribute.Person.LastName'}: <strong>{$cart->getLastName()}</strong></li>
-    <li n:if="$cart->getPhone()">{_'Attribute.Person.Phone'}: <strong>{$cart->getPhone()}</strong></li>
+    <li n:if="$cart->getPhone()">{_'Attribute.Person.Phone'}: <strong><a
+                    href="tel:{$cart->getPhone()}">{$cart->getPhone()}</a></strong></li>
     <li n:if="$cart->getEmail()">{_'Attribute.Person.Email'}: <strong><a href="mailto:{$cart->getEmail()}">{$cart->getEmail()}</a></strong></li>
-    {var $link = $control->link('//:Front:Cart:default',$cart->getHashId())}
+    {var $link = $control->link('//:Front:Cart:default',$cart->getUid())}
     <li>{_'Attribute.Link'}: <strong><a href="{$link}">{$link}</a></strong></li>
     <li n:if="$cart->getEarly()">
         {_'Entity.Singular.Early'}:

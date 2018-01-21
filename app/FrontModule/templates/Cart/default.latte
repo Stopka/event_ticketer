@@ -2,6 +2,8 @@
 <h1><i class="fa fa-shopping-cart"></i> {_'Presenter.Front.Order.Default.H1',['cart_id'=>$cart->getId()]}</h1>
 <ul>
     <li>{_'Entity.Singular.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
+    <li n:if="$cart->getCreated()">{_'Attribute.Created'}:
+        <strong>{$cart->getCreated()|date: $dateFormatter->getDateTimeFormat()}</strong></li>
     <li>Jméno: <strong>{$cart->getFirstName()}</strong></li>
     <li>Příjmení: <strong>{$cart->getLastName()}</strong></li>
     <li>Telefon: <strong>{$cart->getPhone()}</strong></li>

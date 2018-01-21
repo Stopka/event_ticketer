@@ -133,7 +133,7 @@ class CartEntity extends BaseEntity {
     /**
      * @return EarlyEntity
      */
-    public function getEarly(): EarlyEntity {
+    public function getEarly(): ?EarlyEntity {
         return $this->early;
     }
 

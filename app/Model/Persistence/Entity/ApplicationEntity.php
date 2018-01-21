@@ -159,6 +159,21 @@ class ApplicationEntity extends BaseEntity {
     }
 
     /**
+     * @return ChoiceEntity[][]
+     */
+    public function getChoicesByAdditionId(): array {
+        $result = [];
+        foreach ($this->getChoices() as $choice) {
+            $addition = $choice->getOption()->getAddition();
+            if (!isset($result[$addition->getId()])) {
+                $result[$addition->getId()] = [];
+            }
+            $result[$addition->getId()][] = $choice;
+        }
+        return $result;
+    }
+
+    /**
      * @param ChoiceEntity $choice
      */
     public function addChoice(ChoiceEntity $choice): void {
@@ -278,12 +293,22 @@ class ApplicationEntity extends BaseEntity {
                 }
             }
         }
-        foreach ($this->getChoices() as $choice) {
-            $additionId = $choice->getOption()->getAddition()->getId();
-            if (isset($enough[$additionId]) && $choice->isPayed() && $enough[$additionId] > $this->state) {
+        $choices = $this->getChoicesByAdditionId();
+        foreach ($event->getAdditions() as $addition) {
+            $areChoicesPayed = true;
+            $additionId = $addition->getId();
+            if (isset($choices[$additionId])) {
+                foreach ($choices[$additionId] as $choice) {
+                    if (!$choice->isPayed()) {
+                        $areChoicesPayed = false;
+                        break;
+                    }
+                }
+            }
+            if (isset($enough[$additionId]) && $areChoicesPayed && $enough[$additionId] > $this->state) {
                 $this->state = $enough[$additionId];
             }
-            if (isset($required_additions[$additionId]) && $choice->isPayed()) {
+            if (isset($required_additions[$additionId]) && $areChoicesPayed) {
                 foreach ($required_additions[$additionId] as $state) {
                     $index = array_search($additionId, $required_states[$state]);
                     unset($required_states[$state][$index]);

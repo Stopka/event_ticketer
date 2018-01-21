@@ -7,6 +7,7 @@ use App\AdminModule\Controls\Grids\CartApplicationsGridWrapper;
 use App\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory;
 use App\Controls\Forms\CartFormWrapper;
 use App\Controls\Forms\ICartFormWrapperFactory;
+use App\Model\DateFormatter;
 use App\Model\Persistence\Dao\CartDao;
 
 class CartPresenter extends BasePresenter {
@@ -20,17 +21,20 @@ class CartPresenter extends BasePresenter {
     /** @var ICartApplicationsGridWrapperFactory  */
     public $cartApplicationsGridFactory;
 
+    /** @var DateFormatter */
+    public $dateFormatter;
     /**
      * CartPresenter constructor.
      * @param CartDao $cartDao
      * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param ICartApplicationsGridWrapperFactory $cartApplicationsGridWrapperFactory
      */
-    public function __construct(CartDao $cartDao, ICartFormWrapperFactory $cartFormWrapperFactory, ICartApplicationsGridWrapperFactory $cartApplicationsGridWrapperFactory) {
+    public function __construct(DateFormatter $dateFormatter, CartDao $cartDao, ICartFormWrapperFactory $cartFormWrapperFactory, ICartApplicationsGridWrapperFactory $cartApplicationsGridWrapperFactory) {
         parent::__construct();
         $this->cartDao = $cartDao;
         $this->cartFormFactory = $cartFormWrapperFactory;
         $this->cartApplicationsGridFactory = $cartApplicationsGridWrapperFactory;
+        $this->dateFormatter = $dateFormatter;
     }
 
     /**
@@ -46,6 +50,7 @@ class CartPresenter extends BasePresenter {
         /** @var CartApplicationsGridWrapper $cartApplicationsGrid */
         $cartApplicationsGrid = $this->getComponent('cartApplicationsGrid');
         $cartApplicationsGrid->setCart($cart);
+        $this->template->dateFormatter = $this->dateFormatter;
         $this->template->cart = $cart;
     }
 

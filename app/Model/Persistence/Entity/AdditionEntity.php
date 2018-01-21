@@ -189,6 +189,7 @@ class AdditionEntity extends BaseEntity implements ISortableEntity {
     }
 
     /**
+     * @param string $place
      * @return bool
      */
     public function isVisibleIn(string $place): bool {

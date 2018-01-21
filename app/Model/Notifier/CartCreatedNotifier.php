@@ -53,7 +53,7 @@ class CartCreatedNotifier implements Subscriber {
             throw new NotReadyException("Cart has no email address");
         }
         $emailService =$this->getEmailService();
-        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getId()]);
+        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getUid()]);
         $message = $emailService->createMessage();
         $message->addTo($cartEntity->getEmail(), $cartEntity->getFullName());
         $message->setSubject('Přihláška na ' . $cartEntity->getEvent()->getName());

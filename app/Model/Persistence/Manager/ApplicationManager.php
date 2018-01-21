@@ -56,14 +56,15 @@ class ApplicationManager {
             $application->setEvent($event);
             //$application->setNextNumber($entityManager);
             $entityManager->persist($application);
+            $created = true;
         }
         $application->setByValueArray($commonValues);
         if (isset($values[CartFormWrapper::CONTAINER_NAME_APPLICATION])) {
             $application->setByValueArray($values[CartFormWrapper::CONTAINER_NAME_APPLICATION]);
-        }
-        if (isset($values['insuranceCompanyId'])) {
-            $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($values['insuranceCompanyId']);
-            $application->setInsuranceCompany($insuranceCompany);
+            if (isset($values[CartFormWrapper::CONTAINER_NAME_APPLICATION]['insuranceCompanyId'])) {
+                $insuranceCompany = $this->insuranceCompanyDao->getInsuranceCompany($values[CartFormWrapper::CONTAINER_NAME_APPLICATION]['insuranceCompanyId']);
+                $application->setInsuranceCompany($insuranceCompany);
+            }
         }
         if ($created) {
             $this->choiceManager->createAdditionChoicesToApplication($values[AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS], $application, $reserve);

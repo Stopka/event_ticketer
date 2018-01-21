@@ -27,6 +27,7 @@ class CartFormWrapper extends FormWrapper {
     const CONTAINER_NAME_APPLICATIONS = 'applications';
     const CONTAINER_NAME_APPLICATION = 'application';
     const CONTAINER_NAME_COMMONS = 'commons';
+    const VALUE_APPLICATION_NEW = 'new';
 
     /** @var  CartManager */
     private $cartManager;
@@ -336,7 +337,7 @@ class CartFormWrapper extends FormWrapper {
         if ($this->substitute) {
             return $this->substitute->getCount();
         }
-        return 1;
+        return 0;
     }
 
     private function isApplicationCountFixed() {
@@ -387,7 +388,8 @@ class CartFormWrapper extends FormWrapper {
         $form = $button->getForm();
         /** @var \Kdyby\Replicator\Container $applicationsContainer */
         $applicationsContainer = $form[self::CONTAINER_NAME_APPLICATIONS];
-        $applicationsContainer->createOne();
+        $count = count(iterator_to_array($applicationsContainer->getComponents()));
+        $applicationsContainer->createOne(self::VALUE_APPLICATION_NEW . $count);
         $this->redrawControl('form');
     }
 
