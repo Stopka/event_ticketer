@@ -38,6 +38,7 @@ class OptionFormWrapper extends FormWrapper {
 
     /**
      * OptionFormWrapper constructor.
+     * @param FormWrapperDependencies $formWrapperDependencies
      * @param OptionManager $optionManager
      * @param OccupancyIcons $occupancyIcons
      * @param CurrencyDao $currencyDao
@@ -90,6 +91,7 @@ class OptionFormWrapper extends FormWrapper {
     protected function preprocessData(array $values): array {
         if (!$values['limitCapacity']) {
             $values['capacity'] = null;
+            $values['occupancyIcon'] = null;
         }
         if (!$values['occupancyIcon']) {
             $values['occupancyIcon'] = null;
@@ -115,32 +117,34 @@ class OptionFormWrapper extends FormWrapper {
         ])
             ->setRequired()
             ->setDefaultValue(OptionEntity::AUTOSELECT_NONE);
-        $form->addCheckbox('limitCapacity', 'Form.Option.Attribute.LimitCapacity')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.LimitCapacity")
-            ->addCondition($form::EQUAL, true)
+        $limitCapacity = $form->addCheckbox('limitCapacity', 'Form.Option.Attribute.LimitCapacity')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.LimitCapacity");
+        $limitCapacity->addCondition($form::EQUAL, true)
             ->toggle("capacityControlGroup");
+        $form->addGroup('Form.Option.Attribute.LimitCapacity')
+            ->setOption($form::OPTION_KEY_ID, "capacityControlGroup");
         $form->addText('capacity', 'Attribute.Event.Capacity')
             ->setDefaultValue(10)
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Option.Description.Capacity')
             ->setOption($form::OPTION_KEY_TYPE, 'number')
-            ->setOption($form::OPTION_KEY_ID, "capacityControlGroup")
             ->setRequired(false)
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, null, [1, null])
-            ->addConditionOn($form['limitCapacity'], $form::EQUAL, true)
+            ->addConditionOn($limitCapacity, $form::EQUAL, true)
             ->addRule($form::FILLED);
-        $form->addRadioList('occupancyIcon', 'Attribute.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons('Value.OccupancyIcon.None'))
+        $form->addRadioList('occupancyIcon', 'Attribute.Event.OccupancyIcon', $this->occupancyIcons->getLabeledIcons())
             ->setRequired(false)
-            ->setDefaultValue(null);
+            ->addConditionOn($limitCapacity, $form::EQUAL, true)
+            ->addRule($form::FILLED);
     }
 
     public function appendPriceControls(Form $form) {
-        $group = $form->addGroup('Form.Option.Group.PriceSetting')
+        $form->addGroup('Form.Option.Group.PriceSetting')
             ->setOption($form::OPTION_KEY_LOGICAL, true)
             ->setOption($form::OPTION_KEY_EMBED_NEXT, 1);
-        $form->addCheckbox('setPrice', 'Form.Option.Attribute.SetPrice')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.SetPrice")
-            ->addCondition($form::EQUAL, true)
+        $setPriceControl = $form->addCheckbox('setPrice', 'Form.Option.Attribute.SetPrice')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.SetPrice");
+        $setPriceControl->addCondition($form::EQUAL, true)
             ->toggle("priceControlGroup");
         $subgroup = $form->addGroup(Html::el()->addHtml(Html::el('i', ['class' => 'fa fa-money']))->addText(' '.$this->getTranslator()->translate('Entity.Singular.Price')))
             //->setOption($form::OPTION_KEY_LOGICAL,true)
@@ -159,13 +163,15 @@ class OptionFormWrapper extends FormWrapper {
                 //->setOption($form::OPTION_KEY_ID, "priceControlGroup_$number")
                 ->setRequired(false)
                 ->addRule($form::FLOAT, null)
-                ->addConditionOn($form['setPrice'], $form::EQUAL, true)
+                ->addConditionOn($setPriceControl, $form::EQUAL, true)
                 ->addRule($form::FILLED);
         }
     }
 
     /**
      * @param SubmitButton $button
+     * @throws \Exception
+     * @throws \Nette\Application\AbortException
      */
     protected function submitClicked(SubmitButton $button) {
         $form = $button->getForm();
@@ -176,7 +182,7 @@ class OptionFormWrapper extends FormWrapper {
             $this->getPresenter()->flashTranslatedMessage('Form.Option.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()]);
         } else {
-            $addition = $this->optionManager->createOptionFromEventForm($values, $this->additionEntity);
+            $this->optionManager->createOptionFromEventForm($values, $this->additionEntity);
             $this->getPresenter()->flashTranslatedMessage('Form.Option.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
             $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()]);
         }

@@ -100,7 +100,8 @@ class OccupancyIcons {
     protected function getLabel(string $key): Html {
         return Html::el("span")->addHtml(
             $this->getIconHtml($key)
-        )->addHtml(
+        )->addText(' ')
+            ->addHtml(
             Html::el('span')
                 ->setText($this->getLabelText($key))
         );

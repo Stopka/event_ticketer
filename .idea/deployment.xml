@@ -5,7 +5,7 @@
       <paths name="ldtpardubice.cz">
         <serverdata>
           <mappings>
-            <mapping deploy="/www/subdom/application" local="$PROJECT_DIR$" web="http://application.ldtpardubice.cz/" />
+            <mapping deploy="/www/domains/application.ldtpardubice.cz" local="$PROJECT_DIR$" web="http://application.ldtpardubice.cz/" />
           </mappings>
         </serverdata>
       </paths>
