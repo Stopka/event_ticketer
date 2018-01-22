@@ -66,7 +66,7 @@ class EarlyWavesGridWrapper extends GridWrapper {
 
 
     protected function appendActions(Grid $grid) {
-        $grid->addActionHref('edit','Form.Action.Edit', 'Early:edit')
+        $grid->addActionHref('edit', 'Form.Action.Edit', 'EarlyWave:edit')
             ->setIcon('fa fa-pencil');
         $grid->addButton('add', 'Presenter.Admin.EarlyWave.Add.H1', 'EarlyWave:add', [$this->eventEntity->getId()])
             ->setIcon('fa fa-plus-circle');

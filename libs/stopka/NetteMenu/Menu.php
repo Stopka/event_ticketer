@@ -1,19 +1,27 @@
 <?php
 
-namespace Elearning\Util\Menu;
+namespace Stopka\NetteMenu;
 
+use Nette\Application\IPresenter;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Localization\ITranslator;
+use Nette\Utils\Strings;
 
 /**
  * Strom menu
  *
  * @author stopka
  */
-class Menu extends \Nette\Application\UI\Control {
+class Menu extends Control {
 
-    /** @var \Nette\ */
+    const LINK_PARAM_PROCESSOR_ALL = '*';
+
+    /** @var ITranslator */
     protected $translator;
+
+    /** @var bool */
+    protected $disableTranslation = false;
 
     /** @var \Nette\Security\User */
     protected $user;
@@ -43,13 +51,22 @@ class Menu extends \Nette\Application\UI\Control {
     private $show = TRUE;
 
     /** @var  mixed */
-    protected $idParam;
+    protected $linkParamValue;
 
     /** @var  null|\string */
-    protected $idNeeded;
+    protected $linkParamName;
 
-    /** @var null|array */
-    protected $authorization = NULL;
+    /** @var  null|\string */
+    protected $linkParamNeeded;
+
+    /** @var  callable[] */
+    protected $linkParamPreprocesors = [];
+
+    /** @var null|string */
+    protected $authorizationResource = NULL;
+
+    /** @var null|string */
+    protected $authorizationPrivilege = NULL;
 
     /** @var callback|string */
     protected $class;
@@ -58,13 +75,13 @@ class Menu extends \Nette\Application\UI\Control {
     protected $beforeRenderCalled = false;
 
     /**
-     * Menu item constructor.
+     * App\Controls\Menus\Menu item constructor.
      * @param ITranslator $translator
      * @param string|callable $link url, nette link or callback
      * @param array $linkArgs
      * @param string $title
      */
-    public function __construct($translator, $title, $link, array $linkArgs = []) {
+    public function __construct(?ITranslator $translator, string $title, $link, array $linkArgs = []) {
         parent::__construct();
         $this->translator = $translator;
         $this->link = $link;
@@ -88,18 +105,30 @@ class Menu extends \Nette\Application\UI\Control {
     }
 
     /**
+     * @param $presenter
+     * @throws MenuException
+     */
+    protected function attached($presenter) {
+        parent::attached($presenter);
+        if (is_subclass_of($presenter, IPresenter::class)) {
+            $this->setActiveByPresenter();
+        }
+    }
+
+
+    /**
      * Adds next menu item as a child
-     * @param \string $link
+     * @param string|callable $link
      * @param array $linkArgs
      * @param \string $title
      * @param \string $name
      * @return Menu
      */
-    public function add($link, $linkArgs, $title, $name = NULL): Menu {
+    public function add(string $title, $link, array $linkArgs = [], $name = NULL): Menu {
         if ($name === NULL) {
             $name = $this->generateSubcomponentName();
         }
-        $result = new Menu($this->translator, $link, $linkArgs, $title);
+        $result = new Menu($this->translator, $title, $link, $linkArgs);
         $this->addComponent($result, $name);
         return $result;
     }
@@ -113,12 +142,15 @@ class Menu extends \Nette\Application\UI\Control {
      */
     public function addMenu($class, $name) {
         if (!is_subclass_of($class, Menu::class)) {
-            throw new MenuException("$class is not subclass of Menu");
+            throw new MenuException("$class is not subclass of App\Controls\Menus\Menu");
         }
         $result = new $class($this->translator, $this, $name);
         return $result;
     }
 
+    /**
+     * @throws MenuException
+     */
     public function render() {
         $this->renderTree();
     }
@@ -127,28 +159,31 @@ class Menu extends \Nette\Application\UI\Control {
         $this->callBeforeRender();
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/Item.latte');
+        /** @noinspection PhpUndefinedFieldInspection */
         $template->node = $this;
-        $template->help = $this->help;
+        /** @noinspection PhpUndefinedFieldInspection */
         $template->showlink = $showlink;
         $template->render();
     }
 
     /**
-     * @param null $root_name
+     * @param string $rootName
      * @throws MenuException
      */
-    public function renderTree(string $root_name = null) {
+    public function renderTree(string $rootName = null) {
         $this->callBeforeRender();
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/Tree.latte');
-        if ($root_name == NULL) {
+        if ($rootName == NULL) {
+            /** @noinspection PhpUndefinedFieldInspection */
             $template->node = $this;
         } else {
             /** @var Menu $node */
-            $node = $this->getComponent($root_name, false);
+            $node = $this->getComponent($rootName, false);
             if (!$node) {
-                $node = $this->getDeepMenuComponent($root_name);
+                $node = $this->getDeepMenuComponent($rootName);
             }
+            /** @noinspection PhpUndefinedFieldInspection */
             $template->node = $node;
         }
         $template->render();
@@ -158,6 +193,7 @@ class Menu extends \Nette\Application\UI\Control {
         $this->callBeforeRender();
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/Subtree.latte');
+        /** @noinspection PhpUndefinedFieldInspection */
         $template->node = $this;
         $template->render();
     }
@@ -166,6 +202,7 @@ class Menu extends \Nette\Application\UI\Control {
         $this->callBeforeRender();
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/Path.latte');
+        /** @noinspection PhpUndefinedFieldInspection */
         $template->path = $this->getCurrentPath();
         $template->render();
     }
@@ -185,6 +222,7 @@ class Menu extends \Nette\Application\UI\Control {
         } else {
             $node = $this->getDeepMenuComponent($node_name);
         }
+        /** @noinspection PhpUndefinedFieldInspection */
         $template->node = $node;
         $template->render();
     }
@@ -218,7 +256,6 @@ class Menu extends \Nette\Application\UI\Control {
     /**
      * Vrací vygenerovanou URL
      * @return null|string
-     * @throws InvalidLinkException
      */
     public function getUrl(): ?string {
         if (is_callable($this->link)) {
@@ -227,13 +264,22 @@ class Menu extends \Nette\Application\UI\Control {
         if ($this->hasDirectUrl()) {
             return $this->link;
         }
-        if ($this->idNeeded !== null) {
-            if ($this->idParam == null) {
+        $args = $this->linkArgs;
+        if ($this->linkParamNeeded !== null) {
+            if ($this->linkParamValue == null) {
                 return null;
             }
-            return $this->getPresenter()->link($this->link, $this->idParam);
+            $args[$this->linkParamName] = $this->linkParamValue;
         }
-        return $this->getPresenter()->link($this->link);
+        try {
+            $link = @$this->getPresenter()->link($this->link, $args);
+        } catch (InvalidLinkException $e) {
+            return null;
+        }
+        if (Strings::startsWith('#error', $link)) {
+            return null;
+        }
+        return $link;
     }
 
     /**
@@ -241,25 +287,30 @@ class Menu extends \Nette\Application\UI\Control {
      * @return \string
      */
     public function getTitle() {
-        if ($this->translator) {
+        if (!$this->translator || $this->disableTranslation) {
             return $this->title;
         }
         return $this->translator->translate($this->title);
     }
 
     /**
-     *
-     * @param ITranslator|FALSE $translator
+     * @param ITranslator|null $translator
+     * @return $this
      */
-    public function setTranslator($translator) {
+    public function setTranslator(?ITranslator $translator) {
         $this->translator = $translator;
+        return $this;
+    }
+
+    public function disableTranslation(bool $disable = true): self {
+        $this->disableTranslation = $disable;
         return $this;
     }
 
     /**
      * Children of current menu item
      * @param bool $deep
-     * @return \Iterator
+     * @return \Iterator|Menu[]
      */
     public function getChildren($deep = FALSE) {
         return $this->getComponents($deep, Menu::class);
@@ -291,14 +342,16 @@ class Menu extends \Nette\Application\UI\Control {
     }
 
     /**
-     * Pro funkčnost odkazu je nutné nastavit parametr id
-     * @param \string $key identifikátor typu id
-     * @param null|mixed $default výchozí hodnota
+     * Item needs parameter to generate url link
+     * @param null|string $key
+     * @param null|mixed $defaultValue
+     * @param string $paramName
      * @return $this
      */
-    public function setIdNeeded($key, $default = null) {
-        $this->idNeeded = $key;
-        $this->idParam = $default;
+    public function setLinkParamNeeded(?string $key = null, $defaultValue = null, string $paramName = 'id') {
+        $this->linkParamNeeded = $key;
+        $this->linkParamValue = $defaultValue;
+        $this->linkParamName = $paramName;
         return $this;
     }
 
@@ -360,7 +413,7 @@ class Menu extends \Nette\Application\UI\Control {
     }
 
     /**
-     * Vrátí cestu Menu prvků od tohoto prvku ke kořeni
+     * Vrátí cestu App\Controls\Menus\Menu prvků od tohoto prvku ke kořeni
      * @return Menu[]
      */
     public function getPath() {
@@ -376,7 +429,7 @@ class Menu extends \Nette\Application\UI\Control {
      * @return Menu[]
      */
     public function findCurrent() {
-        return $this->find(function ($node) {
+        return $this->find(function (Menu $node) {
             return $node->isCurrent();
         });
     }
@@ -448,12 +501,17 @@ class Menu extends \Nette\Application\UI\Control {
 
     /**
      * Nastaví autamaticky příznak aktivní položky a cesty v podstromu menu
+     * @throws MenuException
      */
     public function setActiveByPresenter() {
         if ($this->hasDirectUrl()) {
             $this->setActive(false);
         } else {
-            $is_current_link = $this->getPresenter()->isLinkCurrent($this->link);
+            try {
+                $is_current_link = $this->getPresenter()->isLinkCurrent($this->link);
+            } catch (InvalidLinkException $e) {
+                throw new MenuException("Unable to generate link", 0, $e);
+            }
             $this->setActive($is_current_link);
             if ($is_current_link) {
                 $this->setInPath($is_current_link);
@@ -465,27 +523,50 @@ class Menu extends \Nette\Application\UI\Control {
     }
 
     /**
-     * Nastaví autamaticky id potřebným položkám
+     * Sets id param to all subitems
+     * @param string $key
+     * @param mixed $value
      */
-    public function setIdParameter($key, $value) {
-        if ($this->idNeeded == $key) {
-            $this->idParam = $value;
+    public function setLinkParam(string $key, $value) {
+        if (isset($this->linkParamPreprocesors[$key])) {
+            $value = call_user_func($this->linkParamPreprocesors[$key], $value, $key, $this);
+        }
+        if (isset($this->linkParamPreprocesors[self::LINK_PARAM_PROCESSOR_ALL])) {
+            $value = call_user_func($this->linkParamPreprocesors[self::LINK_PARAM_PROCESSOR_ALL], $value, $key, $this);
+        }
+        if ($this->linkParamNeeded == $key) {
+            $this->linkParamValue = $value;
         }
         foreach ($this->getChildren() as $child) {
-            $child->setIdParameter($key, $value);
+            /** @var Menu $child */
+            $child->setLinkParam($key, $value);
         }
     }
 
     /**
-     * Nastaví práva k zobrazení této položky
-     * @param \string|\string[]|\NULL,FALSE $resource false znamená žádnou kontrolu
-     * @param \string|NULL $privilege
+     * Sets preprocessor of the link param
+     * @param string $key
+     * @param callable|null $callback
+     * @return $this
      */
-    public function setAuthorization($resource = NULL, $privilege = NULL) {
-        if ($resource === false) {
-            $this->authorization = null;
+    public function setLinkParamPreprocessor(string $key = self::LINK_PARAM_PROCESSOR_ALL, ?callable $callback) {
+        if (!$callback) {
+            unset($this->linkParamPreprocesors[$key]);
+            return $this;
         }
-        $this->authorization = [$resource, $privilege];
+        $this->linkParamPreprocesors[$key] = $callback;
+        return $this;
+    }
+
+    /**
+     * Sets authorization limits
+     * @param null|string $resource
+     * @param null|string $privilege
+     * @return $this
+     */
+    public function setAuthorization(?string $resource = NULL, ?string $privilege = NULL): self {
+        $this->authorizationResource = $resource;
+        $this->authorizationPrivilege = $privilege;
         return $this;
     }
 
@@ -495,11 +576,9 @@ class Menu extends \Nette\Application\UI\Control {
      * @return \bool
      */
     public function isAllowed() {
-        if ($this->authorization == NULL) {
-            return TRUE;
-        }
-        list($resource, $privilege) = $this->authorization;
-        return $this->getPresenter()->getUser()->isAllowed($resource, $privilege);
+        return $this->getPresenter()
+            ->getUser()
+            ->isAllowed($this->authorizationResource, $this->authorizationPrivilege);
     }
 
     protected function callBeforeRender() {

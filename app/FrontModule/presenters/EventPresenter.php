@@ -9,6 +9,7 @@ use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use App\FrontModule\Controls\IOccupancyControlFactory;
 use App\FrontModule\Controls\OccupancyControl;
 use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\EventEntity;
 
 
 class EventPresenter extends BasePresenter {
@@ -80,6 +81,7 @@ class EventPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Event.Full', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('substitute', $id);
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var CartFormWrapper $cartForm */
         $cartForm = $this->getComponent('cartForm');
         $cartForm->setEvent($event);

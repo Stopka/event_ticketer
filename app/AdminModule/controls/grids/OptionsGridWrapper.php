@@ -88,7 +88,10 @@ class OptionsGridWrapper extends GridWrapper {
         $grid->addColumnNumber('occupnacyIcon', 'Attribute.Event.OccupancyIcon')
             ->setSortable()
             ->setCustomRender(function (OptionEntity $option) {
-                return $this->occupancyIcons->getIconHtml($option->getOccupancyIcon());
+                if (!$option->getOccupancyIcon()) {
+                    return "";
+                }
+                return $this->occupancyIcons->getLabel($option->getOccupancyIcon());
             });
         $grid->addColumnNumber('autoselect', 'Attribute.Addition.AutoSelect')
             ->setSortable()

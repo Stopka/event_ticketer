@@ -9,6 +9,7 @@ use App\Controls\Forms\CartFormWrapper;
 use App\Controls\Forms\ICartFormWrapperFactory;
 use App\Model\DateFormatter;
 use App\Model\Persistence\Dao\CartDao;
+use App\Model\Persistence\Entity\CartEntity;
 
 class CartPresenter extends BasePresenter {
 
@@ -47,6 +48,7 @@ class CartPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(CartEntity::class, $cart);
         /** @var CartApplicationsGridWrapper $cartApplicationsGrid */
         $cartApplicationsGrid = $this->getComponent('cartApplicationsGrid');
         $cartApplicationsGrid->setCart($cart);
@@ -64,6 +66,7 @@ class CartPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(CartEntity::class, $cart);
         /** @var CartFormWrapper $cartForm */
         $cartForm = $this->getComponent('cartForm');
         $cartForm->setCart($cart);

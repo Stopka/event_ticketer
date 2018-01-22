@@ -154,8 +154,8 @@ footer{
 	background-color: lightgrey;
 }
 
-#user_block .layout_row_content{
-	text-align: right;
+#user_block .layout_row_content .user {
+	float: right;
 }
 
 /*******************************************************************************
@@ -548,4 +548,31 @@ a.price_recalculate{
 	white-space: nowrap;
 	font-size: 16px;
 	font-weight: normal;
+}
+
+nav.breadcrumbs ul {
+	padding: 0;
+	margin: 0;
+}
+
+nav.breadcrumbs li {
+	display: inline;
+	list-style: none;
+}
+
+nav.breadcrumbs li a {
+	text-decoration: none;
+}
+
+nav.breadcrumbs li a:hover {
+	text-decoration: underline;
+}
+
+nav.breadcrumbs li:before {
+	content: "/";
+	color: darkgray;
+}
+
+nav.breadcrumbs li:first-of-type:before {
+	content: "";
 }

@@ -6,6 +6,7 @@ namespace App\AdminModule\Presenters;
 use App\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory;
 use App\AdminModule\Controls\Grids\SubstitutesGridWrapper;
 use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\EventEntity;
 
 class SubstitutePresenter extends BasePresenter {
 
@@ -36,6 +37,7 @@ class SubstitutePresenter extends BasePresenter {
             $this->flashTranslatedMessage("Error.Event.NotFound",self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var SubstitutesGridWrapper $substitutesGridWrapper */
         $substitutesGridWrapper = $this->getComponent('substitutesGrid');
         $substitutesGridWrapper->setEvent($event);

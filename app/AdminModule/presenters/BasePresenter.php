@@ -2,11 +2,17 @@
 
 namespace App\AdminModule\Presenters;
 
+use App\AdminModule\Controls\Menus\MenuFactory;
+use App\Controls\Menus\Menu;
+
 
 /**
  * Base presenter for admin application presenters.
  */
 abstract class BasePresenter extends \App\Presenters\BasePresenter {
+
+    /** @var MenuFactory */
+    private $menuFactory;
 
     /**
      * @throws \Nette\Application\AbortException
@@ -14,6 +20,10 @@ abstract class BasePresenter extends \App\Presenters\BasePresenter {
     public function startup() {
         parent::startup();
         $this->checkUser();
+    }
+
+    public function injectMenuFactory(MenuFactory $menuFactory) {
+        $this->menuFactory = $menuFactory;
     }
 
     /**
@@ -27,5 +37,16 @@ abstract class BasePresenter extends \App\Presenters\BasePresenter {
             $backlink = $this->storeRequest();
             $this->redirect('Sign:in', array('backlink' => $backlink));
         }
+    }
+
+    /**
+     * @return \App\Controls\Menus\Menu
+     */
+    protected function createComponentMenu() {
+        return $this->menuFactory->create();
+    }
+
+    protected function getMenu(): Menu {
+        return $this->getComponent('menu');
     }
 }

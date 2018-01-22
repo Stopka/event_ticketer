@@ -23,6 +23,10 @@ class EarlyPresenter extends BasePresenter {
     }
 
 
+    /**
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\UI\InvalidLinkException
+     */
     public function renderSendEmails() {
         if(!Debugger::$productionMode){
             $this->earlyWaveInviteNotifier->sendUnsentInvites();

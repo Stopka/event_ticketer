@@ -10,6 +10,7 @@ use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
 use App\AdminModule\Responses\ApplicationsExportResponse;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\EventEntity;
 
 class ApplicationPresenter extends BasePresenter {
 
@@ -49,6 +50,7 @@ class ApplicationPresenter extends BasePresenter {
         if (!$event) {
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var ApplicationsGridWrapper $applicationGrid */
         $applicationGrid = $this->getComponent('applicationsGrid');
         $applicationGrid->setEvent($event);
@@ -64,6 +66,7 @@ class ApplicationPresenter extends BasePresenter {
         if (!$event) {
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var ReserveApplicationFormWrapper $reserveForm */
         $reserveForm = $this->getComponent('reserveForm');
         $reserveForm->setEvent($event);

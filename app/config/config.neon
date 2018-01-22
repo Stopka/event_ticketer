@@ -44,6 +44,7 @@ services:
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
     - App\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory
     - App\FrontModule\Responses\ApplicationPdfRenderer
+    - App\FrontModule\Controls\Menus\MenuFactory
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
     - App\AdminModule\Controls\Forms\IEventFromWrapperFactory
@@ -63,6 +64,7 @@ services:
     - App\AdminModule\Controls\Grids\IOptionsGridWrapperFactory
     - App\AdminModule\Controls\Grids\IEarliesGridWrapperFactory
     - App\AdminModule\Controls\Forms\IDelegateReservationControlsBuilderFactory
+    - App\AdminModule\Controls\Menus\MenuFactory
     - App\Model\CronService
     - App\Model\AdminAuthenticator
     - App\Model\FileStorage(%appDir%/files)

@@ -8,6 +8,7 @@ use App\AdminModule\Controls\Forms\ICurrencyFromWrapperFactory;
 use App\AdminModule\Controls\Grids\CurrenciesGridWrapper;
 use App\AdminModule\Controls\Grids\ICurrenciesGridWrapperFactory;
 use App\Model\Persistence\Dao\CurrencyDao;
+use App\Model\Persistence\Entity\CurrencyEntity;
 
 class CurrencyPresenter extends BasePresenter {
 
@@ -46,6 +47,9 @@ class CurrencyPresenter extends BasePresenter {
         $currency = $this->currencyDao->getCurrency($id);
         if (!$currency && $id) {
             $this->redirect('edit');
+        }
+        if ($currency) {
+            $this->getMenu()->setLinkParam(CurrencyEntity::class, $currency);
         }
         /** @var CurrencyFormWrapper $currencyForm */
         $currencyForm = $this->getComponent('currencyForm');

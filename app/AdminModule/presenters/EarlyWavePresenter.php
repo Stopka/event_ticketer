@@ -9,6 +9,8 @@ use App\AdminModule\Controls\Grids\EarlyWavesGridWrapper;
 use App\AdminModule\Controls\Grids\IEarlyWavesGridWrapperFactory;
 use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\EarlyWaveEntity;
+use App\Model\Persistence\Entity\EventEntity;
 
 class EarlyWavePresenter extends BasePresenter {
 
@@ -42,6 +44,7 @@ class EarlyWavePresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var EarlyWavesGridWrapper $grid */
         $grid = $this->getComponent('earlyWavesGrid');
         $grid->setEventEntity($event);
@@ -59,6 +62,7 @@ class EarlyWavePresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Event.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var EarlyWaveFormWrapper $earlyWaveForm */
         $earlyWaveForm = $this->getComponent('earlyWaveForm');
         $earlyWaveForm->setEventEntity($event);
@@ -77,6 +81,7 @@ class EarlyWavePresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.EarlyWave.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(EarlyWaveEntity::class, $earlyWave);
         /** @var EarlyWaveFormWrapper $earlyWaveForm */
         $earlyWaveForm = $this->getComponent('earlyWaveForm');
         $earlyWaveForm->setEarlyWaveEntity($earlyWave);

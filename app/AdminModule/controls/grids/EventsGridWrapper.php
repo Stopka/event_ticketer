@@ -5,6 +5,7 @@ namespace App\AdminModule\Controls\Grids;
 use App\Controls\Grids\Grid;
 use App\Controls\Grids\GridWrapperDependencies;
 use App\Model\Exception\TranslatedException;
+use App\Model\OccupancyIcons;
 use App\Model\Persistence\Dao\EventDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\EventManager;
@@ -23,16 +24,25 @@ class EventsGridWrapper extends GridWrapper {
     /** @var EventManager */
     private $eventManager;
 
+    /** @var OccupancyIcons */
+    private $occupancyIcons;
+
     /**
      * EventsGridWrapper constructor.
      * @param GridWrapperDependencies $gridWrapperDependencies
      * @param EventDao $additionDao
      * @param EventManager $eventManager
+     * @param OccupancyIcons $occupancyIcons
      */
-    public function __construct(GridWrapperDependencies $gridWrapperDependencies, EventDao $additionDao, EventManager $eventManager) {
+    public function __construct(
+        GridWrapperDependencies $gridWrapperDependencies,
+        EventDao $additionDao, EventManager $eventManager,
+        OccupancyIcons $occupancyIcons
+    ) {
         parent::__construct($gridWrapperDependencies);
         $this->eventDao = $additionDao;
         $this->eventManager = $eventManager;
+        $this->occupancyIcons = $occupancyIcons;
     }
 
     /**
@@ -75,6 +85,14 @@ class EventsGridWrapper extends GridWrapper {
         $grid->addColumnNumber('capacity', 'Attribute.Event.Capacity', '0')
             ->setSortable()
             ->setFilterNumber();
+        $grid->addColumnNumber('occupnacyIcon', 'Attribute.Event.OccupancyIcon')
+            ->setSortable()
+            ->setCustomRender(function (EventEntity $eventEntity) {
+                if (!$eventEntity->getOccupancyIcon()) {
+                    return "";
+                }
+                return $this->occupancyIcons->getLabel($eventEntity->getOccupancyIcon());
+            });
         $grid->addColumnDate('startDate', 'Attribute.Event.Public')
             ->setDefaultSort('ASC')
             ->setFilterDateRange();
@@ -102,7 +120,7 @@ class EventsGridWrapper extends GridWrapper {
                 return !$eventEntity->isActive();
             })
             ->setConfirm(function (EventEntity $eventEntity) {
-                return $this->getTranslator()->translate('Grid.Event.Confirm.Cancel',['event'=>$eventEntity->getName()]);
+                return $this->getTranslator()->translate('Grid.Event.Confirm.Cancel', ['event' => $eventEntity->getName()]);
             });
 
         $grid->addActionEvent('close', 'Form.Action.Close', [$this, 'onCloseClicked'])
@@ -111,7 +129,7 @@ class EventsGridWrapper extends GridWrapper {
                 return !$eventEntity->isActive();
             })
             ->setConfirm(function (EventEntity $eventEntity) {
-                return $this->getTranslator()->translate('Grid.Event.Confirm.Close',['event'=>$eventEntity->getName()]);
+                return $this->getTranslator()->translate('Grid.Event.Confirm.Close', ['event' => $eventEntity->getName()]);
             });
         $grid->addButton('add', 'Presenter.Admin.Event.Add.H1', 'Event:add')
             ->setIcon('fa fa-plus-circle');

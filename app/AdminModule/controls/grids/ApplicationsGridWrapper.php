@@ -157,7 +157,7 @@ class ApplicationsGridWrapper extends GridWrapper {
                     $html = Html::el('a', [
                         'href' => $this->getPresenter()->link('Cart:default', $applicationEntity->getCart()->getId())
                     ]);
-                    $html->addHtml(Html::el('div', ['class' => 'cart-id id'])->addText($cart->getId()));
+                    $html->addHtml(Html::el('div', ['class' => 'cart-id id'])->addText('#')->addText($cart->getId()));
                     $html->addHtml(Html::el('div', ['class' => 'cart-fullName fillName'])->addText($cart->getFullName()));
                     $html->addHtml(Html::el('div', ['class' => 'cart-email email'])->addText($cart->getEmail()));
                 }

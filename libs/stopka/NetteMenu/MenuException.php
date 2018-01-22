@@ -6,7 +6,7 @@
  * Time: 0:10
  */
 
-namespace Elearning\Util\Menu;
+namespace Stopka\NetteMenu;
 
 
 class MenuException extends \Exception {

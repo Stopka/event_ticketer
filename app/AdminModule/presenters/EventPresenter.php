@@ -8,6 +8,7 @@ use App\AdminModule\Controls\Forms\IEventFromWrapperFactory;
 use App\AdminModule\Controls\Grids\EventsGridWrapper;
 use App\AdminModule\Controls\Grids\IEventsGridWrapperFactory;
 use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\EventEntity;
 
 class EventPresenter extends BasePresenter {
 
@@ -46,6 +47,9 @@ class EventPresenter extends BasePresenter {
         $event = $this->eventDao->getEvent($id);
         if (!$event && $id) {
             $this->redirect('edit');
+        }
+        if ($event) {
+            $this->getMenu()->setLinkParam(EventEntity::class, $event);
         }
         /** @var EventFormWrapper $eventForm */
         $eventForm = $this->getComponent('eventForm');

@@ -1,1 +1,24 @@
 {layout '../../presenters/templates/@layout.latte'}
+{block header}
+    {include #parent}
+    <div n:if="$administratorEntity" class="layout_row" id="user_block">
+        <div class="layout_row_content">
+            <div n:if="$administratorEntity" class="user">
+                <span>{$administratorEntity->getFullName()}</span>
+                <a n:href=":Admin:Homepage:default">
+                    <i class="fa fa-user-secret"></i>
+                    <span>{_'Presenter.Admin.Homepage.Default.H1'}</span>
+                </a>
+                <a n:href=":Admin:Sign:out">
+                    <i class="fa fa-sign-out"></i>
+                    <span>{_'Form.Action.SignOut'}</span>
+                </a>
+            </div>
+            <div class="nav">
+                <nav class="breadcrumbs">
+                    {control menu:path}
+                </nav>
+            </div>
+        </div>
+    </div>
+{/block}

@@ -12,7 +12,7 @@ namespace App\Model\Persistence\Entity;
  * Základ všech entit
  * @package App\Model\Entities
  */
-abstract class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity {
+abstract class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity implements IEntity {
     use TArrayValue;
 
     abstract function resetId(): void;

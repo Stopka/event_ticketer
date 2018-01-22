@@ -9,6 +9,8 @@ use App\AdminModule\Controls\Grids\AdditionsGridWrapper;
 use App\AdminModule\Controls\Grids\IAdditionsGridWrapperFactory;
 use App\Model\Persistence\Dao\AdditionDao;
 use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\AdditionEntity;
+use App\Model\Persistence\Entity\EventEntity;
 
 class AdditionPresenter extends BasePresenter {
 
@@ -41,6 +43,7 @@ class AdditionPresenter extends BasePresenter {
         if(!$event){
             $this->redirect("Event:edit");
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var AdditionsGridWrapper $additionsGrid */
         $additionsGrid = $this->getComponent('additionsGrid');
         $additionsGrid->setEventEntity($event);
@@ -57,6 +60,7 @@ class AdditionPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var AdditionFormWrapper $additionForm */
         $additionForm = $this->getComponent('additionForm');
         $additionForm->setEventEntity($event);
@@ -74,6 +78,7 @@ class AdditionPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(AdditionEntity::class, $addition);
         /** @var AdditionFormWrapper $additionForm */
         $additionForm = $this->getComponent('additionForm');
         $additionForm->setAdditionEntity($addition);

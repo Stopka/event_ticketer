@@ -2,7 +2,8 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\Model;
+use App\Controls\Menus\Menu;
+use App\FrontModule\Controls\Menus\MenuFactory;
 
 
 /**
@@ -10,7 +11,25 @@ use App\Model;
  */
 abstract class BasePresenter extends \App\Presenters\BasePresenter {
 
+    /** @var MenuFactory */
+    private $menuFactory;
+
     /** @persistent null|string Určuje jazykovou verzi webu. */
     public $locale;
 
+
+    public function injectMenuFactory(MenuFactory $menuFactory) {
+        $this->menuFactory = $menuFactory;
+    }
+
+    /**
+     * @return \App\Controls\Menus\Menu
+     */
+    protected function createComponentMenu() {
+        return $this->menuFactory->create();
+    }
+
+    protected function getMenu(): Menu {
+        return $this->getComponent('menu');
+    }
 }

@@ -5,6 +5,7 @@ namespace App\FrontModule\Presenters;
 use App\Controls\Forms\CartFormWrapper;
 use App\Controls\Forms\ICartFormWrapperFactory;
 use App\Model\Persistence\Dao\ReservationDao;
+use App\Model\Persistence\Entity\ReservationEntity;
 
 
 class ReservationPresenter extends BasePresenter {
@@ -44,6 +45,7 @@ class ReservationPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Reservation.NotFound', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(ReservationEntity::class, $reservation);
         /** @var CartFormWrapper $cartFormWrapper */
         $cartFormWrapper = $this->getComponent('cartForm');
         $cartFormWrapper->setReservation($reservation);

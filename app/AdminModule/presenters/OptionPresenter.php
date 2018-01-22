@@ -9,6 +9,8 @@ use App\AdminModule\Controls\Grids\IOptionsGridWrapperFactory;
 use App\AdminModule\Controls\Grids\OptionsGridWrapper;
 use App\Model\Persistence\Dao\AdditionDao;
 use App\Model\Persistence\Dao\OptionDao;
+use App\Model\Persistence\Entity\AdditionEntity;
+use App\Model\Persistence\Entity\OptionEntity;
 
 class OptionPresenter extends BasePresenter {
 
@@ -42,6 +44,7 @@ class OptionPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(AdditionEntity::class, $addition);
         /** @var OptionsGridWrapper $optionsGrid */
         $optionsGrid = $this->getComponent('optionsGrid');
         $optionsGrid->setAdditionEntity($addition);
@@ -58,6 +61,7 @@ class OptionPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(AdditionEntity::class, $addition);
         /** @var OptionFormWrapper $optionForm */
         $optionForm = $this->getComponent('optionForm');
         $optionForm->setAdditionEntity($addition);
@@ -75,6 +79,7 @@ class OptionPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(OptionEntity::class, $option);
         /** @var OptionFormWrapper $optionForm */
         $optionForm = $this->getComponent('optionForm');
         $optionForm->setOptionEntity($option);

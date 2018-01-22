@@ -18,6 +18,7 @@ use App\Model\Persistence\Entity\OptionEntity;
 use App\Model\Persistence\Manager\OptionManager;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 class OptionFormWrapper extends FormWrapper {
 
@@ -75,15 +76,18 @@ class OptionFormWrapper extends FormWrapper {
         if (!$this->optionEntity) {
             return;
         }
-        $values = $this->optionEntity->getValueArray();
+        $values = $this->optionEntity->getValueArray(null, ['price']);
         $values['limitCapacity'] = $values['capacity'] !== null;
         $price = $this->optionEntity->getPrice();
         $values['setPrice'] = $price !== null;
-        $priceValues = [];
-        foreach ($price->getPriceAmounts() as $priceAmount) {
-            $priceValues[$priceAmount->getCurrency()->getCode()] = $priceAmount->getAmount();
+        if ($price) {
+            $priceValues = [];
+            foreach ($price->getPriceAmounts() as $priceAmount) {
+                $priceValues[$priceAmount->getCurrency()->getCode()] = $priceAmount->getAmount();
+            }
+            $values['price'] = $priceValues;
         }
-        $values['price'] = $priceValues;
+        Debugger::barDump($values);
         $form->setDefaults($values);
 
     }

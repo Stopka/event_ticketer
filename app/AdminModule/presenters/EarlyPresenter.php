@@ -9,6 +9,8 @@ use App\AdminModule\Controls\Grids\EarliesGridWrapper;
 use App\AdminModule\Controls\Grids\IEarliesGridWrapperFactory;
 use App\Model\Persistence\Dao\EarlyDao;
 use App\Model\Persistence\Dao\EventDao;
+use App\Model\Persistence\Entity\EarlyEntity;
+use App\Model\Persistence\Entity\EventEntity;
 
 class EarlyPresenter extends BasePresenter {
 
@@ -41,6 +43,7 @@ class EarlyPresenter extends BasePresenter {
         if(!$event){
             $this->redirect("Event:edit");
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var EarliesGridWrapper $earliesGrid */
         $earliesGrid = $this->getComponent('earliesGrid');
         $earliesGrid->setEventEntity($event);
@@ -57,6 +60,7 @@ class EarlyPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Event.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
         /** @var EarlyFormWrapper $earlyForm */
         $earlyForm = $this->getComponent('earlyForm');
         $earlyForm->setEventEntity($event);
@@ -74,6 +78,7 @@ class EarlyPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Addition.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect("Homepage:");
         }
+        $this->getMenu()->setLinkParam(EarlyEntity::class, $early);
         /** @var EarlyFormWrapper $earlyForm */
         $earlyForm = $this->getComponent('earlyForm');
         $earlyForm->setEarlyEntity($early);

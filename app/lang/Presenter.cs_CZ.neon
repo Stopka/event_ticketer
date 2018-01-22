@@ -2,11 +2,15 @@ AdminLayout:
     Setting:
         H1: 'Nastavení systému'
 Admin:
+    Homepage:
+        Default.H1: Administrace
     Reservation:
         Delegate.H1: 'Delegovat rezervaci'
     Addition:
         Add.H1: Vytvořit přídavek
         Edit.H1: Upravit přídavek
+    Cart:
+        Edit.H1: Upravit objednávku
     Application:
         Reserve.H1: 'Rezervovat přihlášky'
         Export.H1: 'Exportovat seznam'
@@ -15,10 +19,10 @@ Admin:
         Edit.H1: 'Upravit měnu'
     Early:
         Add.H1: 'Vytvořit přednostníka'
-        Edit:H1: 'Upravit přednostníka'
+        Edit.H1: 'Upravit přednostníka'
     EarlyWave:
         Add.H1: 'Vytvořit přednostní vlnu'
-        Edit:H1: 'Upravit přednostní vlnu'
+        Edit.H1: 'Upravit přednostní vlnu'
     Event:
         Edit.H1: 'Upravit událost'
         Add.H1: 'Vytvořit událost'

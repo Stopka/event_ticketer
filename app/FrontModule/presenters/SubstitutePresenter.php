@@ -5,6 +5,7 @@ namespace App\FrontModule\Presenters;
 use App\Controls\Forms\CartFormWrapper;
 use App\Controls\Forms\ICartFormWrapperFactory;
 use App\Model\Persistence\Dao\SubstituteDao;
+use App\Model\Persistence\Entity\SubstituteEntity;
 
 
 class SubstitutePresenter extends BasePresenter {
@@ -44,6 +45,7 @@ class SubstitutePresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Substitute.NotFound', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(SubstituteEntity::class, $substitute);
         /** @var CartFormWrapper $cartFormWrapper */
         $cartFormWrapper = $this->getComponent('cartForm');
         $cartFormWrapper->setSubstitute($substitute);

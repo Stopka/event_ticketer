@@ -8,6 +8,7 @@ use App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use App\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\EarlyDao;
+use App\Model\Persistence\Entity\EarlyEntity;
 
 
 class EarlyPresenter extends BasePresenter {
@@ -57,6 +58,7 @@ class EarlyPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Early.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(EarlyEntity::class, $early);
         /** @var CartFormWrapper $cartFormWrapper */
         $cartFormWrapper = $this->getComponent('cartForm');
         $cartFormWrapper->setEarly($early);
@@ -78,6 +80,7 @@ class EarlyPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Early.NotReady', self::FLASH_MESSAGE_TYPE_WARNING);
             $this->redirect('Homepage:');
         }
+        $this->getMenu()->setLinkParam(EarlyEntity::class, $early);
         /** @var SubstituteFormWrapper $substituteFormWrapper */
         $substituteFormWrapper = $this->getComponent('substituteForm');
         $substituteFormWrapper->setEarly($early);
