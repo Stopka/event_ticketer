@@ -222,11 +222,23 @@ class CartFormWrapper extends FormWrapper {
         if (!count($values[self::CONTAINER_NAME_APPLICATIONS])) {
             throw new EmptyException("Error.Application.Empty");
         }
+        $builder = $this->getAdditionsControlsBuilder();
         foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $key => $applicationValues) {
+            $builder->resetPreselectedOptions();
+            if ($this->reservation) {
+                $application = $this->applicationDao->getApplication($key);
+                $preselectedOptionIds = [];
+                foreach ($application->getChoices() as $choice) {
+                    $preselectedOptionIds[] = $choice->getOption()->getId();
+
+                }
+                $builder->setPreselectedOptions($preselectedOptionIds);
+            }
             try {
-                $applicationValues = $this->getAdditionsControlsBuilder()->preprocessAdditionsValues($applicationValues, $index);
+                $applicationValues = $builder->preprocessAdditionsValues($applicationValues, $index);
             } catch (FormControlException $e) {
-                throw $e->prependControlPath($key)->prependControlPath(self::CONTAINER_NAME_APPLICATIONS);
+                throw $e->prependControlPath($key)
+                    ->prependControlPath(self::CONTAINER_NAME_APPLICATIONS);
             }
             $values[self::CONTAINER_NAME_APPLICATIONS][$key] = $applicationValues;
             $index++;
@@ -316,7 +328,7 @@ class CartFormWrapper extends FormWrapper {
             $add_button->onClick[] = [$this, 'addApplication'];
         }
         /** @noinspection PhpUndefinedMethodInspection */
-        $form->addDynamic(self::CONTAINER_NAME_APPLICATIONS, function (Container $application) use ($removeEvent, $form) {
+        $form->addDynamic(self::CONTAINER_NAME_APPLICATIONS, function (Container $applicationContainer) use ($removeEvent, $form) {
             /** @var \Kdyby\Replicator\Container $applicationsContainer */
             $applicationsContainer = $form[self::CONTAINER_NAME_APPLICATIONS];
             $applicationIndex = iterator_count($applicationsContainer->getComponents());
@@ -325,19 +337,28 @@ class CartFormWrapper extends FormWrapper {
             $parent_group = $form->getGroup('Přihlášky');
             $count = $parent_group->getOption($form::OPTION_KEY_EMBED_NEXT);
             $parent_group->setOption($form::OPTION_KEY_EMBED_NEXT, $count ? $count + 1 : 1);
-            $application->setCurrentGroup($group);
+            $applicationContainer->setCurrentGroup($group);
 
-            $this->appendApplicationControls($form, $application);
-            $this->getAdditionsControlsBuilder()->appendAdditionsControls($application, $applicationIndex);
+            $this->appendApplicationControls($form, $applicationContainer);
+            $this->appendAdditionsControls($applicationContainer, $applicationIndex);
 
             if (!$this->cart) {
-                $remove_button = $application->addSubmit('remove', 'Zrušit tuto přihlášku')
+                $remove_button = $applicationContainer->addSubmit('remove', 'Zrušit tuto přihlášku')
                     ->setValidationScope(FALSE); # disables validation
                 $remove_button->onClick[] = $removeEvent;
                 /** @noinspection PhpUndefinedFieldInspection */
                 $remove_button->getControlPrototype()->class = 'ajax';
             }
         }, $this->getApplicationCount(), $this->isApplicationCountFixed());
+    }
+
+    protected function appendAdditionsControls(Container $applicationContainer, int $applicationIndex) {
+        $builder = $this->getAdditionsControlsBuilder();
+        if ($this->reservation) {
+            $builder->setVisibleCountLeft(false);
+            $builder->setPredisabledAdditionVisibilities([AdditionEntity::VISIBLE_RESERVATION]);
+        }
+        $builder->appendAdditionsControls($applicationContainer, $applicationIndex);
     }
 
     private function getApplicationCount() {

@@ -1,7 +1,7 @@
 {layout '../../presenters/templates/@layout.latte'}
 {block header}
     {include #parent}
-    <div n:if="$administratorEntity" class="layout_row" id="user_block">
+    <div class="layout_row" id="user_block">
         <div class="layout_row_content">
             <div n:if="$administratorEntity" class="user">
                 <span>{$administratorEntity->getFullName()}</span>

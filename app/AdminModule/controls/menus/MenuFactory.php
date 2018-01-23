@@ -24,6 +24,8 @@ class MenuFactory extends \App\Controls\Menus\MenuFactory {
         $menu = parent::create();
         $admin = $menu->add('Presenter.Admin.Homepage.Default.H1', ':Admin:Homepage:default')
             ->setIcon('fa fa-user-secret');
+        $admin->add('Presenter.Admin.Sign.In.H1', ':Admin:Sign:in')
+            ->setIcon('fa fa-key');
         $setting = $admin->add('Presenter.AdminLayout.Setting.H1', ':Admin:Currency:default')
             ->setCurentable(false)
             ->setIcon('fa fa-wrench');

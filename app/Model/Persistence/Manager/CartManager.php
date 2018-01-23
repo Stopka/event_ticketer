@@ -110,6 +110,7 @@ class CartManager {
             if (!Strings::startsWith($id, CartFormWrapper::VALUE_APPLICATION_NEW)) {
                 // find application by id
                 $application = $this->applicationDao->getApplication($id);
+                //TODO zkontrolovat přijátá ID a zrušit nepoužité přihlášky
             }
             // if exisitning application is not matched with event
             if ($application && $application->getEvent()->getId() != $event->getId()) {

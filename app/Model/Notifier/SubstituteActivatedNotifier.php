@@ -65,7 +65,7 @@ class SubstituteActivatedNotifier implements Subscriber {
 <a href='$link'>$link</a></p>";
         $endDate = $substitute->getEndDate() ? $substitute->getEndDate()->format('d.m.Y H:i:s') : null;
         $message_endDate = ($endDate ? "<p>Místo pro vás držíme do $endDate, poté dáme šanci dalšímu náhradníkovi v pořadí.</p>" : "");
-        $message_foot = "<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě rezervace místa náhradníka.</em></p>";
+        $message_foot = "<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě uvolnění místa pro náhradníka.</em></p>";
 
         $message->setHtmlBody($message_body . $message_endDate . $message_foot);
         $emailService->sendMessage($message);

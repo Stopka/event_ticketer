@@ -53,6 +53,12 @@ class AdditionsControlsBuilder {
     /** @var bool */
     private $admin = false;
 
+    /** @var string[] */
+    private $predisabledAdditionVisibilities = [];
+
+    /** @var int[] */
+    private $preselectedOptionIds = [];
+
     public function __construct(
         EventEntity $eventEntity,
         CurrencyEntity $currencyEntity,
@@ -198,20 +204,20 @@ class AdditionsControlsBuilder {
             $values = [$values];
         }
         $prices = $this->createAdditionPrices($addition);
-        $preselected = $this->getPreselectedOptions($addition, $index);
-        $predisabled = $this->getPredisabledOptions($addition, $prices);
+        $preselectedOptionIds = $this->getPreselectedOptions($addition, $index);
+        $predisabledOptionIds = $this->getPredisabledOptions($addition, $prices);
         foreach ($addition->getOptions() as $option) {
             if (
                 !in_array($option->getId(), $values) &&
-                in_array($option->getId(), $preselected) &&
-                in_array($option->getId(), $predisabled)
+                in_array($option->getId(), $preselectedOptionIds) &&
+                in_array($option->getId(), $predisabledOptionIds)
             ) {
                 $values[] = $option->getId();
             }
             if (
                 in_array($option->getId(), $values) &&
-                !in_array($option->getId(), $preselected) &&
-                in_array($option->getId(), $predisabled)
+                !in_array($option->getId(), $preselectedOptionIds) &&
+                in_array($option->getId(), $predisabledOptionIds)
             ) {
                 $i = array_search($option->getId(), $values);
                 unset($values[$i]);
@@ -252,8 +258,8 @@ class AdditionsControlsBuilder {
     protected function appendAdditionControls(Container $container, AdditionEntity $addition, int $index) {
         $prices = $this->createAdditionPrices($addition);
         $options = $this->createAdditionOptions($addition, $prices);
-        $preselectedOptions = $this->getPreselectedOptions($addition, $index);
-        $predisabledOptions = $this->getPredisabledOptions($addition, $prices);
+        $preselectedOptionIds = $this->getPreselectedOptions($addition, $index);
+        $predisabledOptionIds = $this->getPredisabledOptions($addition, $prices);
         if (!count($options)) {
             return;
         }
@@ -261,22 +267,22 @@ class AdditionsControlsBuilder {
             $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
                 ->setRequired(false)
                 ->setTranslator()
-                ->setDefaultValue($preselectedOptions);
+                ->setDefaultValue($preselectedOptionIds);
         } else {
             $control = $container->addRadioList($addition->getId(), $addition->getName(), $options)
                 ->setRequired(false)
                 ->setTranslator();
-            if ($preselectedOptions) {
-                $control->setDefaultValue($preselectedOptions[0]);
+            if ($preselectedOptionIds) {
+                $control->setDefaultValue($preselectedOptionIds[0]);
             }
         }
-        if ($preselectedOptions) {
+        if ($preselectedOptionIds) {
             $control->getControlPrototype()
-                ->setAttribute('data-price-prechecked', json_encode($preselectedOptions));
+                ->setAttribute('data-price-prechecked', json_encode($preselectedOptionIds));
         }
-        if ($predisabledOptions) {
+        if ($predisabledOptionIds) {
             $control->getControlPrototype()
-                ->setAttribute('data-price-predisabled', json_encode($predisabledOptions));
+                ->setAttribute('data-price-predisabled', json_encode($predisabledOptionIds));
         }
         if ($prices) {
             /** @noinspection PhpUndefinedMethodInspection */
@@ -323,10 +329,10 @@ class AdditionsControlsBuilder {
     /**
      * @param AdditionEntity $additionEntity
      * @param int $index
-     * @return array
+     * @return int[]
      */
     protected function getPreselectedOptions(AdditionEntity $additionEntity, int $index = 1): array {
-        $result = [];
+        $result = $this->preselectedOptionIds;
         foreach ($additionEntity->getOptions() as $option) {
             if ($option->getAutoSelect() == OptionEntity::AUTOSELECT_ALWAYS) {
                 $result[] = $option->getId();
@@ -341,14 +347,21 @@ class AdditionsControlsBuilder {
     /**
      * @param AdditionEntity $additionEntity
      * @param array $prices
-     * @return array
+     * @return int[]
      */
     protected function getPredisabledOptions(AdditionEntity $additionEntity, array $prices): array {
         $result = [];
+        $isAdditionPredisabled = false;
+        foreach ($this->predisabledAdditionVisibilities as $additionVisibility) {
+            if (in_array($additionVisibility, $additionEntity->getVisible())) {
+                $isAdditionPredisabled = true;
+                break;
+            }
+        }
         foreach ($additionEntity->getOptions() as $option) {
             $isAutoselected = $option->getAutoSelect() != OptionEntity::AUTOSELECT_NONE;
             $isFull = isset($prices[$option->getId()]['countLeft']) && $prices[$option->getId()]['countLeft'] === 0;
-            if (!$this->isAdmin() && ($isAutoselected || $isFull)) {
+            if (!$this->isAdmin() && ($isAutoselected || $isFull || $isAdditionPredisabled)) {
                 $result[] = $option->getId();
             }
         }
@@ -357,6 +370,24 @@ class AdditionsControlsBuilder {
 
     protected function isAdmin(): bool {
         return $this->admin;
+    }
+
+    /**
+     * @param string[] $visibilities
+     */
+    public function setPredisabledAdditionVisibilities(array $visibilities = []) {
+        $this->predisabledAdditionVisibilities = $visibilities;
+    }
+
+    /**
+     * @param int[] $optionIds
+     */
+    public function setPreselectedOptions(array $optionIds = []) {
+        $this->preselectedOptionIds = $optionIds;
+    }
+
+    public function resetPreselectedOptions() {
+        $this->preselectedOptionIds = [];
     }
 
     /**
