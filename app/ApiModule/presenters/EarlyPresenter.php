@@ -2,6 +2,7 @@
 
 namespace App\ApiModule\Presenters;
 
+use App\Model\Exception\NotReadyException;
 use App\Model\Notifier\EarlyWaveInviteNotifier;
 use Nette\Application\Responses\TextResponse;
 use Tracy\Debugger;
@@ -28,8 +29,8 @@ class EarlyPresenter extends BasePresenter {
      * @throws \Nette\Application\UI\InvalidLinkException
      */
     public function renderSendEmails() {
-        if(!Debugger::$productionMode){
-            $this->earlyWaveInviteNotifier->sendUnsentInvites();
+        if (Debugger::$productionMode) {
+            throw new NotReadyException("Not availible in production");
         }
         $this->sendResponse(new TextResponse('OK'));
     }

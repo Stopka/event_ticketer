@@ -1,0 +1,271 @@
+{**
+ * @param ApplicationEntity $application
+ *}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <title>Přihláška - Letní dětský tábor Pardubice z.s.</title>
+    <link type="text/css" rel="stylesheet" href="/app/pdf/application/style.css"/>
+</head>
+<body>
+<table>
+    <tr style="height: 4cm">
+        <td style="width: 25%; text-align: center;">
+            <img src="/app/pdf/application/logo.png" style="max-height: 3cm; max-width: 100%;">
+            <img src="/app/pdf/application/landa.jpg" style="max-height: 2cm; max-width: 100%;">
+        </td>
+        <td style="width: 25%; text-align: center;">
+            <h1>
+                <small>Závazná přihláška na</small>
+                <br>
+                <span>Letní dětský tábor Pardubice, z.s.</span>
+            </h1>
+        </td>
+        <td style="width: 25%; text-align: center; border-width: 1mm; border-color: black; font-weight: bold; font-size: 4em; color: darkred">
+            {$id}
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td style="width: 60%">Místo: <strong>JINDŘICHOVICE (Havlišův mlýn)</strong></td>
+        <td>Termín: <strong>23. 7. – 6. 8. 2017</strong></td>
+    </tr>
+</table>
+<table class="form">
+    <tr>
+        <td style="width:60%;">
+            <div class="label">Jméno a příjmení dítěte:</div>
+            <div class="input">{$application->getFullName()}&nbsp;</div>
+        </td>
+        <td>
+            <div class="label">Rod. č.:</div>
+            <div class="input">&nbsp;</div>
+        </td>
+    </tr>
+</table>
+<table class="form">
+    <tr>
+        <td>
+            <div class="label">Bydliště
+                <small>(ulice, č.p., okres, PSČ)</small>
+                :
+            </div>
+            <div class="input">{$application->getAddress()}; {$application->getCity()}; {$application->getZip()}&nbsp;
+            </div>
+        </td>
+    </tr>
+</table>
+<table class="form">
+    <tr>
+        <td style="width: 60%">
+            <div class="label">Jméno a příjmení matky:</div>
+            <siv class="input">&nbsp;</siv>
+        </td>
+        <td>
+            <div class="label">Zaměstnavatel:</div>
+            <div class="input">&nbsp;</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="label">Jméno a příjmení otce:</div>
+            <div class="input">&nbsp;</div>
+        </td>
+        <td>
+            <div class="label">Zaměstnavatel:</div>
+            <div class="input">&nbsp;</div>
+        </td>
+    </tr>
+</table>
+<table class="form">
+    <tr>
+        <td style="width: 50%">
+            <div class="label">Zájmy dítěte:</div>
+            <div class="input">&nbsp;</div>
+        </td>
+        <td style="width: 25%">
+            <div class="label">Vychází z třídy:</div>
+            <div class="input">&nbsp;</div>
+        </td>
+        <td style="width: 25%">
+            <div class="label">Zdrav. poj.
+                <small>(č. kód)</small>
+                :
+            </div>
+            <div class="input">{$application->getInsuranceCompany()->getCode()}&nbsp;</div>
+        </td>
+    </tr>
+</table>
+<table class="form">
+    <tr>
+        <td style="width: 50%">
+            <div class="label">Email:
+                <small>(na této adrese budete informováni o LDT - <strong>závazné</strong>)</small>
+            </div>
+            <div class="input">{$application->getCart()->getEmail()}&nbsp;</div>
+        </td>
+        <td>
+            <div class="label">Velikost trička
+                <small>(S,M,L,XL,XXL)</small>
+                :
+            </div>
+            <div class="input">S!&nbsp;</div>
+        </td>
+    </tr>
+</table>
+<table class="form">
+    <tr>
+        <td>
+            <div class="label">Mobil.tel. pro případ onemocnění dítěte a poskytnutí informací:
+                <small>(pokud rodiče v době
+                    konání LDT pobývají v zahraničí, uveďte prosím, kdo dítě v naléhavém případě převezme do své péče –
+                    jméno, mobil)
+                </small>
+            </div>
+            <div class="input">&nbsp;</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="label">Žádost o příspěvek zaměstnavatele bude podán u:
+                <small>(pokud ANO, pošlete žádost na mail:
+                    ldtmpp@email.cz s fakturační adresou, IČO(DIČ), adresu pro zaslání dokladu, případný text)
+                </small>
+            </div>
+            <div class="input">&nbsp;</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="label">Mám zájem o umístění dítěte do oddílu společně s
+                <small>(max. jedno jméno - Můžeme garantovat
+                    vždy pouze u té dvojice dětí, jejichž jména budou vzájemně uvedena na obou přihláškách. Vzhledem ke
+                    snaze o sestavení vyrovnaných oddílů nemůžeme zaručit společné umístění většího počtu dětí. U
+                    sourozenců
+                    uveďte, zda je chcete společně do oddílu.)
+                </small>
+                :
+            </div>
+            <div class="input">{$application->getFriend()}&nbsp;</div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="label">Další závazné informace pro provozovatele tábora
+                <small>(fobie, strav. návyky atd.)</small>
+                :
+            </div>
+            <div class="input">{$application->getInfo()}&nbsp;</div>
+        </td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>
+            <div class="label">Způsob dopravy:
+                <small>(zakroužkujte, nehodící se škrtněnte)
+                    <small>
+            </div>
+            <div>
+                <img src="/app/pdf/application/checkbox1.png" style="max-height: 22px;"> Autobus (+400Kč)
+                <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Individuální
+            </div>
+        </td>
+        <td>
+            <div class="label">Díte je:
+                <small>(zakroužkujte, nehodící se škrtněnte)
+                    <small>
+            </div>
+            <div>
+                <img src="/app/pdf/application/checkbox1.png" style="max-height: 22px;"> Plavec
+                <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Částečný plavec
+                <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Neplavec
+            </div>
+        </td>
+    </tr>
+</table>
+<p><strong>Cena 4.300,- Kč</strong> Na dalšího sourozence účastnícího se tábora <strong>sleva 200,- Kč</strong>.
+    <em>(táborové tričko a tematické profi DVD z tábora zahrnuto v ceně; na sourozence vždy jeden nosič)</em></p>
+<p><strong>Registrace se stává závaznou až po úhradě</strong> nevratného rezervačního poplatku ve výši <strong>1000,-
+        Kč</strong>. <strong>Splatnost zbylé částky nejpozději do 01.06.2018</strong>, pokud nebude s provozovatelem
+    tábora předem domluveno jinak! V případě, že bude nutné ošetření dítěte u lékaře (případná hospitalizace
+    v nemocnici), <strong>zavazuje se zákonný zástupce dodatečně uhradit lékařské poplatky</strong>!</p>
+<p><strong>Storno poplatek:</strong> 1000,- Kč rezervační poplatek + 2500,- Kč do 14 dnů před zahájením tábora; 1000,-
+    Kč rezervační poplatek + 3000,- Kč v termínu kratším než 14 dnů před zahájením tábora. Při zajištění náhradníka se
+    storno poplatek neúčtuje a vrací se rezervační poplatek (zrušení se provádí pouze písemnou formou). Při předčasném
+    odjezdu nebo pozdním příjezdu dítěte z/na tábor <strong>pouze z důvodu nemoci</strong> (lékař. potvrzení nutné) má
+    plátce nárok na proplacení poměrné části strav. limitu (100,- Kč/den – pouze celé dny, a to <strong>na základě
+        písemné žádosti</strong>, která <strong>bude doručena</strong> nejpozději do <strong>15.09.2018</strong>).
+    <strong>Organizátor dětem nesjednává na dobu pobytu na táboře (včetně dopravy) úrazové ani žádné jiné
+        pojištění.</strong></p>
+
+<pagebreak>
+
+    <p><strong>Vzal jsem na vědomí, že návštěvy v táboře nejsou z výchovných a především z hygienických a zdravotních
+            důvodů povoleny !!!</strong></p>
+    <p>Tábor je určen pro pobyt zdravých dětí od 6 do 17 let věku, které se mohou bez problémů přizpůsobit táborovému
+        režimu (konzultujte s hlavním vedoucím).</p>
+    <p>V případě závažného porušení táborového řádu může být účastník tábora na základě rozhodnutí vedení tábora
+        vyloučen. V takovém případě hradí rodiče účastníka nebo jeho zákonný zástupce veškeré náklady spojené
+        s ukončením pobytu a provozovatel nevrací alikvotní část účastnického poplatku.</p>
+    <p>Provozovatel tábora neručí za ztráty a zničení cenností (drahé kovy, elektronika, mobilní telefony, drahé
+        oblečení apod.).</p>
+    <p><strong>Mobilní telefony vedení LDT zakazuje z výchovných a zdravotních důvodů a z důvodu zajištění bezpečnosti
+            dětí</strong> (mimořádné případy včetně udání důvodu konzultujte s vedením LDT před odjezdem na tábor)!!!
+    </p>
+    <p><strong>Prohlášení rodičů:</strong></p>
+    <p>Prohlašuji tímto a potvrzuji správnost uvedených údajů a jsem připraven/a na vyzvání zodpovědné osoby
+        provozovatele správnost údajů doložit. Dávám tímto výslovně souhlas s tím, aby provozovatel, jako správce,
+        zpracoval v souladu se zák.č. 101/2000 Sb., o ochraně osobních údajů, mé osobní údaje, prostřednictvím svých
+        zpracovatelů, přičemž beru na vědomí, že takto určený zpracovatel, již nepodléhá mému dalšímu souhlasu. Správce
+        může používat mé osobní údaje ke své činnosti v souladu se zákonem a dále v nutném rozsahu pro svou činnost.
+        Souhlas uděluji do doby likvidace osobních údajů, jakmile pomine účel, pro který byly osobní údaje zpracovány.
+        Beru na vědomí, že svůj souhlas mohu kdykoliv odvolat a správce mé údaje do jednoho roku zlikviduje. Způsob
+        zpracování údajů řeší vnitřní směrnice provozovatele.</p>
+    <p>Prohlašuji dále, že souhlasím s případným umístěním fotografie/videa mého dítěte na internetových stránkách a
+        v propagačních materiálech spojených s LDT Pardubice, z.s.</p>
+    <p>Jsou mi známy dispozice provozu letního tábora a uvedl/a jsem v této přihlášce veškeré závažné informace,
+        týkající se zdravotního stavu účastníka tábora a případné změny, zjištěné po odevzdání této přihlášky, oznámím
+        nejpozději před zahájením tábora v prohlášení o bezinfekčnosti. Současně prohlašuji, že telefonické spojení
+        uvedené na přihlášce pro dobu konání tábora je platné a v případě zdravotních problémů dítěte (rozhoduje lékař
+        či zdravotník tábora) nebo vážných kázeňských přestupků dítěte zajistím na vlastní náklady odvoz dítěte z tábora
+        nejpozději do 24 hodin. Dále se tímto zavazuji uhradit veškeré případné škody na majetku v objektu i
+        provozovatele tábora, třetím osobám, případně dalších účastníků tábora, které účastník tábora způsobí.</p>
+    <p>V průběhu tábora mají děti možnost uložit kapesné u hlavního vedoucího LDT (viz.potvrzení o úschově kapesného),
+        provozovatel tábora neručí za ztráty neuložené hotovosti!!! Upozorňujeme na nevhodnost cenností (zlaté šperky,
+        elektronika…). Provozovatel tábora neručí za jejich případné poškození a ztráty!!!</p>
+    <p><strong>Přihláška je závazná po uhrazení rezervačního poplatku (1.000,- Kč) a odevzdání závazné přihlášky, která
+            obsahuje dva listy! Nedílnou součástí (odevzdat u odjezdu) závazné přihlášky je očkovací průkaz (postačí
+            fotokopie), originál průkazu zdravotní pojišťovny, prohlášení o bezinfekčnosti (datum v den odjezdu) a
+            vyjádření lékaře (vyplní lékař)!</strong>
+    <p>Vyplněnou přihlášku zašlete obratem elektronicky naskenovanou s podpisem (barevně) na e-mail: <a
+                href="mailto:ldtmpp@email.cz">ldtmpp@email.cz</a> , nebo <strong>poštou na adresu</strong>: Radek
+        Vančura, Staré Jesenčany 129, Pardubice 530 02. Rezervační poplatek uhraďte na účet dětského tábora: <strong>67717524/2010</strong>
+        nebo po dohodě s p. Vančurou osobně na domluveném místě - <strong>mob. tel.: <a href="tel:+420728202173">728 202
+                173</a> (p.Vančura)</strong></p>
+    <p>Veškeré informace sledujte na <a href="https://ldtpardubice.cz">www.ldtpardubice.cz</a> - případné důležité změny
+        budou odeslány na <strong>Vámi uvedený mail</strong>.
+    <p><strong>Bez uhrazeného rezervačního poplatku je přihláška neplatná. Na později odevzdané přihlášky a uhrazené
+            poplatky nebude brán zřetel !!!</strong></p>
+    <table class="form">
+        <tr>
+            <td style="width: 25%">
+                <div class="label">V</div>
+                <div class="input">&nbsp;</div>
+            </td>
+            <td style="width: 25%">
+                <div class="label">dne</div>
+                <div class="input">&nbsp;</div>
+            </td>
+
+            <td style="width: 50%">
+                <div class="label">Podpis:</div>
+                <div class="input">&nbsp;</div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

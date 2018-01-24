@@ -42,8 +42,8 @@
 		"minetro/recaptcha": "^1.6",
 		"o5/grido": "@dev",
 		"phpoffice/phpspreadsheet": "^1.0",
-		"joseki/pdf-response": "~3.1",
-		"stopka/nette-form-renderer": "dev-develop"
+      "joseki/pdf-response": "dev-master@dev",
+      "stopka/nette-form-renderer": "dev-develop@dev"
 	},
 	"require-dev": {
 		"nette/tester": "^1.6"

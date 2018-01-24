@@ -43,7 +43,9 @@ services:
     - App\FrontModule\Controls\IOccupancyControlFactory
     - App\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
     - App\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory
-    - App\FrontModule\Responses\ApplicationPdfRenderer
+    - App\Responses\PdfResponse\PdfResponseDependencies(%tempDir%/mpdf)
+    - App\Responses\PdfResponse\IPdfResponseFactory
+    - App\FrontModule\Responses\ApplicationPdfResponse
     - App\FrontModule\Controls\Menus\MenuFactory
     - App\AdminModule\Controls\Forms\ISignInFormWrapperFactory
     - App\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory

@@ -26,11 +26,38 @@ h1 small{
 }
 table{
 	width: 100%;
+	margin: 0;
 }
 table td{
-	border: 1px solid black;
+	border: 0px solid white;
+}
+
+table.form {
+	border-spacing: 2mm;
+}
+
+table.form td {
+	width: 50%;
+	border-bottom: 2px dotted black;
+	border-left: 2px dotted black;
+}
+
+.label {
+	font-size: 0.8em;
+	margin-bottom: 3px;
 }
 .input{
-	border: none;
-	border-bottom: 1px dotted black;
+	color: darkblue;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 1em;
+}
+
+input {
+	width: 42px;
+}
+
+p {
+	margin: 0;
+	margin-bottom: 4px;
 }
