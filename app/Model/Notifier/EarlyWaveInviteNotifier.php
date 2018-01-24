@@ -12,6 +12,7 @@ use App\Model\CronService;
 use App\Model\Exception\AlreadyDoneException;
 use App\Model\Exception\NotFoundException;
 use App\Model\Exception\NotReadyException;
+use App\Model\FileStorage;
 use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
@@ -31,14 +32,18 @@ class EarlyWaveInviteNotifier implements Subscriber {
     /** @var callable[] */
     public $onEarlyWaveInvitesSent= Array();
 
+    /** @var FileStorage */
+    private $fileStorage;
+
     /**
      * EarlyWaveInviteNotifier constructor.
      * @param EmailService $emailService
      * @param EarlyWaveDao $earlyWaveDao
      */
-    public function __construct(EmailService $emailService, EarlyWaveDao $earlyWaveDao) {
+    public function __construct(EmailService $emailService, EarlyWaveDao $earlyWaveDao, FileStorage $fileStorage) {
         $this->earlyWaveDao = $earlyWaveDao;
         $this->injectEmailService($emailService);
+        $this->fileStorage = $fileStorage;
     }
 
     /**
@@ -56,7 +61,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
     public function sendUnsentInvites(): void {
         $waves = $this->earlyWaveDao->getUnsentInviteEarlyWaves();
         foreach ($waves as $wave) {
-            $this->sendEarlyWaveInvites($wave->getId());
+            $this->sendUnsentEarlyWaveInvites($wave->getId());
         }
     }
 
@@ -66,7 +71,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
      */
     public function onEarlyWaveCreated(EarlyWaveEntity $earlyWave): void{
         try {
-            $this->sendEarlyWaveInvites($earlyWave->getId());
+            $this->sendUnsentEarlyWaveInvites($earlyWave->getId());
         }catch(NotReadyException $exception){
 
         }
@@ -80,7 +85,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
      * @throws SendException
      * @throws \Nette\Application\UI\InvalidLinkException
      */
-    public function sendEarlyWaveInvites(string $waveId): void {
+    public function sendUnsentEarlyWaveInvites(string $waveId): void {
         $wave = $this->earlyWaveDao->getEarlyWave($waveId);
         if (!$wave) {
             throw new NotFoundException('EarlyWave not found!');
@@ -91,6 +96,17 @@ class EarlyWaveInviteNotifier implements Subscriber {
         if (!$wave->isReadyToRegister()) {
             throw new NotReadyException('EarlyWave is not ready to start!');
         }
+        $this->sendEarlyWaveInvites($wave);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->onEarlyWaveInvitesSent($wave);
+    }
+
+    /**
+     * @param string $waveId
+     * @throws SendException
+     * @throws InvalidLinkException
+     */
+    private function sendEarlyWaveInvites(EarlyWaveEntity $wave): void {
         foreach ($wave->getEarlies() as $early) {
             try {
                 $this->sendEarlyInvite($early);
@@ -98,8 +114,19 @@ class EarlyWaveInviteNotifier implements Subscriber {
                 continue;
             }
         }
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->onEarlyWaveInvitesSent($wave);
+    }
+
+    /**
+     * @param string $waveId
+     * @throws NotFoundException
+     * @throws AlreadyDoneException
+     * @throws NotReadyException
+     * @throws SendException
+     * @throws InvalidLinkException
+     */
+    public function sendDebugEarlyWaveInvites(int $waveId): void {
+        $wave = $this->earlyWaveDao->getEarlyWave($waveId);
+        $this->sendEarlyWaveInvites($wave);
     }
 
     /**
@@ -121,8 +148,10 @@ class EarlyWaveInviteNotifier implements Subscriber {
             ->setHtmlBody("<p>Dobrý den,<br/>
 Velice si vážíme Vaší podpory v minulém roce, a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek. Běžný výdej přihlášek započne " . $wave->getEvent()->getStartDate()->format('d. m. Y') . ", pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu, kde standardním způsobem vyplníte registrační formulář.<br/>
 $link</p>
+<p>Zároveň bychom Vás při této příležitosti chtěli pozvat na druhý ročník našeho plesu. Infromace naleznete v přiložené pdf pozvánce.</p>
 <p>Tým LDTPardubice</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě otevření přednostního přístupu k přihláškám.</em></p>");
+        $message->addAttachment($this->fileStorage->getFullPath('/early_attachements/ples2018.pdf'));
         $emailService->sendMessage($message);
     }
 

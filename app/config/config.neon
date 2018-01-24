@@ -127,6 +127,9 @@ services:
     -
         class: App\Console\GenerateUidCommand
         tags: [kdyby.console.command]
+    -
+        class: App\Console\SendEarlyInvitesCommand
+        tags: [kdyby.console.command]
     router: App\RouterFactory::createRouter
 
 extensions:
