@@ -35,7 +35,36 @@ class ApplicationPdfResponse extends Nette\Application\UI\Control implements IRe
     protected function buildHtml(): string {
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/ApplicationPdfResponse.latte');
-        $template->application = $this->application;
+        $application = $this->application;
+        $bus = null;
+        $tricko = null;
+        foreach ($application->getChoices() as $choice) {
+            if ($choice->getOption()->getAddition()->getName() == "Doprava") {
+                if ($choice->getOption()->getName() == 'Autobus') {
+                    $bus = true;
+                }
+                if ($choice->getOption()->getName() == 'Individuální') {
+                    $bus = false;
+                }
+            }
+            if ($choice->getOption()->getAddition()->getName() == "Tričko") {
+                $tricko = $choice->getOption()->getName();
+            }
+        }
+        $address = [];
+        if ($application->getAddress()) {
+            $address[] = $application->getAddress();
+        }
+        if ($application->getCity()) {
+            $address[] = $application->getCity();
+        }
+        if ($application->getZip()) {
+            $address[] = $application->getZip();
+        }
+        $template->application = $application;
+        $template->bus = $bus;
+        $template->tricko = $tricko;
+        $template->address = implode('; ', $address);
         $template->id = Nette\Utils\Strings::padLeft($this->application->getId(), 3, '0');
         $html = (string)$template;
         return $html;
@@ -50,7 +79,7 @@ class ApplicationPdfResponse extends Nette\Application\UI\Control implements IRe
         $pdf->setDocumentAuthor("ldtpardubice.cz");
         $pdf->setPageMargins("13,13,13,13,10,10");
         $mpdf = $pdf->getMPDF();
-        $mpdf->setHeader("<a href='https://ldtpardubice.cz'>ldtpardubice.cz</a>");
+        $mpdf->setFooter("<a href='https://ldtpardubice.cz'>ldtpardubice.cz</a>");
         return $pdf;
     }
 

@@ -41,7 +41,7 @@
             <div class="input">{$application->getFullName()}&nbsp;</div>
         </td>
         <td>
-            <div class="label">Rod. č.:</div>
+            <div class="label">Rodné číslo:</div>
             <div class="input">&nbsp;</div>
         </td>
     </tr>
@@ -53,7 +53,7 @@
                 <small>(ulice, č.p., okres, PSČ)</small>
                 :
             </div>
-            <div class="input">{$application->getAddress()}; {$application->getCity()}; {$application->getZip()}&nbsp;
+            <div class="input">{$address}&nbsp;
             </div>
         </td>
     </tr>
@@ -64,7 +64,7 @@
             <div class="label">Jméno a příjmení matky:</div>
             <siv class="input">&nbsp;</siv>
         </td>
-        <td>
+        <td style="width: 40%">
             <div class="label">Zaměstnavatel:</div>
             <div class="input">&nbsp;</div>
         </td>
@@ -82,58 +82,67 @@
 </table>
 <table class="form">
     <tr>
-        <td style="width: 50%">
+        <td style="width: 60%">
             <div class="label">Zájmy dítěte:</div>
             <div class="input">&nbsp;</div>
         </td>
-        <td style="width: 25%">
+        <td style="width: 20%">
             <div class="label">Vychází z třídy:</div>
             <div class="input">&nbsp;</div>
         </td>
-        <td style="width: 25%">
+        <td style="width: 20%">
             <div class="label">Zdrav. poj.
                 <small>(č. kód)</small>
                 :
             </div>
-            <div class="input">{$application->getInsuranceCompany()->getCode()}&nbsp;</div>
+            <div class="input">{if $application->getInsuranceCompany()}{$application->getInsuranceCompany()->getCode()}{/if}
+                &nbsp;
+            </div>
         </td>
     </tr>
 </table>
 <table class="form">
     <tr>
-        <td style="width: 50%">
-            <div class="label">Email:
+        <td style="width: 70%">
+            <div class="label">Email
                 <small>(na této adrese budete informováni o LDT - <strong>závazné</strong>)</small>
+                :
             </div>
             <div class="input">{$application->getCart()->getEmail()}&nbsp;</div>
         </td>
-        <td>
+        <td style="width: 30%">
             <div class="label">Velikost trička
                 <small>(S,M,L,XL,XXL)</small>
                 :
             </div>
-            <div class="input">S!&nbsp;</div>
+            <div class="input">
+                {$tricko}
+                &nbsp;
+            </div>
         </td>
     </tr>
 </table>
 <table class="form">
     <tr>
         <td>
-            <div class="label">Mobil.tel. pro případ onemocnění dítěte a poskytnutí informací:
+            <div class="label">Mobil.tel. pro případ onemocnění dítěte a poskytnutí informací
                 <small>(pokud rodiče v době
                     konání LDT pobývají v zahraničí, uveďte prosím, kdo dítě v naléhavém případě převezme do své péče –
                     jméno, mobil)
                 </small>
+                :
             </div>
             <div class="input">&nbsp;</div>
         </td>
     </tr>
     <tr>
         <td>
-            <div class="label">Žádost o příspěvek zaměstnavatele bude podán u:
-                <small>(pokud ANO, pošlete žádost na mail:
-                    ldtmpp@email.cz s fakturační adresou, IČO(DIČ), adresu pro zaslání dokladu, případný text)
+            <div class="label">Žádost o příspěvek zaměstnavatele bude podán u
+                <small>(pokud ANO, pošlete žádost na mail
+                    <a href="mailto:ldtmpp@email.cz">ldtmpp@email.cz</a> s fakturační adresou, IČO(DIČ), adresu pro
+                    zaslání dokladu, případný text)
                 </small>
+                :
             </div>
             <div class="input">&nbsp;</div>
         </td>
@@ -165,19 +174,26 @@
 <table class="form">
     <tr>
         <td>
-            <div class="label">Způsob dopravy:
-                <small>(zakroužkujte, nehodící se škrtněnte)
+            <div class="label">
+                Způsob dopravy
+                <small>
+                    (zakroužkujte, nehodící se škrtněnte)
                     <small>
+                        :
             </div>
             <div>
-                <img src="/app/pdf/application/checkbox1.png" style="max-height: 22px;"> Autobus (+400Kč)
-                <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Individuální
+                <img src="/app/pdf/application/checkbox{$bus===true?1:0}.png" style="max-height: 22px;"> Autobus
+                (+400Kč)
+                <img src="/app/pdf/application/checkbox{$bus===false?1:0}.png" style="max-height: 22px;"> Individuální
             </div>
         </td>
         <td>
-            <div class="label">Díte je:
-                <small>(zakroužkujte, nehodící se škrtněnte)
+            <div class="label">
+                Díte je
+                <small>
+                    (zakroužkujte, nehodící se škrtněnte)
                     <small>
+                        :
             </div>
             <div>
                 <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Plavec
