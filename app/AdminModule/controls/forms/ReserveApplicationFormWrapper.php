@@ -88,8 +88,8 @@ class ReserveApplicationFormWrapper extends FormWrapper {
             )
                 ->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION)
                 ->setVisibleCountLeft()
-                ->setAdmin()
-                ->disableMinimum();
+                ->setAdmin();
+            //->disableMinimum();
             $this->additionsControlsBuilder = $builder;
         }
         return $this->additionsControlsBuilder;
