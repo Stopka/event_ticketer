@@ -571,8 +571,15 @@ nav.breadcrumbs li a:hover {
 nav.breadcrumbs li:before {
 	content: "/";
 	color: darkgray;
+    display: inline-block;
+    margin: 0 3px;
 }
 
 nav.breadcrumbs li:first-of-type:before {
 	content: "";
+}
+
+i {
+    display: inline-block;
+    margin-right: 3px;
 }
