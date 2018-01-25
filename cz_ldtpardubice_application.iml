@@ -51,6 +51,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdi" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdi-tcpdf" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/stopka/nette-form-renderer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/stopka/nette-menu-control" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/config" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/console" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/filesystem" />

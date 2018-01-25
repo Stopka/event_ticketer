@@ -1,52 +1,55 @@
 {
-	"name": "Stopka/event_ticketer",
-	"description": "Ticket distributing system for ldtpardubice.cz",
-	"homepage": "https://ldtpardubice.cz",
-	"type": "project",
-	"license": ["proprietary"],
-	"authors": [
-		{
-			"name": "Štěpán Škorpil",
-			"homepage": "https://skorpils.cz"
-		}
-	],
-	"require": {
-		"php": ">=7.1.0",
-		"nette/application": "^2.4",
-		"nette/bootstrap": "^2.4.2",
-		"nette/caching": "^2.5",
-		"nette/database": "^2.4",
-		"nette/di": "^2.4",
-		"nette/finder": "^2.4",
-		"nette/forms": "^2.4",
-		"nette/http": "^2.4",
-		"nette/mail": "^2.4",
-		"nette/robot-loader": "^2.4",
-		"nette/safe-stream": "^2.3",
-		"nette/security": "^2.4",
-		"nette/utils": "^2.4",
-		"latte/latte": "^2.4",
-		"tracy/tracy": "^2.4",
-		"doctrine/orm": "^2.5",
-		"kdyby/annotations": "^2.3",
-		"kdyby/console": "^2.6",
-		"kdyby/events": "^3.0",
-		"kdyby/doctrine-cache": "^2.5",
-		"kdyby/doctrine": "~3.1",
-		"symfony/config": "~2.5",
-		"symfony/translation": "~2.5",
-		"kdyby/translation": "@dev",
-		"voda/date-input": "^1.1",
-		"kdyby/forms-replicator": "@dev",
-		"setasign/fpdi-tcpdf": "^1.6",
-		"minetro/recaptcha": "^1.6",
-		"o5/grido": "@dev",
-		"phpoffice/phpspreadsheet": "^1.0",
-      "joseki/pdf-response": "dev-master@dev",
-      "stopka/nette-form-renderer": "dev-develop@dev"
-	},
-	"require-dev": {
-		"nette/tester": "^1.6"
-	},
-	"minimum-stability": "stable"
+  "name": "Stopka/event_ticketer",
+  "description": "Ticket distributing system for ldtpardubice.cz",
+  "homepage": "https://ldtpardubice.cz",
+  "type": "project",
+  "license": [
+    "proprietary"
+  ],
+  "authors": [
+    {
+      "name": "Štěpán Škorpil",
+      "homepage": "https://skorpils.cz"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "nette/application": "^2.4",
+    "nette/bootstrap": "^2.4.2",
+    "nette/caching": "^2.5",
+    "nette/database": "^2.4",
+    "nette/di": "^2.4",
+    "nette/finder": "^2.4",
+    "nette/forms": "^2.4",
+    "nette/http": "^2.4",
+    "nette/mail": "^2.4",
+    "nette/robot-loader": "^2.4",
+    "nette/safe-stream": "^2.3",
+    "nette/security": "^2.4",
+    "nette/utils": "^2.4",
+    "latte/latte": "^2.4",
+    "tracy/tracy": "^2.4",
+    "doctrine/orm": "^2.5",
+    "kdyby/annotations": "^2.3",
+    "kdyby/console": "^2.6",
+    "kdyby/events": "^3.0",
+    "kdyby/doctrine-cache": "^2.5",
+    "kdyby/doctrine": "~3.1",
+    "symfony/config": "~2.5",
+    "symfony/translation": "~2.5",
+    "kdyby/translation": "@dev",
+    "voda/date-input": "^1.1",
+    "kdyby/forms-replicator": "@dev",
+    "setasign/fpdi-tcpdf": "^1.6",
+    "minetro/recaptcha": "^1.6",
+    "o5/grido": "@dev",
+    "phpoffice/phpspreadsheet": "^1.0",
+    "joseki/pdf-response": "dev-master@dev",
+    "stopka/nette-form-renderer": "dev-develop@dev",
+    "stopka/nette-menu-control": "dev-master@dev"
+  },
+  "require-dev": {
+    "nette/tester": "^1.6"
+  },
+  "minimum-stability": "stable"
 }

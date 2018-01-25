@@ -10,7 +10,7 @@ use Kdyby\Translation\ITranslator;
  * Date: 22.1.18
  * Time: 10:55
  */
-class Menu extends \Stopka\NetteMenu\Menu {
+class Menu extends \Stopka\NetteMenuControl\Menu {
     public function __construct(?ITranslator $translator, string $title, $link, array $linkArgs = []) {
         parent::__construct($translator, $title, $link, $linkArgs);
     }

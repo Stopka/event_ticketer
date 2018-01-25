@@ -1,6 +1,0 @@
-<ul class="breadcrumbs">
-    <li n:foreach="$path as $path_node" n:class="$iterator->isLast()?active">
-        {var $withLink = !$iterator->isLast() || count($path)==1 }
-        {control $path_node:item, $withLink}
-    </li>
-</ul>

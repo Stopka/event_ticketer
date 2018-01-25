@@ -1,8 +1,0 @@
-<ul n:class="$node->getClass()">
-    {foreach $node->getChildren() as $child}
-        <li n:if="$child->getShow()" n:class="$child->isActive()?active, $child->isInPath()?in_path, $child->getClass()">
-            {control $child:item}
-        </li>
-    {/foreach}
-</ul>
-    
