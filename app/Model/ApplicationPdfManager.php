@@ -15,27 +15,26 @@ use Nette\Utils\Strings;
 
 class ApplicationPdfManager {
     use SmartObject;
-
-    const PATH_BASE = '/pdf_applications';
-    const PATH_SOURCES = '/sources';
-    const PATH_DESTINATIONS = '/destinations';
-    const PATH_OTHERS = '/others';
+    //TODO
+    const PATH_BASE = '/PdfApplications';
+    const PATH_SOURCES = '/Sources';
+    const PATH_DESTINATIONS = '/Destinations';
+    //const PATH_OTHERS = '/others';
     const INFO_PDF_ITEM = 'pdfPathExtension';
     const INFO_FILES_ITEM = 'files';
 
-    /** @var  FileStorage */
-    private $fileStorage;
+    /** @var  FileStorageFactory */
+    private $fileStorageFactory;
 
-    public function __construct(FileStorage $fileStorage) {
-        $this->fileStorage = $fileStorage;
-        $this->createDirs();
+    public function __construct(FileStorageFactory $fileStorageFactory) {
+        $this->fileStorageFactory = $fileStorageFactory;
     }
 
     /**
      * @param \App\Model\Persistence\Entity\EventEntity $event
      * @return string[]
      */
-    public function getFilePaths(EventEntity $event){
+    public function getEventAttachmentFilePaths(EventEntity $event) {
         $files = $event->getInternalInfoItem(self::INFO_FILES_ITEM);
         if(!$files){
             $files = [];
@@ -56,23 +55,16 @@ class ApplicationPdfManager {
     }
 
 
-    public function getPdfPath(ApplicationEntity $application) {
+    public function getGeneratedApplicationPdfPath(ApplicationEntity $application) {
         $this->createPdf($application);
         return $this->getDestinationPdfFilePath($application);
-    }
-
-    private function createDirs(){
-        $this->fileStorage->createDir(self::PATH_BASE);
-        $this->fileStorage->createDir(self::PATH_BASE.self::PATH_SOURCES);
-        $this->fileStorage->createDir(self::PATH_BASE.self::PATH_DESTINATIONS);
-        $this->fileStorage->createDir(self::PATH_BASE.self::PATH_OTHERS);
     }
 
     /**
      * @return string
      */
     private function getBasePath(){
-        return $this->fileStorage->getFullPath(self::PATH_BASE);
+        return $this->fileStorageFactory->getFullPath(self::PATH_BASE);
     }
 
     /**

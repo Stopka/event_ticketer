@@ -18,7 +18,7 @@ use Nette\Mail\SendException;
 use Nette\SmartObject;
 
 class CartCreatedNotifier implements Subscriber {
-    use SmartObject, TEmailService;
+    use SmartObject, TEmailService, TAtachmentManager;
 
     /** @var  ApplicationPdfManager */
     private $applicationPdfManager;
@@ -32,6 +32,11 @@ class CartCreatedNotifier implements Subscriber {
         $this->injectEmailService($emailService);
         $this->applicationPdfManager = $applicationPdfManager;
     }
+
+    function getAtachmentManagerNamespace(): string {
+        return "CartCreated";
+    }
+
 
     /**
      * Event callback
@@ -65,12 +70,11 @@ class CartCreatedNotifier implements Subscriber {
 <p>V případě dotazu pište na ldtmpp@email.cz.</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě registrace přihlášky.</em></p>");
         foreach ($cartEntity->getApplications() as $application) {
-            $file_path = $this->applicationPdfManager->getPdfPath($application);
+            $file_path = $this->applicationPdfManager->getGeneratedApplicationPdfPath($application);
             $message->addAttachment('přihláška_' . $application->getId() . '.pdf', @file_get_contents($file_path));
         }
-        foreach ($this->applicationPdfManager->getFilePaths($cartEntity->getEvent()) as $file) {
-            $message->addAttachment($file);
-        }
+        $atachmentManager = $this->getAtachmentManager($cartEntity->getEvent());
+        $atachmentManager->addAttachmentsToMessage($message);
         $emailService->sendMessage($message);
     }
 

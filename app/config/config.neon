@@ -69,7 +69,8 @@ services:
     - App\AdminModule\Controls\Menus\MenuFactory
     - App\Model\CronService
     - App\Model\AdminAuthenticator
-    - App\Model\FileStorage(%appDir%/files)
+    - App\Model\FileStorageFactory(%appDir%/files)
+    - App\Model\Notifier\IEventMessageAtachmentManagerFactory
     - App\Model\ApplicationPdfManager
     - App\Model\DateFormatter(%dateFormat.date%,%dateFormat.time%,%dateFormat.dateTime%)
     - App\Model\Persistence\EntityManagerWrapper

@@ -12,7 +12,6 @@ use App\Model\CronService;
 use App\Model\Exception\AlreadyDoneException;
 use App\Model\Exception\NotFoundException;
 use App\Model\Exception\NotReadyException;
-use App\Model\FileStorage;
 use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
@@ -24,33 +23,39 @@ use Nette\Mail\SendException;
 use Nette\SmartObject;
 
 class EarlyWaveInviteNotifier implements Subscriber {
-    use SmartObject, TDoctrineEntityManager, TEmailService;
+    use SmartObject, TDoctrineEntityManager, TEmailService, TAtachmentManager;
 
     /** @var  EarlyWaveDao */
     private $earlyWaveDao;
 
     /** @var callable[] */
-    public $onEarlyWaveInvitesSent= Array();
-
-    /** @var FileStorage */
-    private $fileStorage;
+    public $onEarlyWaveInvitesSent = Array();
 
     /**
      * EarlyWaveInviteNotifier constructor.
      * @param EmailService $emailService
      * @param EarlyWaveDao $earlyWaveDao
+     * @param IEventMessageAtachmentManagerFactory $atachmentManagerFactory
      */
-    public function __construct(EmailService $emailService, EarlyWaveDao $earlyWaveDao, FileStorage $fileStorage) {
+    public function __construct(
+        EmailService $emailService,
+        EarlyWaveDao $earlyWaveDao,
+        IEventMessageAtachmentManagerFactory $atachmentManagerFactory
+    ) {
         $this->earlyWaveDao = $earlyWaveDao;
         $this->injectEmailService($emailService);
-        $this->fileStorage = $fileStorage;
+        $this->injectAtachmentManagerFactory($atachmentManagerFactory);
+    }
+
+    function getAtachmentManagerNamespace(): string {
+        return "EarlyWaveInvite";
     }
 
     /**
      * event callback
      * @throws InvalidLinkException
      */
-    public function onCronRun(){
+    public function onCronRun() {
         $this->sendUnsentInvites();
     }
 
@@ -69,10 +74,10 @@ class EarlyWaveInviteNotifier implements Subscriber {
      * @param EarlyWaveEntity $earlyWave
      * @throws \Nette\Application\UI\InvalidLinkException
      */
-    public function onEarlyWaveCreated(EarlyWaveEntity $earlyWave): void{
+    public function onEarlyWaveCreated(EarlyWaveEntity $earlyWave): void {
         try {
             $this->sendUnsentEarlyWaveInvites($earlyWave->getId());
-        }catch(NotReadyException $exception){
+        } catch (NotReadyException $exception) {
 
         }
     }
@@ -102,8 +107,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
     }
 
     /**
-     * @param string $waveId
-     * @throws SendException
+     * @param EarlyWaveEntity $wave
      * @throws InvalidLinkException
      */
     private function sendEarlyWaveInvites(EarlyWaveEntity $wave): void {
@@ -117,11 +121,7 @@ class EarlyWaveInviteNotifier implements Subscriber {
     }
 
     /**
-     * @param string $waveId
-     * @throws NotFoundException
-     * @throws AlreadyDoneException
-     * @throws NotReadyException
-     * @throws SendException
+     * @param int $waveId
      * @throws InvalidLinkException
      */
     public function sendDebugEarlyWaveInvites(int $waveId): void {
@@ -151,7 +151,8 @@ $link</p>
 <p>Zároveň bychom Vás při této příležitosti chtěli pozvat na druhý ročník našeho plesu. Infromace naleznete v přiložené pdf pozvánce.</p>
 <p>Tým LDTPardubice</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě otevření přednostního přístupu k přihláškám.</em></p>");
-        $message->addAttachment($this->fileStorage->getFullPath('/early_attachements/ples2018.pdf'));
+        $atachmentManager = $this->getAtachmentManager($early->getEarlyWave()->getEvent());
+        $atachmentManager->addAttachmentsToMessage($message);
         $emailService->sendMessage($message);
     }
 
