@@ -88,7 +88,8 @@ class ReserveApplicationFormWrapper extends FormWrapper {
             )
                 ->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION)
                 ->setVisibleCountLeft()
-                ->setAdmin();
+                ->setAdmin()
+                ->disableMinimum();
             $this->additionsControlsBuilder = $builder;
         }
         return $this->additionsControlsBuilder;
@@ -132,6 +133,11 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         $delegateSelect->setItems($items);
     }
 
+    public function processValues(array $values): array {
+        $values = $this->getAdditionsControlsBuilder()->preprocessAdditionsValues($values);
+        return $values;
+    }
+
     /**
      * @param SubmitButton $button
      * @throws \Exception
@@ -140,6 +146,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
+        $this->processValues($values);
         $this->reservationManager->createReservedApplicationsFromReservationForm($values, $this->event);
         $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
         $this->getPresenter()->redirect('Application:', $this->event->getId());

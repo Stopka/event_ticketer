@@ -19,10 +19,11 @@ use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\OptionEntity;
 use Kdyby\Translation\ITranslator;
 use Nette\Forms\Container;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 
 class AdditionsControlsBuilder {
-    use TRecalculateControl;
+    use TRecalculateControl, SmartObject;
 
     const CONTAINER_NAME_ADDITIONS = 'additions';
 
@@ -59,6 +60,9 @@ class AdditionsControlsBuilder {
     /** @var int[] */
     private $preselectedOptionIds = [];
 
+    /** @var bool */
+    private $disabledMinimum = false;
+
     public function __construct(
         EventEntity $eventEntity,
         CurrencyEntity $currencyEntity,
@@ -71,6 +75,10 @@ class AdditionsControlsBuilder {
         $this->translator = $translator;
     }
 
+    public function disableMinimum(bool $value = true): self {
+        $this->disabledMinimum = $value;
+        return $this;
+    }
 
     protected function getTranslator(): ?ITranslator {
         return $this->translator;
@@ -224,7 +232,7 @@ class AdditionsControlsBuilder {
             }
         }
         $count = count($values);
-        if ($count < $addition->getMinimum()) {
+        if (!$this->disabledMinimum && $count < $addition->getMinimum()) {
             throw new InvalidInputException("Error.Addition.Minimum.InvalidInput", $addition->getMinimum());
         }
         if ($count > $addition->getMaximum()) {
@@ -263,7 +271,7 @@ class AdditionsControlsBuilder {
         if (!count($options)) {
             return;
         }
-        if ($addition->getMinimum() !== 1 || $addition->getMaximum() > 1 || $addition->getMaximum() == count($options)) {
+        if ($this->disabledMinimum || $addition->getMinimum() !== 1 || $addition->getMaximum() > 1 || $addition->getMaximum() == count($options)) {
             $control = $container->addCheckboxList($addition->getId(), $addition->getName(), $options)
                 ->setRequired(false)
                 ->setTranslator()

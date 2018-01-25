@@ -186,7 +186,7 @@
                 <small>(na této adrese budete informováni o LDT - <strong>závazné</strong>)</small>
                 :
             </div>
-            <div class="input">{$application->getCart()->getEmail()}&nbsp;</div>
+            <div class="input">{if $application->getCart()}{$application->getCart()->getEmail()}{/if}&nbsp;</div>
         </td>
         <td style="width: 30%">
             <div class="label">Velikost trička
@@ -262,7 +262,7 @@
             <div>
                 <img src="{$baseDir|noescape}/ApplicationPdfResponse/checkbox{$bus===true?1:0}.png"
                      style="max-height: 22px;"> Autobus
-                (+400Kč)
+                <small>(+400,-Kč)</small>
                 <img src="{$baseDir|noescape}/ApplicationPdfResponse/checkbox{$bus===false?1:0}.png"
                      style="max-height: 22px;"> Individuální
             </div>
