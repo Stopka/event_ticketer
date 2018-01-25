@@ -32,22 +32,7 @@ class ApplicationPresenter extends BasePresenter {
         }
         $application = $this->appicationDao->getApplication($id);
         $response = $this->applicationPdfResponse;
-        $this->addComponent($response, 'response');
-        $response->setApplication($application);
-        $this->sendResponse($response);
-    }
-
-    /**
-     * @param int $applicationId
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderSend(int $id) {
-        if (Debugger::$productionMode) {
-            throw new NotReadyException("Not availible in production");
-        }
-        $application = $this->appicationDao->getApplication($id);
-        $response = $this->applicationPdfResponse;
-        $this->addComponent($response, 'response');
+        //$this->addComponent($response, 'response');
         $response->setApplication($application);
         $this->sendResponse($response);
     }

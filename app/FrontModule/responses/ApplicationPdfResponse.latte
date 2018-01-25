@@ -6,14 +6,92 @@
 <head>
     <meta charset="utf-8">
     <title>Přihláška - Letní dětský tábor Pardubice z.s.</title>
-    <link type="text/css" rel="stylesheet" href="/app/pdf/application/style.css"/>
+    <style>
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-size: 14px;
+            color: #000000;
+            margin: 0;
+            /*
+            background: #FFFFFF;
+            background-image: url('
+
+        {$baseDir|noescape}  /ApplicationPdfResponse/watermark.png');
+            */
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        h1 {
+            font-size: 16px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        h1 span {
+            display: block;
+        }
+
+        h1 small {
+            font-size: 14px;
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            margin: 0;
+        }
+
+        table td {
+            border: 0px solid white;
+        }
+
+        table.form {
+            border-spacing: 2mm;
+        }
+
+        table.form td {
+            width: 50%;
+            border-bottom: 2px dotted black;
+            border-left: 2px dotted black;
+        }
+
+        .label {
+            font-size: 0.8em;
+            margin-bottom: 3px;
+        }
+
+        .input {
+            color: darkblue;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 1em;
+        }
+
+        input {
+            width: 42px;
+        }
+
+        p {
+            margin: 0;
+            margin-bottom: 4px;
+        }
+
+        a {
+            color: black;
+        }
+    </style>
 </head>
-<body>
+<body style="background-image: url('{$baseDir|noescape}/ApplicationPdfResponse/watermark.png')">
 <table>
     <tr style="height: 4cm">
         <td style="width: 25%; text-align: center;">
-            <img src="/app/pdf/application/logo.png" style="max-height: 3cm; max-width: 100%;">
-            <img src="/app/pdf/application/landa.jpg" style="max-height: 2cm; max-width: 100%;">
+            <img src="{$baseDir|noescape}/ApplicationPdfResponse/logo.png" style="max-height: 3cm; max-width: 100%;">
+            <img src="{$baseDir|noescape}/ApplicationPdfResponse/landa.jpg" style="max-height: 2cm; max-width: 100%;">
         </td>
         <td style="width: 25%; text-align: center;">
             <h1>
@@ -182,9 +260,11 @@
                         :
             </div>
             <div>
-                <img src="/app/pdf/application/checkbox{$bus===true?1:0}.png" style="max-height: 22px;"> Autobus
+                <img src="{$baseDir|noescape}/ApplicationPdfResponse/checkbox{$bus===true?1:0}.png"
+                     style="max-height: 22px;"> Autobus
                 (+400Kč)
-                <img src="/app/pdf/application/checkbox{$bus===false?1:0}.png" style="max-height: 22px;"> Individuální
+                <img src="{$baseDir|noescape}/ApplicationPdfResponse/checkbox{$bus===false?1:0}.png"
+                     style="max-height: 22px;"> Individuální
             </div>
         </td>
         <td>
@@ -196,9 +276,10 @@
                         :
             </div>
             <div>
-                <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Plavec
-                <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Částečný plavec
-                <img src="/app/pdf/application/checkbox0.png" style="max-height: 22px;"> Neplavec
+                <img src="{$baseDir|noescape}/ApplicationPdfResponse/checkbox0.png" style="max-height: 22px;"> Plavec
+                <img src="{$baseDir|noescape}/ApplicationPdfResponse/checkbox0.png" style="max-height: 22px;"> Částečný
+                plavec
+                <img src="{$baseDir|noescape}/ApplicationPdfResponse/checkbox0.png" style="max-height: 22px;"> Neplavec
             </div>
         </td>
     </tr>

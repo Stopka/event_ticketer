@@ -9,8 +9,8 @@
 namespace App\Model\Notifier;
 
 
-use App\Model\ApplicationPdfManager;
 use App\Model\Exception\NotReadyException;
+use App\Model\IApplicationPdfManager;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Manager\CartManager;
 use Kdyby\Events\Subscriber;
@@ -20,16 +20,22 @@ use Nette\SmartObject;
 class CartCreatedNotifier implements Subscriber {
     use SmartObject, TEmailService, TAtachmentManager;
 
-    /** @var  ApplicationPdfManager */
+    /** @var  IApplicationPdfManager */
     private $applicationPdfManager;
 
     /**
      * CartCreatedNotifier constructor.
      * @param EmailService $emailService
-     * @param ApplicationPdfManager $applicationPdfManager
+     * @param IApplicationPdfManager $applicationPdfManager
+     * @param IEventMessageAtachmentManagerFactory $atachmentManagerFactory
      */
-    public function __construct(EmailService $emailService, ApplicationPdfManager $applicationPdfManager) {
+    public function __construct(
+        EmailService $emailService,
+        IApplicationPdfManager $applicationPdfManager,
+        IEventMessageAtachmentManagerFactory $atachmentManagerFactory
+    ) {
         $this->injectEmailService($emailService);
+        $this->injectAtachmentManagerFactory($atachmentManagerFactory);
         $this->applicationPdfManager = $applicationPdfManager;
     }
 
@@ -43,7 +49,7 @@ class CartCreatedNotifier implements Subscriber {
      * @param CartEntity $cartEntity
      * @throws \Nette\Application\UI\InvalidLinkException
      */
-    public function onCartCreated(CartEntity $cartEntity){
+    public function onCartCreated(CartEntity $cartEntity) {
         $this->sendNotification($cartEntity);
     }
 
@@ -57,7 +63,7 @@ class CartCreatedNotifier implements Subscriber {
         if (!$cartEntity->getEmail()) {
             throw new NotReadyException("Cart has no email address");
         }
-        $emailService =$this->getEmailService();
+        $emailService = $this->getEmailService();
         $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getUid()]);
         $message = $emailService->createMessage();
         $message->addTo($cartEntity->getEmail(), $cartEntity->getFullName());
@@ -70,8 +76,7 @@ class CartCreatedNotifier implements Subscriber {
 <p>V případě dotazu pište na ldtmpp@email.cz.</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě registrace přihlášky.</em></p>");
         foreach ($cartEntity->getApplications() as $application) {
-            $file_path = $this->applicationPdfManager->getGeneratedApplicationPdfPath($application);
-            $message->addAttachment('přihláška_' . $application->getId() . '.pdf', @file_get_contents($file_path));
+            $this->applicationPdfManager->addMessageAttachment($message, $application);
         }
         $atachmentManager = $this->getAtachmentManager($cartEntity->getEvent());
         $atachmentManager->addAttachmentsToMessage($message);

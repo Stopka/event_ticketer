@@ -5,8 +5,11 @@ namespace App\FrontModule\Responses;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Responses\PdfResponse\IPdfResponseFactory;
 use App\Responses\PdfResponse\PdfResponse;
-use Nette;
 use Nette\Application\IResponse;
+use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\ITemplateFactory;
+use Nette\Http\IRequest;
+use Nette\Utils\Strings;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,14 +17,34 @@ use Nette\Application\IResponse;
  * Date: 25.1.17
  * Time: 11:11
  */
-class ApplicationPdfResponse extends Nette\Application\UI\Control implements IResponse {
+class ApplicationPdfResponse implements IResponse {
 
     /** @var IPdfResponseFactory */
     private $pdfResponseFactory;
 
-    public function __construct(IPdfResponseFactory $pdfResponseFactory) {
-        parent::__construct();
+    /** @var ITemplateFactory */
+    private $templateFactory;
+
+    /** @var ITemplate */
+    private $template;
+
+    public function __construct(
+        IPdfResponseFactory $pdfResponseFactory,
+        ITemplateFactory $templateFactory
+    ) {
         $this->pdfResponseFactory = $pdfResponseFactory;
+        $this->templateFactory = $templateFactory;
+    }
+
+    protected function createTemplate(): ITemplate {
+        return $this->templateFactory->createTemplate();
+    }
+
+    protected function getTemplate(): ITemplate {
+        if (!$this->template) {
+            $this->template = $this->createTemplate();
+        }
+        return $this->template;
     }
 
 
@@ -32,9 +55,10 @@ class ApplicationPdfResponse extends Nette\Application\UI\Control implements IRe
         $this->application = $application;
     }
 
-    protected function buildHtml(): string {
+    protected function buildTemplate(): ITemplate {
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/ApplicationPdfResponse.latte');
+        $template->baseDir = __DIR__;
         $application = $this->application;
         $bus = null;
         $tricko = null;
@@ -65,14 +89,13 @@ class ApplicationPdfResponse extends Nette\Application\UI\Control implements IRe
         $template->bus = $bus;
         $template->tricko = $tricko;
         $template->address = implode('; ', $address);
-        $template->id = Nette\Utils\Strings::padLeft($this->application->getId(), 3, '0');
-        $html = (string)$template;
-        return $html;
+        $template->id = Strings::padLeft($this->application->getId(), 3, '0');
+        return $template;
     }
 
     protected function buildPdfResponse() {
-        $html = $this->buildHtml();
-        $pdf = $this->pdfResponseFactory->create($html);
+        $template = $this->buildTemplate();
+        $pdf = $this->pdfResponseFactory->create($template);
         $pdf->setSaveMode(PdfResponse::INLINE);
         $pdf->setPageFormat("A4");
         $pdf->setDocumentTitle("Application form");
@@ -84,11 +107,20 @@ class ApplicationPdfResponse extends Nette\Application\UI\Control implements IRe
     }
 
     /**
-     * @param Nette\Http\IRequest $httpRequest
-     * @param Nette\Http\IResponse $httpResponse
+     * @param IRequest $httpRequest
+     * @param \Nette\Http\IResponse $httpResponse
      */
-    function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse) {
+    function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
         $pdfResponse = $this->buildPdfResponse();
         $pdfResponse->send($httpRequest, $httpResponse);
+    }
+
+    /**
+     * @param string $dir
+     * @param string $filename
+     */
+    public function save(string $dir, string $filename) {
+        $pdfResponse = $this->buildPdfResponse();
+        $pdfResponse->save($dir, $filename);
     }
 }

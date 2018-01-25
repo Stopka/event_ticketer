@@ -53,7 +53,7 @@ class FileStorage {
      * @param $path string
      * @return string
      */
-    public function getFullPath($path) {
+    public function getFullPath(string $path = "") {
         return $this->getBasePath() . $path;
     }
 

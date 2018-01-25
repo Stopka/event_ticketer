@@ -71,7 +71,7 @@ services:
     - App\Model\AdminAuthenticator
     - App\Model\FileStorageFactory(%appDir%/files)
     - App\Model\Notifier\IEventMessageAtachmentManagerFactory
-    - App\Model\ApplicationPdfManager
+    - App\Model\GeneratingApplicationPdfManager
     - App\Model\DateFormatter(%dateFormat.date%,%dateFormat.time%,%dateFormat.dateTime%)
     - App\Model\Persistence\EntityManagerWrapper
     - App\Model\Persistence\Dao\AdditionDao
