@@ -21,9 +21,9 @@ class SendEarlyInvitesCommand extends Command {
     /** @var EarlyWaveInviteNotifier */
     private $earlyWaveInviteNotifier;
 
-    public function __construct(EarlyWaveInviteNotifier $earlyWaveInviteNotifier, ?string $name = null) {
+    public function __construct(EarlyWaveInviteNotifier $cartCreatedNotifier, ?string $name = null) {
         parent::__construct($name);
-        $this->earlyWaveInviteNotifier = $earlyWaveInviteNotifier;
+        $this->earlyWaveInviteNotifier = $cartCreatedNotifier;
     }
 
 
