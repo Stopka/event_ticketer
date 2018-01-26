@@ -583,3 +583,21 @@ i {
     display: inline-block;
     margin-right: 3px;
 }
+
+.occupancy_visual .occupancy-item {
+	display: inline-block;
+	margin: 2px;
+	color: #BF360C;
+}
+
+.occupancy_visual .occupancy-item.over {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.occupancy_visual .occupancy-item.issued .occupancy-icon {
+	color: rgba(13, 71, 161, 0.6);
+}
+
+.occupancy_visual .occupancy-item.free .occupancy-icon {
+	color: rgba(27, 94, 32, 0.2);
+}

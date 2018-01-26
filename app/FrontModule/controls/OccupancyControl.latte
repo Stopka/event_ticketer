@@ -4,12 +4,22 @@
 <fieldset n:if="$event->getCapacity()">
     <legend>{_'Occupancy.Occupied',$event_occupied,['total'=>$event->getCapacity()]}</legend>
     <div class="occupancy_visual">
-        {for $i=0; $i<$event_occupied; $i++}
+        {for $i=0; $i < min($event_occupied,$event->getCapacity()); $i++}
             {control $control:icon $event,2}
         {/for}
-        {for $i=$event_occupied; $i<$event_issued; $i++}
+        {if $admin}
+            {for $i=$event->getCapacity(); $i < $event_occupied; $i++}
+                {control $control:icon $event,2, true}
+            {/for}
+        {/if}
+        {for $i=$event_occupied; $i < min($event_issued,$event->getCapacity()); $i++}
             {control $control:icon $event,1}
         {/for}
+        {if $admin}
+            {for $i=$event->getCapacity(); $i < $event_issued; $i++}
+                {control $control:icon $event,1, true}
+            {/for}
+        {/if}
         {for $i=$event_issued; $i<$event->getCapacity(); $i++}
             {control $control:icon $event,0}
         {/for}
@@ -21,12 +31,22 @@
     <legend>{$option->getAddition()->getName()}: {$option->getName()}
         - {_'Occupancy.Occupied',$occupied,['total'=>$option->getCapacity()]}</legend>
     <div class="occupancy_visual">
-        {for $i=0; $i<$occupied; $i++}
+        {for $i=0; $i<min($occupied,$option->getCapacity()); $i++}
             {control $control:icon $option,2}
         {/for}
-        {for $i=$occupied; $i<$issued; $i++}
+        {if $admin}
+            {for $i=$option->getCapacity(); $i < $occupied; $i++}
+                {control $control:icon $option,2, true}
+            {/for}
+        {/if}
+        {for $i=$occupied; $i<min($issued,$option->getCapacity()); $i++}
             {control $control:icon $option,1}
         {/for}
+        {if $admin}
+            {for $i=$option->getCapacity(); $i < $issued; $i++}
+                {control $control:icon $option,1, true}
+            {/for}
+        {/if}
         {for $i=$issued; $i<$option->getCapacity(); $i++}
             {control $control:icon $option,0}
         {/for}

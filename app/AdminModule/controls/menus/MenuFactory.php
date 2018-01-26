@@ -88,6 +88,9 @@ class MenuFactory extends \App\Controls\Menus\MenuFactory {
         $apps->add('Entity.Singular.Cart', ':Admin:Cart:default')
             ->setIcon('fa fa-shopping-cart')
             ->setLinkParamNeeded(CartEntity::class);
+        $appsEvent->add('Attribute.Event.Occupancy', ':Admin:Application:occupancy')
+            ->setIcon('fa fa-adjust')
+            ->setLinkParamNeeded(EventEntity::class);
         $appsEvent->add('Entity.Plural.Substitute', ':Admin:Substitute:default')
             ->setIcon('fa fa-retweet')
             ->setLinkParamNeeded(EventEntity::class);

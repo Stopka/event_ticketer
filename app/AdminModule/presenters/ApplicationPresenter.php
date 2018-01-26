@@ -8,6 +8,8 @@ use App\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use App\AdminModule\Controls\Grids\ApplicationsGridWrapper;
 use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
 use App\AdminModule\Responses\ApplicationsExportResponse;
+use App\FrontModule\Controls\IOccupancyControlFactory;
+use App\FrontModule\Controls\OccupancyControl;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\EventDao;
 use App\Model\Persistence\Entity\EventEntity;
@@ -26,19 +28,30 @@ class ApplicationPresenter extends BasePresenter {
     /** @var ApplicationDao */
     public $applicationDao;
 
+    /** @var  IOccupancyControlFactory */
+    public $occupancyControlFactory;
+
     /**
      * ApplicationPresenter constructor.
      * @param IApplicationsGridWrapperFactory $applicationsGridWrapperFactory
      * @param IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory
      * @param EventDao $eventDao
      * @param ApplicationDao $applicationDao
+     * @param IOccupancyControlFactory $occupancyControlFactory
      */
-    public function __construct(IApplicationsGridWrapperFactory $applicationsGridWrapperFactory, IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory, EventDao $eventDao, ApplicationDao $applicationDao) {
+    public function __construct(
+        IApplicationsGridWrapperFactory $applicationsGridWrapperFactory,
+        IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory,
+        EventDao $eventDao,
+        ApplicationDao $applicationDao,
+        IOccupancyControlFactory $occupancyControlFactory
+    ) {
         parent::__construct();
         $this->applicationsGridWrapperFactory = $applicationsGridWrapperFactory;
         $this->reserveApplicationFormWrapperFactory = $reserveApplicationFormWrapperFactory;
         $this->eventDao = $eventDao;
         $this->applicationDao = $applicationDao;
+        $this->occupancyControlFactory = $occupancyControlFactory;
     }
 
     /**
@@ -54,6 +67,24 @@ class ApplicationPresenter extends BasePresenter {
         /** @var ApplicationsGridWrapper $applicationGrid */
         $applicationGrid = $this->getComponent('applicationsGrid');
         $applicationGrid->setEvent($event);
+        $this->template->event = $event;
+
+    }
+
+    /**
+     * @param int $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionOccupancy(int $id) {
+        $event = $this->eventDao->getEvent($id);
+        if (!$event) {
+            $this->redirect('Homepage:');
+        }
+        $this->getMenu()->setLinkParam(EventEntity::class, $event);
+        /** @var OccupancyControl $occupancy */
+        $occupancy = $this->getComponent('occupancy');
+        $occupancy->setEvent($event);
+        $occupancy->setAdmin();
         $this->template->event = $event;
     }
 
@@ -113,5 +144,9 @@ class ApplicationPresenter extends BasePresenter {
 
     protected function createComponentReserveForm() {
         return $this->reserveApplicationFormWrapperFactory->create();
+    }
+
+    protected function createComponentOccupancy() {
+        return $this->occupancyControlFactory->create();
     }
 }

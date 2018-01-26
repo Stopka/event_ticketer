@@ -35,12 +35,19 @@ class OccupancyControl extends Control {
     /** @var  EventEntity */
     private $event;
 
+    /** @var bool */
+    private $admin = false;
+
     public function __construct(ITranslator $translator, ApplicationDao $applicationDao, OptionDao $optionDao, OccupancyIcons $occupancyIcons) {
         parent::__construct();
         $this->applicationDao = $applicationDao;
         $this->optionDao = $optionDao;
         $this->occupancyIcons = $occupancyIcons;
         $this->injectTranslator($translator);
+    }
+
+    public function setAdmin(bool $admin = true) {
+        $this->admin = $admin;
     }
 
 
@@ -56,26 +63,39 @@ class OccupancyControl extends Control {
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/OccupancyControl.latte');
         $template->event = $event;
-        $template->event_issued = $this->applicationDao->countIssuedApplications($event);
-        $template->event_occupied = $this->applicationDao->countOccupiedApplications($event);
+        $template->event_issued = $this->limitValue($this->applicationDao->countIssuedApplications($event), $event->getCapacity());
+        $template->event_occupied = $this->limitValue($this->applicationDao->countOccupiedApplications($event), $event->getCapacity());
         $template->options = $this->optionDao->getOptionsWithLimitedCapacity($event);
+        $template->admin = $this->admin;
         $template->render();
+    }
+
+    private function limitValue(int $value, ?int $limit): int {
+        if ($this->admin || !$limit) {
+            return $value;
+        }
+        return min($value, $limit);
     }
 
     /**
      * @param TOccupancyIconAttribute $item
      * @param bool $occupied
      */
-    public function renderIcon($item, int $occupied = 2) {
+    public function renderIcon($item, int $occupied = 2, $over = false) {
         $title = $occupied ? ($occupied == 1 ? 'Issued' : 'Occupied') : 'Free';
         $title = 'Occupancy.State.' . $title;
         $title = $this->getTranslator()->translate($title);
+        if ($over) {
+            $title .= ' (' . $this->getTranslator()->translate('Occupancy.State.Over') . ')';
+        }
+        $classes = [
+            'occupancy-item',
+            $occupied ? ($occupied == 1 ? 'issued' : 'occupied') : 'free',
+            $over ? 'over' : 'in'
+        ];
         $html = Html::el('span', [
             'title' => $title,
-            'class' => [
-                'occupancy-item',
-                $occupied ? ($occupied == 1 ? 'issued' : 'occupied') : 'free'
-            ]
+            'class' => $classes
         ]);
         $html->addHtml(
             $this->occupancyIcons->getIconHtml($item->getOccupancyIcon(), $occupied)
@@ -88,7 +108,8 @@ class OccupancyControl extends Control {
      * @return int
      */
     public function countOptionsOccupied(OptionEntity $option): int {
-        return $this->applicationDao->countOccupiedApplicationsWithOption($option);
+        $value = $this->applicationDao->countOccupiedApplicationsWithOption($option);
+        return $this->limitValue($value, $option->getCapacity());
     }
 
     /**
@@ -96,6 +117,7 @@ class OccupancyControl extends Control {
      * @return int
      */
     public function countOptionsIssued(OptionEntity $option): int {
-        return $this->applicationDao->countIssuedApplicationsWithOption($option);
+        $value = $this->applicationDao->countIssuedApplicationsWithOption($option);
+        return $this->limitValue($value, $option->getCapacity());
     }
 }

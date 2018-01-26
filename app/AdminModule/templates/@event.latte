@@ -8,6 +8,11 @@
                     <span><i class="fa fa-ticket"></i> {_'Entity.Plural.Application'}</span>
                 </a>
             </li>
+            <li n:class="$presenter->isLinkCurrent('Application:occupancy')?active">
+                <a n:href="Application:occupancy,$event->getId()">
+                    <span><i class="fa fa-adjust"></i> {_'Attribute.Event.Occupancy'}</span>
+                </a>
+            </li>
             <li n:class="$presenter->isLinkCurrent('Substitute:default')?active">
                 <a n:href="Substitute:default,$event->getId()">
                     <span><i class="fa fa-retweet"></i> {_'Entity.Plural.Substitute'}</span>

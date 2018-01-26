@@ -7,3 +7,6 @@ Event:
     Confirm:
         Cancel: 'Opravdu chcete zrušit událost "%event%"?'
         Close: 'Opravdu chcete uzavřít událost "%event%"?'
+Application:
+    Confirm:
+        Cancel: 'Opravdu chcete zrušit přihlášku "%application%"?'

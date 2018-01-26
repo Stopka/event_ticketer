@@ -127,6 +127,16 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setDisable(function (ApplicationEntity $applicationEntity) {
                 return !in_array($applicationEntity->getState(), ApplicationEntity::getStatesReserved()) || $applicationEntity->getCart();
             });
+        $grid->addActionEvent('cancel', 'Form.Action.Cancel', function (ApplicationEntity $applicationEntity) {
+
+        })
+            ->setIcon('fa fa-ban')
+            ->setConfirm(function (ApplicationEntity $applicationEntity) {
+                return $this->getTranslator()->translate('Grid.Application.Confirm.Cancel', ['application' => '#' . $applicationEntity->getId()]);
+            })
+            ->setDisable(function (ApplicationEntity $applicationEntity) {
+                return in_array($applicationEntity->getState(), ApplicationEntity::getStatesNotIssued());
+            });
         $grid->addButton('reserve', 'Presenter.Admin.Application.Reserve.H1', "Application:reserve", ['id' => $this->event->getId()])
             ->setIcon('fa fa-address-book-o');
         $grid->addButton('export', 'Presenter.Admin.Application.Export.H1', "Application:export", ['id' => $this->event->getId()])
