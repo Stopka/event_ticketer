@@ -113,6 +113,20 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setDisable(function (ApplicationEntity $applicationEntity) {
                 return $applicationEntity->getCart() === null;
             });
+        $grid->addActionEvent('editReservation', 'Form.Action.Edit', function ($id) {
+            $application = $this->applicationDao->getApplication($id);
+            if (!$application) {
+                return;
+            }
+            $this->getPresenter()->redirect('Application:editReservation', [
+                'id' => $this->event->getId(),
+                'ids' => [$application->getId()]
+            ]);
+        })
+            ->setIcon('fa fa-pencil')
+            ->setDisable(function (ApplicationEntity $applicationEntity) {
+                return !in_array($applicationEntity->getState(), ApplicationEntity::getStatesReserved()) || $applicationEntity->getCart();
+            });
         $grid->addButton('reserve', 'Presenter.Admin.Application.Reserve.H1', "Application:reserve", ['id' => $this->event->getId()])
             ->setIcon('fa fa-address-book-o');
         $grid->addButton('export', 'Presenter.Admin.Application.Export.H1', "Application:export", ['id' => $this->event->getId()])

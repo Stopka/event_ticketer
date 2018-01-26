@@ -13,6 +13,7 @@ Admin:
         Edit.H1: Upravit objednávku
     Application:
         Reserve.H1: 'Rezervovat přihlášky'
+        EditReservation.H1: Upravit rezervaci přihlášky|Upravit rezervace přihlášek|Upravit rezervace přihlášek
         Export.H1: 'Exportovat seznam'
     Currency:
         Add.H1: 'Vytvořit měnu'

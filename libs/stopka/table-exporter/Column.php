@@ -6,8 +6,6 @@ namespace Stopka\TableExporter;
      * To change this template, choose Tools | Templates
      * and open the template in the editor.
      */
-use Elearning\Model\Company\Setting;
-use Elearning\Model\Root\Translator;
 use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 
@@ -18,6 +16,7 @@ use Nette\SmartObject;
  */
 class Column {
     use SmartObject;
+
     /** @var \string */
     protected $key;
     /** @var  \string */
@@ -30,6 +29,10 @@ class Column {
 
     /** @var  ITranslator */
     protected $translator;
+
+    protected $cellFormat;
+
+    protected $dataType;
 
     /**
      * Tvorba sloupce
@@ -198,6 +201,36 @@ class Column {
      */
     public function setCustomRenderer($callback) {
         $this->renderer = $callback;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCellFormat() {
+        return $this->cellFormat;
+    }
+
+    /**
+     * @param mixed $cellFormat
+     */
+    public function setCellFormat($cellFormat): self {
+        $this->cellFormat = $cellFormat;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDataType() {
+        return $this->dataType;
+    }
+
+    /**
+     * @param mixed $dataType
+     */
+    public function setDataType($dataType): self {
+        $this->dataType = $dataType;
         return $this;
     }
 }

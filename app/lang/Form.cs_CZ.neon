@@ -58,7 +58,8 @@ Reservation:
         NewPerson: 'Nová osoba'
         ExistingPerson: 'Existující osoba'
     Message:
-        Create.Success: 'Přihlášky byly vytvořeny'
+        Create.Success: 'Rezervace byly vytvořeny'
+        Edit.Success: 'Rezervace byly upraveny'
         Delegate.Success: 'Přihlášky byly delegovány'
 EarlyWave:
     Description:

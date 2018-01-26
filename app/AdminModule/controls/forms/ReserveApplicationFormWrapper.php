@@ -16,6 +16,7 @@ use App\Controls\Forms\IAdditionsControlsBuilderFactory;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\ReservationDao;
 use App\Model\Persistence\Entity\AdditionEntity;
+use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Manager\ReservationManager;
@@ -49,6 +50,9 @@ class ReserveApplicationFormWrapper extends FormWrapper {
 
     /** @var DelegateReservationControlsBuilder */
     private $delegateReservationControlsBuilder;
+
+    /** @var ApplicationEntity[] */
+    private $applicationEntities = [];
 
     public function __construct(
         FormWrapperDependencies $formWrapperDependencies,
@@ -105,6 +109,21 @@ class ReserveApplicationFormWrapper extends FormWrapper {
      */
     protected function appendFormControls(Form $form) {
         $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
+        $this->appendReserveControls($form);
+        $form->addGroup('Entity.Plural.Choice')
+            ->setOption($form::OPTION_KEY_CLASS, 'price_subspace');
+        $this->getAdditionsControlsBuilder()
+            ->appendAdditionsControls($form);
+        $this->appendDelegateControls($form);
+        $this->appendSubmitControls($form,
+            count($this->applicationEntities) ? 'Form.Action.Edit' : 'Form.Action.Reserve',
+            [$this, 'reserveClicked']);
+    }
+
+    protected function appendReserveControls(Form $form) {
+        if (count($this->applicationEntities)) {
+            return;
+        }
         $form->addGroup('Entity.Singular.Cart')
             ->setOption('visual', false);
         $form->addText(self::FIELD_COUNT, 'Attribute.Count', null, 255)
@@ -113,15 +132,12 @@ class ReserveApplicationFormWrapper extends FormWrapper {
             ->setRequired()
             ->addRule($form::INTEGER)
             ->addRule($form::RANGE, NULL, [1, 100]);
-        $form->addGroup('Entity.Plural.Choice')
-            ->setOption($form::OPTION_KEY_CLASS, 'price_subspace');
-        $this->getAdditionsControlsBuilder()
-            ->appendAdditionsControls($form);
-        $this->appendDelegateControls($form);
-        $this->appendSubmitControls($form, 'Form.Action.Reserve', [$this, 'reserveClicked']);
     }
 
     protected function appendDelegateControls(Form $form) {
+        if (count($this->applicationEntities)) {
+            return;
+        }
         $this->getDelegateReservationControlsBuilder()
             ->appendDelegateControls($form);
         /** @var SelectBox $delegateSelect */
@@ -147,9 +163,21 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         $form = $button->getForm();
         $values = $form->getValues(true);
         $this->processValues($values);
-        $this->reservationManager->createReservedApplicationsFromReservationForm($values, $this->event);
-        $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
+        if (!$this->applicationEntities) {
+            $this->reservationManager->createReservedApplicationsFromReservationForm($values, $this->event);
+            $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
+        } else {
+            $this->reservationManager->editReservedApplicationsFromReservationForm($values, $this->applicationEntities);
+            $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Edit.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);
+        }
         $this->getPresenter()->redirect('Application:', $this->event->getId());
+    }
+
+    /**
+     * @param ApplicationEntity[] $applications
+     */
+    public function setApplications(array $applications) {
+        $this->applicationEntities = $applications;
     }
 
 }

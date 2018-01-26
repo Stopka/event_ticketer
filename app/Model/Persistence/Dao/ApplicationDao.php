@@ -121,4 +121,16 @@ class ApplicationDao extends EntityDao {
         ]);
     }
 
+    /**
+     * @param array $ids
+     * @return ApplicationEntity[]
+     */
+    public function getReservedApplications(EventEntity $eventEntity, array $ids = []): array {
+        return $this->getRepository()->findBy([
+            'id IN' => $ids,
+            'state IN' => ApplicationEntity::getStatesReserved(),
+            'event' => $eventEntity
+        ]);
+    }
+
 }

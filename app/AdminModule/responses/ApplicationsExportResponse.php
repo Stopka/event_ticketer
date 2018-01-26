@@ -15,6 +15,7 @@ use App\Model\Persistence\Entity\EventEntity;
 use Kdyby\Translation\ITranslator;
 use Nette;
 use Nette\Application\IResponse;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use Stopka\TableExporter\SettingException;
 use Stopka\TableExporter\SpreadsheetResponse;
 
@@ -58,19 +59,23 @@ class ApplicationsExportResponse implements IResponse {
         $response->addColumn('cart_email', 'Email')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getCart() ? $applicaiton->getCart()->getEmail() : "";
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('cart_firstName', 'Jméno rodiče')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getCart() ? $applicaiton->getCart()->getFirstName() : "";
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('cart_lastName', 'Příjmení rodiče')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getCart() ? $applicaiton->getCart()->getLastName() : "";
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('cart_phone', 'Telefon')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getCart() ? $applicaiton->getCart()->getPhone() : "";
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('cart_created', 'Vytvoření objednávky')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getCart() && $applicaiton->getCart()->getCreated() ? $applicaiton->getCart()->getCreated()->format('Y-m-d H:i:s') : "";
@@ -83,52 +88,66 @@ class ApplicationsExportResponse implements IResponse {
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 $states = ApplicationEntity::getAllStates();
                 return $this->translator->translate($states[$applicaiton->getState()]);
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('firstName', 'Jméno')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getFirstName();
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('lastName', 'Příjmení')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getLastName();
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('gender', 'Pohlaví')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 if ($applicaiton->getGender() === NULL) {
                     return '';
                 }
                 return $applicaiton->getGender() ? 'Žena' : 'Muž';
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('birthDate', 'Datum narození')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 $date = $applicaiton->getBirthDate();
-                return $date ? $date->format('Y-m-d') : '';
+                return $date ? $date->format('d. m.') : '';
+            });
+        $response->addColumn('birthYear', 'Rok narození')
+            ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
+                $date = $applicaiton->getBirthDate();
+                return $date ? $date->format('Y') : '';
             });
         $response->addColumn('insuranceCompany', 'Zdravotní pojišťovna')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 $ic = $applicaiton->getInsuranceCompany();
-                return $ic ? $ic->getCode() . ' ' . $ic->getName() : '';
-            });
-        $response->addColumn('address', 'Adresa')
-            ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
-                return $applicaiton->getAddress();
+                return $ic ? $ic->getCode() : '';
             });
         $response->addColumn('city', 'Město')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getCity();
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
+        $response->addColumn('address', 'Adresa')
+            ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
+                return $applicaiton->getAddress();
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('zip', 'PSČ')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getZip();
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('friend', 'Umístění')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getFriend();
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
         $response->addColumn('info', 'Info')
             ->setCustomRenderer(function (ApplicationEntity $applicaiton) {
                 return $applicaiton->getInfo();
-            });
+            })
+            ->setDataType(DataType::TYPE_STRING);
 
 
         foreach ($this->eventEntity->getAdditions() as $addition) {
@@ -145,7 +164,8 @@ class ApplicationsExportResponse implements IResponse {
                         }
                     }
                     return $result;
-                });
+                })
+                ->setDataType(DataType::TYPE_STRING);
         }
         $response->send($httpRequest, $httpResponse);
     }

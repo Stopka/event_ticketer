@@ -74,6 +74,27 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
+     * @param int[] $ids
+     * @throws \Nette\Application\AbortException
+     */
+    public function actionEditReservation(int $id, array $ids) {
+        $eventEntity = $this->eventDao->getEvent($id);
+        if (!$eventEntity) {
+            $this->redirect('Homepage:');
+        }
+        $reservedApplications = $this->applicationDao->getReservedApplications($eventEntity, $ids);
+        $count = count($reservedApplications);
+        if (!count($reservedApplications)) {
+            $this->redirect('Homepage:');
+        }
+        $this->template->count = $count;
+        /** @var ReserveApplicationFormWrapper $reserveForm */
+        $reserveForm = $this->getComponent('reserveForm');
+        $reserveForm->setEvent($eventEntity);
+        $reserveForm->setApplications($reservedApplications);
+    }
+
+    /**
      * @param int $id
      * @throws \Nette\Application\AbortException
      */

@@ -261,7 +261,14 @@ class SpreadsheetResponse implements IResponse {
             $idx = 1;
             foreach ($this->columns_order as $column) {
                 $coordinates = Coordinate::stringFromColumnIndex($idx) . "" . $idy;
-                $sheet->setCellValue($coordinates, $column->createContent($row));
+                if ($column->getDataType()) {
+                    $sheet->setCellValueExplicit($coordinates, $column->createContent($row), $column->getDataType());
+                } else {
+                    $sheet->setCellValue($coordinates, $column->createContent($row));
+                }
+                if ($format = $column->getCellFormat()) {
+                    $sheet->getStyle($coordinates)->getNumberFormat()->setFormatCode($format);
+                }
                 $idx++;
             }
             $idy++;

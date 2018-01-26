@@ -105,4 +105,8 @@ class ApplicationManager {
         $application = $this->processApplicationForm($values, [], $event, null, true);
         return $application;
     }
+
+    public function editReservedApplicationFromReservationForm(array $values, ApplicationEntity $applicationEntity) {
+        $this->processApplicationForm($values, [], $applicationEntity->getEvent(), $applicationEntity, true);
+    }
 }

@@ -105,4 +105,14 @@ class ReservationManager {
             $this->delegateNewReservations($applications, $values);
         }
     }
+
+    /**
+     * @param array $values
+     * @param ApplicationEntity[] $applicationEntities
+     */
+    public function editReservedApplicationsFromReservationForm(array $values, array $applicationEntities) {
+        foreach ($applicationEntities as $applicationEntity) {
+            $this->applicationManager->editReservedApplicationFromReservationForm($values, $applicationEntity);
+        }
+    }
 }
