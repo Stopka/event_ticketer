@@ -64,7 +64,7 @@ class EarlyPresenter extends BasePresenter {
         $cartFormWrapper->setEarly($early);
         $event = $early->getEarlyWave()->getEvent();
         if ($event->isCapacityFull()) {
-            $this->flashTranslatedMessage('Error.Cart.Full', 'warning');
+            $this->flashTranslatedMessage('Error.Event.Full', 'warning');
             $this->redirect('substitute', $id);
         }
         $this->template->event = $event;
