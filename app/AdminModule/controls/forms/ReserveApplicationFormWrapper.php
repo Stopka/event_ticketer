@@ -118,7 +118,16 @@ class ReserveApplicationFormWrapper extends FormWrapper {
         $this->appendSubmitControls($form,
             count($this->applicationEntities) ? 'Form.Action.Edit' : 'Form.Action.Reserve',
             [$this, 'reserveClicked']);
+        //$this->loadData($form);
     }
+
+    /*
+    protected function loadData(Form $form){
+        if(!$this->applicationEntities || count($this->applicationEntities) !== 1){
+            return;
+        }
+
+    }*/
 
     protected function appendReserveControls(Form $form) {
         if (count($this->applicationEntities)) {
@@ -135,7 +144,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     }
 
     protected function appendDelegateControls(Form $form) {
-        if (count($this->applicationEntities)) {
+        if ($this->applicationEntities) {
             return;
         }
         $this->getDelegateReservationControlsBuilder()
@@ -162,7 +171,7 @@ class ReserveApplicationFormWrapper extends FormWrapper {
     public function reserveClicked(SubmitButton $button) {
         $form = $button->getForm();
         $values = $form->getValues(true);
-        $this->processValues($values);
+        $values = $this->processValues($values);
         if (!$this->applicationEntities) {
             $this->reservationManager->createReservedApplicationsFromReservationForm($values, $this->event);
             $this->getPresenter()->flashTranslatedMessage('Form.Reservation.Message.Create.Success', self::FLASH_MESSAGE_TYPE_SUCCESS);

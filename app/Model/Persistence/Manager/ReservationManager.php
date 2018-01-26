@@ -114,5 +114,6 @@ class ReservationManager {
         foreach ($applicationEntities as $applicationEntity) {
             $this->applicationManager->editReservedApplicationFromReservationForm($values, $applicationEntity);
         }
+        $this->getEntityManager()->flush();
     }
 }

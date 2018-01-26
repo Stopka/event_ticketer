@@ -155,7 +155,7 @@ class ChoiceManager {
         $this->processAdditionChoicesFrom($values, $application, $simplified);
     }
 
-    public function editAdditionChoicesInApplication(array $values, ApplicationEntity $application) {
-        $this->processAdditionChoicesFrom($values, $application);
+    public function editAdditionChoicesInApplication(array $values, ApplicationEntity $application, bool $simplified = false) {
+        $this->processAdditionChoicesFrom($values, $application, $simplified);
     }
 }

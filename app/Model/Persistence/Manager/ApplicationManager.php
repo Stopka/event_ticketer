@@ -69,7 +69,7 @@ class ApplicationManager {
         if ($created) {
             $this->choiceManager->createAdditionChoicesToApplication($values[AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS], $application, $reserve);
         } else {
-            $this->choiceManager->editAdditionChoicesInApplication($values[AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS], $application);
+            $this->choiceManager->editAdditionChoicesInApplication($values[AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS], $application, $reserve);
         }
         return $application;
     }
