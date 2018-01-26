@@ -171,7 +171,7 @@ class EventsGridWrapper extends GridWrapper {
      * @param string $id
      * @throws \Nette\Application\AbortException
      */
-    public function onCancelClicked(string $id) {
+    public function onCancelClicked(int $id) {
         try {
             $event = $this->eventDao->getEvent($id);
             $this->eventManager->setEventState($event, EventEntity::STATE_CANCELLED);

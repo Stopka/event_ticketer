@@ -4,12 +4,14 @@ namespace App\AdminModule\Controls\Grids;
 
 use App\Controls\Grids\Grid;
 use App\Controls\Grids\GridWrapperDependencies;
+use App\Model\Exception\TranslatedException;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\IOrder;
 use App\Model\Persistence\Entity\AdditionEntity;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\EventEntity;
+use App\Model\Persistence\Manager\ApplicationManager;
 use App\Model\Persistence\Manager\ChoiceManager;
 use Nette\Utils\Html;
 
@@ -35,16 +37,26 @@ class ApplicationsGridWrapper extends GridWrapper {
     /** @var int */
     private $counter = 0;
 
+    /** @var ApplicationManager */
+    private $applicationManager;
+
     /**
      * ApplicationsGridWrapper constructor.
      * @param GridWrapperDependencies $gridWrapperDependencies
      * @param ApplicationDao $applicationDao
      * @param ChoiceManager $choiceManager
+     * @param ApplicationManager $applicationManager
      */
-    public function __construct(GridWrapperDependencies $gridWrapperDependencies, ApplicationDao $applicationDao, ChoiceManager $choiceManager) {
+    public function __construct(
+        GridWrapperDependencies $gridWrapperDependencies,
+        ApplicationDao $applicationDao,
+        ChoiceManager $choiceManager,
+        ApplicationManager $applicationManager
+    ) {
         parent::__construct($gridWrapperDependencies);
         $this->applicationDao = $applicationDao;
         $this->choiceManager = $choiceManager;
+        $this->applicationManager = $applicationManager;
     }
 
     /**
@@ -127,9 +139,7 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setDisable(function (ApplicationEntity $applicationEntity) {
                 return !in_array($applicationEntity->getState(), ApplicationEntity::getStatesReserved()) || $applicationEntity->getCart();
             });
-        $grid->addActionEvent('cancel', 'Form.Action.Cancel', function (ApplicationEntity $applicationEntity) {
-
-        })
+        $grid->addActionEvent('cancel', 'Form.Action.Cancel', [$this, 'onCancelClicked'])
             ->setIcon('fa fa-ban')
             ->setConfirm(function (ApplicationEntity $applicationEntity) {
                 return $this->getTranslator()->translate('Grid.Application.Confirm.Cancel', ['application' => '#' . $applicationEntity->getId()]);
@@ -187,6 +197,21 @@ class ApplicationsGridWrapper extends GridWrapper {
                 }
                 return $html;
             });
+    }
+
+    /**
+     * @param string $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function onCancelClicked(int $id) {
+        try {
+            $application = $this->applicationDao->getApplication($id);
+            $this->applicationManager->cancelApplication($application);
+            $this->flashTranslatedMessage("Grid.Application.Message.Cancel.Success");
+        } catch (TranslatedException $e) {
+            $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
+        }
+        $this->redirect('this');
     }
 
     protected function appendReservationColumns(Grid $grid) {

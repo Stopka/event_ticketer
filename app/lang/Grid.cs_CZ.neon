@@ -10,3 +10,5 @@ Event:
 Application:
     Confirm:
         Cancel: 'Opravdu chcete zrušit přihlášku "%application%"?'
+    Message:
+        Cancel.Success: 'Application was successfully cancelled'

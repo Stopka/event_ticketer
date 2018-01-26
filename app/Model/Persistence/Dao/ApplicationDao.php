@@ -87,7 +87,7 @@ class ApplicationDao extends EntityDao {
         $qb = $this->getRepository()->createQueryBuilder('a');
         $qb->whereCriteria([
             'a.event' => $event,
-            'a.state !=' => ApplicationEntity::getStatesNotIssued()
+            //'a.state !=' => ApplicationEntity::getStatesNotIssued()
         ]);
         return new Doctrine($qb);
     }
