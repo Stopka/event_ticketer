@@ -156,6 +156,7 @@ class SubstituteEntity extends BaseEntity {
         }
         if ($this->isEnded()) {
             $this->setState(self::STATE_OVERDUE);
+            return;
         }
         $this->setState(self::STATE_ACTIVE);
     }

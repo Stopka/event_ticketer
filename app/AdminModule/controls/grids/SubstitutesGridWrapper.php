@@ -139,6 +139,11 @@ class SubstitutesGridWrapper extends GridWrapper {
      * @throws \Exception
      */
     public function onActivate($substituteId) {
-        $this->substituteManager->activateSubstitute($substituteId);
+        $substitute = $this->substituteDao->getSubstitute($substituteId);
+        if (!$substitute) {
+            return;
+        }
+        $this->substituteManager->activateSubstitute($substitute);
+        $this->redirect('this');
     }
 }

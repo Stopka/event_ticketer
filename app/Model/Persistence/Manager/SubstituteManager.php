@@ -59,8 +59,7 @@ class SubstituteManager implements Subscriber {
      * @param null|string $substituteId
      * @throws \Exception
      */
-    public function activateSubstitute(?string $substituteId): void {
-        $substitute = $this->substituteDao->getSubstitute($substituteId);
+    public function activateSubstitute(SubstituteEntity $substitute): void {
         if (!$substitute || !in_array($substitute->getState(), SubstituteEntity::getActivableStates())) {
             return;
         }
