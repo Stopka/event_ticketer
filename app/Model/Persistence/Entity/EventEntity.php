@@ -24,7 +24,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class EventEntity extends BaseEntity {
-    use TIdentifierAttribute, TNameAttribute, TCapacityAttribute, TStartDateAttribute, TInternalInfoAttribute, TOccupancyIconAttribute;
+    use TIdentifierAttribute, TNameAttribute, TStartDateAttribute, TInternalInfoAttribute, TOccupancyIconAttribute, TCapacityAttribute {
+        TCapacityAttribute::setCapacity as private setCapacityOrig;
+        TCapacityAttribute::updateCapacityFull as private updateCapacityFullOrig;
+    }
 
     const STATE_INACTIVE = 0;
     const STATE_ACTIVE = 1;
@@ -187,11 +190,58 @@ class EventEntity extends BaseEntity {
     }
 
     /**
+     * @return ApplicationEntity[]
+     */
+    public function getReservedApplications(): array {
+        return $this->applications->filter(function (ApplicationEntity $applicationEntity) {
+            return in_array($applicationEntity->getState(), ApplicationEntity::getStatesReserved());
+        })->toArray();
+    }
+
+    /**
+     * @return ApplicationEntity[]
+     */
+    public function getOccupiedApplications(): array {
+        return $this->applications->filter(function (ApplicationEntity $applicationEntity) {
+            return in_array($applicationEntity->getState(), ApplicationEntity::getStatesOccupied());
+        })->toArray();
+    }
+
+    public function setCapacity(?int $capacity): self {
+        $changed = $capacity !== $this->getCapacity();
+        $this->setCapacityOrig($capacity);
+        if ($changed) {
+            $this->updateCapacityFullOrig();
+        }
+        return $this;
+    }
+
+
+    /**
+     * @return ApplicationEntity[]
+     */
+    public function getFullfilledApplications(): array {
+        return $this->applications->filter(function (ApplicationEntity $applicationEntity) {
+            return $applicationEntity->getState() == ApplicationEntity::STATE_FULFILLED;
+        })->toArray();
+    }
+
+    /**
+     * @return ApplicationEntity[]
+     */
+    public function getIssuedApplications(): array {
+        return $this->applications->filter(function (ApplicationEntity $applicationEntity) {
+            return !in_array($applicationEntity->getState(), ApplicationEntity::getStatesNotIssued());
+        })->toArray();
+    }
+
+    /**
      * @internal
      * @param ApplicationEntity $application
      */
     public function addInversedApplication(ApplicationEntity $application): void {
         $this->applications->add($application);
+        $this->updateCapacityFull();
     }
 
     /**
@@ -207,6 +257,7 @@ class EventEntity extends BaseEntity {
      */
     public function removeInversedApplication(ApplicationEntity $application): void {
         $this->applications->removeElement($application);
+        $this->updateCapacityFull();
     }
 
 
@@ -324,5 +375,17 @@ class EventEntity extends BaseEntity {
      */
     public function removeInversedReservation(ReservationEntity $reservation): void {
         $this->reservations->removeElement($reservation);
+    }
+
+    public function countCapacityUsage(): int {
+        return count($this->getIssuedApplications());
+    }
+
+
+    public function updateCapacityFull(): void {
+        if ($this->isCapacityFull()) {
+            return;
+        }
+        $this->updateCapacityFullOrig();
     }
 }

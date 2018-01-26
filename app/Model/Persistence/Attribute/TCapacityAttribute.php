@@ -42,33 +42,36 @@ trait TCapacityAttribute {
         return $this->capacityFull || ($this->isCapacitySet() && !$this->getCapacityLeft($issued_count));
     }
 
-    public function isCapacitySet(): bool{
-        return $this->getCapacity()!==NULL;
+    public function isCapacitySet(): bool {
+        return $this->getCapacity() !== NULL;
     }
 
     /**
-     * @param $issued_count integer
+     * @param $issued_count integer|null
      * @return integer|null
      */
-    public function getRealCapacityLeft($issued_count): ?int{
-        if(!$this->isCapacitySet()){
+    public function getRealCapacityLeft(?int $issued_count): ?int {
+        if ($issued_count === null) {
+            $issued_count = $this->countCapacityUsage();
+        }
+        if (!$this->isCapacitySet()) {
             return NULL;
         }
-        return $this->getCapacity()-$issued_count;
+        return $this->getCapacity() - $issued_count;
     }
 
     /**
-     * @param $issued_count integer
+     * @param $issued_count integer|null
      * @return integer|null
      */
-    public function getCapacityLeft(int $issued_count): ?int{
-        if(!$this->isCapacitySet()){
+    public function getCapacityLeft(?int $issued_count = null): ?int {
+        if (!$this->isCapacitySet()) {
             return NULL;
         }
-        if($this->isCapacityFull()){
+        if ($this->isCapacityFull()) {
             return 0;
         }
-        return max($this->getCapacity()-$issued_count,0);
+        return max($this->getRealCapacityLeft($issued_count), 0);
     }
 
     /**
@@ -76,7 +79,11 @@ trait TCapacityAttribute {
      * @return $this
      */
     public function setCapacity(?int $capacity): self {
+        $changed = $this->capacity !== $capacity;
         $this->capacity = $capacity;
+        if ($changed) {
+            $this->updateCapacityFull();
+        }
         return $this;
     }
 
@@ -84,9 +91,21 @@ trait TCapacityAttribute {
      * @param bool $capacityFull
      * @return $this
      */
-    public function setCapacityFull(bool $capacityFull = true): self {
+    protected function setCapacityFull(bool $capacityFull = true): self {
         $this->capacityFull = $capacityFull;
         return $this;
     }
 
+    abstract public function countCapacityUsage(): int;
+
+    protected function getCapacityUsage(?int $issued_count): int {
+        if ($this->isCapacityFull() && $capacity = $this->getCapacity()) {
+            return $capacity;
+        }
+        return min($issued_count === null ? $this->countCapacityUsage() : $issued_count, $this->getCapacity());
+    }
+
+    public function updateCapacityFull(): void {
+        $this->setCapacityFull($this->isCapacitySet() && $this->countCapacityUsage() >= $this->getCapacity());
+    }
 }

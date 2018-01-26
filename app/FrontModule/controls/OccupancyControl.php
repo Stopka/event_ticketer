@@ -63,18 +63,23 @@ class OccupancyControl extends Control {
         $template = $this->getTemplate();
         $template->setFile(__DIR__ . '/OccupancyControl.latte');
         $template->event = $event;
-        $template->event_issued = $this->limitValue($this->applicationDao->countIssuedApplications($event), $event->getCapacity());
+        $template->event_issued = $this->limitValue($this->applicationDao->countIssuedApplications($event), $event->getCapacity(), $event->isCapacityFull());
         $template->event_occupied = $this->limitValue($this->applicationDao->countOccupiedApplications($event), $event->getCapacity());
         $template->options = $this->optionDao->getOptionsWithLimitedCapacity($event);
         $template->admin = $this->admin;
         $template->render();
     }
 
-    private function limitValue(int $value, ?int $limit): int {
-        if ($this->admin || !$limit) {
-            return $value;
+    private function limitValue(int $value, ?int $limit, bool $full = false): int {
+        if (!$this->admin) {
+            if ($full && $limit) {
+                return $limit;
+            }
+            if ($limit) {
+                return min($value, $limit);
+            }
         }
-        return min($value, $limit);
+        return $value;
     }
 
     /**
@@ -118,6 +123,6 @@ class OccupancyControl extends Control {
      */
     public function countOptionsIssued(OptionEntity $option): int {
         $value = $this->applicationDao->countIssuedApplicationsWithOption($option);
-        return $this->limitValue($value, $option->getCapacity());
+        return $this->limitValue($value, $option->getCapacity(), $option->isCapacityFull());
     }
 }

@@ -14,13 +14,11 @@ use App\Model\Exception\NotFoundException;
 use App\Model\Exception\NotReadyException;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
-use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\EntityManagerWrapper;
-use Kdyby\Events\Subscriber;
 use Nette\SmartObject;
 
-class EventManager implements Subscriber {
+class EventManager {
     use SmartObject, TDoctrineEntityManager;
 
     /** @var  ApplicationDao */
@@ -34,33 +32,6 @@ class EventManager implements Subscriber {
     public function __construct(EntityManagerWrapper $entityManager, ApplicationDao $applicationDao) {
         $this->injectEntityManager($entityManager);
         $this->applicationDao = $applicationDao;
-    }
-
-    /**
-     * Event callback
-     * @param CartEntity $cartEntity
-     * @throws \Exception
-     */
-    public function onCartCreated(CartEntity $cartEntity) {
-        $event = $cartEntity->getEvent();
-        if (!$event) {
-            return;
-        }
-        $this->updateEventCapacityFull($event);
-    }
-
-    /**
-     * @param EventEntity $event
-     * @throws \Exception
-     */
-    public function updateEventCapacityFull(EventEntity $event): void {
-        $isFull = $event->isCapacityFull($this->applicationDao->countIssuedApplications($event));
-        $event->setCapacityFull($isFull);
-        $this->getEntityManager()->flush();
-    }
-
-    public function getSubscribedEvents() {
-        return [CartManager::class . '::onCartCreated'];
     }
 
     /**

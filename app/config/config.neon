@@ -97,11 +97,9 @@ services:
     - App\Model\Persistence\Manager\ReservationManager
     - App\Model\Persistence\Manager\ApplicationManager
     - App\Model\Persistence\Manager\AdministratorManager
+    - App\Model\Persistence\Manager\EventManager
     -
         class: App\Model\Persistence\Manager\EarlyWaveManager
-        tags: [kdyby.subscriber]
-    -
-        class: App\Model\Persistence\Manager\EventManager
         tags: [kdyby.subscriber]
     - App\Model\Notifier\EmailMessageFactory(%email.from%, %email.replyTo%)
     - App\Model\Notifier\EmailService

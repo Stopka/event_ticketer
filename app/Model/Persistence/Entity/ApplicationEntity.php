@@ -268,64 +268,67 @@ class ApplicationEntity extends BaseEntity {
                 $this->state = self::STATE_RESERVED;
             }
         }
-        if (!$this->getCart()) {
-            return;
-        }
-        $this->state = self::STATE_WAITING;
-        $event = $this->getCart()->getEvent();
-        $required_states = [];
-        $required_additions = [];
-        $enough = [];
-        foreach ($event->getAdditions() as $addition) {
-            if ($state = $addition->getEnoughForState()) {
-                $enough[$addition->getId()] = $state;
-            }
-            if ($min_state = $addition->getRequiredForState()) {
-                for ($state = $min_state; $state <= self::STATE_FULFILLED; $state++) {
-                    if (!isset($required_states[$state])) {
-                        $required_states[$state] = [];
-                    }
-                    array_push($required_states[$state], $addition->getId());
-                    if (!isset($required_additions[$addition->getId()])) {
-                        $required_additions[$addition->getId()] = [];
-                    }
-                    array_push($required_additions[$addition->getId()], $state);
+        if ($this->getCart()) {
+
+            $this->state = self::STATE_WAITING;
+            $event = $this->getCart()->getEvent();
+            $required_states = [];
+            $required_additions = [];
+            $enough = [];
+            foreach ($event->getAdditions() as $addition) {
+                if ($state = $addition->getEnoughForState()) {
+                    $enough[$addition->getId()] = $state;
                 }
-            }
-        }
-        $choices = $this->getChoicesByAdditionId();
-        foreach ($event->getAdditions() as $addition) {
-            $areChoicesPayed = true;
-            $additionId = $addition->getId();
-            if (isset($choices[$additionId])) {
-                foreach ($choices[$additionId] as $choice) {
-                    if (!$choice->isPayed()) {
-                        $areChoicesPayed = false;
-                        break;
+                if ($min_state = $addition->getRequiredForState()) {
+                    for ($state = $min_state; $state <= self::STATE_FULFILLED; $state++) {
+                        if (!isset($required_states[$state])) {
+                            $required_states[$state] = [];
+                        }
+                        array_push($required_states[$state], $addition->getId());
+                        if (!isset($required_additions[$addition->getId()])) {
+                            $required_additions[$addition->getId()] = [];
+                        }
+                        array_push($required_additions[$addition->getId()], $state);
                     }
                 }
             }
-            if (isset($enough[$additionId]) && $areChoicesPayed && $enough[$additionId] > $this->state) {
-                $this->state = $enough[$additionId];
-            }
-            if (isset($required_additions[$additionId]) && $areChoicesPayed) {
-                foreach ($required_additions[$additionId] as $state) {
-                    $index = array_search($additionId, $required_states[$state]);
-                    unset($required_states[$state][$index]);
+            $choices = $this->getChoicesByAdditionId();
+            foreach ($event->getAdditions() as $addition) {
+                $areChoicesPayed = true;
+                $additionId = $addition->getId();
+                if (isset($choices[$additionId])) {
+                    foreach ($choices[$additionId] as $choice) {
+                        if (!$choice->isPayed()) {
+                            $areChoicesPayed = false;
+                            break;
+                        }
+                    }
+                }
+                if (isset($enough[$additionId]) && $areChoicesPayed && $enough[$additionId] > $this->state) {
+                    $this->state = $enough[$additionId];
+                }
+                if (isset($required_additions[$additionId]) && $areChoicesPayed) {
+                    foreach ($required_additions[$additionId] as $state) {
+                        $index = array_search($additionId, $required_states[$state]);
+                        unset($required_states[$state][$index]);
+                    }
                 }
             }
+            for ($state = self::STATE_WAITING; $state <= self::STATE_FULFILLED; $state++) {
+                if ($this->state > $state) {
+                    continue;
+                }
+                if (!isset($required_states[$state])) {
+                    continue;
+                }
+                if (count($required_states[$state]) > 0) {
+                    continue;
+                }
+                $this->state = $state;
+            }
         }
-        for ($state = self::STATE_WAITING; $state <= self::STATE_FULFILLED; $state++) {
-            if ($this->state > $state) {
-                continue;
-            }
-            if (!isset($required_states[$state])) {
-                continue;
-            }
-            if (count($required_states[$state]) > 0) {
-                continue;
-            }
-            $this->state = $state;
+        if ($this->getEvent()) {
+            $this->getEvent()->updateCapacityFull();
         }
     }
 

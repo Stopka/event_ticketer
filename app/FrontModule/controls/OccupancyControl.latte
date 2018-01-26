@@ -7,19 +7,15 @@
         {for $i=0; $i < min($event_occupied,$event->getCapacity()); $i++}
             {control $control:icon $event,2}
         {/for}
-        {if $admin}
-            {for $i=$event->getCapacity(); $i < $event_occupied; $i++}
-                {control $control:icon $event,2, true}
-            {/for}
-        {/if}
+        {for $i=$event->getCapacity(); $i < $event_occupied; $i++}
+            {control $control:icon $event,2, true}
+        {/for}
         {for $i=$event_occupied; $i < min($event_issued,$event->getCapacity()); $i++}
             {control $control:icon $event,1}
         {/for}
-        {if $admin}
-            {for $i=$event->getCapacity(); $i < $event_issued; $i++}
-                {control $control:icon $event,1, true}
-            {/for}
-        {/if}
+        {for $i=$event->getCapacity(); $i < $event_issued; $i++}
+            {control $control:icon $event,1, true}
+        {/for}
         {for $i=$event_issued; $i<$event->getCapacity(); $i++}
             {control $control:icon $event,0}
         {/for}

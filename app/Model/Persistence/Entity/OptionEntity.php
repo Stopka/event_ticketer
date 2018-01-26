@@ -101,11 +101,11 @@ class OptionEntity extends BaseEntity implements ISortableEntity {
      * @return $this
      */
     public function setAddtition(?AdditionEntity $addition): self {
-        if($this->addition){
+        if ($this->addition) {
             $this->addition->removeInversedOption($this);
         }
         $this->addition = $addition;
-        if($addition) {
+        if ($addition) {
             $addition->addInversedOption($this);
         }
         return $this;
@@ -116,6 +116,18 @@ class OptionEntity extends BaseEntity implements ISortableEntity {
      */
     public function getChoices(): array {
         return $this->choices->toArray();
+    }
+
+    /**
+     * @return ChoiceEntity[]
+     */
+    public function getIssuedChoices(): array {
+        return $this->choices->filter(function (ChoiceEntity $choiceEntity) {
+            if ($application = $choiceEntity->getApplication()) {
+                return !in_array($application->getState(), ApplicationEntity::getStatesNotIssued());
+            }
+            return false;
+        })->toArray();
     }
 
     /**
@@ -146,6 +158,14 @@ class OptionEntity extends BaseEntity implements ISortableEntity {
      */
     public function removeInversedChoice(ChoiceEntity $choices): void {
         $this->choices->removeElement($choices);
+    }
+
+    public function countCapacityUsage(): int {
+        return count($this->getIssuedChoices());
+    }
+
+    public function updateCapacityFull(): void {
+        $this->setCapacityFull(false);
     }
 
 
