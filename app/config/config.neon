@@ -87,7 +87,9 @@ services:
     - App\Model\Persistence\Dao\ChoiceDao
     - App\Model\Persistence\Dao\InsuranceCompanyDao
     - App\Model\Persistence\Dao\ReservationDao
-    - App\Model\Persistence\Manager\SubstituteManager
+    -
+        class: App\Model\Persistence\Manager\SubstituteManager
+        tags: [kdyby.subscriber]
     - App\Model\Persistence\Manager\CartManager
     - App\Model\Persistence\Manager\ChoiceManager
     - App\Model\Persistence\Manager\AdditionManager

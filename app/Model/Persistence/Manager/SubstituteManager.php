@@ -2,13 +2,14 @@
 
 namespace App\Model\Persistence\Manager;
 
+use App\Model\CronService;
 use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use App\Model\Persistence\EntityManagerWrapper;
-use Kdyby\Doctrine\EntityManager;
+use Kdyby\Events\Subscriber;
 use Nette\SmartObject;
 
 /**
@@ -17,21 +18,21 @@ use Nette\SmartObject;
  * Date: 26.11.17
  * Time: 17:37
  */
-class SubstituteManager {
+class SubstituteManager implements Subscriber {
     use SmartObject, TDoctrineEntityManager;
 
     /** @var  SubstituteDao */
     private $substituteDao;
 
-    /** @var callable[]  */
-    public $onSubtituteActivated = array();
+    /** @var callable[] */
+    public $onSubstituteActivated = array();
 
-    /** @var callable[]  */
-    public $onSubtituteCreated = array();
+    /** @var callable[] */
+    public $onSubstituteCreated = array();
 
     /**
      * SubstituteManager constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerWrapper $entityManager
      * @param SubstituteDao $substituteDao
      */
     public function __construct(EntityManagerWrapper $entityManager, SubstituteDao $substituteDao) {
@@ -39,19 +40,34 @@ class SubstituteManager {
         $this->substituteDao = $substituteDao;
     }
 
+    function getSubscribedEvents() {
+        return [
+            CronService::class . '::onCronRun'
+        ];
+    }
+
+    public function onCronRun() {
+        $substites = $this->substituteDao->getOverdueSubstitutesReadyToUpdateState();
+        foreach ($substites as $substite) {
+            $substite->updateState();
+        }
+        $this->getEntityManager()->flush();
+    }
+
 
     /**
      * @param null|string $substituteId
+     * @throws \Exception
      */
     public function activateSubstitute(?string $substituteId): void {
         $substitute = $this->substituteDao->getSubstitute($substituteId);
-        if (!$substitute || in_array($substitute->getState(), [SubstituteEntity::STATE_ACTIVE, SubstituteEntity::STATE_ORDERED])) {
+        if (!$substitute || !in_array($substitute->getState(), SubstituteEntity::getActivableStates())) {
             return;
         }
-        $substitute->setState(SubstituteEntity::STATE_ACTIVE);
+        $substitute->activate(new \DateInterval('P7D'));
         $this->getEntityManager()->flush();
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->onSubtituteActivated($substitute);
+        $this->onSubstituteActivated($substitute);
     }
 
     /**
@@ -61,7 +77,7 @@ class SubstituteManager {
      * @return SubstituteEntity
      * @throws \Exception
      */
-    public function createSubtituteFromForm(array $values, EventEntity $event, ?EarlyEntity $early = null): SubstituteEntity{
+    public function createSubtituteFromForm(array $values, EventEntity $event, ?EarlyEntity $early = null): SubstituteEntity {
         $entityManager = $this->getEntityManager();
         $substitute = new SubstituteEntity();
         $substitute->setByValueArray($values);
@@ -70,7 +86,7 @@ class SubstituteManager {
         $entityManager->persist($substitute);
         $entityManager->flush();
         /** @noinspection PhpUndefinedMethodInspection */
-        $this->onSubtituteCreated($substitute);
+        $this->onSubstituteCreated($substitute);
         return $substitute;
     }
 }

@@ -8,6 +8,7 @@ use App\Model\Persistence\Dao\SubstituteDao;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\Entity\SubstituteEntity;
 use App\Model\Persistence\Manager\SubstituteManager;
+use Nette\Utils\Html;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +40,7 @@ class SubstitutesGridWrapper extends GridWrapper {
     }
 
     /**
-     * @param \App\Model\Persistence\Entity\EventEntity $entity
+     * @param EventEntity $event
      * @return $this
      */
     public function setEvent(EventEntity $event) {
@@ -61,11 +62,12 @@ class SubstitutesGridWrapper extends GridWrapper {
      */
     protected function configure(Grid $grid) {
         $this->loadModel($grid);
-        $this->appendCartColumns($grid);
+        $this->appendSubstituteColumns($grid);
+        $this->appendEarlyControls($grid);
         $this->appendActions($grid);
     }
 
-    protected function appendCartColumns(Grid $grid) {
+    protected function appendSubstituteColumns(Grid $grid) {
         $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
             ->setReplacement([
@@ -93,27 +95,33 @@ class SubstitutesGridWrapper extends GridWrapper {
             ->setSortable()
             ->setFilterText()
             ->setSuggestion();
-        $grid->addColumnDate('created', 'Attribute.Created', 'd.m.Y H:i:s')
+        $grid->addColumnDateTime('created', 'Attribute.Created')
             ->setDefaultSort('ASC')
             ->setFilterDateRange();
         $grid->addColumnText('count', 'Attribute.Application.Count')
             ->setSortable()
             ->setFilterNumber();
-        $grid->addColumnText('early.lastName', 'Entity.Singular.Substitute')
-            ->setCustomRender(function (SubstituteEntity $susbstitute) {
-                $early = $susbstitute->getEarly();
-                if (!$early) {
-                    return '';
-                }
-                return $early->getFullName();
-            });
+        $grid->addColumnDateTime('endDate', 'Attribute.Event.EndDate')
+            ->setFilterDateRange();
     }
 
+    protected function appendEarlyControls(Grid $grid) {
+        $grid->addColumnText('early', 'Entity.Singular.Early')
+            ->setCustomRender(function (SubstituteEntity $susbstitute) {
+                $html = Html::el();
+                if ($early = $susbstitute->getEarly()) {
+                    $html = Html::el('div');
+                    $html->addHtml(Html::el('div', ['class' => 'early-fullName fillName'])->addText($early->getFullName()));
+                    $html->addHtml(Html::el('div', ['class' => 'early-email email'])->addText($early->getEmail()));
+                }
+                return $html;
+            });
+    }
 
     protected function appendActions(Grid $grid) {
         $grid->addActionEvent('activate', 'Form.Action.Activate', [$this, 'onActivate'])
             ->setDisable(function (SubstituteEntity $substitute) {
-                return $substitute->isOrdered() || $substitute->isActive();
+                return !in_array($substitute->getState(), SubstituteEntity::getActivableStates());
             })
             ->setIcon('fa fa-check-square');
         $grid->addActionEvent('link', 'Attribute.Link', function (string $uid) {
@@ -128,6 +136,7 @@ class SubstitutesGridWrapper extends GridWrapper {
 
     /**
      * @param $substituteId
+     * @throws \Exception
      */
     public function onActivate($substituteId) {
         $this->substituteManager->activateSubstitute($substituteId);

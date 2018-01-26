@@ -98,7 +98,7 @@ class SubstituteEntity extends BaseEntity {
     /**
      * @param EarlyEntity $early
      */
-    public function setEarly(EarlyEntity $early) {
+    public function setEarly(?EarlyEntity $early) {
         $this->early = $early;
     }
 
@@ -113,6 +113,28 @@ class SubstituteEntity extends BaseEntity {
         return $this->getState()==self::STATE_ORDERED;
     }
 
+    public static function getActivableStates() {
+        return [
+            self::STATE_WAITING,
+            self::STATE_OVERDUE
+        ];
+    }
+
+    public function activate(?\DateInterval $interval = null) {
+        if (!in_array($this->getState(), self::getActivableStates())) {
+            return;
+        }
+        $this->setState(self::STATE_ACTIVE);
+        if ($interval) {
+            $date = new \DateTime();
+            $date = $date->add($interval);
+        } else {
+            $date = null;
+        }
+        $this->setEndDate($date);
+        $this->updateState();
+    }
+
     public function isActive(): bool{
         return $this->getState()==self::STATE_ACTIVE && !$this->isEnded();
     }
@@ -120,8 +142,22 @@ class SubstituteEntity extends BaseEntity {
     /**
      * @param int $state
      */
-    public function setState(int $state): void {
+    protected function setState(int $state): void {
         $this->state = $state;
+    }
+
+    public function updateState() {
+        if ($this->getState() == self::STATE_WAITING) {
+            return;
+        }
+        if ($this->getCart()) {
+            $this->setState(self::STATE_ORDERED);
+            return;
+        }
+        if ($this->isEnded()) {
+            $this->setState(self::STATE_OVERDUE);
+        }
+        $this->setState(self::STATE_ACTIVE);
     }
 
     /**
@@ -157,11 +193,7 @@ class SubstituteEntity extends BaseEntity {
      */
     public function setInversedCart(?CartEntity $cart) {
         $this->cart = $cart;
-        if($this->cart){
-            $this->setState(self::STATE_ORDERED);
-        }else{
-            $this->setState(self::STATE_WAITING);
-        }
+        $this->updateState();
     }
 
 

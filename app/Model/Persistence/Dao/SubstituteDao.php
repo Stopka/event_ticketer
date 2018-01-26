@@ -46,4 +46,15 @@ class SubstituteDao extends EntityDao {
         }
         return $substitute;
     }
+
+    /**
+     * @return SubstituteEntity[]
+     */
+    public function getOverdueSubstitutesReadyToUpdateState(): array {
+        return $this->getRepository()
+            ->findBy([
+                'state' => SubstituteEntity::STATE_ACTIVE,
+                'endDate <' => new \DateTime()
+            ]);
+    }
 }
