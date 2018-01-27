@@ -147,6 +147,8 @@ class ApplicationsGridWrapper extends GridWrapper {
             ->setDisable(function (ApplicationEntity $applicationEntity) {
                 return in_array($applicationEntity->getState(), ApplicationEntity::getStatesNotIssued());
             });
+        $grid->addActionHref('pdf', 'Entity.Singular.Application', 'Application:pdf')
+            ->setIcon('fa fa-ticket');
         $grid->addButton('reserve', 'Presenter.Admin.Application.Reserve.H1', "Application:reserve", ['id' => $this->event->getId()])
             ->setIcon('fa fa-address-book-o');
         $grid->addButton('export', 'Presenter.Admin.Application.Export.H1', "Application:export", ['id' => $this->event->getId()])

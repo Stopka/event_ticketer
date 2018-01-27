@@ -10,9 +10,11 @@ use App\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory;
 use App\AdminModule\Responses\ApplicationsExportResponse;
 use App\FrontModule\Controls\IOccupancyControlFactory;
 use App\FrontModule\Controls\OccupancyControl;
+use App\FrontModule\Responses\ApplicationPdfResponse;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\EventDao;
 use App\Model\Persistence\Entity\EventEntity;
+use Joseki\Application\Responses\PdfResponse;
 
 class ApplicationPresenter extends BasePresenter {
 
@@ -32,6 +34,12 @@ class ApplicationPresenter extends BasePresenter {
     public $occupancyControlFactory;
 
     /**
+     * @var ApplicationPdfResponse
+     * @inject
+     */
+    public $applicationPdfResponse;
+
+    /**
      * ApplicationPresenter constructor.
      * @param IApplicationsGridWrapperFactory $applicationsGridWrapperFactory
      * @param IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory
@@ -44,7 +52,8 @@ class ApplicationPresenter extends BasePresenter {
         IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory,
         EventDao $eventDao,
         ApplicationDao $applicationDao,
-        IOccupancyControlFactory $occupancyControlFactory
+        IOccupancyControlFactory $occupancyControlFactory,
+        ApplicationPdfResponse $applicationPdfResponse
     ) {
         parent::__construct();
         $this->applicationsGridWrapperFactory = $applicationsGridWrapperFactory;
@@ -52,6 +61,7 @@ class ApplicationPresenter extends BasePresenter {
         $this->eventDao = $eventDao;
         $this->applicationDao = $applicationDao;
         $this->occupancyControlFactory = $occupancyControlFactory;
+        $this->applicationPdfResponse = $applicationPdfResponse;
     }
 
     /**
@@ -148,5 +158,18 @@ class ApplicationPresenter extends BasePresenter {
 
     protected function createComponentOccupancy() {
         return $this->occupancyControlFactory->create();
+    }
+
+    /**
+     * @param int $applicationId
+     * @throws \Nette\Application\AbortException
+     */
+    public function renderPdf(int $id) {
+        $application = $this->applicationDao->getApplication($id);
+        $response = $this->applicationPdfResponse;
+        //$this->addComponent($response, 'response');
+        $response->setApplication($application);
+        $response->setSaveMode(PdfResponse::DOWNLOAD);
+        $this->sendResponse($response);
     }
 }

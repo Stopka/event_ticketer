@@ -28,6 +28,9 @@ class ApplicationPdfResponse implements IResponse {
     /** @var ITemplate */
     private $template;
 
+    /** @var string */
+    private $saveMode = PdfResponse::INLINE;
+
     public function __construct(
         IPdfResponseFactory $pdfResponseFactory,
         ITemplateFactory $templateFactory
@@ -96,14 +99,29 @@ class ApplicationPdfResponse implements IResponse {
     protected function buildPdfResponse() {
         $template = $this->buildTemplate();
         $pdf = $this->pdfResponseFactory->create($template);
-        $pdf->setSaveMode(PdfResponse::INLINE);
+        $pdf->setSaveMode($this->getSaveMode());
         $pdf->setPageFormat("A4");
-        $pdf->setDocumentTitle("Application form");
+        $title = "Application form " . Strings::padLeft($this->application->getId(), 5, '0');
+        $pdf->setDocumentTitle($title);
         $pdf->setDocumentAuthor("ldtpardubice.cz");
         $pdf->setPageMargins("13,13,13,13,10,10");
         $mpdf = $pdf->getMPDF();
         $mpdf->setFooter("<a href='https://ldtpardubice.cz'>ldtpardubice.cz</a>");
         return $pdf;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSaveMode(): string {
+        return $this->saveMode;
+    }
+
+    /**
+     * @param string $saveMode
+     */
+    public function setSaveMode(string $saveMode): void {
+        $this->saveMode = $saveMode;
     }
 
     /**
