@@ -9,6 +9,7 @@ use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
 use App\Model\Persistence\Dao\InsuranceCompanyDao;
 use App\Model\Persistence\Entity\AdditionEntity;
+use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Model\Persistence\Entity\CartEntity;
 use App\Model\Persistence\Entity\CurrencyEntity;
 use App\Model\Persistence\Entity\EarlyEntity;
@@ -69,6 +70,9 @@ class CartFormWrapper extends FormWrapper {
     /** @var bool */
     private $admin;
 
+    /** @var ApplicationEntity[] */
+    private $applications = [];
+
     /**
      * CartFormWrapper constructor.
      * @param bool $admin
@@ -122,11 +126,13 @@ class CartFormWrapper extends FormWrapper {
         $this->event = $cart->getEvent();
         $this->early = $cart->getEarly();
         $this->substitute = $cart->getSubstitute();
+        $this->applications = $cart->getApplications();
     }
 
     public function setReservation(ReservationEntity $reservation) {
         $this->reservation = $reservation;
         $this->event = $reservation->getEvent();
+        $this->applications = $reservation->getApplications();
     }
 
     /**
@@ -159,6 +165,13 @@ class CartFormWrapper extends FormWrapper {
         $this->substitute = $substitute;
     }
 
+    /**
+     * @param ApplicationEntity[] $applications
+     */
+    public function setApplications(array $applications) {
+        $this->applications = $applications;
+    }
+
     protected function appendFormControls(Form $form) {
         $form->elementPrototype->setAttribute('data-price-currency', $this->currency->getSymbol());
         $this->appendParentControls($form);
@@ -178,41 +191,26 @@ class CartFormWrapper extends FormWrapper {
         }
         if ($this->cart) {
             $form->setDefaults($this->cart->getValueArray());
-            foreach ($this->cart->getApplications() as $application) {
-                /** @var Container $applicationContainer */
-                $applicationContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][self::CONTAINER_NAME_APPLICATION];
-                $applicationContainer->setDefaults($application->getValueArray());
-                if ($insuranceCompany = $application->getInsuranceCompany()) {
-                    $applicationContainer->setDefaults(['insuranceCompanyId' => $insuranceCompany->getId()]);
-                }
-                /** @var Container $commonContainer */
-                $commonContainer = $form[self::CONTAINER_NAME_COMMONS];
-                $commonContainer->setDefaults($application->getValueArray());
-                foreach ($application->getChoices() as $choice) {
-                    /** @var Container $additionsContainer */
-                    $additionsContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS];
-                    $additionsContainer->setDefaults([
-                        $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
-                    ]);
-                }
-            }
         }
         if ($this->reservation) {
             $form->setDefaults($this->reservation->getValueArray());
-            foreach ($this->reservation->getApplications() as $application) {
-                /** @var Container $applicationContainer */
-                $applicationContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][self::CONTAINER_NAME_APPLICATION];
-                $applicationContainer->setDefaults($application->getValueArray());
-                /** @var Container $commonContainer */
-                $commonContainer = $form[self::CONTAINER_NAME_COMMONS];
-                $commonContainer->setDefaults($application->getValueArray());
-                foreach ($application->getChoices() as $choice) {
-                    /** @var Container $additionsContainer */
-                    $additionsContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS];
-                    $additionsContainer->setDefaults([
-                        $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
-                    ]);
-                }
+        }
+        foreach ($this->applications as $application) {
+            /** @var Container $applicationContainer */
+            $applicationContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][self::CONTAINER_NAME_APPLICATION];
+            $applicationContainer->setDefaults($application->getValueArray());
+            if ($insuranceCompany = $application->getInsuranceCompany()) {
+                $applicationContainer->setDefaults(['insuranceCompanyId' => $insuranceCompany->getId()]);
+            }
+            /** @var Container $commonContainer */
+            $commonContainer = $form[self::CONTAINER_NAME_COMMONS];
+            $commonContainer->setDefaults($application->getValueArray());
+            foreach ($application->getChoices() as $choice) {
+                /** @var Container $additionsContainer */
+                $additionsContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS];
+                $additionsContainer->setDefaults([
+                    $choice->getOption()->getAddition()->getId() => $choice->getOption()->getId()
+                ]);
             }
         }
     }
