@@ -286,7 +286,9 @@ class CartFormWrapper extends FormWrapper {
             ->setRequired()
             ->addRule($form::MAX_LENGTH, NULL, 255);
         $form->addText('phone', 'Telefon', NULL, 13)
-            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Ve formátu +420123456789')
+            ->setOption($form::OPTION_KEY_DESCRIPTION, Html::el('div', ['class' => 'description control-description'])
+                ->addHtml(Html::el('div')->setText('Ve formátu +420123456789'))
+                ->addHtml(Html::el('div')->setText('Pro případ onemocnění dítěte a poskytnutí informací')))
             ->setDefaultValue('+420')
             ->setRequired()
             ->addRule($form::PATTERN, '%label musí být ve formátu +420123456789', '[+]([0-9]){6,20}');

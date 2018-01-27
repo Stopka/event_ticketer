@@ -26,7 +26,7 @@ class EarlyPresenter extends BasePresenter {
     public $earlyDao;
 
     /**
-     * EarlyPresenter constructor.
+     * EarlyWavePresenter constructor.
      * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
      * @param ApplicationDao $applicationDao
