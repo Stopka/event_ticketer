@@ -16,6 +16,7 @@ use App\Model\Persistence\Dao\EarlyWaveDao;
 use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EarlyWaveEntity;
+use App\Model\Persistence\Manager\EarlyManager;
 use App\Model\Persistence\Manager\EarlyWaveManager;
 use Kdyby\Events\Subscriber;
 use Nette\Application\UI\InvalidLinkException;
@@ -79,6 +80,16 @@ class EarlyWaveInviteNotifier implements Subscriber {
             $this->sendUnsentEarlyWaveInvites($earlyWave->getId());
         } catch (NotReadyException $exception) {
 
+        }
+    }
+
+    /**
+     * @param EarlyEntity $earlyEntity
+     * @throws InvalidLinkException
+     */
+    public function onEarlyAddedToWave(EarlyEntity $earlyEntity) {
+        if ($earlyEntity->getEarlyWave()->isInviteSent()) {
+            $this->sendEarlyInvite($earlyEntity);
         }
     }
 
@@ -159,7 +170,8 @@ $link</p>
     function getSubscribedEvents() {
         return [
             CronService::class . "::onCronRun",
-            EarlyWaveManager::class . '::onEarlyWaveCreated'
+            EarlyWaveManager::class . '::onEarlyWaveCreated',
+            EarlyManager::class . "::onEarlyAddedToWave"
         ];
     }
 }

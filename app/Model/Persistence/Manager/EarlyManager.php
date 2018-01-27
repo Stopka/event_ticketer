@@ -14,7 +14,6 @@ use App\Model\Persistence\Dao\TDoctrineEntityManager;
 use App\Model\Persistence\Entity\EarlyEntity;
 use App\Model\Persistence\Entity\EventEntity;
 use App\Model\Persistence\EntityManagerWrapper;
-use Kdyby\Doctrine\EntityManager;
 use Nette\SmartObject;
 
 class EarlyManager {
@@ -26,9 +25,14 @@ class EarlyManager {
     /** @var EarlyWaveManager */
     private $earlyWaveManager;
 
+    /** @var callable[] */
+    public $onEarlyAddedToWave = Array();
+
     /**
-     * EarlyWaveManager constructor.
-     * @param EntityManager $entityManager
+     * EarlyManager constructor.
+     * @param EntityManagerWrapper $entityManager
+     * @param EarlyWaveDao $earlyWaveDao
+     * @param EarlyWaveManager $earlyWaveManager
      */
     public function __construct(EntityManagerWrapper $entityManager, EarlyWaveDao $earlyWaveDao, EarlyWaveManager $earlyWaveManager) {
         $this->injectEntityManager($entityManager);
@@ -54,8 +58,13 @@ class EarlyManager {
                 throw new InvalidInputException('Wave is from different event');
             }
         }
+        $edited = !$earlyEntity->getEarlyWave() || $earlyEntity->getEarlyWave()->getId() !== $earlyWave->getId();
         $earlyEntity->setEarlyWave($earlyWave);
         $em->flush();
+        if ($edited) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $this->onEarlyAddedToWave($earlyEntity);
+        }
         return $earlyEntity;
     }
 
