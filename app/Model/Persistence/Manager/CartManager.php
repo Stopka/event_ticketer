@@ -88,33 +88,35 @@ class CartManager {
         ?EarlyEntity $early = null,
         ?SubstituteEntity $substitute = null,
         ?ReservationEntity $reservation = null,
-        ?CartEntity $cart = null
+        ?CartEntity $cartInput = null
     ): CartEntity {
         $entityManager = $this->getEntityManager();
-        if (!$cart) {
+        if (!$cartInput) {
             $cart = new CartEntity();
             $entityManager->persist($cart);
             $cart->setEarly($early);
             $cart->setEvent($event);
             $cart->setSubstitute($substitute);
-            //$cart->setReservation($reservation);
             //$cart->setNextNumber($entityManager);
+        } else {
+            $cart = $cartInput;
         }
         $cart->setByValueArray($values);
         $entityManager->persist($cart);
         $commonValues = $values[CartFormWrapper::CONTAINER_NAME_COMMONS];
         // go through all applications from form
-        foreach ($values[CartFormWrapper::CONTAINER_NAME_APPLICATIONS] as $id => $applicationValues) {
+        $processedApplicationIds = [];
+        foreach ($values[CartFormWrapper::CONTAINER_NAME_APPLICATIONS] as $applicationId => $applicationValues) {
             $application = null;
             // is existing application?
-            if (!Strings::startsWith($id, CartFormWrapper::VALUE_APPLICATION_NEW)) {
+            if (!Strings::startsWith($applicationId, CartFormWrapper::VALUE_APPLICATION_NEW)) {
                 // find application by id
-                $application = $this->applicationDao->getApplication($id);
+                $application = $this->applicationDao->getApplication($applicationId);
                 //TODO zkontrolovat přijátá ID a zrušit nepoužité přihlášky
             }
             // if exisitning application is not matched with event
             if ($application && $application->getEvent()->getId() != $event->getId()) {
-                $application = null;
+                continue;
             }
             // if application exists
             if ($application) {
@@ -124,7 +126,13 @@ class CartManager {
                 // create new onecom
                 $application = $this->applicationManager->createApplicationFromCartForm($applicationValues, $commonValues, $event);
             }
+            $processedApplicationIds[] = $application->getId();
             $application->setCart($cart);
+        }
+        foreach ($cart->getApplications() as $application) {
+            if (!in_array($application->getId(), $processedApplicationIds)) {
+                $application->setCart(null);
+            }
         }
         $entityManager->flush();
         return $cart;

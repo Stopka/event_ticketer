@@ -217,14 +217,26 @@ class CartFormWrapper extends FormWrapper {
 
     protected function preprocessValues(array $values): array {
         $index = 1;
+        $applicationIds = [];
+        foreach ($this->applications as $application) {
+            $applicationIds[] = $application->getId();
+        }
+        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $applicationId => $applicationValues) {
+            if ($this->applications && !in_array($applicationId, $applicationIds)) {
+                unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationId]);
+            }
+        }
         if (!count($values[self::CONTAINER_NAME_APPLICATIONS])) {
             throw new EmptyException("Error.Application.Empty");
         }
         $builder = $this->getAdditionsControlsBuilder();
-        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $key => $applicationValues) {
+        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $applicationId => $applicationValues) {
+            if ($this->applications && !in_array($applicationId, $applicationIds)) {
+                unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationId]);
+            }
             $builder->resetPreselectedOptions();
             if ($this->reservation) {
-                $application = $this->applicationDao->getApplication($key);
+                $application = $this->applicationDao->getApplication($applicationId);
                 $preselectedOptionIds = [];
                 foreach ($application->getChoices() as $choice) {
                     $preselectedOptionIds[] = $choice->getOption()->getId();
@@ -235,10 +247,10 @@ class CartFormWrapper extends FormWrapper {
             try {
                 $applicationValues = $builder->preprocessAdditionsValues($applicationValues, $index);
             } catch (FormControlException $e) {
-                throw $e->prependControlPath($key)
+                throw $e->prependControlPath($applicationId)
                     ->prependControlPath(self::CONTAINER_NAME_APPLICATIONS);
             }
-            $values[self::CONTAINER_NAME_APPLICATIONS][$key] = $applicationValues;
+            $values[self::CONTAINER_NAME_APPLICATIONS][$applicationId] = $applicationValues;
             $index++;
         }
         return $values;
