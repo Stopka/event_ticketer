@@ -92,7 +92,7 @@ LiveForm.setOptions({
     messageTag: 'span',                                 // tag that will hold the error/valid message
     messageIdPostfix: '_message',                       // message element id = control id + this postfix
     messageErrorPrefix: '<i class="fa fa-exclamation-triangle"></i> ',
-    wait: 300
+    wait: 500
 });
 
 /**
