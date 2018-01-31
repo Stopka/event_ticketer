@@ -415,7 +415,8 @@ class CartFormWrapper extends FormWrapper {
         /** @noinspection PhpUndefinedMethodInspection */
         $applicationContainer->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
-            ->addRule($form::VALID, 'Vloženo chybné datum!');
+            ->addRule($form::VALID, 'Vloženo chybné datum!')
+            ->setAttribute('class', 'no-validation');
         $applicationContainer->addSelect('insuranceCompanyId', 'Zdravotní pojišťovna',
             $this->insuranceCompanyDao->getInsuranceCompanyList())
             ->setRequired(true);
