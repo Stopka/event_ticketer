@@ -37,10 +37,6 @@ class CartPresenter extends BasePresenter {
             $this->flashTranslatedMessage('Error.Cart.NotFound',self::FLASH_MESSAGE_TYPE_ERROR);
             $this->redirect('Homepage:');
         }
-        if (!$this->a) {
-            $this->flashTranslatedMessage('Error.Cart.NotFound', self::FLASH_MESSAGE_TYPE_ERROR);
-            $this->redirect('Homepage:');
-        }
         $this->getMenu()->setLinkParam(CartEntity::class, $cart);
         /** @var CartApplicationsGridWrapper $applicationsGrid */
         $applicationsGrid = $this->getComponent('applicationsGrid');

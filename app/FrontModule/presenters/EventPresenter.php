@@ -130,9 +130,10 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @param null|int $id
+     * @param bool $showHeaders
      * @throws \Nette\Application\AbortException
      */
-    public function renderOccupancy(?int $id = null) {
+    public function renderOccupancy(?int $id = null, bool $showHeaders = true) {
         if (!$id) {
             $events = $this->eventDao->getPublicAvailibleEvents();
             if ($events) {
@@ -147,6 +148,7 @@ class EventPresenter extends BasePresenter {
         }
         $event = $this->eventDao->getEvent($id);
         $this->template->event = $event;
+        $this->template->showHeaders = $showHeaders;
         if ($event) {
             /** @var OccupancyControl $occupancy */
             $occupancy = $this->getComponent('occupancy');

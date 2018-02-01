@@ -20,9 +20,11 @@
     </head>
     <body>
         {if $event}
-            <h1><i class="fa fa-calendar-o"></i> {$event->getName()}</h1>
-            <h2><i class="fa fa-ticket"></i> {_'Attribute.Event.Occupancy'}</h2>
-            <hr class="clear" />
+            {if $showHeaders}
+                <h1><i class="fa fa-calendar-o"></i> {$event->getName()}</h1>
+                <h2><i class="fa fa-ticket"></i> {_'Attribute.Event.Occupancy'}</h2>
+                <hr class="clear"/>
+            {/if}
             {control occupancy}
         {else}
             <p>{_'Error.Event.NotFound'}</p>
