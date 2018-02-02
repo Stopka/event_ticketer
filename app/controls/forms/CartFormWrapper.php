@@ -198,7 +198,10 @@ class CartFormWrapper extends FormWrapper {
         foreach ($this->applications as $application) {
             /** @var Container $applicationContainer */
             $applicationContainer = $form[self::CONTAINER_NAME_APPLICATIONS][$application->getId()][self::CONTAINER_NAME_APPLICATION];
-            $applicationContainer->setDefaults($application->getValueArray());
+            $applicationContainer->setDefaults($application->getValueArray(null, ['birthDate']));
+            if ($birthDate = $application->getBirthDate()) {
+                $applicationContainer->setDefaults(['birthDate' => $birthDate->format('d.m.Y')]);
+            }
             if ($insuranceCompany = $application->getInsuranceCompany()) {
                 $applicationContainer->setDefaults(['insuranceCompanyId' => $insuranceCompany->getId()]);
             }
@@ -234,6 +237,7 @@ class CartFormWrapper extends FormWrapper {
             if ($this->applications && !in_array($applicationId, $applicationIds)) {
                 unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationId]);
             }
+            $applicationValues[self::CONTAINER_NAME_APPLICATION]['birthDate'] = \DateTime::createFromFormat('d.m.Y', $applicationValues[self::CONTAINER_NAME_APPLICATION]['birthDate']);
             $builder->resetPreselectedOptions();
             if ($this->reservation) {
                 $application = $this->applicationDao->getApplication($applicationId);
@@ -413,10 +417,10 @@ class CartFormWrapper extends FormWrapper {
         ])
             ->setRequired();
         /** @noinspection PhpUndefinedMethodInspection */
-        $applicationContainer->addDate('birthDate', 'Datum narození', DateInput::TYPE_DATE)
+        $applicationContainer->addText('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
-            ->addRule($form::VALID, 'Vloženo chybné datum!')
-            ->setAttribute('class', 'no-validation');
+            ->setOption($form::OPTION_KEY_DESCRIPTION, 'Ve formátu dd.mm.rrrr')
+            ->addRule($form::PATTERN, 'Vloženo chybné datum!', '[0-9]{1,2}.[0-9]{1,2}.[0-9]{4}');
         $applicationContainer->addSelect('insuranceCompanyId', 'Zdravotní pojišťovna',
             $this->insuranceCompanyDao->getInsuranceCompanyList())
             ->setRequired(true);
