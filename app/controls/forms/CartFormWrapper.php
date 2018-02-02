@@ -4,6 +4,7 @@ namespace App\Controls\Forms;
 
 use App\Model\Exception\EmptyException;
 use App\Model\Exception\FormControlException;
+use App\Model\Exception\InvalidInputException;
 use App\Model\Persistence\Attribute\IGender;
 use App\Model\Persistence\Dao\ApplicationDao;
 use App\Model\Persistence\Dao\CurrencyDao;
@@ -238,6 +239,9 @@ class CartFormWrapper extends FormWrapper {
                 unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationId]);
             }
             $applicationValues[self::CONTAINER_NAME_APPLICATION]['birthDate'] = \DateTime::createFromFormat('d.m.Y', $applicationValues[self::CONTAINER_NAME_APPLICATION]['birthDate']);
+            if (!$applicationValues[self::CONTAINER_NAME_APPLICATION]['birthDate']) {
+                throw new FormControlException(new InvalidInputException('Chybný formát data'), 'birthDate');
+            }
             $builder->resetPreselectedOptions();
             if ($this->reservation) {
                 $application = $this->applicationDao->getApplication($applicationId);
@@ -420,7 +424,7 @@ class CartFormWrapper extends FormWrapper {
         $applicationContainer->addText('birthDate', 'Datum narození', DateInput::TYPE_DATE)
             ->setRequired()
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Ve formátu dd.mm.rrrr')
-            ->addRule($form::PATTERN, 'Vloženo chybné datum!', '[0-9]{1,2}.[0-9]{1,2}.[0-9]{4}');
+            ->addRule($form::PATTERN, 'Vloženo chybné datum!', '[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}');
         $applicationContainer->addSelect('insuranceCompanyId', 'Zdravotní pojišťovna',
             $this->insuranceCompanyDao->getInsuranceCompanyList())
             ->setRequired(true);
