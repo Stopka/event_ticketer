@@ -2,5 +2,11 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/joseki/pdf-response" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/kdyby/forms-replicator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/kdyby/translation" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/o5/grido" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/stopka/nette-form-renderer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vendor/stopka/nette-menu-control" vcs="Git" />
   </component>
 </project>

@@ -60,10 +60,11 @@ class DelegateReservationFormWrapper extends FormWrapper {
 
     /**
      * @param ApplicationEntity[] $applications
+     * @throws EmptyException
      */
     public function setApplications(array $applications): void {
         if (!count($applications)) {
-            throw new EmptyException("Error.Reservation.Application.Empty");
+            throw new EmptyException("Error.Reservation.Empty");
         }
         foreach ($applications as $application) {
             if (!$this->event) {

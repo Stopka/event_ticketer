@@ -159,8 +159,8 @@ class EarlyWaveInviteNotifier implements Subscriber {
             ->setHtmlBody("<p>Dobrý den,<br/>
 Velice si vážíme Vaší podpory v minulém roce, a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek. Běžný výdej přihlášek započne " . $wave->getEvent()->getStartDate()->format('d. m. Y') . ", pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu, kde standardním způsobem vyplníte registrační formulář.<br/>
 $link</p>
-<p>Zároveň bychom Vás při této příležitosti chtěli pozvat na náš ples. Infromace naleznete v přiložené pdf pozvánce.</p>
 <p>Tým LDTPardubice</p>
+
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě otevření přednostního přístupu k přihláškám.</em></p>");
         $atachmentManager = $this->getAtachmentManager($early->getEarlyWave()->getEvent());
         $atachmentManager->addAttachmentsToMessage($message);

@@ -13,7 +13,7 @@
         }
 
         body {
-            font-size: 14px;
+            font-size: 12px;
             color: #000000;
             margin: 0;
             /*
@@ -52,12 +52,15 @@
 
         table.form {
             border-spacing: 2mm;
+
         }
 
         table.form td {
             width: 50%;
             border-bottom: 2px dotted black;
             border-left: 2px dotted black;
+
+            vertical-align: top;
         }
 
         .label {
@@ -90,7 +93,7 @@
 <table>
     <tr style="height: 4cm">
         <td style="width: 25%; text-align: center;">
-            <img src="{$baseDir|noescape}/ApplicationPdfResponse/logo.png" style="max-height: 3cm; max-width: 100%;">
+            <img src="{$baseDir|noescape}/ApplicationPdfResponse/netopyr.png" style="max-height: 2cm; max-width: 100%;">
             <img src="{$baseDir|noescape}/ApplicationPdfResponse/landa.jpg" style="max-height: 2cm; max-width: 100%;">
         </td>
         <td style="width: 25%; text-align: center;">
@@ -109,18 +112,18 @@
 <table>
     <tr>
         <td style="width: 60%">Místo: <strong>JINDŘICHOVICE (Havlišův&nbsp;mlýn)</strong></td>
-        <td>Termín: <strong>22.&nbsp;7. – 5.&nbsp;8.&nbsp;2018</strong></td>
+        <td>Termín: <strong>21.&nbsp;7. – 4.&nbsp;8.&nbsp;2019</strong></td>
     </tr>
 </table>
 <table class="form">
     <tr>
         <td style="width:60%;">
-            <div class="label">Jméno a příjmení dítěte:</div>
+            <div class="label">Příjmení a jméno dítěte:</div>
             <div class="input">{$application->getFullName()}&nbsp;</div>
         </td>
         <td>
-            <div class="label">Rodné číslo:</div>
-            <div class="input">&nbsp;</div>
+            <div class="label">Datum narození:</div>
+            <div class="input">{$birth}&nbsp;</div>
         </td>
     </tr>
 </table>
@@ -138,22 +141,12 @@
 </table>
 <table class="form">
     <tr>
-        <td style="width: 60%">
-            <div class="label">Jméno a příjmení matky:</div>
-            <siv class="input">&nbsp;</siv>
-        </td>
-        <td style="width: 40%">
-            <div class="label">Zaměstnavatel:</div>
-            <div class="input">&nbsp;</div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="label">Jméno a příjmení otce:</div>
+        <td style="width: 50%">
+            <div class="label">Příjmení a jméno matky:</div>
             <div class="input">&nbsp;</div>
         </td>
         <td>
-            <div class="label">Zaměstnavatel:</div>
+            <div class="label">Příjmení a jméno otce:</div>
             <div class="input">&nbsp;</div>
         </td>
     </tr>
@@ -212,8 +205,6 @@
             </div>
             <div class="input">{if $application->getCart()}{$application->getCart()->getPhone()}{/if}&nbsp;</div>
         </td>
-    </tr>
-    <tr>
         <td>
             <div class="label">Žádost o příspěvek zaměstnavatele bude podán u
                 <small>(pokud ANO, pošlete žádost na mail
@@ -238,8 +229,6 @@
             </div>
             <div class="input">{$application->getFriend()}&nbsp;</div>
         </td>
-    </tr>
-    <tr>
         <td>
             <div class="label">Další závazné informace pro provozovatele tábora
                 <small>(fobie, strav. návyky atd.)</small>
@@ -287,7 +276,7 @@
 <p><strong>Cena 4.300,- Kč</strong> Na dalšího sourozence účastnícího se tábora <strong>sleva 200,- Kč</strong>.
     <em>(táborové tričko a tematické profi DVD z tábora zahrnuto v ceně; na sourozence vždy jeden nosič)</em></p>
 <p><strong>Registrace se stává závaznou až po úhradě</strong> nevratného rezervačního poplatku ve výši <strong>1000,-
-        Kč</strong>. <strong>Splatnost zbylé částky nejpozději do 01.06.2018</strong>, pokud nebude s provozovatelem
+        Kč</strong>. <strong>Splatnost zbylé částky nejpozději do 01.06.2019</strong>, pokud nebude s provozovatelem
     tábora předem domluveno jinak! V případě, že bude nutné ošetření dítěte u lékaře (případná hospitalizace
     v nemocnici), <strong>zavazuje se zákonný zástupce dodatečně uhradit lékařské poplatky</strong>!</p>
 <p><strong>Storno poplatek:</strong> 1000,- Kč rezervační poplatek + 2500,- Kč do 14 dnů před zahájením tábora; 1000,-
@@ -295,12 +284,9 @@
     storno poplatek neúčtuje a vrací se rezervační poplatek (zrušení se provádí pouze písemnou formou). Při předčasném
     odjezdu nebo pozdním příjezdu dítěte z/na tábor <strong>pouze z důvodu nemoci</strong> (lékař. potvrzení nutné) má
     plátce nárok na proplacení poměrné části strav. limitu (100,- Kč/den – pouze celé dny, a to <strong>na základě
-        písemné žádosti</strong>, která <strong>bude doručena</strong> nejpozději do <strong>15.09.2018</strong>).
+        písemné žádosti</strong>, která <strong>bude doručena</strong> nejpozději do <strong>15.09.2019</strong>).
     <strong>Organizátor dětem nesjednává na dobu pobytu na táboře (včetně dopravy) úrazové ani žádné jiné
         pojištění.</strong></p>
-
-<pagebreak>
-
     <p><strong>Vzal jsem na vědomí, že návštěvy v táboře nejsou z výchovných a především z hygienických a zdravotních
             důvodů povoleny !!!</strong></p>
     <p>Tábor je určen pro pobyt zdravých dětí od 6 do 17 let věku, které se mohou bez problémů přizpůsobit táborovému
@@ -308,29 +294,66 @@
     <p>V případě závažného porušení táborového řádu může být účastník tábora na základě rozhodnutí vedení tábora
         vyloučen. V takovém případě hradí rodiče účastníka nebo jeho zákonný zástupce veškeré náklady spojené
         s ukončením pobytu a provozovatel nevrací alikvotní část účastnického poplatku.</p>
-    <p>Provozovatel tábora neručí za ztráty a zničení cenností (drahé kovy, elektronika, mobilní telefony, drahé
-        oblečení apod.).</p>
-    <p><strong>Mobilní telefony vedení LDT zakazuje z výchovných a zdravotních důvodů a z důvodu zajištění bezpečnosti
-            dětí</strong> (mimořádné případy včetně udání důvodu konzultujte s vedením LDT před odjezdem na tábor)!!!
-    </p>
-    <p><strong>Prohlášení rodičů:</strong></p>
+<p>Provozovatel tábora neručí za ztráty a zničení cenností (drahé kovy, elektronika, mobilní telefony, drahé
+    oblečení apod.).</p>
+<p><strong>Mobilní telefony vedení LDT zakazuje z výchovných a zdravotních důvodů a z důvodu zajištění bezpečnosti
+        dětí</strong> (mimořádné případy včetně udání důvodu konzultujte s vedením LDT před odjezdem na tábor)!!!</p>
+<pagebreak>
+
+    <p><strong>Prohlášení a souhlasy rodičů:</strong></p>
     <p>Prohlašuji tímto a potvrzuji správnost uvedených údajů a jsem připraven/a na vyzvání zodpovědné osoby
-        provozovatele správnost údajů doložit. Dávám tímto výslovně souhlas s tím, aby provozovatel, jako správce,
-        zpracoval v souladu se zák.č. 101/2000 Sb., o ochraně osobních údajů, mé osobní údaje, prostřednictvím svých
-        zpracovatelů, přičemž beru na vědomí, že takto určený zpracovatel, již nepodléhá mému dalšímu souhlasu. Správce
-        může používat mé osobní údaje ke své činnosti v souladu se zákonem a dále v nutném rozsahu pro svou činnost.
-        Souhlas uděluji do doby likvidace osobních údajů, jakmile pomine účel, pro který byly osobní údaje zpracovány.
-        Beru na vědomí, že svůj souhlas mohu kdykoliv odvolat a správce mé údaje do jednoho roku zlikviduje. Způsob
-        zpracování údajů řeší vnitřní směrnice provozovatele.</p>
-    <p>Prohlašuji dále, že souhlasím s případným umístěním fotografie/videa mého dítěte na internetových stránkách a
-        v propagačních materiálech spojených s LDT Pardubice, z.s.</p>
+        provozovatele správnost údajů doložit.</p>
+    <p>Berete na vědomí, že společnost <strong>LDT Pardubice, z.s. – Mgr.Radek Vančura</strong> (dále jen
+        „<em>Správce</em>“),
+        aby ve smyslu zákona č.101/2000 Sb., o ochraně osobních údajů (dále jen „<em>Zákon na ochranu osobních
+            údajů</em>“)
+        a Nařízení EU č. 2016/679 (dále jen „<em>GDPR</em>“) k mému dítěti a k mé osobě zpracovával tyto údaje:
+    <ol>
+        <li>Jméno, příjmení rodičů (příp. zák. zástupců) i dítěte</li>
+        <li>Datum narození dítěte</li>
+        <li>Adresa bydliště rodičů (příp. zák. zástupců) i dítěte</li>
+        <li>Kontaktní údaje rodičů (příp. zák. zástupců)</li>
+        <li>Informace o zdravotních omezeních a úrazech dítěte</li>
+        <li>Fotografie a audiovizuální záznamy dítěte</li>
+    </ol>
+    <small>(V případě nesouhlasu – škrtněte)</small>
+    </p>
+    <p><strong>Berete na vědomí, že poskytnutí osobních údajů je nezbytné pro plnění povinností Správce</strong>
+        při výkonu jeho činnosti. Odmítnutí udělení osobních údajů může znamenat odmítnutí poskytování služeb péče
+        o dítě Správcem s ohledem na dotační podmínky, bezpečnost dítěte, atp.</p>
+    <p>Tyto osobní údaje jsou zpracovávány za účelem plnění výkonu činnosti tábora provozované Správcem,
+        primárně pak jako kontaktní údaje a údaje pro účely smlouvy s Vámi, jakož i ve vztahu k subjektům
+        vykonávajícím dohled nad předmětem podnikání Správce, jakož i ve vztahu k veřejným orgánům,
+        jejichž prostřednictvím zajišťuje Správce čerpání dotací z veřejných zdrojů a dále pro uchovávání
+        a archivování údajů dle zákonných požadavků. Osobní údaje budou zpracovávány po dobu trvání tábora
+        a následující 3 roky, nestanoví-li právní předpis nebo pravidla poskytnuté dotace lhůtu delší.</p>
+    <p>Fotografie a audiovizuální záznamy budou zpracovány formou umístění fotografií a audiovizuálních záznamů na
+        webové a facebookové stránky správce a v propagačních materiálech spojených s LDT Pardubice, z.s.</p>
+    <p>Zpracování osobních údajů je prováděno Správcem, osobní údaje však pro Správce mohou zpracovávat i zpracovatelé,
+        kteří by v budoucnu nahradili služby správce.</p>
+    <p>Berete na vědomí, že podle Zákona na ochranu osobních údajů a GDPR máte právo:
+    <ol type="a">
+        <li>vzít souhlas kdykoliv zpět;</li>
+        <li>požadovat po Správci informaci, jaké osobní údaje zpracovává;</li>
+        <li>požadovat po Správci vysvětlení ohledně zpracování osobních údajů;</li>
+        <li>vyžádat si u Správce přístup k těmto údajům a tyto nechat aktualizovat nebo opravit;</li>
+        <li>požadovat po Správci výmaz těchto osobních údajů;</li>
+        <li>v případě pochybností o dodržování povinností souvisejících se zpracováním osobních údajů obrátit
+            se na Správce nebo na Úřad pro ochranu osobních údajů;
+        </li>
+        <li>uplatnit veškerá další práva přiznaná Zákonem na ochranu osobních údajů a GDPR.</li>
+    </ol>
+    </p>
+    <p>Odvolání souhlasu nemá za následek odstranění již dříve použitých fotografií
+        v marketingových a propagačních materiálech Správce. </p>
     <p>Jsou mi známy dispozice provozu letního tábora a uvedl/a jsem v této přihlášce veškeré závažné informace,
-        týkající se zdravotního stavu účastníka tábora a případné změny, zjištěné po odevzdání této přihlášky, oznámím
-        nejpozději před zahájením tábora v prohlášení o bezinfekčnosti. Současně prohlašuji, že telefonické spojení
-        uvedené na přihlášce pro dobu konání tábora je platné a v případě zdravotních problémů dítěte (rozhoduje lékař
-        či zdravotník tábora) nebo vážných kázeňských přestupků dítěte zajistím na vlastní náklady odvoz dítěte z tábora
-        nejpozději do 24 hodin. Dále se tímto zavazuji uhradit veškeré případné škody na majetku v objektu i
-        provozovatele tábora, třetím osobám, případně dalších účastníků tábora, které účastník tábora způsobí.</p>
+        týkající se zdravotního stavu účastníka tábora a případné změny, zjištěné po odevzdání této přihlášky,
+        oznámím nejpozději před zahájením tábora v prohlášení o bezinfekčnosti. Současně prohlašuji,
+        že telefonické spojení uvedené na přihlášce pro dobu konání tábora je platné a v případě zdravotních problémů
+        dítěte (rozhoduje lékař či zdravotník tábora) nebo vážných kázeňských přestupků dítěte zajistím na vlastní
+        náklady odvoz dítěte z tábora nejpozději do 24 hodin. Dále se tímto zavazuji uhradit veškeré případné škody
+        na majetku v objektu i provozovatele tábora, třetím osobám, případně dalších účastníků tábora, které účastník
+        tábora způsobí.</p>
     <p>V průběhu tábora mají děti možnost uložit kapesné u hlavního vedoucího LDT (viz.potvrzení o úschově kapesného),
         provozovatel tábora neručí za ztráty neuložené hotovosti!!! Upozorňujeme na nevhodnost cenností (zlaté šperky,
         elektronika…). Provozovatel tábora neručí za jejich případné poškození a ztráty!!!</p>
@@ -359,7 +382,7 @@
             </td>
 
             <td style="width: 50%">
-                <div class="label">Podpis:</div>
+                <div class="label">Podpis rodičů (příp. zákon. zást.):</div>
                 <div class="input">&nbsp;</div>
             </td>
         </tr>

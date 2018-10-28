@@ -2,6 +2,7 @@
 
 namespace App\FrontModule\Responses;
 
+use App\Model\DateFormatter;
 use App\Model\Persistence\Entity\ApplicationEntity;
 use App\Responses\PdfResponse\IPdfResponseFactory;
 use App\Responses\PdfResponse\PdfResponse;
@@ -28,15 +29,20 @@ class ApplicationPdfResponse implements IResponse {
     /** @var ITemplate */
     private $template;
 
+    /** @var DateFormatter */
+    private $dateFormatter;
+
     /** @var string */
     private $saveMode = PdfResponse::INLINE;
 
     public function __construct(
         IPdfResponseFactory $pdfResponseFactory,
+        DateFormatter $dateFormatter,
         ITemplateFactory $templateFactory
     ) {
         $this->pdfResponseFactory = $pdfResponseFactory;
         $this->templateFactory = $templateFactory;
+        $this->dateFormatter = $dateFormatter;
     }
 
     protected function createTemplate(): ITemplate {
@@ -92,6 +98,7 @@ class ApplicationPdfResponse implements IResponse {
         $template->bus = $bus;
         $template->tricko = $tricko;
         $template->address = implode('; ', $address);
+        $template->birth = $application->getBirthDate() ? $this->dateFormatter->getDateString($application->getBirthDate()) : null;
         $template->id = Strings::padLeft($this->application->getId(), 3, '0');
         return $template;
     }
