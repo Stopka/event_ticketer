@@ -69,7 +69,7 @@ class CartCreatedNotifier implements Subscriber {
         $message->addTo($cartEntity->getEmail(), $cartEntity->getFullName());
         $message->setSubject('Přihláška na ' . $cartEntity->getEvent()->getName());
         $message->setHtmlBody("<p>Dobrý den,</p>
-<p> Děkujeme, že jste projevili zájem o přihlášku na <strong>" . $cartEntity->getEvent()->getName() . "</strong>. V příloze zasíláme přihlášku, bezinfekčnost a lékařské potvrzení. Bezinfekčnost, lékařské potvrzení a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
+<p> Děkujeme, že jste projevili zájem o přihlášku na <strong>" . $cartEntity->getEvent()->getName() . "</strong>. V příloze zasíláme přihlášku, prohlášení o bezinfekčnosti, posudek o zdravotni způsobilosti a list se základními informacemi. Bezinfekčnost, lékařský posudek a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
 <p>Nyní je potřeba přihlášku vytisknout pro každé registrované místo, dovyplnit, odeslat a ke každé přihlášce zaplatit rezervační poplatek. Další informace jsou uvedeny přímo v přihlášce.</p>
 <p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na následující adrese: <br />
  <a href='$link'>$link</a></p>
