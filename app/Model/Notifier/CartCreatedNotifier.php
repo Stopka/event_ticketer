@@ -69,11 +69,11 @@ class CartCreatedNotifier implements Subscriber {
         $message->addTo($cartEntity->getEmail(), $cartEntity->getFullName());
         $message->setSubject('Přihláška na ' . $cartEntity->getEvent()->getName());
         $message->setHtmlBody("<p>Dobrý den,</p>
-<p> Děkujeme, že jste projevili zájem o přihlášku na <strong>" . $cartEntity->getEvent()->getName() . "</strong>. V příloze zasíláme přihlášku, prohlášení o bezinfekčnosti, posudek o zdravotni způsobilosti a list se základními informacemi. Bezinfekčnost, lékařský posudek a list s informacemi můžete v případě ztráty získat na našich stránkách.</p>
-<p>Nyní je potřeba přihlášku vytisknout pro každé registrované místo, dovyplnit, odeslat a ke každé přihlášce zaplatit rezervační poplatek. Další informace jsou uvedeny přímo v přihlášce.</p>
+<p> Děkujeme, že jste projevili zájem o přihlášku na <a href='https://ldtpardubice.cz/event/612'>" . $cartEntity->getEvent()->getName() . "</a>. V příloze zasíláme přihlášku, prohlášení o bezinfekčnosti, posudek o zdravotni způsobilosti a list se základními informacemi. Bezinfekčnost, lékařský posudek a list s informacemi můžete v případě ztráty získat na našich <a href='https://ldtpardubice.cz/article/613'>stránkách</a>.</p>
+<p>Nyní je potřeba přihlášku vytisknout pro každé registrované místo, dovyplnit, odeslat a ke každé přihlášce zaplatit rezervační poplatek. Další informace jsou uvedeny přímo v přiloženém dokumentu popřípadě na našich stránkách.</p>
 <p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na následující adrese: <br />
  <a href='$link'>$link</a></p>
-<p>V případě dotazu pište na ldtmpp@email.cz.</p>
+<p>V případě dotazu pište na <a href='mailto:ldtmpp@email.cz'>ldtmpp@email.cz</a>.</p>
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz na základě registrace přihlášky.</em></p>");
         foreach ($cartEntity->getApplications() as $application) {
             $this->applicationPdfManager->addMessageAttachment($message, $application);
