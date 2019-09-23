@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+  event_ticketer:
+    build:
+      target: dev
+    image: stopka/event_ticketer:dev
+    ports:
+      - 80:80
+    volumes:
+      - ./src:/srv
+      - composer-cache:/root/.composer
+  event_ticketer-mariadb:
+    ports:
+      - 3306:3306
+volumes:
+  composer-cache:

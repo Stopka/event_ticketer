@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+  event_ticketer:
+    build:
+      context: .
+      target: prod
+    image: stopka/event_ticketer:latest
+    environment:
+      - 'ConfigNeon={
+           "parameters": {
+              "database": {
+                "host": "event_ticketer-mariadb",
+                "user": "root",
+                "password": "${DB_PASSWORD}",
+                "dbname": "event_ticketer"
+              }
+           }
+         }'
+    networks:
+      - event_ticketer-mariadb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "10"
+  event_ticketer-mariadb:
+    image: mariadb:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=event_ticketer
+    volumes:
+      - event_ticketer-mariadb-data:/var/lib/mysql
+    networks:
+      - event_ticketer-mariadb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "10"
+volumes:
+  event_ticketer-mariadb-data:
+networks:
+  event_ticketer-mariadb:
