@@ -104,8 +104,8 @@ RUN \
         vim \
         wget && \
     rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/*
-ADD ./docker/php/20-xdebug.ini ${PHP_FPM_CONF_DIR}/
-ADD ./docker/php/20-xdebug.ini ${PHP_CLI_CONF_DIR}/
+ADD ./docker/php/xdebug-custom.ini ${PHP_FPM_CONF_DIR}/
+ADD ./docker/php/xdebug-custom.ini ${PHP_CLI_CONF_DIR}/
 
 FROM libtools AS libs
 RUN \

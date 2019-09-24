@@ -1,6 +1,8 @@
 version: "3.7"
 services:
   event_ticketer:
+    environment:
+      PHP_IDE_CONFIG: "serverName=event_ticketer"
     build:
       target: dev
     image: stopka/event_ticketer:dev
@@ -9,8 +11,16 @@ services:
     volumes:
       - ./src:/srv
       - composer-cache:/root/.composer
+    networks:
+      - xdebug
   event_ticketer-mariadb:
     ports:
       - 3306:3306
 volumes:
   composer-cache:
+networks:
+  xdebug:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.9.0/24
