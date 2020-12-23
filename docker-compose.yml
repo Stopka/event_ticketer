@@ -5,17 +5,6 @@ services:
       context: .
       target: prod
     image: stopka/event_ticketer:latest
-    environment:
-      - 'ConfigNeon={
-           "parameters": {
-              "database": {
-                "host": "event_ticketer-mariadb",
-                "user": "root",
-                "password": "${DB_PASSWORD}",
-                "dbname": "event_ticketer"
-              }
-           }
-         }'
     networks:
       - event_ticketer-mariadb
     logging:
@@ -26,8 +15,8 @@ services:
   event_ticketer-mariadb:
     image: mariadb:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=event_ticketer
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_NAME}
     volumes:
       - event_ticketer-mariadb-data:/var/lib/mysql
     networks:

@@ -1,0 +1,5 @@
+session:
+    expiration: '+ 30 days'
+    #cookieDomain: '.%host%'
+    name: 'ticketer_sessid'
+    autoStart: true

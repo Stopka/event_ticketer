@@ -1,7 +1,0 @@
-parameters:
-    database:
-        driver: mysql
-        host: localhost
-        dbname:
-        user:
-        password:

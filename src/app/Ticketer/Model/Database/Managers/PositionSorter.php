@@ -1,0 +1,137 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Ticketer\Model\Database\Managers;
+
+use Doctrine\ORM\EntityRepository;
+use Ticketer\Model\Database\Attributes\TPositionAttribute;
+use Ticketer\Model\Database\Daos\OrderEnum;
+use Ticketer\Model\Database\Entities\ISortableEntity;
+
+class PositionSorter
+{
+
+    /** @var EntityRepository */
+    private $entityRepository;
+
+    /** @var int|null */
+    private $lastPosition;
+
+    /**
+     * @param ISortableEntity $positionable
+     * @return int
+     */
+    public function setEndPosition(ISortableEntity $positionable): int
+    {
+        if (null === $this->lastPosition) {
+            /** @var ISortableEntity|null $last */
+            $last = $this->entityRepository->findOneBy([], ['position' => OrderEnum::DESC()->getValue()]);
+            if (null === $last) {
+                $this->lastPosition = 0;
+            } else {
+                $this->lastPosition = $last->getPosition();
+            }
+        }
+        $newPosition = $this->lastPosition++;
+        $positionable->setPosition($newPosition);
+
+        return $newPosition;
+    }
+
+    /**
+     * @param iterable<ISortableEntity> $entities
+     */
+    public function recalculatePositions(iterable $entities): void
+    {
+        $this->lastPosition = null;
+        $position = 1;
+        foreach ($entities as $entity) {
+            $entity->setPosition($position);
+            $position++;
+        }
+    }
+
+    /**
+     * @param ISortableEntity $item
+     * @param iterable<ISortableEntity> $entities
+     */
+    public function moveEntityUp(ISortableEntity $item, iterable $entities): void
+    {
+        $this->lastPosition = null;
+        $position = 1;
+        /** @var ISortableEntity|null $previousEntity */
+        $previousEntity = null;
+        foreach ($entities as $entity) {
+            if ($item->getId() === $entity->getId() && null !== $previousEntity) {
+                $previousEntity->setPosition($position);
+                $entity->setPosition($position - 1);
+            } else {
+                $entity->setPosition($position);
+            }
+            $previousEntity = $entity;
+            $position++;
+        }
+    }
+
+    /**
+     * @param ISortableEntity $item
+     * @param iterable<ISortableEntity> $entities
+     */
+    public function moveEntityDown(ISortableEntity $item, iterable $entities): void
+    {
+        $this->lastPosition = null;
+        $position = 1;
+        $shift = 0;
+        foreach ($entities as $entity) {
+            if ($item->getId() === $entity->getId()) {
+                $entity->setPosition($position + 1);
+                $shift++;
+            } else {
+                $entity->setPosition($position - $shift);
+                if (0 !== $shift) {
+                    $shift--;
+                }
+            }
+            $position++;
+        }
+    }
+
+    /**
+     * @param ISortableEntity $item
+     * @param iterable<ISortableEntity> $entities
+     */
+    public function moveEntityToEnd(ISortableEntity $item, iterable $entities): void
+    {
+        $this->lastPosition = null;
+        $position = 1;
+        foreach ($entities as $entity) {
+            if ($item->getId() === $entity->getId()) {
+                continue;
+            }
+
+            $entity->setPosition($position);
+            $position++;
+        }
+        $item->setPosition($position);
+    }
+
+    /**
+     * @param ISortableEntity $item
+     * @param iterable<ISortableEntity> $entities
+     */
+    public function moveEntityToStart(ISortableEntity $item, iterable $entities): void
+    {
+        $this->lastPosition = null;
+        $item->setPosition(1);
+        $position = 2;
+        foreach ($entities as $entity) {
+            if ($item->getId() === $entity->getId()) {
+                continue;
+            }
+
+            $entity->setPosition($position);
+            $position++;
+        }
+    }
+}

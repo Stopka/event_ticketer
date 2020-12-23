@@ -1,0 +1,9 @@
+extensions:
+    nettrine.migrations: Nettrine\Migrations\DI\MigrationsExtension
+
+nettrine.migrations:
+	table: doctrine_migrations
+	column: version
+	directory: %appDir%/Ticketer/Model/Database/Migrations
+	namespace: Ticketer\Model\Database\Migrations
+	versionsOrganization: year

@@ -1,0 +1,17 @@
+extensions:
+    forms.multiplier: Contributte\FormMultiplier\DI\MultiplierExtension
+
+forms:
+    messages:
+        EQUAL: 'Form.Rule.Equal'
+        FILLED: 'Form.Rule.Filled'
+        NOT_EQUAL: 'Form.Rule.NotEqual'
+        INTEGER: 'Form.Rule.Integer'
+        FLOAT: 'Form.Rule.Float'
+        MIN: 'Form.Rule.Min'
+        MAX: 'Form.Rule.Max'
+        RANGE: 'Form.Rule.Range'
+        LENGTH: 'Form.Rule.Length'
+        MIN_LENGTH: 'Form.Rule.MinLength'
+        MAX_LENGTH: 'Form.Rule.MaxLength'
+        EMAIL: 'Form.Rule.Email'

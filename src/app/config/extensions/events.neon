@@ -1,0 +1,2 @@
+extensions:
+    events: Contributte\EventDispatcher\DI\EventDispatcherExtension

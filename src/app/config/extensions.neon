@@ -1,0 +1,12 @@
+includes:
+    - extensions/application.neon
+    - extensions/console.neon
+    - extensions/events.neon
+    - extensions/forms.neon
+    - extensions/http.neon
+    - extensions/monolog.neon
+    - extensions/nettrine.neon
+    - extensions/php.neon
+    - extensions/session.neon
+    - extensions/tracy.neon
+    - extensions/translation.neon

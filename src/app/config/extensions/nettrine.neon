@@ -1,0 +1,5 @@
+includes:
+    - nettrine/annotations.neon
+    - nettrine/dbal.neon
+    - nettrine/orm.neon
+    - nettrine/migrations.neon

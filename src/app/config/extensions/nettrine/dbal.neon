@@ -1,0 +1,15 @@
+extensions:
+    nettrine.dbal: Nettrine\DBAL\DI\DbalExtension
+    nettrine.dbal.console: Nettrine\DBAL\DI\DbalConsoleExtension
+
+nettrine.dbal:
+	debug:
+		panel: %debugMode%
+	configuration:
+		sqlLogger: Nettrine\DBAL\Logger\PsrLogger(@Monolog\Logger)
+	connection:
+		driver: %database.driver%
+		host: %database.host%
+		user: %database.user%
+		password: %database.password%
+		dbname: %database.dbname%

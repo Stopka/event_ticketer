@@ -4,7 +4,7 @@ FROM ubuntu:latest AS build
 
 ENV TZ=Europe/Prague
 
-ENV PHP_VERSION=7.3
+ENV PHP_VERSION=7.4
 ENV PHP_ETC=/etc/php/${PHP_VERSION}
 ENV PHP_MODS_DIR=${PHP_ETC}/mods-available
 ENV PHP_CLI_DIR=${PHP_ETC}/cli
@@ -12,6 +12,23 @@ ENV PHP_CLI_CONF_DIR=${PHP_CLI_DIR}/conf.d
 ENV PHP_FPM_DIR=${PHP_ETC}/fpm/
 ENV PHP_FPM_CONF_DIR=${PHP_FPM_DIR}/conf.d
 ENV PHP_FPM_POOL_DIR=${PHP_FPM_DIR}/pool.d
+
+ENV HOST_NAME='Event ticketer'
+ENV HOST_DOMAIN='ticketer.localhost'
+ENV MAIL_HOST='localhost'
+ENV MAIL_PORT='25'
+ENV MAIL_USER=''
+ENV MAIL_PASS=''
+ENV MAIL_FROM=system@${HOST_DOMAIN}
+ENV MAIL_FROM_NAME=${HOST_NAME}
+ENV MAIL_REPLY_TO=${MAIL_FROM}
+ENV MAIL_REPLY_TO_NAME=${MAIL_FROM_NAME}
+ENV FORMAT_DATE='Y-m-d'
+ENV FORMAT_TIME='H:i:s'
+ENV DATABASE_HOST='localhost:3306'
+ENV DATABASE_NAME='event_ticketer'
+ENV DATABASE_USER='root'
+ENV DATABASE_PASSWORD=''
 
 RUN \
     # INSTALLATION
@@ -38,13 +55,10 @@ RUN \
         php${PHP_VERSION}-intl \
         php${PHP_VERSION}-mbstring \
         php${PHP_VERSION}-memcached \
-        php${PHP_VERSION}-mongo \
         php${PHP_VERSION}-mysql \
         php${PHP_VERSION}-soap \
         php${PHP_VERSION}-sqlite3 \
-        php${PHP_VERSION}-ssh2 \
         php${PHP_VERSION}-zip \
-        php${PHP_VERSION}-xmlrpc \
         php${PHP_VERSION}-imagick \
         ghostscript && \
     rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/* \
@@ -82,7 +96,6 @@ FROM build AS libtools
 RUN \
     # COMPOSER
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
-    composer global require "hirak/prestissimo:^0.3" && \
     # YARN
     apt-get update && \
     apt-get install -y --no-install-recommends \

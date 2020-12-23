@@ -1,0 +1,18 @@
+parameters:
+    timezone: Europe/Prague
+    format:
+        date: 'd.m.Y'
+        time: 'H:i:s'
+        dateTime: '%%date%% %%time%%'
+    database:
+        driver: mysql
+        host: localhost
+        dbname: event_ticketer
+        user: root
+        password: ''
+    host:
+        name: Event ticketer
+        domain: ticketer.localhost
+    email:
+        from: [system@%host.domain%, %host.name%]
+        replyTo: %email.from%

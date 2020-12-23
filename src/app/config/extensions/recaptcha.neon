@@ -1,0 +1,6 @@
+extensions:
+    recaptcha: Contributte\ReCaptcha\DI\ReCaptchaExtension
+
+recaptcha:
+    secretKey: ***
+    siteKey: ***

@@ -1,21 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/../vendor/autoload.php';
 
-$configurator = new App\Configurator\Configurator();
+$configurator = new Ticketer\Configurators\TicketerConfigurator();
 
 $configurator->setDebugMode(true);
 $configurator->enableTracy(__DIR__ . '/../var/log');
-
-$configurator->setTimeZone('Europe/Prague');
 $configurator->setTempDirectory(__DIR__ . '/../var/temp');
 
 $confDir = __DIR__ . '/config';
-$configurator->addConfig("$confDir/config.neon");
+$configurator->addConfig("$confDir/main.neon");
+$configurator->addConfigIfExists("$confDir/config.environmental.neon");
 $configurator->addConfigIfExists("$confDir/config.local.neon");
-$configurator->addConfigIfExists("$confDir/environment.php");
-$configurator->addConfigIfExists("$confDir/environmentOverride.php");
 
-$container = $configurator->createContainer();
-
-return $container;
+return $configurator->createContainer();

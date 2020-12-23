@@ -1,0 +1,12 @@
+extensions:
+	monolog: Contributte\Monolog\DI\MonologExtension
+
+monolog:
+    channel:
+        default:
+            handlers:
+                - Monolog\Handler\SyslogHandler(%host.domain%)
+                - Monolog\Handler\RotatingFileHandler(%appDir%/../var/log/syslog.log, 30, Monolog\Logger::WARNING)
+                - Monolog\Handler\StreamHandler("php://stderr")
+            processors:
+                - Monolog\Processor\MemoryPeakUsageProcessor()

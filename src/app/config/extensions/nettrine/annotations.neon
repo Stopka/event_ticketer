@@ -1,0 +1,2 @@
+extensions:
+    nettrine.annotations: Nettrine\Annotations\DI\AnnotationsExtension
