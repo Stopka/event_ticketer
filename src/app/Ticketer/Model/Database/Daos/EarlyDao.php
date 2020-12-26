@@ -6,6 +6,7 @@ namespace Ticketer\Model\Database\Daos;
 
 use Ticketer\Model\Database\Entities\EarlyEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
+use Ticketer\Model\Dtos\Uuid;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 
@@ -18,10 +19,10 @@ class EarlyDao extends EntityDao
     }
 
     /**
-     * @param null|int $id
+     * @param Uuid $id
      * @return EarlyEntity|null
      */
-    public function getEarly(?int $id): ?EarlyEntity
+    public function getEarly(Uuid $id): ?EarlyEntity
     {
         /** @var EarlyEntity $result */
         $result = $this->get($id);

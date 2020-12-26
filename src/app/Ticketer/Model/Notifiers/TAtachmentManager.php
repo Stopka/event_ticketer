@@ -11,7 +11,7 @@ trait TAtachmentManager
     /** @var IEventMessageAtachmentManagerFactory */
     private $atachmentManagerFactory;
 
-    /** @var EventMessageAtachmentManager[] */
+    /** @var array<string,EventMessageAtachmentManager> */
     private $atachmentManager = [];
 
 
@@ -32,7 +32,7 @@ trait TAtachmentManager
      */
     public function getAtachmentManager(EventEntity $eventEntity): EventMessageAtachmentManager
     {
-        $eventId = $eventEntity->getId();
+        $eventId = $eventEntity->getId()->toString();
         if (!isset($this->atachmentManager[$eventId])) {
             $this->atachmentManager[$eventId] = $this->atachmentManagerFactory->create(
                 $this->getAtachmentManagerNamespace(),

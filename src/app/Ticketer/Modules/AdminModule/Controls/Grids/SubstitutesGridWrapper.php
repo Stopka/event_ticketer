@@ -11,6 +11,7 @@ use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\Managers\SubstituteManager;
 use Nette\Utils\Html;
+use Ticketer\Model\Dtos\Uuid;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
@@ -172,12 +173,13 @@ class SubstitutesGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $substituteId
+     * @param string $substituteId
      * @throws \Exception
      */
-    public function onActivate(int $substituteId): void
+    public function onActivate(string $substituteId): void
     {
-        $substitute = $this->substituteDao->getSubstitute($substituteId);
+        $substituteUuid = Uuid::fromString($substituteId);
+        $substitute = $this->substituteDao->getSubstitute($substituteUuid);
         if (null === $substitute) {
             return;
         }

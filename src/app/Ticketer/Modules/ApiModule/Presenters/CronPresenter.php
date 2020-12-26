@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\ApiModule\Presenters;
 
 use Nette\Application\AbortException;
-use Ticketer\Model\CronService;
+use Ticketer\Model\Cron\CronService;
 use Nette\Application\Responses\TextResponse;
 
 class CronPresenter extends BasePresenter

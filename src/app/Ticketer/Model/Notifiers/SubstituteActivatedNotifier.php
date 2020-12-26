@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Model\Notifiers;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Ticketer\Model\Database\Managers\Events\SubstituteActivatedEvent;
 use Ticketer\Model\Exceptions\NotReadyException;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\Managers\SubstituteManager;
@@ -28,13 +29,13 @@ class SubstituteActivatedNotifier implements EventSubscriberInterface
 
     /**
      * Event callback
-     * @param SubstituteEntity $substituteEntity
+     * @param SubstituteActivatedEvent $event
      * @throws \Nette\Application\UI\InvalidLinkException
      */
-    public function onSubstituteActivated(SubstituteEntity $substituteEntity): void
+    public function onSubstituteActivated(SubstituteActivatedEvent $event): void
     {
         try {
-            $this->sendNotification($substituteEntity);
+            $this->sendNotification($event->getSubstitute());
         } catch (NotReadyException $exception) {
         }
     }
@@ -54,7 +55,7 @@ class SubstituteActivatedNotifier implements EventSubscriberInterface
             throw new NotReadyException('Náhradník není aktivní.');
         }
         $emailService = $this->getEmailService();
-        $link = $emailService->generateLink('Front:Substitute:', ['id' => $substitute->getUid()]);
+        $link = $emailService->generateLink('Front:Substitute:', ['id' => $substitute->getId()]);
         $message = $emailService->createMessage();
         $message->addTo($substitute->getEmail(), $substitute->getFullName());
         $event = $substitute->getEvent();
@@ -83,6 +84,6 @@ na základě uvolnění místa pro náhradníka.</em></p>";
      */
     public static function getSubscribedEvents(): array
     {
-        return [SubstituteManager::class . '::onSubstituteActivated'];
+        return [SubstituteActivatedEvent::class => 'onSubstituteActivated'];
     }
 }

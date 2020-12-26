@@ -89,14 +89,14 @@ class EarlyFormWrapper extends FormWrapper
     }
 
     /**
-     * @return string[] earlyID => earlyTitle
+     * @return array<string,string> earlyID => earlyTitle
      */
     protected function getEarlyFormSelectArray(): array
     {
         $result = [null => 'Form.Early.EarlyWave.CreateNew'];
         $waves = $this->earlyWaveDao->getEventEearlyWaves($this->eventEntity);
         foreach ($waves as $wave) {
-            $result[(int)$wave->getId()] = $wave->getName() . ' - ' . $this->dateFormatter->getDateString(
+            $result[$wave->getId()->toString()] = $wave->getName() . ' - ' . $this->dateFormatter->getDateString(
                 $wave->getStartDate()
             );
         }

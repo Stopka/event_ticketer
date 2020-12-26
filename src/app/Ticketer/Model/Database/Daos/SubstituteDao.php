@@ -6,6 +6,7 @@ namespace Ticketer\Model\Database\Daos;
 
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
+use Ticketer\Model\Dtos\Uuid;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
 use Ublaboo\DataGrid\DataSource\IDataSource;
 
@@ -29,7 +30,7 @@ class SubstituteDao extends EntityDao
         return new DoctrineDataSource($queryBuilder, 'id');
     }
 
-    public function getSubstitute(?int $id): ?SubstituteEntity
+    public function getSubstitute(Uuid $id): ?SubstituteEntity
     {
         /** @var SubstituteEntity $result */
         $result = $this->get($id);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Grids\ApplicationsGridWrapper;
@@ -63,12 +64,13 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionDefault(int $id): void
+    public function actionDefault(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
         }
@@ -80,12 +82,13 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionOccupancy(int $id): void
+    public function actionOccupancy(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
         }
@@ -98,12 +101,13 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionReserve(int $id): void
+    public function actionReserve(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
         }
@@ -115,13 +119,14 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
-     * @param int[] $ids
+     * @param string $id
+     * @param string[] $ids
      * @throws AbortException
      */
-    public function actionEditReservation(int $id, array $ids): void
+    public function actionEditReservation(string $id, array $ids): void
     {
-        $eventEntity = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $eventEntity = $this->eventDao->getEvent($uuid);
         if (null === $eventEntity) {
             $this->redirect('Homepage:');
         }
@@ -138,12 +143,13 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function renderExport(int $id): void
+    public function renderExport(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
         }
@@ -156,12 +162,13 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id application id
+     * @param string $id application id
      * @throws AbortException
      */
-    public function renderPdf(int $id): void
+    public function renderPdf(string $id): void
     {
-        $application = $this->applicationDao->getApplication($id);
+        $uuid = Uuid::fromString($id);
+        $application = $this->applicationDao->getApplication($uuid);
         if (null === $application) {
             throw new NotFoundException();
             //TODO better handling

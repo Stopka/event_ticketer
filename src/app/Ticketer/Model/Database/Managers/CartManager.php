@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Managers;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Model\Database\Daos\AdditionDao;
 use Ticketer\Model\Database\Daos\ApplicationDao;
@@ -18,6 +19,8 @@ use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\EntityManager as EntityManagerWrapper;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
+use Ticketer\Model\Database\Managers\Events\CartCreatedEvent;
+use Ticketer\Model\Database\Managers\Events\CartUpdatedEvent;
 
 class CartManager
 {
@@ -39,11 +42,7 @@ class CartManager
     /** @var ApplicationDao */
     private $applicationDao;
 
-    /** @var callable[] */
-    public $onCartCreated = [];
-
-    /** @var callable[] */
-    public $onCartUpdated = [];
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
      * CartManager constructor.
@@ -60,7 +59,8 @@ class CartManager
         OptionDao $optionDao,
         InsuranceCompanyDao $insuranceCompanyDao,
         ApplicationManager $applicationManager,
-        ApplicationDao $applicationDao
+        ApplicationDao $applicationDao,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->injectEntityManager($entityManager);
         $this->additionDao = $additionDao;
@@ -68,6 +68,7 @@ class CartManager
         $this->insuranceCompanyDao = $insuranceCompanyDao;
         $this->applicationManager = $applicationManager;
         $this->applicationDao = $applicationDao;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -166,8 +167,7 @@ class CartManager
         ?ReservationEntity $reservation = null
     ): CartEntity {
         $cart = $this->processCartForm($values, $event, $early, $substitute, $reservation);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->onCartCreated($cart);
+        $this->eventDispatcher->dispatch(new CartCreatedEvent($cart));
 
         return $cart;
     }
@@ -189,8 +189,7 @@ class CartManager
         ?CartEntity $cart = null
     ): ?CartEntity {
         $cart = $this->processCartForm($values, $event, $early, $substitute, null, $cart);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->onCartUpdated($cart);
+        $this->eventDispatcher->dispatch(new CartUpdatedEvent($cart));
 
         return $cart;
     }

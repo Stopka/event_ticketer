@@ -6,6 +6,7 @@ namespace Ticketer\Model\Notifiers;
 
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Ticketer\Model\Database\Managers\Events\ReservationDelegatedEvent;
 use Ticketer\Model\Exceptions\NotReadyException;
 use Ticketer\Model\Database\Entities\ReservationEntity;
 use Ticketer\Model\Database\Managers\ReservationManager;
@@ -29,12 +30,12 @@ class ReservationDelegatedNotifier implements EventSubscriberInterface
 
     /**
      * Event callback
-     * @param ReservationEntity $reservationEntity
+     * @param ReservationDelegatedEvent $event
      * @throws InvalidLinkException
      */
-    public function onReservationDelegated(ReservationEntity $reservationEntity): void
+    public function onReservationDelegated(ReservationDelegatedEvent $event): void
     {
-        $this->sendNotification($reservationEntity);
+        $this->sendNotification($event->getReservation());
     }
 
     /**
@@ -57,7 +58,7 @@ class ReservationDelegatedNotifier implements EventSubscriberInterface
             throw new RuntimeException('Missing email address');
         }
 
-        $link = $emailService->generateLink('Front:Reservation:', ['id' => $reservationEntity->getUid()]);
+        $link = $emailService->generateLink('Front:Reservation:', ['id' => $reservationEntity->getId()]);
         $message = $emailService->createMessage();
         $message->addTo($email, $reservationEntity->getFullName());
         $message->setSubject('Rezervace místa na ' . $event->getName());
@@ -80,6 +81,6 @@ na základě rezervace místa.</em></p>"
      */
     public static function getSubscribedEvents(): array
     {
-        return [ReservationManager::class . '::onReservationDelegated'];
+        return [ReservationDelegatedEvent::class => 'onReservationDelegated'];
     }
 }

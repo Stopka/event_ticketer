@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\EarlyWaveEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
@@ -17,7 +18,7 @@ class EarlyWaveDao extends EntityDao
         return EarlyWaveEntity::class;
     }
 
-    public function getEarlyWave(?int $id): ?EarlyWaveEntity
+    public function getEarlyWave(Uuid $id): ?EarlyWaveEntity
     {
         /** @var EarlyWaveEntity $result */
         $result = $this->get($id);

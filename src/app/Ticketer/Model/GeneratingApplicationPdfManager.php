@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Model;
 
 use Ticketer\Model\Database\Entities\ApplicationEntity;
-use Ticketer\Model\Database\Entities\IEntity;
+use Ticketer\Model\Database\Entities\EntityInterface;
 use Nette\Mail\Message;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
@@ -71,7 +71,7 @@ class GeneratingApplicationPdfManager implements IApplicationPdfManager
         $message->addAttachment($fileName, $fileContent);
     }
 
-    protected function getIdString(IEntity $entity): string
+    protected function getIdString(EntityInterface $entity): string
     {
         return Strings::padLeft((string)$entity->getId(), 10, '0');
     }

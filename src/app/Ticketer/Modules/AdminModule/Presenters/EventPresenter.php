@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\EventFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\IEventFromWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Grids\EventsGridWrapper;
@@ -46,13 +47,14 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param string|null $id
      * @throws AbortException
      */
-    public function actionEdit(?int $id = null): void
+    public function actionEdit(?string $id = null): void
     {
-        $event = $this->eventDao->getEvent($id);
-        if (null === $event && null !== $id) {
+        $uuid = null === $id ? null : Uuid::fromString($id);
+        $event = null === $uuid ? null : $this->eventDao->getEvent($uuid);
+        if (null === $event && null !== $uuid) {
             $this->redirect('edit');
         }
         if (null !== $event) {

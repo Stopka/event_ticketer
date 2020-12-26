@@ -24,7 +24,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
     private AdministratorDao $administratorDao;
 
-    protected ?AdministratorEntity $administratorEntity;
+    protected ?AdministratorEntity $administratorEntity = null;
 
     public function __construct(BasePresenterDependencies $dependencies)
     {

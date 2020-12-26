@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\InsuranceCompanyEntity;
 
 class InsuranceCompanyDao extends EntityDao
@@ -15,10 +16,10 @@ class InsuranceCompanyDao extends EntityDao
     }
 
     /**
-     * @param null|int $id
+     * @param Uuid $id
      * @return InsuranceCompanyEntity|null
      */
-    public function getInsuranceCompany(?int $id): ?InsuranceCompanyEntity
+    public function getInsuranceCompany(Uuid $id): ?InsuranceCompanyEntity
     {
         /** @var InsuranceCompanyEntity $result */
         $result = $this->get($id);
@@ -35,7 +36,7 @@ class InsuranceCompanyDao extends EntityDao
         $companies = $this->getRepository()->findAll();
         $result = [null => ''];
         foreach ($companies as $company) {
-            $result[$company->getId()] = $company->getCode() . ' - ' . $company->getName();
+            $result[$company->getId()->toString()] = $company->getCode() . ' - ' . $company->getName();
         }
 
         return $result;

@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EarlyEntity extends BaseEntity
 {
-    use TIdentifierAttribute;
     use TPersonNameAttribute;
     use TEmailAttribute;
 
@@ -102,11 +101,6 @@ class EarlyEntity extends BaseEntity
     public function removeIversedCart(CartEntity $cart): void
     {
         $this->carts->removeElement($cart);
-    }
-
-    public function __clone()
-    {
-        $this->resetId();
     }
 
     /**

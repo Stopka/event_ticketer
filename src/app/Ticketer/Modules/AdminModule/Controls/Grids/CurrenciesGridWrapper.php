@@ -7,6 +7,7 @@ namespace Ticketer\Modules\AdminModule\Controls\Grids;
 use Ticketer\Controls\Grids\Grid;
 use Ticketer\Controls\Grids\GridWrapperDependencies;
 use Ticketer\Model\Database\Daos\CurrencyDao;
+use Ticketer\Model\Dtos\Uuid;
 
 /**
  * Created by IntelliJ IDEA.
@@ -75,9 +76,10 @@ class CurrenciesGridWrapper extends GridWrapper
             ->setIcon('fa fa-plus-circle');
     }
 
-    public function onSetDefaultClicked(int $id): void
+    public function onSetDefaultClicked(string $id): void
     {
-        $currency = $this->currencyDao->getCurrency($id);
+        $uuid = Uuid::fromString($id);
+        $currency = $this->currencyDao->getCurrency($uuid);
         $this->currencyDao->setDefaultCurrency($currency);
         $this->redrawControl();
     }

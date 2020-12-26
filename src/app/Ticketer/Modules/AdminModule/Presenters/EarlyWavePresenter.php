@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\EarlyWaveFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\IEarlyWaveFormWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Grids\EarlyWavesGridWrapper;
@@ -41,12 +42,13 @@ class EarlyWavePresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionDefault(int $id): void
+    public function actionDefault(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');
@@ -60,12 +62,13 @@ class EarlyWavePresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionAdd(int $id): void
+    public function actionAdd(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');
@@ -80,12 +83,13 @@ class EarlyWavePresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionEdit(int $id): void
+    public function actionEdit(string $id): void
     {
-        $earlyWave = $this->earlyWaveDao->getEarlyWave($id);
+        $uuid = Uuid::fromString($id);
+        $earlyWave = $this->earlyWaveDao->getEarlyWave($uuid);
         if (null === $earlyWave) {
             $this->flashTranslatedMessage('Error.EarlyWave.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect("Homepage:");

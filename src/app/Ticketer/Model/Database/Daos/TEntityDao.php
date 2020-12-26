@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Ticketer\Model\Database\Daos;
 
 use Doctrine\ORM\EntityRepository;
-use Ticketer\Model\Database\Entities\IEntity;
+use Ticketer\Model\Dtos\Uuid;
+use Ticketer\Model\Database\Entities\EntityInterface;
 use Ticketer\Model\Database\EntityManager as EntityManagerWrapper;
 use Ticketer\Model\Exceptions\ORMException;
 
@@ -35,17 +36,13 @@ trait TEntityDao
     }
 
     /**
-     * @param int|null $id
-     * @return IEntity|null
-     * @throws ORMException
+     * @param Uuid $id
+     * @return EntityInterface|null
      */
-    protected function get(?int $id): ?IEntity
+    protected function get(Uuid $id): ?EntityInterface
     {
-        if (!isset($id)) {
-            return null;
-        }
         /**
-         * @var IEntity $result
+         * @var EntityInterface|null $result
          */
         $result = $this->getEntityManager()->find($this->getEntityClass(), $id);
 

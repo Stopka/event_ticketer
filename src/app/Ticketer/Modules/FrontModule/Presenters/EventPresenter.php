@@ -8,6 +8,7 @@ use Nette\Application\AbortException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Controls\Forms\ICartFormWrapperFactory;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use Ticketer\Modules\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use Ticketer\Modules\FrontModule\Controls\IOccupancyControlFactory;
@@ -78,12 +79,13 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionRegister(int $id): void
+    public function actionRegister(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event || !$event->isActive()) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');
@@ -104,12 +106,13 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionSubstitute(int $id): void
+    public function actionSubstitute(string $id): void
     {
-        $event = $this->eventDao->getPublicAvailibleEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getPublicAvailibleEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');
@@ -148,23 +151,26 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @param null|int $id
+     * @param string|null $id
      * @param bool $showHeaders
      * @throws AbortException
      */
-    public function renderOccupancy(?int $id = null, bool $showHeaders = true): void
+    public function renderOccupancy(?string $id = null, bool $showHeaders = true): void
     {
         if (null === $id) {
             $events = $this->eventDao->getPublicAvailibleEvents();
             if (count($events) > 0) {
-                $this->redirect('this', $events[0]->getId());
+                $this->redirect('this', $events[0]->getId()->toString());
             }
             $events = $this->eventDao->getPublicFutureEvents();
             if (count($events) > 0) {
-                $this->redirect('this', $events[0]->getId());
+                $this->redirect('this', $events[0]->getId()->toString());
             }
+            $event = null;
+        } else {
+            $uuid = Uuid::fromString($id);
+            $event = $this->eventDao->getEvent($uuid);
         }
-        $event = $this->eventDao->getEvent($id);
         $template = $this->getTemplate();
         $template->event = $event;
         $template->showHeaders = $showHeaders;

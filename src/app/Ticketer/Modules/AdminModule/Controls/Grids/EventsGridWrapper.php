@@ -8,6 +8,7 @@ use Nette\Application\AbortException;
 use Nette\Utils\Html;
 use Ticketer\Controls\Grids\Grid;
 use Ticketer\Controls\Grids\GridWrapperDependencies;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\TranslatedException;
 use Ticketer\Model\OccupancyIcons;
 use Ticketer\Model\Database\Daos\EventDao;
@@ -176,13 +177,14 @@ class EventsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function onActivateClicked(int $id): void
+    public function onActivateClicked(string $id): void
     {
+        $uuid = Uuid::fromString($id);
         try {
-            $event = $this->eventDao->getEvent($id);
+            $event = $this->eventDao->getEvent($uuid);
             $this->eventManager->setEventState($event, EventEntity::STATE_ACTIVE);
             $this->flashTranslatedMessage("Grid.Event.Message.Activate.Success");
         } catch (TranslatedException $e) {
@@ -192,13 +194,14 @@ class EventsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function onDeactivateClicked(int $id): void
+    public function onDeactivateClicked(string $id): void
     {
+        $uuid = Uuid::fromString($id);
         try {
-            $event = $this->eventDao->getEvent($id);
+            $event = $this->eventDao->getEvent($uuid);
             $this->eventManager->setEventState($event, EventEntity::STATE_INACTIVE);
             $this->flashTranslatedMessage("Grid.Event.Message.Dectivate.Success");
         } catch (TranslatedException $e) {
@@ -208,13 +211,14 @@ class EventsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function onCancelClicked(int $id): void
+    public function onCancelClicked(string $id): void
     {
+        $uuid = Uuid::fromString($id);
         try {
-            $event = $this->eventDao->getEvent($id);
+            $event = $this->eventDao->getEvent($uuid);
             $this->eventManager->setEventState($event, EventEntity::STATE_CANCELLED);
             $this->flashTranslatedMessage("Grid.Event.Message.Cancel.Success");
         } catch (TranslatedException $e) {
@@ -224,13 +228,14 @@ class EventsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function onCloseClicked(int $id): void
+    public function onCloseClicked(string $id): void
     {
+        $uuid = Uuid::fromString($id);
         try {
-            $event = $this->eventDao->getEvent($id);
+            $event = $this->eventDao->getEvent($uuid);
             $this->eventManager->setEventState($event, EventEntity::STATE_CLOSED);
             $this->flashTranslatedMessage("Grid.Event.Message.Close.Success");
         } catch (TranslatedException $e) {

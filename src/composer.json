@@ -73,7 +73,10 @@
     "autoload": {
         "psr-4": {
             "Ticketer\\": "app/Ticketer"
-        }
+        },
+        "files": [
+            "app/Bootstrap.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -84,7 +87,7 @@
         "phpcbf": "phpcbf --standard=tests/phpcs.xml ./app ./tests",
         "phpcs": "phpcs --standard=tests/phpcs.xml ./app ./tests",
         "phpstan": "phpstan analyse --configuration tests/phpstan.neon app tests",
-        "tester": "tester -p phpdbg tests -s --coverage ./tests/coverage.xml --coverage-src ./app",
+        "tester": "tester -C -p phpdbg tests -s --coverage ./tests/coverage.xml --coverage-src ./app",
         "test": [
             "@phpcs",
             "@phpstan",

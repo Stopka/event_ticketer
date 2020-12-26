@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Managers;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Ticketer\Model\CronService;
+use Ticketer\Model\Cron\CronService;
+use Ticketer\Model\Cron\HourCronEvent;
 use Ticketer\Model\Database\Daos\SubstituteDao;
 use Ticketer\Model\Database\Daos\TDoctrineEntityManager;
 use Ticketer\Model\Database\Entities\EarlyEntity;
@@ -13,6 +15,7 @@ use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\EntityManager;
 use Nette\SmartObject;
+use Ticketer\Model\Database\Managers\Events\SubstituteCreatedEvent;
 
 class SubstituteManager implements EventSubscriberInterface
 {
@@ -22,21 +25,21 @@ class SubstituteManager implements EventSubscriberInterface
     /** @var  SubstituteDao */
     private $substituteDao;
 
-    /** @var callable[] */
-    public $onSubstituteActivated = [];
-
-    /** @var callable[] */
-    public $onSubstituteCreated = [];
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
      * SubstituteManager constructor.
      * @param EntityManager $entityManager
      * @param SubstituteDao $substituteDao
      */
-    public function __construct(EntityManager $entityManager, SubstituteDao $substituteDao)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        SubstituteDao $substituteDao,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->injectEntityManager($entityManager);
         $this->substituteDao = $substituteDao;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -45,7 +48,7 @@ class SubstituteManager implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            CronService::class . '::onCronRun',
+            HourCronEvent::class => 'onCronRun',
         ];
     }
 
@@ -69,8 +72,7 @@ class SubstituteManager implements EventSubscriberInterface
         }
         $substitute->activate(new \DateInterval('P7D'));
         $this->getEntityManager()->flush();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->onSubstituteActivated($substitute);
+        $this->eventDispatcher->dispatch(new SubstituteCreatedEvent($substitute));
     }
 
     /**
@@ -92,8 +94,7 @@ class SubstituteManager implements EventSubscriberInterface
         $substitute->setEvent($event);
         $entityManager->persist($substitute);
         $entityManager->flush();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->onSubstituteCreated($substitute);
+        $this->eventDispatcher->dispatch(new SubstituteCreatedEvent($substitute));
 
         return $substitute;
     }

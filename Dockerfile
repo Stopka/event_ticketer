@@ -60,6 +60,7 @@ RUN \
         php${PHP_VERSION}-sqlite3 \
         php${PHP_VERSION}-zip \
         php${PHP_VERSION}-imagick \
+        php${PHP_VERSION}-phpdbg \
         ghostscript && \
     rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/* \
     # PHP MOD(s) ###############################################################

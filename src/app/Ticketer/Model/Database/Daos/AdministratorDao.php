@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\AdministratorEntity;
 
 class AdministratorDao extends EntityDao
@@ -16,10 +17,10 @@ class AdministratorDao extends EntityDao
 
     /**
      * Najde administrátora podle id
-     * @param integer|NULL $id
+     * @param Uuid $id
      * @return AdministratorEntity|NULL
      */
-    public function getAdministrator(?int $id): ?AdministratorEntity
+    public function getAdministrator(Uuid $id): ?AdministratorEntity
     {
         /** @var AdministratorEntity $result */
         $result = $this->get($id);

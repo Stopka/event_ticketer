@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\AdminModule\Presenters;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\DelegateReservationFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\IDelegateReservationFormWrapperFactory;
 use Ticketer\Controls\FlashMessageTypeEnum;
@@ -33,13 +34,14 @@ class ReservationPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id    event id
-     * @param int[] $ids applications
+     * @param string $id    event id
+     * @param string[] $ids applications
      * @throws AbortException
      */
-    public function actionDelegate(int $id, array $ids = []): void
+    public function actionDelegate(string $id, array $ids = []): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage("Error.Event.NotFound", FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\CurrencyFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\ICurrencyFromWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Grids\CurrenciesGridWrapper;
@@ -46,12 +47,13 @@ class CurrencyPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param string|null $id
      * @throws AbortException
      */
-    public function actionEdit(?int $id = null): void
+    public function actionEdit(?string $id = null): void
     {
-        $currency = $this->currencyDao->getCurrency($id);
+        $uuid = null === $id ? null : Uuid::fromString($id);
+        $currency = null === $uuid ? null : $this->currencyDao->getCurrency($uuid);
         if (null === $currency && null !== $id) {
             $this->redirect('edit');
         }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Grids\CartApplicationsGridWrapper;
 use Ticketer\Modules\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory;
 use Ticketer\Controls\FlashMessageTypeEnum;
@@ -48,12 +49,13 @@ class CartPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionDefault(int $id): void
+    public function actionDefault(string $id): void
     {
-        $cart = $this->cartDao->getCart($id);
+        $uuid = Uuid::fromString($id);
+        $cart = $this->cartDao->getCart($uuid);
         if (null === $cart) {
             $this->flashTranslatedMessage('Error.Cart.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');
@@ -67,12 +69,13 @@ class CartPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionEdit(int $id): void
+    public function actionEdit(string $id): void
     {
-        $cart = $this->cartDao->getCart($id);
+        $uuid = Uuid::fromString($id);
+        $cart = $this->cartDao->getCart($uuid);
         if (null === $cart) {
             $this->flashTranslatedMessage('Error.Cart.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');

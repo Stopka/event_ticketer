@@ -9,6 +9,7 @@ use Nette\Application\AbortException;
 use Nette\Utils\Html;
 use Ticketer\Controls\Grids\Grid;
 use Ticketer\Controls\Grids\GridWrapperDependencies;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\OccupancyIcons;
 use Ticketer\Model\Database\Daos\CurrencyDao;
 use Ticketer\Model\Database\Daos\OptionDao;
@@ -190,13 +191,14 @@ class OptionsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $optionId
+     * @param string $optionId
      * @throws Exception
      * @throws AbortException
      */
-    public function onMoveUpClicked(int $optionId): void
+    public function onMoveUpClicked(string $optionId): void
     {
-        $option = $this->optionDao->getOption($optionId);
+        $optionUuid = Uuid::fromString($optionId);
+        $option = $this->optionDao->getOption($optionUuid);
         if (null === $option) {
             return;
         }
@@ -206,13 +208,14 @@ class OptionsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $optionId
+     * @param string $optionId
      * @throws Exception
      * @throws AbortException
      */
-    public function onMoveDownClicked(int $optionId): void
+    public function onMoveDownClicked(string $optionId): void
     {
-        $option = $this->optionDao->getOption($optionId);
+        $optionUuid = Uuid::fromString($optionId);
+        $option = $this->optionDao->getOption($optionUuid);
         if (null === $option) {
             return;
         }
@@ -222,13 +225,13 @@ class OptionsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $optionId
-     * @throws Exception
+     * @param string $optionId
      * @throws AbortException
      */
-    public function onDeleteClicked(int $optionId): void
+    public function onDeleteClicked(string $optionId): void
     {
-        $option = $this->optionDao->getOption($optionId);
+        $optionUuid = Uuid::fromString($optionId);
+        $option = $this->optionDao->getOption($optionUuid);
         if (null === $option) {
             return;
         }

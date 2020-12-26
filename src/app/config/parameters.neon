@@ -5,7 +5,7 @@ parameters:
         time: 'H:i:s'
         dateTime: '%%date%% %%time%%'
     database:
-        driver: mysql
+        driver: pdo_mysql
         host: localhost
         dbname: event_ticketer
         user: root

@@ -1,4 +1,5 @@
 includes:
+    - nettrine/cache.neon
     - nettrine/annotations.neon
     - nettrine/dbal.neon
     - nettrine/orm.neon

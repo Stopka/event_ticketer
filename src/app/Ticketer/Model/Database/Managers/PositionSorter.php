@@ -7,7 +7,7 @@ namespace Ticketer\Model\Database\Managers;
 use Doctrine\ORM\EntityRepository;
 use Ticketer\Model\Database\Attributes\TPositionAttribute;
 use Ticketer\Model\Database\Daos\OrderEnum;
-use Ticketer\Model\Database\Entities\ISortableEntity;
+use Ticketer\Model\Database\Entities\SortableEntityInterface;
 
 class PositionSorter
 {
@@ -19,13 +19,13 @@ class PositionSorter
     private $lastPosition;
 
     /**
-     * @param ISortableEntity $positionable
+     * @param SortableEntityInterface $positionable
      * @return int
      */
-    public function setEndPosition(ISortableEntity $positionable): int
+    public function setEndPosition(SortableEntityInterface $positionable): int
     {
         if (null === $this->lastPosition) {
-            /** @var ISortableEntity|null $last */
+            /** @var SortableEntityInterface|null $last */
             $last = $this->entityRepository->findOneBy([], ['position' => OrderEnum::DESC()->getValue()]);
             if (null === $last) {
                 $this->lastPosition = 0;
@@ -40,7 +40,7 @@ class PositionSorter
     }
 
     /**
-     * @param iterable<ISortableEntity> $entities
+     * @param iterable<SortableEntityInterface> $entities
      */
     public function recalculatePositions(iterable $entities): void
     {
@@ -53,14 +53,14 @@ class PositionSorter
     }
 
     /**
-     * @param ISortableEntity $item
-     * @param iterable<ISortableEntity> $entities
+     * @param SortableEntityInterface $item
+     * @param iterable<SortableEntityInterface> $entities
      */
-    public function moveEntityUp(ISortableEntity $item, iterable $entities): void
+    public function moveEntityUp(SortableEntityInterface $item, iterable $entities): void
     {
         $this->lastPosition = null;
         $position = 1;
-        /** @var ISortableEntity|null $previousEntity */
+        /** @var SortableEntityInterface|null $previousEntity */
         $previousEntity = null;
         foreach ($entities as $entity) {
             if ($item->getId() === $entity->getId() && null !== $previousEntity) {
@@ -75,10 +75,10 @@ class PositionSorter
     }
 
     /**
-     * @param ISortableEntity $item
-     * @param iterable<ISortableEntity> $entities
+     * @param SortableEntityInterface $item
+     * @param iterable<SortableEntityInterface> $entities
      */
-    public function moveEntityDown(ISortableEntity $item, iterable $entities): void
+    public function moveEntityDown(SortableEntityInterface $item, iterable $entities): void
     {
         $this->lastPosition = null;
         $position = 1;
@@ -98,10 +98,10 @@ class PositionSorter
     }
 
     /**
-     * @param ISortableEntity $item
-     * @param iterable<ISortableEntity> $entities
+     * @param SortableEntityInterface $item
+     * @param iterable<SortableEntityInterface> $entities
      */
-    public function moveEntityToEnd(ISortableEntity $item, iterable $entities): void
+    public function moveEntityToEnd(SortableEntityInterface $item, iterable $entities): void
     {
         $this->lastPosition = null;
         $position = 1;
@@ -117,10 +117,10 @@ class PositionSorter
     }
 
     /**
-     * @param ISortableEntity $item
-     * @param iterable<ISortableEntity> $entities
+     * @param SortableEntityInterface $item
+     * @param iterable<SortableEntityInterface> $entities
      */
-    public function moveEntityToStart(ISortableEntity $item, iterable $entities): void
+    public function moveEntityToStart(SortableEntityInterface $item, iterable $entities): void
     {
         $this->lastPosition = null;
         $item->setPosition(1);

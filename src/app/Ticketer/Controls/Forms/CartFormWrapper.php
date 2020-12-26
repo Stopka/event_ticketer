@@ -267,7 +267,7 @@ class CartFormWrapper extends FormWrapper
                 $additionsContainer = $applicationItemContainer[AdditionsControlsBuilder::CONTAINER_NAME_ADDITIONS];
                 $additionsContainer->setDefaults(
                     [
-                        $addition->getId() => $option->getId(),
+                        $addition->getId()->toString() => $option->getId()->toString(),
                     ]
                 );
             }
@@ -312,7 +312,7 @@ class CartFormWrapper extends FormWrapper
             if (null !== $this->reservation) {
                 $application = $this->applicationDao->getApplication($applicationId);
 
-                /** @var int[] $preselectedOptionIds */
+                /** @var string[] $preselectedOptionIds */
                 $preselectedOptionIds = [];
                 if (null !== $application) {
                     foreach ($application->getChoices() as $choice) {
@@ -320,7 +320,7 @@ class CartFormWrapper extends FormWrapper
                         if (null === $option) {
                             continue;
                         }
-                        $preselectedOptionIds[] = (int)$option->getId();
+                        $preselectedOptionIds[] = $option->getId()->toString();
                     }
                 }
                 $builder->setPreselectedOptions($preselectedOptionIds);

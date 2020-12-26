@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Managers;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Ticketer\Model\Database\Managers\Events\ReservationDelegatedEvent;
 use Ticketer\Modules\AdminModule\Controls\Forms\DelegateReservationControlsBuilder;
 use Ticketer\Modules\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use Ticketer\Model\Exceptions\EmptyException;
@@ -26,24 +28,26 @@ class ReservationManager
     /** @var ApplicationManager */
     private $applicationManager;
 
+    private EventDispatcherInterface $eventDispatcher;
+
     /**
      * ReservationManager constructor.
      * @param EntityManagerWrapper $entityManager
      * @param ReservationDao $reservationDao
      * @param ApplicationManager $applicationManager
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         EntityManagerWrapper $entityManager,
         ReservationDao $reservationDao,
-        ApplicationManager $applicationManager
+        ApplicationManager $applicationManager,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->injectEntityManager($entityManager);
         $this->reservationDao = $reservationDao;
         $this->applicationManager = $applicationManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
-
-    /** @var callable[] */
-    public $onReservationDelegated = [];
 
     /**
      * @param ApplicationEntity[] $applications
@@ -97,8 +101,7 @@ class ReservationManager
             }
         }
         $entityManager->flush();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->onReservationDelegated($reservation);
+        $this->eventDispatcher->dispatch(new ReservationDelegatedEvent($reservation));
     }
 
     /**

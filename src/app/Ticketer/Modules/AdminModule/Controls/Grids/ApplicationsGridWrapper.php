@@ -7,6 +7,7 @@ namespace Ticketer\Modules\AdminModule\Controls\Grids;
 use Nette\Application\AbortException;
 use Ticketer\Controls\Grids\Grid;
 use Ticketer\Controls\Grids\GridWrapperDependencies;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\TranslatedException;
 use Ticketer\Model\Database\Attributes\GenderEnum;
 use Ticketer\Model\Database\Daos\ApplicationDao;
@@ -118,8 +119,9 @@ class ApplicationsGridWrapper extends GridWrapper
         $grid->addActionCallback(
             'editCart',
             'Form.Action.Edit',
-            function (int $id): void {
-                $application = $this->applicationDao->getApplication($id);
+            function (string $id): void {
+                $uuid = Uuid::fromString($id);
+                $application = $this->applicationDao->getApplication($uuid);
                 if (null === $application) {
                     return;
                 }
@@ -275,13 +277,14 @@ class ApplicationsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function onCancelClicked(int $id): void
+    public function onCancelClicked(string $id): void
     {
+        $uuid = Uuid::fromString($id);
         try {
-            $application = $this->applicationDao->getApplication($id);
+            $application = $this->applicationDao->getApplication($uuid);
             if (null === $application) {
                 return;
             }
@@ -306,7 +309,7 @@ class ApplicationsGridWrapper extends GridWrapper
                             [
                                 'href' => $this->getPresenter()->link(
                                     ':Front:Reservation:register',
-                                    $reservation->getUid()
+                                    $reservation->getId()
                                 ),
                             ]
                         );
@@ -385,13 +388,14 @@ class ApplicationsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $choiceId
+     * @param string $choiceId
      * @throws AbortException
      * @throws \Exception
      */
-    public function handleInverseChoicePayed(int $choiceId): void
+    public function handleInverseChoicePayed(string $choiceId): void
     {
-        $this->choiceManager->inverseChoicePayed($choiceId);
+        $choiceUuid = Uuid::fromString($choiceId);
+        $this->choiceManager->inverseChoicePayed($choiceUuid);
         if ($this->getPresenter()->isAjax()) {
             $this->redrawControl();
 

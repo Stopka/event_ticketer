@@ -12,6 +12,7 @@ use Ticketer\Model\Database\Daos\AdditionDao;
 use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Managers\AdditionManager;
+use Ticketer\Model\Dtos\Uuid;
 use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
@@ -121,13 +122,14 @@ class AdditionsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $additionId
+     * @param string $additionId
      * @throws Exception
      * @throws AbortException
      */
-    public function onMoveUpClicked(int $additionId): void
+    public function onMoveUpClicked(string $additionId): void
     {
-        $addition = $this->additionDao->getAddition($additionId);
+        $additionUuid = Uuid::fromString($additionId);
+        $addition = $this->additionDao->getAddition($additionUuid);
         if (null === $addition) {
             return;
         }
@@ -137,13 +139,13 @@ class AdditionsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $additionId
-     * @throws Exception
+     * @param string $additionId
      * @throws AbortException
      */
-    public function onMoveDownClicked(int $additionId): void
+    public function onMoveDownClicked(string $additionId): void
     {
-        $addition = $this->additionDao->getAddition($additionId);
+        $additionUuid = Uuid::fromString($additionId);
+        $addition = $this->additionDao->getAddition($additionUuid);
         if (null === $addition) {
             return;
         }
@@ -153,12 +155,13 @@ class AdditionsGridWrapper extends GridWrapper
     }
 
     /**
-     * @param int $additionId
+     * @param string $additionId
      * @throws AbortException
      */
-    public function onDeleteClicked(int $additionId): void
+    public function onDeleteClicked(string $additionId): void
     {
-        $addition = $this->additionDao->getAddition($additionId);
+        $additionUuid = Uuid::fromString($additionId);
+        $addition = $this->additionDao->getAddition($additionUuid);
         if (null === $addition) {
             return;
         }

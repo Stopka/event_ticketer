@@ -182,7 +182,7 @@ class ApplicationEntity extends BaseEntity
             if (null === $addition) {
                 continue;
             }
-            $additionId = $addition->getId();
+            $additionId = $addition->getId()->toString();
             if (!isset($result[$additionId])) {
                 $result[$additionId] = [];
             }
@@ -326,9 +326,10 @@ class ApplicationEntity extends BaseEntity
             $required_additions = [];
             $enough = [];
             foreach ($event->getAdditions() as $addition) {
+                $additionId = $addition->getId()->toString();
                 $state = $addition->getEnoughForState();
                 if (null !== $state) {
-                    $enough[$addition->getId()] = $state;
+                    $enough[$additionId] = $state;
                 }
                 $minState = $addition->getRequiredForState();
                 if (null !== $minState) {
@@ -337,17 +338,17 @@ class ApplicationEntity extends BaseEntity
                             $required_states[$state] = [];
                         }
                         $required_states[$state][] = $addition->getId();
-                        if (!isset($required_additions[$addition->getId()])) {
-                            $required_additions[$addition->getId()] = [];
+                        if (!isset($required_additions[$additionId])) {
+                            $required_additions[$additionId] = [];
                         }
-                        $required_additions[$addition->getId()][] = $state;
+                        $required_additions[$additionId][] = $state;
                     }
                 }
             }
             $choices = $this->getChoicesByAdditionId();
             foreach ($event->getAdditions() as $addition) {
                 $areChoicesPayed = true;
-                $additionId = $addition->getId();
+                $additionId = $addition->getId()->toString();
                 if (isset($choices[$additionId])) {
                     foreach ($choices[$additionId] as $choice) {
                         if (!$choice->isPayed()) {

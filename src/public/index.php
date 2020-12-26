@@ -1,6 +1,10 @@
 <?php
 
-$container = require __DIR__ . '/../app/bootstrap.php';
-/** @var \Nette\Application\Application $app */
-$app = $container->getByType(Nette\Application\Application::class);
-$app->run();
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$configurator = Ticketer\Bootstrap::boot();
+$container = $configurator->createContainer();
+$application = $container->getByType(Nette\Application\Application::class);
+$application->run();

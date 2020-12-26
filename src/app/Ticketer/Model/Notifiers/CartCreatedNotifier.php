@@ -6,6 +6,7 @@ namespace Ticketer\Model\Notifiers;
 
 use Nette\Application\UI\InvalidLinkException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Ticketer\Model\Database\Managers\Events\CartCreatedEvent;
 use Ticketer\Model\Exceptions\NotReadyException;
 use Ticketer\Model\IApplicationPdfManager;
 use Ticketer\Model\Database\Entities\CartEntity;
@@ -46,12 +47,12 @@ class CartCreatedNotifier implements EventSubscriberInterface
 
     /**
      * Event callback
-     * @param CartEntity $cartEntity
+     * @param CartCreatedEvent $event
      * @throws InvalidLinkException
      */
-    public function onCartCreated(CartEntity $cartEntity): void
+    public function onCartCreated(CartCreatedEvent $event): void
     {
-        $this->sendNotification($cartEntity);
+        $this->sendNotification($event->getCart());
     }
 
     /**
@@ -71,7 +72,7 @@ class CartCreatedNotifier implements EventSubscriberInterface
             throw new NotReadyException("Cart has no event");
         }
         $emailService = $this->getEmailService();
-        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getUid()]);
+        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getId()]);
         $message = $emailService->createMessage();
         $message->addTo($emailAddress, $cartEntity->getFullName());
         $message->setSubject('Přihláška na ' . $event->getName());
@@ -105,6 +106,8 @@ na základě registrace přihlášky.</em></p>"
      */
     public static function getSubscribedEvents(): array
     {
-        return [CartManager::class . '::onCartCreated'];
+        return [
+            CartCreatedEvent::class => 'onCartCreated',
+        ];
     }
 }

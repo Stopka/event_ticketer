@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\ReservationEntity;
 
@@ -21,16 +22,18 @@ class ReservationDao extends EntityDao
      */
     public function getEventReservations(EventEntity $event): array
     {
-        return $this->getRepository()->findBy([
-            'event.id' => $event->getId()
-        ]);
+        return $this->getRepository()->findBy(
+            [
+                'event.id' => $event->getId(),
+            ]
+        );
     }
 
     /**
-     * @param null|int $id
+     * @param Uuid $id
      * @return ReservationEntity|null
      */
-    public function getReservation(?int $id): ?ReservationEntity
+    public function getReservation(Uuid $id): ?ReservationEntity
     {
         /** @var ReservationEntity|null $result */
         $result = $this->get($id);
@@ -63,7 +66,8 @@ class ReservationDao extends EntityDao
         $reservations = $this->getEventReservations($event);
         $list = [];
         foreach ($reservations as $reservation) {
-            $list[$reservation->getId()] = $reservation->getFullName() . ' (' . $reservation->getEmail() . ')';
+            $list[$reservation->getId()->toString()] = $reservation->getFullName()
+                . ' (' . $reservation->getEmail() . ')';
         }
 
         return $list;

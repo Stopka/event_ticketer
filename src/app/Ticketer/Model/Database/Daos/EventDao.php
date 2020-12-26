@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
 use Ublaboo\DataGrid\DataSource\IDataSource;
@@ -69,10 +70,10 @@ class EventDao extends EntityDao
     }
 
     /**
-     * @param int|null $id
+     * @param Uuid $id
      * @return EventEntity|null
      */
-    public function getEvent(?int $id): ?EventEntity
+    public function getEvent(Uuid $id): ?EventEntity
     {
         /** @var EventEntity $result */
         $result = $this->get($id);
@@ -82,10 +83,10 @@ class EventDao extends EntityDao
 
     /**
      * Finds one active and started event if exists
-     * @param int|null $id
+     * @param Uuid $id
      * @return null|EventEntity
      */
-    public function getPublicAvailibleEvent(?int $id): ?EventEntity
+    public function getPublicAvailibleEvent(Uuid $id): ?EventEntity
     {
         $event = $this->getEvent($id);
         if (null !== $event && $event->isPublicAvailible()) {

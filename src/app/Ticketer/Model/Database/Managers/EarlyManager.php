@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Managers;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Ticketer\Model\Database\Managers\Events\EarlyAddedToWaveEvent;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Database\Daos\EarlyWaveDao;
 use Ticketer\Model\Database\Daos\TDoctrineEntityManager;
@@ -23,8 +25,7 @@ class EarlyManager
     /** @var EarlyWaveManager */
     private $earlyWaveManager;
 
-    /** @var callable[] */
-    public $onEarlyAddedToWave = [];
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
      * EarlyManager constructor.
@@ -35,11 +36,13 @@ class EarlyManager
     public function __construct(
         EntityManagerWrapper $entityManager,
         EarlyWaveDao $earlyWaveDao,
-        EarlyWaveManager $earlyWaveManager
+        EarlyWaveManager $earlyWaveManager,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->injectEntityManager($entityManager);
         $this->earlyWaveDao = $earlyWaveDao;
         $this->earlyWaveManager = $earlyWaveManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -73,8 +76,7 @@ class EarlyManager
         $earlyEntity->setEarlyWave($earlyWave);
         $em->flush();
         if ($edited) {
-            /** @noinspection PhpUndefinedMethodInspection */
-            $this->onEarlyAddedToWave($earlyEntity);
+            $this->eventDispatcher->dispatch(new EarlyAddedToWaveEvent($earlyEntity));
         }
 
         return $earlyEntity;

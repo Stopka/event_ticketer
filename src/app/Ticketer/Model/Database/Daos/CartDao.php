@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\CartEntity;
 
 class CartDao extends EntityDao
@@ -30,10 +31,10 @@ class CartDao extends EntityDao
     }
 
     /**
-     * @param int|null $id
+     * @param Uuid $id
      * @return null|CartEntity
      */
-    public function getCart(?int $id): ?CartEntity
+    public function getCart(Uuid $id): ?CartEntity
     {
         /** @var CartEntity|null $result */
         $result = $this->get($id);

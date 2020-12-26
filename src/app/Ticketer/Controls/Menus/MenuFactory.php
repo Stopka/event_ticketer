@@ -12,7 +12,7 @@ use Ticketer\Model\Database\Entities\CartEntity;
 use Ticketer\Model\Database\Entities\EarlyEntity;
 use Ticketer\Model\Database\Entities\EarlyWaveEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
-use Ticketer\Model\Database\Entities\IEntity;
+use Ticketer\Model\Database\Entities\EntityInterface;
 use Ticketer\Model\Database\Entities\OptionEntity;
 use Ticketer\Model\Database\Entities\ReservationEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
@@ -38,7 +38,7 @@ abstract class MenuFactory
             ->setLinkParamPreprocessor(
                 Menu::LINK_PARAM_PROCESSOR_ALL,
                 function ($value, string $key, Menu $menu) {
-                    if (!$value instanceof IEntity) {
+                    if (!$value instanceof EntityInterface) {
                         return $value;
                     }
 

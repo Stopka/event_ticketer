@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Grids\SubstitutesGridWrapper;
 use Ticketer\Controls\FlashMessageTypeEnum;
@@ -36,12 +37,13 @@ class SubstitutePresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionDefault(int $id): void
+    public function actionDefault(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage("Error.Event.NotFound", FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');

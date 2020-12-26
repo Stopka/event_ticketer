@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Ticketer\Console\Commands;
 
-use Ticketer\Model\CronService;
+use Ticketer\Model\Cron\CronService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CronCommand extends AbstractCommand
 {
 
-    /** @var CronService */
-    private $cronService;
+    private CronService $cronService;
 
-    public function __construct(CronService $cronService, ?string $name = null)
+    protected static $defaultName = 'cron:hourly';
+
+    public function __construct(CronService $cronService)
     {
-        parent::__construct($name);
+        parent::__construct();
         $this->cronService = $cronService;
     }
 

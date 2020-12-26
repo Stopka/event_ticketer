@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\IOptionFormWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Forms\OptionFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Grids\IOptionsGridWrapperFactory;
@@ -41,12 +42,13 @@ class OptionPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionDefault(int $id): void
+    public function actionDefault(string $id): void
     {
-        $addition = $this->additionDao->getAddition($id);
+        $uuid = Uuid::fromString($id);
+        $addition = $this->additionDao->getAddition($uuid);
         if (null === $addition) {
             $this->flashTranslatedMessage('Addition.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect("Homepage:");
@@ -59,12 +61,13 @@ class OptionPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionAdd(int $id): void
+    public function actionAdd(string $id): void
     {
-        $addition = $this->additionDao->getAddition($id);
+        $uuid = Uuid::fromString($id);
+        $addition = $this->additionDao->getAddition($uuid);
         if (null === $addition) {
             $this->flashTranslatedMessage('Addition.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect("Homepage:");
@@ -78,12 +81,13 @@ class OptionPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionEdit(int $id): void
+    public function actionEdit(string $id): void
     {
-        $option = $this->optionDao->getOption($id);
+        $uuid = Uuid::fromString($id);
+        $option = $this->optionDao->getOption($uuid);
         if (null === $option) {
             $this->flashTranslatedMessage('Addition.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect("Homepage:");

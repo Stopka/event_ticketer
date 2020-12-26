@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Model\Entities
  * @ORM\Entity
  */
-class AdditionEntity extends BaseEntity implements ISortableEntity
+class AdditionEntity extends BaseEntity implements SortableEntityInterface
 {
     use TIdentifierAttribute;
     use TPositionAttribute;

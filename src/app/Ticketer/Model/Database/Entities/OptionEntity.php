@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Model\Entities
  * @ORM\Entity
  */
-class OptionEntity extends BaseEntity implements ISortableEntity
+class OptionEntity extends BaseEntity implements SortableEntityInterface
 {
     use TIdentifierAttribute;
     use TPositionAttribute;

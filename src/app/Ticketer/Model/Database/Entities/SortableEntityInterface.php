@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Entities;
 
-interface ISortableEntity extends IEntity
+interface SortableEntityInterface extends EntityInterface
 {
 
     /**

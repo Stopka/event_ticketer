@@ -19,8 +19,6 @@ use Nette\Forms\Container;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
-use function _HumbugBox39a196d4601e\RingCentral\Psr7\str;
-
 class AdditionsControlsBuilder
 {
     use TRecalculateControl;
@@ -58,7 +56,7 @@ class AdditionsControlsBuilder
     /** @var string[] */
     private $predisabledAdditionVisibilities = [];
 
-    /** @var int[] */
+    /** @var string[] */
     private $preselectedOptionIds = [];
 
     /** @var bool */
@@ -228,34 +226,31 @@ class AdditionsControlsBuilder
     }
 
     /**
-     * @param mixed $values
+     * @param array<string> $values
      * @param AdditionEntity $addition
      * @param int $index
-     * @return array<mixed>
+     * @return array<string>
      * @throws InvalidStateException
      */
-    protected function preprocessAdditionValues($values, AdditionEntity $addition, int $index = 1): array
+    protected function preprocessAdditionValues(array $values, AdditionEntity $addition, int $index = 1): array
     {
-        if (is_int($values)) {
-            $values = [$values];
-        }
         $prices = $this->createAdditionPrices($addition);
         $preselectedOptionIds = $this->getPreselectedOptions($addition, $index);
         $predisabledOptionIds = $this->getPredisabledOptions($addition, $prices);
         foreach ($addition->getOptions() as $option) {
             if (
-                !in_array($option->getId(), $values, true) &&
-                in_array($option->getId(), $preselectedOptionIds, true) &&
-                in_array($option->getId(), $predisabledOptionIds, true)
+                !in_array($option->getId()->toString(), $values, true)
+                && in_array($option->getId()->toString(), $preselectedOptionIds, true)
+                && in_array($option->getId()->toString(), $predisabledOptionIds, true)
             ) {
-                $values[] = $option->getId();
+                $values[] = $option->getId()->toString();
             }
             if (
-                in_array($option->getId(), $values, true) &&
-                !in_array($option->getId(), $preselectedOptionIds, true) &&
-                in_array($option->getId(), $predisabledOptionIds, true)
+                in_array($option->getId()->toString(), $values, true)
+                && !in_array($option->getId()->toString(), $preselectedOptionIds, true)
+                && in_array($option->getId()->toString(), $predisabledOptionIds, true)
             ) {
-                $i = array_search($option->getId(), $values, true);
+                $i = array_search($option->getId()->toString(), $values, true);
                 unset($values[$i]);
             }
         }
@@ -349,7 +344,7 @@ class AdditionsControlsBuilder
 
     /**
      * @param AdditionEntity $addition
-     * @return array<int,mixed>
+     * @return array<string,mixed>
      */
     protected function createAdditionPrices(AdditionEntity $addition): array
     {
@@ -367,7 +362,7 @@ class AdditionsControlsBuilder
             if (null === $currency) {
                 continue;
             }
-            $result[(int)$option->getId()] = [
+            $result[(string)$option->getId()] = [
                 'amount' => $amount->getAmount(),
                 'currency' => $currency->getSymbol(),
                 'countLeft' => $option->getCapacityLeft(
@@ -382,13 +377,13 @@ class AdditionsControlsBuilder
     /**
      * @param AdditionEntity $addition
      * @param mixed[] $prices
-     * @return array<int,Html> id=>Html
+     * @return array<string,Html> id=>Html
      */
     protected function createAdditionOptions(AdditionEntity $addition, $prices): array
     {
         $result = [];
         foreach ($addition->getOptions() as $option) {
-            $result[(int)$option->getId()] = $this->createOptionLabel($option, $prices);
+            $result[(string)$option->getId()] = $this->createOptionLabel($option, $prices);
         }
 
         return $result;
@@ -397,17 +392,17 @@ class AdditionsControlsBuilder
     /**
      * @param AdditionEntity $additionEntity
      * @param int $index
-     * @return int[]
+     * @return string[]
      */
     protected function getPreselectedOptions(AdditionEntity $additionEntity, int $index = 1): array
     {
         $result = $this->preselectedOptionIds;
         foreach ($additionEntity->getOptions() as $option) {
             if (OptionEntity::AUTOSELECT_ALWAYS === $option->getAutoSelect()) {
-                $result[] = (int)$option->getId();
+                $result[] = (string)$option->getId();
             }
             if (OptionEntity::AUTOSELECT_SECONDON === $option->getAutoSelect() && $index >= 2) {
-                $result[] = (int)$option->getId();
+                $result[] = (string)$option->getId();
             }
         }
 
@@ -417,7 +412,7 @@ class AdditionsControlsBuilder
     /**
      * @param AdditionEntity $additionEntity
      * @param mixed[] $prices
-     * @return int[]
+     * @return string[]
      */
     protected function getPredisabledOptions(AdditionEntity $additionEntity, array $prices): array
     {
@@ -431,9 +426,13 @@ class AdditionsControlsBuilder
         }
         foreach ($additionEntity->getOptions() as $option) {
             $isAutoselected = OptionEntity::AUTOSELECT_NONE !== $option->getAutoSelect();
-            $isFull = isset($prices[$option->getId()]['countLeft']) && 0 === $prices[$option->getId()]['countLeft'];
-            if (!$this->isAdmin() && ($isAutoselected || $isFull || $isAdditionPredisabled)) {
-                $result[] = (int)$option->getId();
+            $isFull = isset($prices[$option->getId()->toString()]['countLeft'])
+                && 0 === $prices[$option->getId()->toString()]['countLeft'];
+            if (
+                !$this->isAdmin()
+                && ($isAutoselected || $isFull || $isAdditionPredisabled)
+            ) {
+                $result[] = (string)$option->getId();
             }
         }
 
@@ -454,7 +453,7 @@ class AdditionsControlsBuilder
     }
 
     /**
-     * @param int[] $optionIds
+     * @param string[] $optionIds
      */
     public function setPreselectedOptions(array $optionIds = []): void
     {
@@ -471,7 +470,7 @@ class AdditionsControlsBuilder
      * @param mixed[] $prices
      * @return Html
      */
-    protected function createOptionLabel(OptionEntity $option, $prices): Html
+    protected function createOptionLabel(OptionEntity $option, array $prices): Html
     {
         $result = Html::el();
         if (null !== $option->getName()) {
@@ -481,17 +480,19 @@ class AdditionsControlsBuilder
             );
         }
         if (
-            $this->isVisiblePrice() && isset($prices[$option->getId()]) &&
-            isset($prices[$option->getId()]['amount']) && isset($prices[$option->getId()]['currency'])
+            isset(
+                $prices[(string)$option->getId()]['amount'],
+                $prices[(string)$option->getId()]['currency']
+            ) && $this->isVisiblePrice()
         ) {
-            $price = $prices[$option->getId()];
+            $price = $prices[(string)$option->getId()];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline price'])
                     ->setText($price['amount'] . $price['currency'])
             );
         }
-        if (isset($prices[$option->getId()]['countLeft']) && $this->isVisibleCountLeft()) {
-            $left = $prices[$option->getId()]['countLeft'];
+        if (isset($prices[(string)$option->getId()]['countLeft']) && $this->isVisibleCountLeft()) {
+            $left = $prices[(string)$option->getId()]['countLeft'];
             $result->addHtml(
                 Html::el('span', ['class' => 'description inline countLeft'])
                     ->setText($this->getTranslator()->translate('Occupancy.Left.Options', $left))

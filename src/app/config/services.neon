@@ -1,43 +1,43 @@
 services:
+    - Stopka\NetteMenuControl\MenuFactory
     - Ticketer\Controls\ControlDependencies
     - Ticketer\Controls\Forms\FormWrapperDependencies
     - Ticketer\Controls\Grids\GridWrapperDependencies
     - Ticketer\Controls\Forms\ICartFormWrapperFactory
     - Ticketer\Controls\Forms\IAdditionsControlsBuilderFactory
-    - Ticketer\FrontModule\Controls\IOccupancyControlFactory
-    - Ticketer\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
-    - Ticketer\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory
+    - Ticketer\Modules\FrontModule\Controls\IOccupancyControlFactory
+    - Ticketer\Modules\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
+    - Ticketer\Modules\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory
     - Ticketer\Responses\PdfResponse\PdfResponseDependencies(%tempDir%/mpdf)
     - Ticketer\Responses\PdfResponse\PdfResponseFactoryInterface
-    - Ticketer\FrontModule\Responses\ApplicationPdfResponse
-    - Ticketer\FrontModule\Controls\Menus\MenuFactory
-    - Ticketer\AdminModule\Controls\Forms\ISignInFormWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IEventFromWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IAdditionFormWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\ICurrencyFromWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IOptionFormWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IEarlyFormWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IEarlyWaveFormWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IDelegateReservationFormWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\IEarlyWavesGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\IEventsGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\IAdditionsGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\ICurrenciesGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\IOptionsGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Grids\IEarliesGridWrapperFactory
-    - Ticketer\AdminModule\Controls\Forms\IDelegateReservationControlsBuilderFactory
-    - Ticketer\AdminModule\Controls\Menus\MenuFactory
-    - Ticketer\Model\CronService
-    - Ticketer\Model\AdminAuthenticator
+    - Ticketer\Modules\FrontModule\Responses\ApplicationPdfResponse
+    - Ticketer\Modules\FrontModule\Controls\Menus\MenuFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\ISignInFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IEventFromWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IAdditionFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\ICurrencyFromWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IOptionFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IEarlyFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IEarlyWaveFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IDelegateReservationFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IEarlyWavesGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IEventsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IAdditionsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\ICurrenciesGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IOptionsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IEarliesGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IDelegateReservationControlsBuilderFactory
+    - Ticketer\Modules\AdminModule\Controls\Menus\MenuFactory
+    - Ticketer\Model\Cron\CronService
+    - Ticketer\Model\Authenticators\AdminAuthenticator
     - Ticketer\Model\FileStorageFactory(%appDir%/resources)
     - Ticketer\Model\Notifiers\IEventMessageAtachmentManagerFactory
     - Ticketer\Model\GeneratingApplicationPdfManager
     - Ticketer\Model\DateFormatter(%format.date%,%format.time%,%format.dateTime%)
-    - Ticketer\Model\Database\EntityManagerWrapper
     - Ticketer\Model\Database\Daos\AdditionDao
     - Ticketer\Model\Database\Daos\EventDao
     - Ticketer\Model\Database\Daos\EarlyDao
@@ -51,9 +51,7 @@ services:
     - Ticketer\Model\Database\Daos\ChoiceDao
     - Ticketer\Model\Database\Daos\InsuranceCompanyDao
     - Ticketer\Model\Database\Daos\ReservationDao
-    -
-        class: Ticketer\Model\Database\Managers\SubstituteManager
-        tags: [kdyby.subscriber]
+    - Ticketer\Model\Database\Managers\SubstituteManager
     - Ticketer\Model\Database\Managers\CartManager
     - Ticketer\Model\Database\Managers\ChoiceManager
     - Ticketer\Model\Database\Managers\AdditionManager
@@ -64,23 +62,13 @@ services:
     - Ticketer\Model\Database\Managers\ApplicationManager
     - Ticketer\Model\Database\Managers\AdministratorManager
     - Ticketer\Model\Database\Managers\EventManager
-    -
-        class: Ticketer\Model\Database\Managers\EarlyWaveManager
-        tags: [kdyby.subscriber]
+    - Ticketer\Model\Database\Managers\EarlyWaveManager
     - Ticketer\Model\Notifiers\EmailMessageFactory(%email.from%, %email.replyTo%)
     - Ticketer\Model\Notifiers\EmailService
-    -
-        class: Ticketer\Model\Notifiers\EarlyWaveInviteNotifier
-        tags: [kdyby.subscriber]
-    -
-        class: Ticketer\Model\Notifiers\CartCreatedNotifier
-        tags: [kdyby.subscriber]
-    -
-        class: Ticketer\Model\Notifiers\SubstituteActivatedNotifier
-        tags: [kdyby.subscriber]
-    -
-        class: Ticketer\Model\Notifiers\ReservationDelegatedNotifier
-        tags: [kdyby.subscriber]
+    - Ticketer\Model\Notifiers\EarlyWaveInviteNotifier
+    - Ticketer\Model\Notifiers\CartCreatedNotifier
+    - Ticketer\Model\Notifiers\SubstituteActivatedNotifier
+    - Ticketer\Model\Notifiers\ReservationDelegatedNotifier
     -
         class: Ticketer\Model\OccupancyIcons
         setup:
@@ -88,16 +76,12 @@ services:
             - addIcon('ticket', null, 'fa fa-ticket')
             - addIcon('bed', null, 'fa fa-bed')
             - addIcon('bus', null, 'fa fa-bus')
-    -
-        class: Ticketer\Console\CronCommand
-        tags: [kdyby.console.command]
-    -
-        class: Ticketer\Console\GenerateUidCommand
-        tags: [kdyby.console.command]
-    -
-        class: Ticketer\Console\SendEarlyInvitesCommand
-        tags: [kdyby.console.command]
-    -
-        class: Ticketer\Console\SendCartCreatedCommand
-        tags: [kdyby.console.command]
+    - Ticketer\Console\Commands\CronCommand
+    - Ticketer\Console\Commands\GenerateUidCommand
+    - Ticketer\Console\Commands\SendEarlyInvitesCommand
+    - Ticketer\Console\Commands\SendCartCreatedCommand
     router: Ticketer\Routers\RouterFactory::createRouter
+    - Ticketer\Presenters\BasePresenterDependencies
+    - Ticketer\Modules\ApiModule\Presenters\BasePresenterDependencies
+    - Ticketer\Modules\AdminModule\Presenters\BasePresenterDependencies
+    - Ticketer\Modules\FrontModule\Presenters\BasePresenterDependencies

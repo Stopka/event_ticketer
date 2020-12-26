@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\AdditionFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\IAdditionFormWrapperFactory;
 use Ticketer\Controls\FlashMessageTypeEnum;
@@ -41,12 +42,13 @@ class AdditionPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionDefault(int $id): void
+    public function actionDefault(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect("Event:edit");
         }
@@ -58,12 +60,13 @@ class AdditionPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionAdd(int $id): void
+    public function actionAdd(string $id): void
     {
-        $event = $this->eventDao->getEvent($id);
+        $uuid = Uuid::fromString($id);
+        $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect("Homepage:");
@@ -77,12 +80,13 @@ class AdditionPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param string $id
      * @throws AbortException
      */
-    public function actionEdit(int $id): void
+    public function actionEdit(string $id): void
     {
-        $addition = $this->additionDao->getAddition($id);
+        $uuid = Uuid::fromString($id);
+        $addition = $this->additionDao->getAddition($uuid);
         if (null === $addition) {
             $this->flashTranslatedMessage('Error.Addition.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect("Homepage:");

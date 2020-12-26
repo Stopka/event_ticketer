@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
 use Ticketer\Model\Database\Entities\CartEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
@@ -125,7 +126,7 @@ class ApplicationDao extends EntityDao
         );
     }
 
-    public function getApplication(?int $id): ?ApplicationEntity
+    public function getApplication(Uuid $id): ?ApplicationEntity
     {
         /** @var ApplicationEntity $result */
         $result = $this->get($id);
@@ -134,7 +135,7 @@ class ApplicationDao extends EntityDao
     }
 
     /**
-     * @param int[] $applicationIds
+     * @param string[] $applicationIds
      * @param EventEntity $event
      * @return ApplicationEntity[]
      */
@@ -150,7 +151,7 @@ class ApplicationDao extends EntityDao
     }
 
     /**
-     * @param array<int> $ids
+     * @param array<string> $ids
      * @return ApplicationEntity[]
      */
     public function getReservedApplications(EventEntity $eventEntity, array $ids = []): array

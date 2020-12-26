@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\OptionEntity;
@@ -19,10 +20,10 @@ class OptionDao extends EntityDao
     }
 
     /**
-     * @param null|int $id
+     * @param Uuid $id
      * @return OptionEntity|null
      */
-    public function getOption(?int $id): ?OptionEntity
+    public function getOption(Uuid $id): ?OptionEntity
     {
         /** @var OptionEntity $result */
         $result = $this->get($id);

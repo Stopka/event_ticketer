@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Console\Commands;
 
 use Nette\Application\UI\InvalidLinkException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Notifiers\CartCreatedNotifier;
 use Ticketer\Model\Database\Daos\CartDao;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,6 +23,8 @@ class SendCartCreatedCommand extends AbstractCommand
     /** @var CartDao */
     private $cartDao;
 
+    protected static $defaultName = 'debug:sendCartCreated';
+
     public function __construct(CartCreatedNotifier $cartCreatedNotifier, CartDao $cartDao, ?string $name = null)
     {
         parent::__construct($name);
@@ -34,7 +37,7 @@ class SendCartCreatedCommand extends AbstractCommand
     {
         $this->setName('debug:sendCartCreated')
             ->setDescription('Sends email about created cart')
-            ->addArgument(self::ARG_CART_ID, InputArgument::OPTIONAL, 'Which cart should be sent', '1');
+            ->addArgument(self::ARG_CART_ID, InputArgument::REQUIRED, 'Which cart should be sent');
     }
 
     /**
@@ -47,7 +50,8 @@ class SendCartCreatedCommand extends AbstractCommand
     {
         /** @var string $cartIdArgument */
         $cartIdArgument = $input->getArgument(self::ARG_CART_ID);
-        $cart = $this->cartDao->getCart((int)$cartIdArgument);
+        $uuid = Uuid::fromString($cartIdArgument);
+        $cart = $this->cartDao->getCart($uuid);
         if (null === $cart) {
             $output->writeln('Cart not found');
 

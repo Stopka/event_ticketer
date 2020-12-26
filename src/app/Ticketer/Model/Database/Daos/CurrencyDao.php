@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\EmptyException;
 use Ticketer\Model\Exceptions\ORMException;
 use Ticketer\Model\Database\Entities\CurrencyEntity;
@@ -19,10 +20,10 @@ class CurrencyDao extends EntityDao
     }
 
     /**
-     * @param null|int $currencyId
+     * @param Uuid $currencyId
      * @return CurrencyEntity|null
      */
-    public function getCurrency(?int $currencyId): ?CurrencyEntity
+    public function getCurrency(Uuid $currencyId): ?CurrencyEntity
     {
         /** @var CurrencyEntity $result */
         $result = $this->get($currencyId);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Console\Commands;
 
 use Nette\Application\UI\InvalidLinkException;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Notifiers\EarlyWaveInviteNotifier;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,6 +19,8 @@ class SendEarlyInvitesCommand extends AbstractCommand
     /** @var EarlyWaveInviteNotifier */
     private $earlyWaveInviteNotifier;
 
+    protected static $defaultName = 'debug:sendEarlyInvites';
+
     public function __construct(EarlyWaveInviteNotifier $cartCreatedNotifier, ?string $name = null)
     {
         parent::__construct($name);
@@ -29,7 +32,7 @@ class SendEarlyInvitesCommand extends AbstractCommand
     {
         $this->setName('debug:sendEarlyInvites')
             ->setDescription('Sends emails to earlies')
-            ->addArgument(self::ARG_WAVE_ID, InputArgument::OPTIONAL, 'Which wave should be sent', '1');
+            ->addArgument(self::ARG_WAVE_ID, InputArgument::REQUIRED, 'Which wave should be sent');
     }
 
     /**
@@ -42,7 +45,8 @@ class SendEarlyInvitesCommand extends AbstractCommand
     {
         /** @var string $waveIdArgument */
         $waveIdArgument = $input->getArgument(self::ARG_WAVE_ID);
-        $this->earlyWaveInviteNotifier->sendDebugEarlyWaveInvites((int)$waveIdArgument);
+        $uuid = Uuid::fromString($waveIdArgument);
+        $this->earlyWaveInviteNotifier->sendDebugEarlyWaveInvites($uuid);
 
         return self::SUCCESS;
     }

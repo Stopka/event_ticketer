@@ -11,7 +11,7 @@ use Nette\Routing\Router;
 class RouterFactory
 {
 
-    public function createRouter(): Router
+    public static function createRouter(): Router
     {
         return (new RouteList())
             ->addRoute(

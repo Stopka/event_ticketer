@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Ticketer\Console\Commands;
 
-use Ticketer\Model\Database\Attributes\TIdentifierAttribute;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Ticketer\Model\Dtos\Uuid;
 
 class GenerateUidCommand extends AbstractCommand
 {
     private const ARG_COUNT = 'count';
+
+    protected static $defaultName = 'debug:generate-uid';
 
     protected function configure(): void
     {
@@ -24,9 +26,9 @@ class GenerateUidCommand extends AbstractCommand
     {
         /** @var string $countArgument */
         $countArgument = $input->getArgument(self::ARG_COUNT);
-        $count = (int)$countArgument;
+        $count = (int)($countArgument ?? 1);
         for ($i = 0; $i < $count; $i++) {
-            $output->writeln(TIdentifierAttribute::generateUid());
+            $output->writeln(Uuid::generate()->toString());
         }
 
         return self::SUCCESS;

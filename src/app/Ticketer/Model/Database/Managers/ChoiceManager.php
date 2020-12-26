@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Managers;
 
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\NotFoundException;
 use Ticketer\Model\Database\Daos\AdditionDao;
@@ -57,11 +58,9 @@ class ChoiceManager
     }
 
     /**
-     * @param int|null $choiceId
-     * @throws NotFoundException
-     * @throws \Exception
+     * @param Uuid $choiceId
      */
-    public function inverseChoicePayed(?int $choiceId): void
+    public function inverseChoicePayed(Uuid $choiceId): void
     {
         $choice = $this->choiceDao->getChoice($choiceId);
         if (null === $choice) {
@@ -72,11 +71,11 @@ class ChoiceManager
     }
 
     /**
-     * @param int $optionId
+     * @param Uuid $optionId
      * @param ApplicationEntity $application
      * @return ChoiceEntity
      */
-    private function addChoice(int $optionId, ApplicationEntity $application): ChoiceEntity
+    private function addChoice(Uuid $optionId, ApplicationEntity $application): ChoiceEntity
     {
         $option = $this->optionDao->getOption($optionId);
         if (null === $option) {
@@ -92,7 +91,7 @@ class ChoiceManager
 
     /**
      * @param AdditionEntity $hiddenAddition
-     * @return int[]
+     * @return Uuid[]
      */
     private function selectHiddenAdditionOptionIds(AdditionEntity $hiddenAddition): array
     {
@@ -100,7 +99,7 @@ class ChoiceManager
         $optionIds = [];
         for ($i = 0; $i < count($options) && $i < $hiddenAddition->getMinimum(); $i++) {
             $option = $options[$i];
-            $optionIds[] = (int)$option->getId();
+            $optionIds[] = $option->getId();
         }
 
         return $optionIds;
@@ -153,6 +152,7 @@ class ChoiceManager
             if (!is_array($optionIds)) {
                 $optionIds = [$optionIds];
             }
+            $additionUuid = Uuid::fromString($additionId);
             $processedOptionIds = [];
             $choices = $application->getChoices();
             foreach ($choices as $choice) {
@@ -161,13 +161,13 @@ class ChoiceManager
                     continue;
                 }
                 $addition = $option->getAddition();
-                if (null === $addition || $addition->getId() !== $additionId) {
+                if (null === $addition || !$addition->getId()->equals($additionUuid)) {
                     continue;
                 }
-                if (!in_array($option->getId(), $optionIds, true)) {
+                if (!in_array($option->getId()->toString(), $optionIds, true)) {
                     $this->getEntityManager()->remove($choice);
                 }
-                $processedOptionIds[] = $option->getId();
+                $processedOptionIds[] = $option->getId()->toString();
             }
             foreach ($optionIds as $optionId) {
                 if (in_array($optionId, $processedOptionIds, true)) {
