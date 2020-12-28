@@ -20,4 +20,16 @@ class TicketerConfigurator extends Configurator
 
         return $this;
     }
+
+    /**
+     * @return array<mixed>
+     */
+    protected function getDefaultParameters(): array
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $parameters = parent::getDefaultParameters();
+        $parameters['appDir'] = isset($trace[1]['file']) ? dirname($trace[1]['file'], 2) : null;
+
+        return $parameters;
+    }
 }

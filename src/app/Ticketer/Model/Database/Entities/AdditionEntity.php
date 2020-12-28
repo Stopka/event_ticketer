@@ -9,6 +9,8 @@ use Ticketer\Model\Database\Attributes\TNameAttribute;
 use Ticketer\Model\Database\Attributes\TPositionAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ticketer\Model\Database\Enums\AdditionVisibilityEnum;
+use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 
 /**
  * Přídavek k přihlášce (Přihláška, Faktura, Doprava, Tričko...)
@@ -21,23 +23,17 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
     use TPositionAttribute;
     use TNameAttribute;
 
-    public const VISIBLE_RESERVATION = 'reservation';
-    public const VISIBLE_REGISTER = 'register';
-    public const VISIBLE_CUSTOMER = 'customer';
-    public const VISIBLE_PREVIEW = 'preview';
-    public const VISIBLE_EXPORT = 'export';
+    /**
+     * @ORM\Column(type="application_state_enum", nullable=true)
+     * @var ApplicationStateEnum|null
+     */
+    private ?ApplicationStateEnum $requiredForState = null;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     * @var integer|null
+     * @ORM\Column(type="application_state_enum", nullable=true)
+     * @var ApplicationStateEnum|null
      */
-    private $requiredForState;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     * @var integer|null
-     */
-    private $enoughForState;
+    private ?ApplicationStateEnum $enoughForState = null;
 
     /**
      * @ORM\Column(type="integer")
@@ -52,10 +48,10 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
     private $maximum = 1;
 
     /**
-     * @ORM\Column(type="json_array")
-     * @var string[]
+     * @ORM\OneToOne (targetEntity="AdditionVisibilityEntity", cascade={"persist","remove"})
+     * @var AdditionVisibilityEntity
      */
-    private $visible = [];
+    private AdditionVisibilityEntity $visibility;
 
     /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="additions")
@@ -77,11 +73,11 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
     {
         //TODO make it enum
         return [
-            self::VISIBLE_RESERVATION => 'Value.Addition.Visible.Reservation',
-            self::VISIBLE_REGISTER => 'Value.Addition.Visible.Register',
-            self::VISIBLE_CUSTOMER => 'Value.Addition.Visible.Customer',
-            self::VISIBLE_PREVIEW => 'Value.Addition.Visible.Preview',
-            self::VISIBLE_EXPORT => 'Value.Addition.Visible.Export',
+            'reservation' => 'Value.Addition.Visible.Reservation',
+            'register' => 'Value.Addition.Visible.Register',
+            'customer' => 'Value.Addition.Visible.Customer',
+            'preview' => 'Value.Addition.Visible.Preview',
+            'export' => 'Value.Addition.Visible.Export',
         ];
     }
 
@@ -89,6 +85,7 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
     {
         parent::__construct();
         $this->options = new ArrayCollection();
+        $this->visibility = new AdditionVisibilityEntity();
     }
 
     /**
@@ -191,72 +188,41 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
     }
 
     /**
-     * @return int
+     * @return ApplicationStateEnum
      */
-    public function getRequiredForState(): ?int
+    public function getRequiredForState(): ?ApplicationStateEnum
     {
         return $this->requiredForState;
     }
 
     /**
-     * @param int $requiredForState
+     * @param ApplicationStateEnum $requiredForState
      */
-    public function setRequiredForState(?int $requiredForState): void
+    public function setRequiredForState(?ApplicationStateEnum $requiredForState): void
     {
         $this->requiredForState = $requiredForState;
     }
 
     /**
-     * @param string $place
-     * @return bool
+     * @return AdditionVisibilityEntity
      */
-    public function isVisibleIn(string $place): bool
+    public function getVisibility(): AdditionVisibilityEntity
     {
-        return in_array($place, $this->getVisible(), true);
+        return $this->visibility;
     }
 
     /**
-     * @return string[]
+     * @return ApplicationStateEnum|null
      */
-    public function getVisible(): array
-    {
-        return $this->visible;
-    }
-
-    /**
-     * @param string[] $places
-     */
-    public function setVisible(array $places): void
-    {
-        $this->visible = array_values($places);
-    }
-
-    /**
-     * @param bool $visible
-     */
-    public function setVisibleIn(string $place, bool $visible = true): void
-    {
-        $index = array_search($place, $this->getVisible(), true);
-        if (false !== $index && !$visible) {
-            unset($this->visible[$index]);
-        }
-        if (false === $index && $visible) {
-            $this->visible[] = $place;
-        }
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getEnoughForState(): ?int
+    public function getEnoughForState(): ?ApplicationStateEnum
     {
         return $this->enoughForState;
     }
 
     /**
-     * @param int|null $enoughForState
+     * @param ApplicationStateEnum|null $enoughForState
      */
-    public function setEnoughForState(?int $enoughForState): void
+    public function setEnoughForState(?ApplicationStateEnum $enoughForState): void
     {
         $this->enoughForState = $enoughForState;
     }

@@ -1,0 +1,13 @@
+services:
+    - Ticketer\Model\Database\Managers\SubstituteManager
+    - Ticketer\Model\Database\Managers\CartManager
+    - Ticketer\Model\Database\Managers\ChoiceManager
+    - Ticketer\Model\Database\Managers\AdditionManager
+    - Ticketer\Model\Database\Managers\CurrencyManager
+    - Ticketer\Model\Database\Managers\OptionManager
+    - Ticketer\Model\Database\Managers\EarlyManager
+    - Ticketer\Model\Database\Managers\ReservationManager
+    - Ticketer\Model\Database\Managers\ApplicationManager
+    - Ticketer\Model\Database\Managers\AdministratorManager
+    - Ticketer\Model\Database\Managers\EventManager
+    - Ticketer\Model\Database\Managers\EarlyWaveManager

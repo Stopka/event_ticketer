@@ -13,6 +13,7 @@ use Ticketer\Model\Database\Attributes\TPositionAttribute;
 use Ticketer\Model\Database\Attributes\TPriceAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ticketer\Model\Database\Enums\OptionAutoselectEnum;
 
 /**
  * Jedna z voleb v addtion
@@ -29,11 +30,6 @@ class OptionEntity extends BaseEntity implements SortableEntityInterface
     use TInternalInfoAttribute;
     use TOccupancyIconAttribute;
 
-    // TODO make it enum
-    public const AUTOSELECT_NONE = 0;
-    public const AUTOSELECT_ALWAYS = 1;
-    public const AUTOSELECT_SECONDON = 2;
-
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string|null
@@ -41,10 +37,10 @@ class OptionEntity extends BaseEntity implements SortableEntityInterface
     private $description;
 
     /**
-     * @ORM\Column(type="integer")
-     * @var integer
+     * @ORM\Column(type="option_autoselect_enum")
+     * @var OptionAutoselectEnum
      */
-    private $autoSelect = self::AUTOSELECT_NONE;
+    private OptionAutoselectEnum $autoSelect;
 
 
     /**
@@ -63,20 +59,21 @@ class OptionEntity extends BaseEntity implements SortableEntityInterface
     {
         parent::__construct();
         $this->choices = new ArrayCollection();
+        $this->autoSelect = OptionAutoselectEnum::NONE();
     }
 
     /**
-     * @return int
+     * @return OptionAutoselectEnum
      */
-    public function getAutoSelect(): int
+    public function getAutoSelect(): OptionAutoselectEnum
     {
         return $this->autoSelect;
     }
 
     /**
-     * @param int $autoSelect
+     * @param OptionAutoselectEnum $autoSelect
      */
-    public function setAutoSelect(int $autoSelect): void
+    public function setAutoSelect(OptionAutoselectEnum $autoSelect): void
     {
         $this->autoSelect = $autoSelect;
     }
@@ -139,7 +136,7 @@ class OptionEntity extends BaseEntity implements SortableEntityInterface
             function (ChoiceEntity $choiceEntity): bool {
                 $application = $choiceEntity->getApplication();
                 if (null !== $application) {
-                    return !in_array($application->getState(), ApplicationEntity::getStatesNotIssued(), true);
+                    return $application->getState()->isIssued();
                 }
 
                 return false;

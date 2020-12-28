@@ -12,6 +12,7 @@ use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
 use Ticketer\Model\Database\Entities\CartEntity;
 use Nette\Utils\Html;
+use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ublaboo\DataGrid\Exception\DataGridException;
 
 /**
@@ -95,10 +96,10 @@ class CartApplicationsGridWrapper extends GridWrapper
         $grid->addColumnText('state', 'Attribute.State')
             ->setReplacement(
                 [
-                    ApplicationEntity::STATE_WAITING => 'Value.Application.State.Waiting',
-                    ApplicationEntity::STATE_OCCUPIED => 'Value.Application.State.Occupied',
-                    ApplicationEntity::STATE_FULFILLED => 'Value.Application.State.Fulfilled',
-                    ApplicationEntity::STATE_CANCELLED => 'Value.Application.State.Cancelled',
+                    ApplicationStateEnum::WAITING => 'Value.Application.State.Waiting',
+                    ApplicationStateEnum::OCCUPIED => 'Value.Application.State.Occupied',
+                    ApplicationStateEnum::FULFILLED => 'Value.Application.State.Fulfilled',
+                    ApplicationStateEnum::CANCELLED => 'Value.Application.State.Cancelled',
                 ]
             );
         $grid->addColumnText('address', 'Adresa');
@@ -111,7 +112,7 @@ class CartApplicationsGridWrapper extends GridWrapper
 
     protected function isVisible(AdditionEntity $additionEntity): bool
     {
-        return $additionEntity->isVisibleIn(AdditionEntity::VISIBLE_CUSTOMER);
+        return $additionEntity->getVisibility()->isCustomer();
     }
 
     /**

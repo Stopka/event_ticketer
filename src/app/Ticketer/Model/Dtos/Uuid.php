@@ -15,6 +15,8 @@ class Uuid
 {
     private UuidInterface $uuid;
 
+    private static ?int $stringLength;
+
     private const UUID_SIZE = 2 ** 128;
     private const ALPHABET = [
         '0',
@@ -158,7 +160,7 @@ class Uuid
         );
     }
 
-    private static function getStringLength(): int
+    public static function getStringLength(): int
     {
         return (int)ceil(log(self::UUID_SIZE, count(self::ALPHABET)));
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
@@ -44,10 +45,10 @@ class AdditionDao extends EntityDao
 
     /**
      * @param EventEntity $event
-     * @param string $place
+     * @param callable(AdditionVisibilityEntity $visibility):bool $visibilityResolver
      * @return AdditionEntity[]
      */
-    public function getEventAdditionsHiddenIn(EventEntity $event, string $place): array
+    public function getEventAdditionsHiddenIn(EventEntity $event, callable $visibilityResolver): array
     {
         /** @var AdditionEntity[] $additions */
         $additions = $this->getRepository()->findBy(
@@ -57,7 +58,7 @@ class AdditionDao extends EntityDao
         );
         $result = [];
         foreach ($additions as $addition) {
-            if (!$addition->isVisibleIn($place)) {
+            if (!$addition->getVisibility()->matches($visibilityResolver)) {
                 $result[] = $addition;
             }
         }

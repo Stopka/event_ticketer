@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use DateTimeImmutable;
+use Doctrine\Common\Collections\Criteria;
+use Ticketer\Model\Database\Enums\EventStateEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
@@ -41,15 +44,22 @@ class EventDao extends EntityDao
      */
     public function getPublicAvailibleEvents(): array
     {
-        return $this->getRepository()->findBy(
-            [
-                'state' => EventEntity::STATE_ACTIVE,
-                'startDate <=' => new \DateTime(),
-            ],
-            [
-                'startDate' => OrderEnum::ASC()->getValue(),
-            ]
-        );
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->andX(
+                    Criteria::expr()->eq('state', EventStateEnum::ACTIVE()),
+                    Criteria::expr()->lte('startDate', new DateTimeImmutable()),
+                )
+            )
+            ->orderBy(
+                [
+                    'startDate' => OrderEnum::ASC()->getValue(),
+                ]
+            );
+
+        return $this->getRepository()
+            ->matching($criteria)
+            ->toArray();
     }
 
     /**
@@ -58,15 +68,22 @@ class EventDao extends EntityDao
      */
     public function getPublicFutureEvents(): array
     {
-        return $this->getRepository()->findBy(
-            [
-                'state' => EventEntity::STATE_ACTIVE,
-                'startDate >' => new \DateTime(),
-            ],
-            [
-                'startDate' => OrderEnum::ASC()->getValue(),
-            ]
-        );
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->andX(
+                    Criteria::expr()->eq('state', EventStateEnum::ACTIVE()),
+                    Criteria::expr()->gt('startDate', new DateTimeImmutable()),
+                )
+            )
+            ->orderBy(
+                [
+                    'startDate' => OrderEnum::ASC()->getValue(),
+                ]
+            );
+
+        return $this->getRepository()
+            ->matching($criteria)
+            ->toArray();
     }
 
     /**

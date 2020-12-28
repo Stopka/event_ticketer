@@ -1,0 +1,11 @@
+services:
+    - Ticketer\Modules\AdminModule\Controls\Forms\ISignInFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IEventFromWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IAdditionFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\ICurrencyFromWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IOptionFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IEarlyFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IEarlyWaveFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IDelegateReservationFormWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Forms\IDelegateReservationControlsBuilderFactory

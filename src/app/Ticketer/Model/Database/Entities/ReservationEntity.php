@@ -10,6 +10,7 @@ use Ticketer\Model\Database\Attributes\TIdentifierAttribute;
 use Ticketer\Model\Database\Attributes\TPersonNameAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ticketer\Model\Database\Enums\ReservationStateEnum;
 
 /**
  * Náhradník
@@ -23,15 +24,11 @@ class ReservationEntity extends BaseEntity
     use TEmailAttribute;
     use TCreatedAttribute;
 
-    //TODO make it enum
-    public const STATE_WAITING = 0;
-    public const STATE_ORDERED = 1;
-
     /**
-     * @ORM\Column(type="integer")
-     * @var integer
+     * @ORM\Column(type="reservation_state_enum")
+     * @var ReservationStateEnum
      */
-    private $state = self::STATE_WAITING;
+    private ReservationStateEnum $state;
 
     /**
      * @ORM\OneToMany(targetEntity="ApplicationEntity", mappedBy="reservation")
@@ -53,6 +50,7 @@ class ReservationEntity extends BaseEntity
         parent::__construct();
         $this->applications = new ArrayCollection();
         $this->setCreated();
+        $this->state = ReservationStateEnum::WAITING();
     }
 
     /**
@@ -98,17 +96,17 @@ class ReservationEntity extends BaseEntity
     }
 
     /**
-     * @return int
+     * @return ReservationStateEnum
      */
-    public function getState(): int
+    public function getState(): ReservationStateEnum
     {
         return $this->state;
     }
 
     /**
-     * @param int $state
+     * @param ReservationStateEnum $state
      */
-    public function setState(int $state): void
+    public function setState(ReservationStateEnum $state): void
     {
         $this->state = $state;
     }
@@ -139,6 +137,6 @@ class ReservationEntity extends BaseEntity
 
     public function isRegisterReady(): bool
     {
-        return count($this->getApplications()) > 0 && self::STATE_WAITING === $this->getState();
+        return count($this->getApplications()) > 0 && $this->getState()->equals(ReservationStateEnum::WAITING());
     }
 }

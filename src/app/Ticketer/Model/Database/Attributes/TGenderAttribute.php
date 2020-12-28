@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace Ticketer\Model\Database\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ticketer\Model\Database\Enums\GenderEnum;
 
 trait TGenderAttribute
 {
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     * @var int|null
+     * @ORM\Column(type="gender_enum", nullable=true)
+     * @var GenderEnum|null
      */
-    private ?int $gender;
+    private ?GenderEnum $gender;
 
     /**
      * @return GenderEnum|null
      */
     public function getGender(): ?GenderEnum
     {
-        return null !== $this->gender ? new GenderEnum($this->gender) : null;
+        return $this->gender;
     }
 
     /**
@@ -28,6 +29,6 @@ trait TGenderAttribute
      */
     public function setGender(?GenderEnum $gender): void
     {
-        $this->gender = null !== $gender ? $gender->getValue() : null;
+        $this->gender = $gender;
     }
 }

@@ -1,0 +1,17 @@
+includes:
+    - model/database.neon
+    - model/notifiers.neon
+
+services:
+    - Ticketer\Model\Cron\CronService
+    - Ticketer\Model\Authenticators\AdminAuthenticator
+    - Ticketer\Model\FileStorageFactory(%appDir%/resources)
+    - Ticketer\Model\GeneratingApplicationPdfManager
+    - Ticketer\Model\DateFormatter(%format.date%,%format.time%,%format.dateTime%)
+    -
+        class: Ticketer\Model\OccupancyIcons
+        setup:
+            - addIcon('dot', null, 'fa fa-circle')
+            - addIcon('ticket', null, 'fa fa-ticket')
+            - addIcon('bed', null, 'fa fa-bed')
+            - addIcon('bus', null, 'fa fa-bus')

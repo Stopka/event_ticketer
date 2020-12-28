@@ -10,6 +10,7 @@ use Ticketer\Model\Database\Attributes\TEndDateAttribute;
 use Ticketer\Model\Database\Attributes\TIdentifierAttribute;
 use Ticketer\Model\Database\Attributes\TPersonNameAttribute;
 use Doctrine\ORM\Mapping as ORM;
+use Ticketer\Model\Database\Enums\SubstituteStateEnum;
 
 /**
  * Náhradník
@@ -24,26 +25,11 @@ class SubstituteEntity extends BaseEntity
     use TEndDateAttribute;
     use TCreatedAttribute;
 
-    //TODO make it enum
-    public const STATE_WAITING = 0;
-    public const STATE_ACTIVE = 1;
-    public const STATE_ORDERED = 2;
-    public const STATE_OVERDUE = 4;
-
     /**
-     * CartEntity constructor
+     * @ORM\Column(type="substitute_state_enum")
+     * @var SubstituteStateEnum
      */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setCreated();
-    }
-
-    /**
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    private $state = self::STATE_WAITING;
+    private SubstituteStateEnum $state;
 
     /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="substitutes")
@@ -68,6 +54,16 @@ class SubstituteEntity extends BaseEntity
      * @var CartEntity|null
      */
     private $cart;
+
+    /**
+     * CartEntity constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setCreated();
+        $this->state = SubstituteStateEnum::WAITING();
+    }
 
     /**
      * @return EventEntity
@@ -110,35 +106,24 @@ class SubstituteEntity extends BaseEntity
     }
 
     /**
-     * @return int
+     * @return SubstituteStateEnum
      */
-    public function getState(): int
+    public function getState(): SubstituteStateEnum
     {
         return $this->state;
     }
 
     public function isOrdered(): bool
     {
-        return self::STATE_ORDERED === $this->getState();
-    }
-
-    /**
-     * @return int[]
-     */
-    public static function getActivableStates(): array
-    {
-        return [
-            self::STATE_WAITING,
-            self::STATE_OVERDUE,
-        ];
+        return $this->getState()->equals(SubstituteStateEnum::ORDERED());
     }
 
     public function activate(?\DateInterval $interval = null): void
     {
-        if (!in_array($this->getState(), self::getActivableStates(), true)) {
+        if (!$this->getState()->isActivable()) {
             return;
         }
-        $this->setState(self::STATE_ACTIVE);
+        $this->setState(SubstituteStateEnum::ACTIVE());
         if (null !== $interval) {
             $date = new \DateTime();
             $date = $date->add($interval);
@@ -151,33 +136,34 @@ class SubstituteEntity extends BaseEntity
 
     public function isActive(): bool
     {
-        return self::STATE_ACTIVE === $this->getState() && !$this->isEnded();
+        return $this->getState()->equals(SubstituteStateEnum::ACTIVE())
+            && !$this->isEnded();
     }
 
     /**
-     * @param int $state
+     * @param SubstituteStateEnum $state
      */
-    protected function setState(int $state): void
+    protected function setState(SubstituteStateEnum $state): void
     {
         $this->state = $state;
     }
 
     public function updateState(): void
     {
-        if (self::STATE_WAITING === $this->getState()) {
+        if ($this->getState()->equals(SubstituteStateEnum::WAITING())) {
             return;
         }
         if (null !== $this->getCart()) {
-            $this->setState(self::STATE_ORDERED);
+            $this->setState(SubstituteStateEnum::ORDERED());
 
             return;
         }
         if ($this->isEnded()) {
-            $this->setState(self::STATE_OVERDUE);
+            $this->setState(SubstituteStateEnum::OVERDUE());
 
             return;
         }
-        $this->setState(self::STATE_ACTIVE);
+        $this->setState(SubstituteStateEnum::ACTIVE());
     }
 
     /**

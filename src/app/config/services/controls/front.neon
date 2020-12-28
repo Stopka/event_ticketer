@@ -1,0 +1,5 @@
+services:
+    - Ticketer\Modules\FrontModule\Controls\IOccupancyControlFactory
+    - Ticketer\Modules\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory
+    - Ticketer\Modules\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory
+    - Ticketer\Modules\FrontModule\Controls\Menus\MenuFactory

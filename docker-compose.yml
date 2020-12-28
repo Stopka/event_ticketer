@@ -7,6 +7,9 @@ services:
     image: stopka/event_ticketer:latest
     networks:
       - event_ticketer-mariadb
+    environment:
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
     logging:
       driver: "json-file"
       options:
@@ -20,7 +23,9 @@ services:
     volumes:
       - event_ticketer-mariadb-data:/var/lib/mysql
     networks:
-      - event_ticketer-mariadb
+      event_ticketer-mariadb:
+          aliases:
+              - database
     logging:
       driver: "json-file"
       options:

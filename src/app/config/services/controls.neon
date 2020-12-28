@@ -1,0 +1,11 @@
+includes:
+    - controls/admin.neon
+    - controls/front.neon
+
+services:
+    - Stopka\NetteMenuControl\MenuFactory
+    - Ticketer\Controls\ControlDependencies
+    - Ticketer\Controls\Grids\GridWrapperDependencies
+    - Ticketer\Controls\Forms\FormWrapperDependencies
+    - Ticketer\Controls\Forms\ICartFormWrapperFactory
+    - Ticketer\Controls\Forms\IAdditionsControlsBuilderFactory

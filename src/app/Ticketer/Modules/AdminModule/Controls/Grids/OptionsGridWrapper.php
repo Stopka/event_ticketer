@@ -9,6 +9,7 @@ use Nette\Application\AbortException;
 use Nette\Utils\Html;
 use Ticketer\Controls\Grids\Grid;
 use Ticketer\Controls\Grids\GridWrapperDependencies;
+use Ticketer\Model\Database\Enums\OptionAutoselectEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\OccupancyIcons;
 use Ticketer\Model\Database\Daos\CurrencyDao;
@@ -115,17 +116,17 @@ class OptionsGridWrapper extends GridWrapper
             ->setSortable()
             ->setReplacement(
                 [
-                    OptionEntity::AUTOSELECT_NONE => "Value.Addition.AutoSelect.None",
-                    OptionEntity::AUTOSELECT_ALWAYS => "Value.Addition.AutoSelect.Always",
-                    OptionEntity::AUTOSELECT_SECONDON => "Value.Addition.AutoSelect.SecondOn",
+                    OptionAutoselectEnum::NONE => "Value.Addition.AutoSelect.None",
+                    OptionAutoselectEnum::ALWAYS => "Value.Addition.AutoSelect.Always",
+                    OptionAutoselectEnum::SECOND_ON => "Value.Addition.AutoSelect.SecondOn",
                 ]
             )
             ->setFilterSelect(
                 [
                     null => "",
-                    OptionEntity::AUTOSELECT_NONE => "Value.Addition.AutoSelect.None",
-                    OptionEntity::AUTOSELECT_ALWAYS => "Value.Addition.AutoSelect.Always",
-                    OptionEntity::AUTOSELECT_SECONDON => "Value.Addition.AutoSelect.SecondOn",
+                    OptionAutoselectEnum::NONE => "Value.Addition.AutoSelect.None",
+                    OptionAutoselectEnum::ALWAYS => "Value.Addition.AutoSelect.Always",
+                    OptionAutoselectEnum::SECOND_ON => "Value.Addition.AutoSelect.SecondOn",
                 ]
             );
     }

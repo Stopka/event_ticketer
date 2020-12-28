@@ -24,6 +24,8 @@ services:
     image: mailhog/mailhog:latest
     ports:
       - 8025:8025
+    networks:
+      - mail
 volumes:
   composer-cache:
 networks:

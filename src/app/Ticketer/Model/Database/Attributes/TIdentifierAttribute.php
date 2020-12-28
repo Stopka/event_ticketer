@@ -14,7 +14,7 @@ trait TIdentifierAttribute
      * @ORM\Column(type="uuid")
      * @var Uuid
      */
-    private Uuid $id;
+    protected Uuid $id;
 
     public function __construct()
     {

@@ -1,0 +1,14 @@
+services:
+    - Ticketer\Model\Database\Daos\AdditionDao
+    - Ticketer\Model\Database\Daos\EventDao
+    - Ticketer\Model\Database\Daos\EarlyDao
+    - Ticketer\Model\Database\Daos\EarlyWaveDao
+    - Ticketer\Model\Database\Daos\CurrencyDao
+    - Ticketer\Model\Database\Daos\CartDao
+    - Ticketer\Model\Database\Daos\SubstituteDao
+    - Ticketer\Model\Database\Daos\ApplicationDao
+    - Ticketer\Model\Database\Daos\OptionDao
+    - Ticketer\Model\Database\Daos\AdministratorDao
+    - Ticketer\Model\Database\Daos\ChoiceDao
+    - Ticketer\Model\Database\Daos\InsuranceCompanyDao
+    - Ticketer\Model\Database\Daos\ReservationDao

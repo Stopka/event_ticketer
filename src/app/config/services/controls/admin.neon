@@ -1,0 +1,6 @@
+includes:
+    - admin/forms.neon
+    - admin/grids.neon
+
+services:
+    - Ticketer\Modules\AdminModule\Controls\Menus\MenuFactory

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Managers;
 
+use Ticketer\Model\Database\Enums\EventStateEnum;
 use Ticketer\Model\Exceptions\AlreadyDoneException;
 use Ticketer\Model\Exceptions\NotFoundException;
 use Ticketer\Model\Exceptions\NotReadyException;
@@ -65,21 +66,24 @@ class EventManager
 
     /**
      * @param EventEntity|null $eventEntity
-     * @param int $state
+     * @param EventStateEnum|null $state
      */
-    public function setEventState(?EventEntity $eventEntity, int $state = EventEntity::STATE_ACTIVE): void
+    public function setEventState(?EventEntity $eventEntity, ?EventStateEnum $state = null): void
     {
+        if (null === $state) {
+            $state = EventStateEnum::ACTIVE();
+        }
         if (null === $eventEntity) {
             throw new NotFoundException("Error.Event.NotFound");
         }
-        if ($eventEntity->isActive() && EventEntity::STATE_ACTIVE === $state) {
+        if ($eventEntity->isActive() && EventStateEnum::ACTIVE()->equals($state)) {
             throw new AlreadyDoneException("Error.Event.AlreadyActivated");
         }
-        if (EventEntity::STATE_CANCELLED === $eventEntity->getState()) {
+        if (EventStateEnum::CANCELLED()->equals($eventEntity->getState())) {
             throw new NotReadyException("Error.Event.AlreadyCancelled");
         }
 
-        if (EventEntity::STATE_CLOSED === $eventEntity->getState()) {
+        if (EventStateEnum::CLOSED()->equals($eventEntity->getState())) {
             throw new NotReadyException("Error.Event.AlreadyClosed");
         }
         $eventEntity->setState($state);

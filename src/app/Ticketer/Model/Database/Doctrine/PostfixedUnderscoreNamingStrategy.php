@@ -28,9 +28,6 @@ class PostfixedUnderscoreNamingStrategy extends UnderscoreNamingStrategy
     public function classToTableName($className): string
     {
         $className = parent::classToTableName($className);
-        if (!Strings::endsWith($className, $this->postfix)) {
-            return $className;
-        }
         $postfix = '_' . (
             CASE_LOWER === $this->getCase()
                 ? Strings::lower($this->postfix)

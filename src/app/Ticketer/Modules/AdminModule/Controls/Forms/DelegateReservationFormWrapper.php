@@ -79,7 +79,7 @@ class DelegateReservationFormWrapper extends FormWrapper
             ) {
                 throw new InvalidInputException("Error.Reservation.Application.InvalidInput");
             }
-            if (!in_array($application->getState(), ApplicationEntity::getStatesReserved(), true)) {
+            if (!$application->getState()->isReserved()) {
                 throw new InvalidInputException("Error.Reservation.Application.InvalidState");
             }
         }

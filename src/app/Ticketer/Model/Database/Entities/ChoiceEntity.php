@@ -9,13 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Provedená volba v přihlášce
- * @package App\Model\Entities
  * @ORM\Entity
  */
 class ChoiceEntity extends BaseEntity
 {
-    use TIdentifierAttribute;
-
     /**
      * @ORM\ManyToOne(targetEntity="ApplicationEntity", inversedBy="choices")
      * @var ApplicationEntity|null

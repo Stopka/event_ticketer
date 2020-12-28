@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Entities;
 
+use Doctrine\Common\Collections\Criteria;
 use Ticketer\Model\Database\Attributes\TCapacityAttribute;
 use Ticketer\Model\Database\Attributes\TIdentifierAttribute;
 use Ticketer\Model\Database\Attributes\TInternalInfoAttribute;
@@ -12,6 +13,8 @@ use Ticketer\Model\Database\Attributes\TOccupancyIconAttribute;
 use Ticketer\Model\Database\Attributes\TStartDateAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ticketer\Model\Database\Enums\ApplicationStateEnum;
+use Ticketer\Model\Database\Enums\EventStateEnum;
 
 /**
  * Událost, ke které se přihlášky vydávají
@@ -31,17 +34,11 @@ class EventEntity extends BaseEntity
         TCapacityAttribute::updateCapacityFull as private updateCapacityFullOrig;
     }
 
-    //TODO make it enum
-    public const STATE_INACTIVE = 0;
-    public const STATE_ACTIVE = 1;
-    public const STATE_CLOSED = 2;
-    public const STATE_CANCELLED = 3;
-
     /**
-     * @ORM\Column(type="integer")
-     * @var integer
+     * @ORM\Column(type="event_state_enum")
+     * @var EventStateEnum
      */
-    private $state = self::STATE_INACTIVE;
+    private EventStateEnum $state;
 
     /**
      * @ORM\OneToMany(targetEntity="EarlyWaveEntity", mappedBy="event", cascade={"persist","remove"})
@@ -89,20 +86,21 @@ class EventEntity extends BaseEntity
         $this->substitutes = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->reservations = new ArrayCollection();
+        $this->state = EventStateEnum::INACTIVE();
     }
 
     /**
-     * @return int
+     * @return EventStateEnum
      */
-    public function getState(): int
+    public function getState(): EventStateEnum
     {
         return $this->state;
     }
 
     /**
-     * @param int $state
+     * @param EventStateEnum $state
      */
-    public function setState(int $state): void
+    public function setState(EventStateEnum $state): void
     {
         $this->state = $state;
     }
@@ -212,11 +210,12 @@ class EventEntity extends BaseEntity
      */
     public function getReservedApplications(): array
     {
-        return $this->applications->filter(
-            function (ApplicationEntity $applicationEntity): bool {
-                return in_array($applicationEntity->getState(), ApplicationEntity::getStatesReserved(), true);
-            }
-        )->toArray();
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in('state', ApplicationStateEnum::listReserved())
+            );
+
+        return $this->applications->matching($criteria)->toArray();
     }
 
     /**
@@ -224,11 +223,12 @@ class EventEntity extends BaseEntity
      */
     public function getOccupiedApplications(): array
     {
-        return $this->applications->filter(
-            function (ApplicationEntity $applicationEntity): bool {
-                return in_array($applicationEntity->getState(), ApplicationEntity::getStatesOccupied(), true);
-            }
-        )->toArray();
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in('state', ApplicationStateEnum::listOccupied())
+            );
+
+        return $this->applications->matching($criteria)->toArray();
     }
 
     public function setCapacity(?int $capacity): self
@@ -248,11 +248,11 @@ class EventEntity extends BaseEntity
      */
     public function getFullfilledApplications(): array
     {
-        return $this->applications->filter(
-            function (ApplicationEntity $applicationEntity): bool {
-                return ApplicationEntity::STATE_FULFILLED === $applicationEntity->getState();
-            }
-        )->toArray();
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->eq('state', ApplicationStateEnum::FULFILLED())
+        );
+
+        return $this->applications->matching($criteria)->toArray();
     }
 
     /**
@@ -260,11 +260,11 @@ class EventEntity extends BaseEntity
      */
     public function getIssuedApplications(): array
     {
-        return $this->applications->filter(
-            function (ApplicationEntity $applicationEntity): bool {
-                return !in_array($applicationEntity->getState(), ApplicationEntity::getStatesNotIssued(), true);
-            }
-        )->toArray();
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->notIn('state', ApplicationStateEnum::listNotIssued())
+        );
+
+        return $this->applications->matching($criteria)->toArray();
     }
 
     /**
@@ -369,7 +369,7 @@ class EventEntity extends BaseEntity
      */
     public function isActive(): bool
     {
-        return self::STATE_ACTIVE == $this->getState();
+        return $this->getState()->equals(EventStateEnum::ACTIVE());
     }
 
     /**

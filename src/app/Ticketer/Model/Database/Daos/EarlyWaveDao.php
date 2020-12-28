@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Ticketer\Model\Database\Enums\EventStateEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\EarlyWaveEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
@@ -32,7 +33,7 @@ class EarlyWaveDao extends EntityDao
     public function getUnsentInviteEarlyWaves(): array
     {
         return $this->getRepository()->findBy([
-            'event.state' => EventEntity::STATE_ACTIVE,
+            'event.state' => EventStateEnum::ACTIVE,
             'startDate <=' => new \DateTime(),
             'inviteSent' => false
         ]);

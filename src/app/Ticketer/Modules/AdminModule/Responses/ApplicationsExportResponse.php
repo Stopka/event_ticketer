@@ -7,7 +7,8 @@ namespace Ticketer\Modules\AdminModule\Responses;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse as HttpIResponse;
 use Nette\Localization\ITranslator;
-use Ticketer\Model\Database\Attributes\GenderEnum;
+use Ticketer\Model\Database\Enums\ApplicationStateEnum;
+use Ticketer\Model\Database\Enums\GenderEnum;
 use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
@@ -114,9 +115,9 @@ class ApplicationsExportResponse implements IResponse
         $response->addColumn('state', 'Stav')
             ->setRenderer(
                 function (ApplicationEntity $applicaiton): string {
-                    $states = ApplicationEntity::getAllStates();
+                    $states = ApplicationStateEnum::getLabels();
 
-                    return $this->translator->translate($states[$applicaiton->getState()]);
+                    return $this->translator->translate($states[$applicaiton->getState()->getValue()]);
                 }
             );
         $response->addColumn('firstName', 'Jméno')
@@ -202,7 +203,7 @@ class ApplicationsExportResponse implements IResponse
 
 
         foreach ($this->eventEntity->getAdditions() as $addition) {
-            if (!$addition->isVisibleIn(AdditionEntity::VISIBLE_EXPORT)) {
+            if (!$addition->getVisibility()->isExport()) {
                 continue;
             }
             $response->addColumn('a' . $addition->getId(), (string)$addition->getName())

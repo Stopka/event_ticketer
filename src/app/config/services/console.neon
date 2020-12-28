@@ -1,0 +1,5 @@
+services:
+    - Ticketer\Console\Commands\CronCommand
+    - Ticketer\Console\Commands\GenerateUidCommand
+    - Ticketer\Console\Commands\SendEarlyInvitesCommand
+    - Ticketer\Console\Commands\SendCartCreatedCommand

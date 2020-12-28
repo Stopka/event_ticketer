@@ -1,0 +1,8 @@
+services:
+    - Ticketer\Model\Notifiers\IEventMessageAtachmentManagerFactory
+    - Ticketer\Model\Notifiers\EmailMessageFactory(%email.from%, %email.replyTo%)
+    - Ticketer\Model\Notifiers\EmailService
+    - Ticketer\Model\Notifiers\EarlyWaveInviteNotifier
+    - Ticketer\Model\Notifiers\CartCreatedNotifier
+    - Ticketer\Model\Notifiers\SubstituteActivatedNotifier
+    - Ticketer\Model\Notifiers\ReservationDelegatedNotifier

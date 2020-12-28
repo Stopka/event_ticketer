@@ -12,7 +12,7 @@ class CartApplicationsGridWrapper extends FrontCartApplicationsGridWrapper
 {
     protected function isVisible(AdditionEntity $additionEntity): bool
     {
-        return $additionEntity->isVisibleIn(AdditionEntity::VISIBLE_PREVIEW);
+        return $additionEntity->getVisibility()->isPreview();
     }
 
 

@@ -44,7 +44,6 @@
         "contributte/recaptcha": "^3.1.0",
         "ublaboo/datagrid": "^6.0",
         "ramsey/uuid": "^4.1",
-        "ramsey/uuid-doctrine": "^1.5",
         "radekdostal/nette-datetimepicker": "^3.0",
         "phpoffice/phpspreadsheet": "^1.0",
         "stopka/nette-form-renderer": "dev-develop@dev",
@@ -73,10 +72,7 @@
     "autoload": {
         "psr-4": {
             "Ticketer\\": "app/Ticketer"
-        },
-        "files": [
-            "app/Bootstrap.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

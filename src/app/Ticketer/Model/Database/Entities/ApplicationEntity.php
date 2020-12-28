@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Entities;
 
+use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\InvalidStateException;
 use Ticketer\Model\Database\Attributes\TAddressAttribute;
@@ -30,28 +31,6 @@ class ApplicationEntity extends BaseEntity
     use TBirthDateAttribute;
     use TCreatedAttribute;
 
-    //TODO make it enum
-    public const STATE_RESERVED = 1;
-    public const STATE_DELEGATED = 2;
-    public const STATE_WAITING = 3;
-    public const STATE_OCCUPIED = 4;
-    public const STATE_FULFILLED = 5;
-    public const STATE_CANCELLED = 6;
-
-    /**
-     * @return array<int,string>
-     */
-    public static function getAllStates(): array
-    {
-        return [
-            self::STATE_RESERVED => "Value.Application.State.Reserved",
-            self::STATE_DELEGATED => "Value.Application.State.Delegated",
-            self::STATE_WAITING => "Value.Application.State.Waiting",
-            self::STATE_OCCUPIED => "Value.Application.State.Occupied",
-            self::STATE_FULFILLED => "Value.Application.State.Fulfilled",
-            self::STATE_CANCELLED => "Value.Application.State.Cancelled",
-        ];
-    }
 
     /**
      * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="application", cascade={"persist","remove"}))
@@ -78,10 +57,10 @@ class ApplicationEntity extends BaseEntity
     private $reservation;
 
     /**
-     * @ORM\Column(type="integer")
-     * @var integer
+     * @ORM\Column(type="application_state_enum")
+     * @var ApplicationStateEnum
      */
-    private $state = self::STATE_WAITING;
+    private ApplicationStateEnum $state;
 
     /**
      * @ORM\ManyToOne(targetEntity="InsuranceCompanyEntity")
@@ -104,9 +83,10 @@ class ApplicationEntity extends BaseEntity
     public function __construct(bool $reserved = false)
     {
         parent::__construct();
-        if ($reserved) {
-            $this->state = self::STATE_RESERVED;
-        }
+
+        $this->state = $reserved
+            ? ApplicationStateEnum::RESERVED()
+            : ApplicationStateEnum::WAITING();
         $this->choices = new ArrayCollection();
         $this->setCreated();
     }
@@ -270,58 +250,34 @@ class ApplicationEntity extends BaseEntity
     }
 
     /**
-     * @return int
+     * @return ApplicationStateEnum
      */
-    public function getState(): int
+    public function getState(): ApplicationStateEnum
     {
         return $this->state;
     }
 
-    /**
-     * @return int[]
-     */
-    public static function getStatesReserved(): array
-    {
-        return [self::STATE_RESERVED, self::STATE_DELEGATED];
-    }
-
-    /**
-     * @return int[]
-     */
-    public static function getStatesOccupied(): array
-    {
-        return [self::STATE_OCCUPIED, self::STATE_FULFILLED, /*self::STATE_RESERVED, self::STATE_DELEGATED*/];
-    }
-
-    /**
-     * @return int[]
-     */
-    public static function getStatesNotIssued(): array
-    {
-        return [self::STATE_CANCELLED];
-    }
-
     public function cancelApplication(): void
     {
-        $this->state = self::STATE_CANCELLED;
+        $this->state = ApplicationStateEnum::CANCELLED();
     }
 
     public function updateState(): void
     {
-        if (in_array($this->getState(), self::getStatesNotIssued(), true)) {
+        if (!$this->getState()->isIssued()) {
             return;
         }
-        if (in_array($this->getState(), self::getStatesReserved(), true)) {
+        if ($this->getState()->isReserved()) {
             if (null !== $this->getReservation()) {
-                $this->state = self::STATE_DELEGATED;
+                $this->state = ApplicationStateEnum::DELEGATED();
             } else {
-                $this->state = self::STATE_RESERVED;
+                $this->state = ApplicationStateEnum::RESERVED();
             }
         }
         $cart = $this->getCart();
         $event = null !== $cart ? $cart->getEvent() : null;
         if (null !== $cart && null !== $event) {
-            $this->state = self::STATE_WAITING;
+            $this->state = ApplicationStateEnum::WAITING();
             $required_states = [];
             $required_additions = [];
             $enough = [];
@@ -333,7 +289,11 @@ class ApplicationEntity extends BaseEntity
                 }
                 $minState = $addition->getRequiredForState();
                 if (null !== $minState) {
-                    for ($state = $minState; $state <= self::STATE_FULFILLED; $state++) {
+                    for (
+                        $state = $minState->getValue();
+                        $state <= ApplicationStateEnum::FULFILLED()->getValue();
+                        $state++
+                    ) {
                         if (!isset($required_states[$state])) {
                             $required_states[$state] = [];
                         }
@@ -367,8 +327,12 @@ class ApplicationEntity extends BaseEntity
                     }
                 }
             }
-            for ($state = self::STATE_WAITING; $state <= self::STATE_FULFILLED; $state++) {
-                if ($this->state > $state) {
+            for (
+                $state = ApplicationStateEnum::WAITING()->getValue();
+                $state <= ApplicationStateEnum::FULFILLED()->getValue();
+                $state++
+            ) {
+                if ($this->state->getValue() > $state) {
                     continue;
                 }
                 if (!array_key_exists($state, $required_states)) {
@@ -378,7 +342,7 @@ class ApplicationEntity extends BaseEntity
                  * if (count($required_states[$state]) > 0) {
                     continue;
                 }*/
-                $this->state = $state;
+                $this->state = new ApplicationStateEnum($state);
             }
         }
         if (null !== $event) {
@@ -425,7 +389,7 @@ class ApplicationEntity extends BaseEntity
      */
     public function setReservation(?ReservationEntity $reservation): void
     {
-        if (!in_array($this->getState(), self::getStatesReserved(), true)) {
+        if (!$this->getState()->isReserved()) {
             throw new InvalidStateException("Error.Reservation.Application.InvalidState");
         }
         if (null !== $reservation) {

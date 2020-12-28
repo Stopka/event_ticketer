@@ -9,6 +9,7 @@ use Ticketer\Controls\Grids\GridWrapperDependencies;
 use Ticketer\Model\Database\Daos\SubstituteDao;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
+use Ticketer\Model\Database\Enums\SubstituteStateEnum;
 use Ticketer\Model\Database\Managers\SubstituteManager;
 use Nette\Utils\Html;
 use Ticketer\Model\Dtos\Uuid;
@@ -81,19 +82,19 @@ class SubstitutesGridWrapper extends GridWrapper
             ->setSortable()
             ->setReplacement(
                 [
-                    SubstituteEntity::STATE_WAITING => 'Value.Substitute.State.Waiting',
-                    SubstituteEntity::STATE_ACTIVE => 'Value.Substitute.State.Active',
-                    SubstituteEntity::STATE_OVERDUE => 'Value.Substitute.State.Overdue',
-                    SubstituteEntity::STATE_ORDERED => 'Value.Substitute.State.Ordered',
+                    SubstituteStateEnum::WAITING => 'Value.Substitute.State.Waiting',
+                    SubstituteStateEnum::ACTIVE => 'Value.Substitute.State.Active',
+                    SubstituteStateEnum::OVERDUE => 'Value.Substitute.State.Overdue',
+                    SubstituteStateEnum::ORDERED => 'Value.Substitute.State.Ordered',
                 ]
             )
             ->setFilterSelect(
                 [
                     null => '',
-                    SubstituteEntity::STATE_WAITING => 'Value.Substitute.State.Waiting',
-                    SubstituteEntity::STATE_ACTIVE => 'Value.Substitute.State.Active',
-                    SubstituteEntity::STATE_OVERDUE => 'Value.Substitute.State.Overdue',
-                    SubstituteEntity::STATE_ORDERED => 'Value.Substitute.State.Ordered',
+                    SubstituteStateEnum::WAITING => 'Value.Substitute.State.Waiting',
+                    SubstituteStateEnum::ACTIVE => 'Value.Substitute.State.Active',
+                    SubstituteStateEnum::OVERDUE => 'Value.Substitute.State.Overdue',
+                    SubstituteStateEnum::ORDERED => 'Value.Substitute.State.Ordered',
                 ]
             );
         $grid->addColumnText('firstName', 'Attribute.Person.FirstName')
@@ -153,7 +154,7 @@ class SubstitutesGridWrapper extends GridWrapper
         $grid->addActionCallback('activate', 'Form.Action.Activate', [$this, 'onActivate'])
             ->setRenderCondition(
                 function (SubstituteEntity $substitute): bool {
-                    return in_array($substitute->getState(), SubstituteEntity::getActivableStates(), true);
+                    return $substitute->getState()->isActivable();
                 }
             )
             ->setIcon('fa fa-check-square');

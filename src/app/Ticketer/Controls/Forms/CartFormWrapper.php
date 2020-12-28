@@ -9,10 +9,11 @@ use Exception;
 use Nette\Application\AbortException;
 use RuntimeException;
 use Ticketer\Controls\FlashMessageTypeEnum;
+use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
 use Ticketer\Model\Exceptions\EmptyException;
 use Ticketer\Model\Exceptions\FormControlException;
 use Ticketer\Model\Exceptions\InvalidInputException;
-use Ticketer\Model\Database\Attributes\GenderEnum;
+use Ticketer\Model\Database\Enums\GenderEnum;
 use Ticketer\Model\Database\Daos\ApplicationDao;
 use Ticketer\Model\Database\Daos\CurrencyDao;
 use Ticketer\Model\Database\Daos\InsuranceCompanyDao;
@@ -121,7 +122,11 @@ class CartFormWrapper extends FormWrapper
                 $this->currency
             )
                 ->setAdmin($this->admin)
-                ->setVisibilityPlace(AdditionEntity::VISIBLE_REGISTER)
+                ->setVisibilityResolver(
+                    static function (AdditionVisibilityEntity $visibility): bool {
+                        return $visibility->isRegistration();
+                    }
+                )
                 ->setVisiblePrice(true)
                 ->setVisiblePriceTotal(true)
                 ->setVisibleCountLeft(true);
@@ -478,7 +483,11 @@ class CartFormWrapper extends FormWrapper
         $builder = $this->getAdditionsControlsBuilder();
         if (null !== $this->reservation) {
             $builder->setVisibleCountLeft(false);
-            $builder->setPredisabledAdditionVisibilities([AdditionEntity::VISIBLE_RESERVATION]);
+            $builder->setPredisabledAdditionVisibilityResolver(
+                static function (AdditionVisibilityEntity $visibility): bool {
+                    return $visibility->isReservation();
+                }
+            );
         }
         $builder->appendAdditionsControls($applicationContainer, $applicationIndex);
     }

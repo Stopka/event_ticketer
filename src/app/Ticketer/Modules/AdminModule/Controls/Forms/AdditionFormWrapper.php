@@ -7,6 +7,7 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\Form;
 use Ticketer\Controls\Forms\FormWrapperDependencies;
+use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\OccupancyIcons;
 use Ticketer\Model\Database\Daos\CurrencyDao;
 use Ticketer\Model\Database\Entities\AdditionEntity;
@@ -110,8 +111,8 @@ class AdditionFormWrapper extends FormWrapper
             'Attribute.Addition.RequiredForState',
             [
                 null => 'Value.ForState.None',
-                ApplicationEntity::STATE_OCCUPIED => 'Value.ForState.Occupied',
-                ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled',
+                ApplicationStateEnum::OCCUPIED => 'Value.ForState.Occupied',
+                ApplicationStateEnum::FULFILLED => 'Value.ForState.Fulfilled',
             ]
         )
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.RequiredForState")
@@ -122,8 +123,8 @@ class AdditionFormWrapper extends FormWrapper
             'Attribute.Addition.EnoughForState',
             [
                 null => 'Value.ForState.None',
-                ApplicationEntity::STATE_OCCUPIED => 'Value.ForState.Occupied',
-                ApplicationEntity::STATE_FULFILLED => 'Value.ForState.Fulfilled',
+                ApplicationStateEnum::OCCUPIED => 'Value.ForState.Occupied',
+                ApplicationStateEnum::FULFILLED => 'Value.ForState.Fulfilled',
             ]
         )
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.EnoughForState")

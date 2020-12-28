@@ -15,6 +15,7 @@ use Ticketer\Controls\Forms\IAdditionsControlsBuilderFactory;
 use Ticketer\Model\Database\Daos\CurrencyDao;
 use Ticketer\Model\Database\Daos\ReservationDao;
 use Ticketer\Model\Database\Entities\AdditionEntity;
+use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
 use Ticketer\Model\Database\Entities\CurrencyEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
@@ -84,7 +85,11 @@ class ReserveApplicationFormWrapper extends FormWrapper
                 $this->event,
                 $this->currency
             )
-                ->setVisibilityPlace(AdditionEntity::VISIBLE_RESERVATION)
+                ->setVisibilityResolver(
+                    static function (AdditionVisibilityEntity $visibility): bool {
+                        return $visibility->isReservation();
+                    }
+                )
                 ->setVisibleCountLeft()
                 ->setAdmin();
             //->disableMinimum();

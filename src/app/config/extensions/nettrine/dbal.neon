@@ -13,3 +13,12 @@ nettrine.dbal:
 		user: %database.user%
 		password: %database.password%
 		dbname: %database.dbname%
+		types:
+			uuid: Ticketer\Model\Database\Doctrine\Types\UuidType
+			gender_enum: Ticketer\Model\Database\Doctrine\Types\Enums\GenderEnumType
+			event_state_enum: Ticketer\Model\Database\Doctrine\Types\Enums\EventStateEnumType
+			reservation_state_enum: Ticketer\Model\Database\Doctrine\Types\Enums\ReservationStateEnumType
+			application_state_enum: Ticketer\Model\Database\Doctrine\Types\Enums\ApplicationStateEnumType
+			option_autoselect_enum: Ticketer\Model\Database\Doctrine\Types\Enums\OptionAutoselectEnumType
+			substitute_state_enum: Ticketer\Model\Database\Doctrine\Types\Enums\SubstituteStateEnumType
+

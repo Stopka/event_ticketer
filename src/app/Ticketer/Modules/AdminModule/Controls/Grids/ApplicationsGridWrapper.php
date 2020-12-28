@@ -7,9 +7,10 @@ namespace Ticketer\Modules\AdminModule\Controls\Grids;
 use Nette\Application\AbortException;
 use Ticketer\Controls\Grids\Grid;
 use Ticketer\Controls\Grids\GridWrapperDependencies;
+use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\TranslatedException;
-use Ticketer\Model\Database\Attributes\GenderEnum;
+use Ticketer\Model\Database\Enums\GenderEnum;
 use Ticketer\Model\Database\Daos\ApplicationDao;
 use Ticketer\Model\Database\Daos\OrderEnum;
 use Ticketer\Model\Database\Entities\AdditionEntity;
@@ -158,11 +159,7 @@ class ApplicationsGridWrapper extends GridWrapper
             ->setIcon('fa fa-pencil')
             ->setRenderCondition(
                 function (ApplicationEntity $applicationEntity): bool {
-                    return in_array(
-                        $applicationEntity->getState(),
-                        ApplicationEntity::getStatesReserved(),
-                        true
-                    )
+                    return $applicationEntity->getState()->isReserved()
                         && null !== $applicationEntity->getCart();
                 }
             );
@@ -180,7 +177,7 @@ class ApplicationsGridWrapper extends GridWrapper
             )
             ->setRenderCondition(
                 function (ApplicationEntity $applicationEntity): bool {
-                    return !in_array($applicationEntity->getState(), ApplicationEntity::getStatesNotIssued(), true);
+                    return $applicationEntity->getState()->isIssued();
                 }
             );
         $grid->addAction('pdf', 'Entity.Singular.Application', 'Application:pdf')
@@ -207,9 +204,9 @@ class ApplicationsGridWrapper extends GridWrapper
             ->setFilterRange();
         $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
-            ->setReplacement(ApplicationEntity::getAllStates())
+            ->setReplacement(ApplicationStateEnum::getLabels())
             ->setSortable()
-            ->setFilterSelect(array_merge([null => ''], ApplicationEntity::getAllStates()));
+            ->setFilterSelect(array_merge([null => ''], ApplicationStateEnum::getLabels()));
         $grid->addColumnText('firstName', 'Attribute.Person.FirstName')
             ->setSortable()
             ->setFilterText();
@@ -337,7 +334,7 @@ class ApplicationsGridWrapper extends GridWrapper
     protected function appendAdditionsColumns(Grid $grid): void
     {
         foreach ($this->event->getAdditions() as $addition) {
-            if (!$addition->isVisibleIn(AdditionEntity::VISIBLE_PREVIEW)) {
+            if (!$addition->getVisibility()->isPreview()) {
                 continue;
             }
             $grid->addColumnText('addition' . $this->getCounterNumber(), (string)$addition->getName())

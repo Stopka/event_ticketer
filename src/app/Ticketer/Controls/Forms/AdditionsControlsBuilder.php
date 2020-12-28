@@ -6,6 +6,8 @@ namespace Ticketer\Controls\Forms;
 
 use Contributte\Translation\Wrappers\NotTranslate;
 use Nette\Localization\ITranslator;
+use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
+use Ticketer\Model\Database\Enums\OptionAutoselectEnum;
 use Ticketer\Model\Exceptions\FormControlException;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\InvalidStateException;
@@ -26,8 +28,8 @@ class AdditionsControlsBuilder
 
     public const CONTAINER_NAME_ADDITIONS = 'additions';
 
-    /** @var string */
-    private $visibilityPlace = AdditionEntity::VISIBLE_RESERVATION;
+    /** @var callable(AdditionVisibilityEntity $addition):bool */
+    private $visibilityResolver;
 
     /** @var bool */
     private $visiblePrice = false;
@@ -53,8 +55,8 @@ class AdditionsControlsBuilder
     /** @var bool */
     private $admin = false;
 
-    /** @var string[] */
-    private $predisabledAdditionVisibilities = [];
+    /** @var callable(AdditionVisibilityEntity $addition):bool */
+    private $predisabledAdditionVisibilityResolver;
 
     /** @var string[] */
     private $preselectedOptionIds = [];
@@ -72,6 +74,12 @@ class AdditionsControlsBuilder
         $this->currencyEntity = $currencyEntity;
         $this->applicationDao = $applicationDao;
         $this->translator = $translator;
+        $this->visibilityResolver = static function (AdditionVisibilityEntity $visibility): bool {
+            return $visibility->isReservation();
+        };
+        $this->predisabledAdditionVisibilityResolver = static function (AdditionVisibilityEntity $visibility): bool {
+            return false;
+        };
     }
 
     public function disableMinimum(bool $value = true): self
@@ -122,22 +130,14 @@ class AdditionsControlsBuilder
     }
 
     /**
-     * @param string $place
+     * @param callable(AdditionVisibilityEntity $addition):bool $resolver
      * @return AdditionsControlsBuilder
      */
-    public function setVisibilityPlace(string $place = AdditionEntity::VISIBLE_RESERVATION): self
+    public function setVisibilityResolver(callable $resolver): self
     {
-        $this->visibilityPlace = $place;
+        $this->visibilityResolver = $resolver;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVisibilityPlace(): string
-    {
-        return $this->visibilityPlace;
     }
 
     /**
@@ -206,7 +206,7 @@ class AdditionsControlsBuilder
     {
         $additionsContainer = $container->addContainer(self::CONTAINER_NAME_ADDITIONS);
         foreach ($this->getEvent()->getAdditions() as $addition) {
-            if (!$addition->isVisibleIn($this->visibilityPlace)) {
+            if (!$addition->getVisibility()->matches($this->visibilityResolver)) {
                 continue;
             }
             $this->appendAdditionControls($additionsContainer, $addition, $index);
@@ -275,7 +275,7 @@ class AdditionsControlsBuilder
     {
         $additionsValues = $values[self::CONTAINER_NAME_ADDITIONS];
         foreach ($this->getEvent()->getAdditions() as $addition) {
-            if (!$addition->isVisibleIn($this->visibilityPlace)) {
+            if (!$addition->getVisibility()->matches($this->visibilityResolver)) {
                 continue;
             }
             try {
@@ -398,10 +398,13 @@ class AdditionsControlsBuilder
     {
         $result = $this->preselectedOptionIds;
         foreach ($additionEntity->getOptions() as $option) {
-            if (OptionEntity::AUTOSELECT_ALWAYS === $option->getAutoSelect()) {
+            if ($option->getAutoSelect()->equals(OptionAutoselectEnum::ALWAYS())) {
                 $result[] = (string)$option->getId();
             }
-            if (OptionEntity::AUTOSELECT_SECONDON === $option->getAutoSelect() && $index >= 2) {
+            if (
+                $option->getAutoSelect()->equals(OptionAutoselectEnum::SECOND_ON())
+                && $index >= 2
+            ) {
                 $result[] = (string)$option->getId();
             }
         }
@@ -417,20 +420,16 @@ class AdditionsControlsBuilder
     protected function getPredisabledOptions(AdditionEntity $additionEntity, array $prices): array
     {
         $result = [];
-        $isAdditionPredisabled = false;
-        foreach ($this->predisabledAdditionVisibilities as $additionVisibility) {
-            if (in_array($additionVisibility, $additionEntity->getVisible(), true)) {
-                $isAdditionPredisabled = true;
-                break;
-            }
-        }
+        $isAdditionPredisabled = $additionEntity->getVisibility()->matches(
+            $this->predisabledAdditionVisibilityResolver
+        );
         foreach ($additionEntity->getOptions() as $option) {
-            $isAutoselected = OptionEntity::AUTOSELECT_NONE !== $option->getAutoSelect();
+            $isAutoSelected = !$option->getAutoSelect()->equals(OptionAutoselectEnum::NONE());
             $isFull = isset($prices[$option->getId()->toString()]['countLeft'])
                 && 0 === $prices[$option->getId()->toString()]['countLeft'];
             if (
                 !$this->isAdmin()
-                && ($isAutoselected || $isFull || $isAdditionPredisabled)
+                && ($isAutoSelected || $isFull || $isAdditionPredisabled)
             ) {
                 $result[] = (string)$option->getId();
             }
@@ -445,11 +444,11 @@ class AdditionsControlsBuilder
     }
 
     /**
-     * @param string[] $visibilities
+     * @param callable(AdditionVisibilityEntity $addition):bool $resolver
      */
-    public function setPredisabledAdditionVisibilities(array $visibilities = []): void
+    public function setPredisabledAdditionVisibilityResolver(callable $resolver): void
     {
-        $this->predisabledAdditionVisibilities = $visibilities;
+        $this->predisabledAdditionVisibilityResolver = $resolver;
     }
 
     /**

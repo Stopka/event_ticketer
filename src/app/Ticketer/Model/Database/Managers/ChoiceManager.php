@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Managers;
 
+use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\NotFoundException;
@@ -113,7 +114,9 @@ class ChoiceManager
         }
         $hiddenAdditions = $this->additionDao->getEventAdditionsHiddenIn(
             $event,
-            AdditionEntity::VISIBLE_REGISTER
+            static function (AdditionVisibilityEntity $visibility): bool {
+                return $visibility->isRegistration();
+            }
         );
         foreach ($hiddenAdditions as $hiddenAddition) {
             $optionIds = $this->selectHiddenAdditionOptionIds($hiddenAddition);

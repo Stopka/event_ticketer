@@ -1,0 +1,10 @@
+services:
+    - Ticketer\Modules\AdminModule\Controls\Grids\IEarlyWavesGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IApplicationsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\ISubstitutesGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IEventsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IAdditionsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\ICurrenciesGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IOptionsGridWrapperFactory
+    - Ticketer\Modules\AdminModule\Controls\Grids\IEarliesGridWrapperFactory

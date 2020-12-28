@@ -67,7 +67,7 @@ class SubstituteManager implements EventSubscriberInterface
      */
     public function activateSubstitute(?SubstituteEntity $substitute): void
     {
-        if (null === $substitute || !in_array($substitute->getState(), SubstituteEntity::getActivableStates(), true)) {
+        if (null === $substitute || !$substitute->getState()->isActivable()) {
             return;
         }
         $substitute->activate(new \DateInterval('P7D'));

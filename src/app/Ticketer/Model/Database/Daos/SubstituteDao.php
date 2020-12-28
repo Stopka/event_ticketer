@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use DateTimeImmutable;
+use Doctrine\Common\Collections\Criteria;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
+use Ticketer\Model\Database\Enums\SubstituteStateEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
 use Ublaboo\DataGrid\DataSource\IDataSource;
@@ -58,12 +61,14 @@ class SubstituteDao extends EntityDao
      */
     public function getOverdueSubstitutesReadyToUpdateState(): array
     {
-        return $this->getRepository()
-            ->findBy(
-                [
-                    'state' => SubstituteEntity::STATE_ACTIVE,
-                    'endDate <' => new \DateTime(),
-                ]
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->andX(
+                    Criteria::expr()->eq('state', SubstituteStateEnum::ACTIVE()),
+                    Criteria::expr()->lt('endDate', new DateTimeImmutable())
+                )
             );
+
+        return $this->getRepository()->matching($criteria)->toArray();
     }
 }

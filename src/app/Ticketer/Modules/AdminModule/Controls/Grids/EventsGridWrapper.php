@@ -8,6 +8,7 @@ use Nette\Application\AbortException;
 use Nette\Utils\Html;
 use Ticketer\Controls\Grids\Grid;
 use Ticketer\Controls\Grids\GridWrapperDependencies;
+use Ticketer\Model\Database\Enums\EventStateEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\TranslatedException;
 use Ticketer\Model\OccupancyIcons;
@@ -77,19 +78,19 @@ class EventsGridWrapper extends GridWrapper
             ->setSortable()
             ->setReplacement(
                 [
-                    EventEntity::STATE_INACTIVE => 'Value.Event.State.Inactive',
-                    EventEntity::STATE_ACTIVE => 'Value.Event.State.Active',
-                    EventEntity::STATE_CLOSED => 'Value.Event.State.Closed',
-                    EventEntity::STATE_CANCELLED => 'Value.Event.State.Cancelled',
+                    EventStateEnum::INACTIVE => 'Value.Event.State.Inactive',
+                    EventStateEnum::ACTIVE => 'Value.Event.State.Active',
+                    EventStateEnum::CLOSED => 'Value.Event.State.Closed',
+                    EventStateEnum::CANCELLED => 'Value.Event.State.Cancelled',
                 ]
             )
             ->setFilterSelect(
                 [
                     null => '',
-                    EventEntity::STATE_INACTIVE => 'Value.Event.State.Inactive',
-                    EventEntity::STATE_ACTIVE => 'Value.Event.State.Active',
-                    EventEntity::STATE_CLOSED => 'Value.Event.State.Closed',
-                    EventEntity::STATE_CANCELLED => 'Value.Event.State.Cancelled',
+                    EventStateEnum::INACTIVE => 'Value.Event.State.Inactive',
+                    EventStateEnum::ACTIVE => 'Value.Event.State.Active',
+                    EventStateEnum::CLOSED => 'Value.Event.State.Closed',
+                    EventStateEnum::CANCELLED => 'Value.Event.State.Cancelled',
                 ]
             );
         $grid->addColumnNumber('capacity', 'Attribute.Event.Capacity')
@@ -185,7 +186,7 @@ class EventsGridWrapper extends GridWrapper
         $uuid = Uuid::fromString($id);
         try {
             $event = $this->eventDao->getEvent($uuid);
-            $this->eventManager->setEventState($event, EventEntity::STATE_ACTIVE);
+            $this->eventManager->setEventState($event, EventStateEnum::ACTIVE());
             $this->flashTranslatedMessage("Grid.Event.Message.Activate.Success");
         } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
@@ -202,7 +203,7 @@ class EventsGridWrapper extends GridWrapper
         $uuid = Uuid::fromString($id);
         try {
             $event = $this->eventDao->getEvent($uuid);
-            $this->eventManager->setEventState($event, EventEntity::STATE_INACTIVE);
+            $this->eventManager->setEventState($event, EventStateEnum::INACTIVE());
             $this->flashTranslatedMessage("Grid.Event.Message.Dectivate.Success");
         } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
@@ -219,7 +220,7 @@ class EventsGridWrapper extends GridWrapper
         $uuid = Uuid::fromString($id);
         try {
             $event = $this->eventDao->getEvent($uuid);
-            $this->eventManager->setEventState($event, EventEntity::STATE_CANCELLED);
+            $this->eventManager->setEventState($event, EventStateEnum::CANCELLED());
             $this->flashTranslatedMessage("Grid.Event.Message.Cancel.Success");
         } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));
@@ -236,7 +237,7 @@ class EventsGridWrapper extends GridWrapper
         $uuid = Uuid::fromString($id);
         try {
             $event = $this->eventDao->getEvent($uuid);
-            $this->eventManager->setEventState($event, EventEntity::STATE_CLOSED);
+            $this->eventManager->setEventState($event, EventStateEnum::CLOSED());
             $this->flashTranslatedMessage("Grid.Event.Message.Close.Success");
         } catch (TranslatedException $e) {
             $this->flashMessage($e->getTranslatedMessage($this->getTranslator()));

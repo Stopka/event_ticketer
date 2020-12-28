@@ -9,6 +9,7 @@ use Nette\Application\AbortException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\Form;
 use Ticketer\Controls\Forms\FormWrapperDependencies;
+use Ticketer\Model\Database\Enums\OptionAutoselectEnum;
 use Ticketer\Model\OccupancyIcons;
 use Ticketer\Model\Database\Daos\CurrencyDao;
 use Ticketer\Model\Database\Entities\AdditionEntity;
@@ -133,13 +134,13 @@ class OptionFormWrapper extends FormWrapper
             'autoSelect',
             'Attribute.Addition.AutoSelect',
             [
-                OptionEntity::AUTOSELECT_NONE => "Value.Addition.AutoSelect.None",
-                OptionEntity::AUTOSELECT_ALWAYS => "Value.Addition.AutoSelect.Always",
-                OptionEntity::AUTOSELECT_SECONDON => "Value.Addition.AutoSelect.SecondOn",
+                OptionAutoselectEnum::NONE => "Value.Addition.AutoSelect.None",
+                OptionAutoselectEnum::ALWAYS => "Value.Addition.AutoSelect.Always",
+                OptionAutoselectEnum::SECOND_ON => "Value.Addition.AutoSelect.SecondOn",
             ]
         )
             ->setRequired()
-            ->setDefaultValue(OptionEntity::AUTOSELECT_NONE);
+            ->setDefaultValue(OptionAutoselectEnum::NONE);
         $limitCapacity = $form->addExtendedCheckbox('limitCapacity', 'Form.Option.Attribute.LimitCapacity')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.LimitCapacity");
         $limitCapacity->addCondition($form::EQUAL, true)
