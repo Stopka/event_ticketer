@@ -15,7 +15,7 @@ class RouterFactory
     {
         return (new RouteList())
             ->addRoute(
-                '/admin/<presenter>/<action>[/<id>]?locale=<locale>',
+                'admin/<presenter>/<action>[/<id>]?locale=<locale>',
                 [
                     'module' => 'Admin',
                     'presenter' => 'Homepage',
@@ -24,7 +24,7 @@ class RouterFactory
                 ]
             )
             ->addRoute(
-                '/api/<presenter>/<action>[/<id>]?locale=<locale>',
+                'api/<presenter>/<action>[/<id>]?locale=<locale>',
                 [
                     'module' => 'Api',
                     'presenter' => 'Homepage',
@@ -33,7 +33,7 @@ class RouterFactory
                 ]
             )
             ->addRoute(
-                '/<presenter>/<action>[/<id>]?locale=<locale>',
+                '<presenter>/<action>[/<id>]?locale=<locale>',
                 [
                     'module' => 'Front',
                     'presenter' => 'Homepage',
