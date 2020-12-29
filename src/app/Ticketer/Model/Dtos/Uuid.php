@@ -8,6 +8,7 @@ use Brick\Math\BigInteger;
 use Brick\Math\RoundingMode;
 use Nette\Utils\Strings;
 use Ramsey\Uuid\Exception\InvalidArgumentException;
+use Ramsey\Uuid\Exception\InvalidUuidStringException;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -65,6 +66,7 @@ class Uuid
         'h',
         'i',
         'j',
+        'l',
         'k',
         'm',
         'n',
@@ -154,10 +156,13 @@ class Uuid
             $number = $number->multipliedBy($alphabetLength)
                 ->plus($charIndex);
         }
-
-        return new self(
-            RamseyUuid::fromInteger((string)$number)
-        );
+        try {
+            return new self(
+                RamseyUuid::fromInteger((string)$number)
+            );
+        } catch (InvalidUuidStringException $exception) {
+            throw new InvalidArgumentException("Invalid uuid string '$uuidString'", 0, $exception);
+        }
     }
 
     public static function getStringLength(): int

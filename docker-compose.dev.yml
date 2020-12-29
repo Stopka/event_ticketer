@@ -3,6 +3,7 @@ services:
   event_ticketer:
     environment:
       PHP_IDE_CONFIG: "serverName=event_ticketer"
+      XDEBUG_MODE: "debug"
       MAIL_HOST: "mailhog"
       MAIL_PORT: "1025"
     build:
@@ -15,7 +16,6 @@ services:
       - composer-cache:/root/.composer
       - ~/.config/composer/:/root/.config/composer/:ro
     networks:
-      - xdebug
       - mail
   event_ticketer-mariadb:
     ports:
@@ -30,8 +30,3 @@ volumes:
   composer-cache:
 networks:
   mail:
-  xdebug:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.9.0/24

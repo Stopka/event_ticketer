@@ -27,19 +27,20 @@ abstract class BasePresenter extends \Ticketer\Presenters\BasePresenter
     public function startup(): void
     {
         parent::startup();
-        $this->checkUser();
+        $this->assertLoggedUser();
     }
 
     /**
      * @throws AbortException
      */
-    protected function checkUser(): void
+    protected function assertLoggedUser(): void
     {
-        if (!$this->getUser()->isLoggedIn()) {
-            $this->flashTranslatedMessage('Error.Permission.NotSignedIn', FlashMessageTypeEnum::WARNING());
-            $backlink = $this->storeRequest();
-            $this->redirect('Sign:in', ['backlink' => $backlink]);
+        if ($this->getUser()->isLoggedIn()) {
+            return;
         }
+        $this->flashTranslatedMessage('Error.Permission.NotSignedIn', FlashMessageTypeEnum::WARNING());
+        $backlink = $this->storeRequest();
+        $this->redirect('Sign:in', ['backlink' => $backlink]);
     }
 
     protected function createComponentMenu(): Menu

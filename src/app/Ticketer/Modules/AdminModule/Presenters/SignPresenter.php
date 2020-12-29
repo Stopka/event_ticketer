@@ -13,13 +13,8 @@ class SignPresenter extends BasePresenter
     public ISignInFormWrapperFactory $signInFromWrapperFactory;
 
     /**
-     * @var string|null
-     * @persistent
-     */
-    public ?string $backlink = '';
-
-    /**
      * SignPresenter constructor.
+     * @param BasePresenterDependencies $dependencies
      * @param ISignInFormWrapperFactory $signInFormWrapperFactory
      */
     public function __construct(
@@ -31,23 +26,23 @@ class SignPresenter extends BasePresenter
     }
 
 
-    protected function checkUser(): void
+    protected function assertLoggedUser(): void
     {
     }
 
     /**
+     * @param string|null $backlink
      * @throws AbortException
      */
-    public function actionIn(): void
+    public function actionIn(?string $backlink = null): void
     {
         if ($this->getUser()->isLoggedIn()) {
-            if (null !== $this->backlink) {
-                $this->restoreRequest($this->backlink);
-                $this->backlink = null;
+            if (null !== $backlink) {
+                $this->restoreRequest($backlink);
 
                 return;
             }
-            $this->redirect('Homepage:', ['backlink' => null]);
+            $this->redirect('Homepage:');
         }
     }
 

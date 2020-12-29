@@ -18,13 +18,12 @@ abstract class Control extends NetteControl
     }
 
     /**
-     * @param bool $throw
      * @return BasePresenter
      */
-    public function getPresenter($throw = true): BasePresenter
+    public function getPresenter(): BasePresenter
     {
         /** @var BasePresenter $presenter */
-        $presenter = parent::getPresenter($throw);
+        $presenter = parent::getPresenter();
 
         return $presenter;
     }
