@@ -34,14 +34,21 @@ trait TArrayValue
         foreach ($methods as $method) {
             $reflection = new \ReflectionMethod($this, $method);
             $parameters = $reflection->getParameters();
+            $werb = null;
+            if (Strings::startsWith($method, 'get')) {
+                $werb = 'get';
+            }
+            if (Strings::startsWith($method, 'is')) {
+                $werb = 'is';
+            }
             if (
-                !Strings::startsWith($method, 'get')
+                $werb === null
                 || in_array($method, $without, true)
                 || count($parameters) > 0
             ) {
                 continue;
             }
-            $key = Strings::firstLower(Strings::substring($method, 3));
+            $key = Strings::firstLower(Strings::substring($method, strlen($werb)));
             try {
                 /** @var callable $getter */
                 $getter = [$this, $method];

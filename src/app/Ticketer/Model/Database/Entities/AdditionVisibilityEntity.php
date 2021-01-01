@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AdditionVisibilityEntity extends BaseEntity
 {
+    use TArrayValue;
+
     /**
      * @ORM\Column(type="boolean")
      * @var bool

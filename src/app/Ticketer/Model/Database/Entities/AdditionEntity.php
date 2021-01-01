@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ticketer\Model\Database\Enums\AdditionVisibilityEnum;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\AdditionVisibilityCheckboxList;
 
 /**
  * Přídavek k přihlášce (Přihláška, Faktura, Doprava, Tričko...)
@@ -65,21 +66,6 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
      * @var ArrayCollection<int,OptionEntity>
      */
     private $options;
-
-    /**
-     * @return string[]
-     */
-    public static function getVisiblePlaces(): array
-    {
-        //TODO make it enum
-        return [
-            'reservation' => 'Value.Addition.Visible.Reservation',
-            'register' => 'Value.Addition.Visible.Register',
-            'customer' => 'Value.Addition.Visible.Customer',
-            'preview' => 'Value.Addition.Visible.Preview',
-            'export' => 'Value.Addition.Visible.Export',
-        ];
-    }
 
     public function __construct()
     {
@@ -209,6 +195,15 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
     public function getVisibility(): AdditionVisibilityEntity
     {
         return $this->visibility;
+    }
+
+    public function setVisibility(array $visibility): void
+    {
+        $values = [];
+        foreach (AdditionVisibilityCheckboxList::getItemLabels() as $key => $label) {
+            $values[$key] = in_array($key, $visibility);
+        }
+        $this->visibility->setByValueArray($values);
     }
 
     /**

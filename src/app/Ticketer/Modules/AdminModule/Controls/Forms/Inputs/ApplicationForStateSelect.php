@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace Ticketer\Controls\Forms\Inputs;
+namespace Ticketer\Modules\AdminModule\Controls\Forms\Inputs;
 
 
 use Nette\Forms\Controls\SelectBox;

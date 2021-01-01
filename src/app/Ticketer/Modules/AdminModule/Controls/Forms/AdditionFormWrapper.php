@@ -7,7 +7,8 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\Form;
 use Ticketer\Controls\Forms\FormWrapperDependencies;
-use Ticketer\Controls\Forms\Inputs\ApplicationForStateSelect;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\AdditionVisibilityCheckboxList;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\ApplicationForStateSelect;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\OccupancyIcons;
 use Ticketer\Model\Database\Daos\CurrencyDao;
@@ -117,9 +118,10 @@ class AdditionFormWrapper extends FormWrapper
             ->setDefaultValue(null)
             ->setRequired(false);
         $form->addComponent($enoughEventStateSelect, 'enoughForState');
-        $form->addCheckboxList('visible', 'Attribute.Addition.Visible', AdditionEntity::getVisiblePlaces())
-            ->setDefaultValue(array_keys(AdditionEntity::getVisiblePlaces()))
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Visible");
+        $additionVisibiltyChecklist = (new AdditionVisibilityCheckboxList('Attribute.Addition.Visible'))
+            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Visible")
+            ->setDefaultValue(array_keys(AdditionVisibilityCheckboxList::getItemLabels()));
+        $form->addComponent($additionVisibiltyChecklist, 'visibility');
         $form->addText('minimum', 'Attribute.Addition.Minimum')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Minimum")
             ->setOption($form::MIME_TYPE, "number")
