@@ -1,22 +1,28 @@
 {
-  "name": "ldtpardubice_application",
-  "description": "Application form for ldtpardubice.cz",
-  "author": "Štěpán Škorpil",
-  "license": "proprietary",
-  "dependencies": {
-    "jquery": "^1.12",
-    "font-awesome": "^4.7",
-    "jquery-ui": "^1.12",
-    "normalize.css": "^7.0",
-    "live-form-validation": "^1.8.1",
-    "nette.ajax.js": "^2.3.0",
-    "bootstrap": "^3.3.7"
-  },
-  "devDependencies": {
-    "copy-webpack-plugin": "^4.0.1",
-    "webpack": "^2.6.1"
-  },
-  "scripts": {
-    "webpack": "webpack"
-  }
+    "name": "event_ticketer",
+    "description": "Application form",
+    "author": "Štěpán Škorpil",
+    "license": "GPL-3.0-only",
+    "dependencies": {
+        "bootstrap": "^4.5.3",
+        "branch-pipe": "^1.0.1",
+        "daterangepicker": "^3.1.0",
+        "font-awesome": "^4.7.0",
+        "gulp-autoprefixer": "^7.0.1",
+        "gulp-babel": "^8.0.0",
+        "gulp-concat": "^2.6.1",
+        "gulp-css-url-adjuster": "^0.2.3",
+        "gulp-modernizr": "^4.0.1",
+        "jquery": "^3.5.1",
+        "live-form-validation": "^1.9.0",
+        "nette.ajax.js": "^2.3.0",
+        "normalize-css": "^2.3.1",
+        "ublaboo-datagrid": "^6.4.1"
+    },
+    "devDependencies": {
+        "gulp": "^4.0.2"
+    },
+    "scripts": {
+        "build": "gulp"
+    }
 }

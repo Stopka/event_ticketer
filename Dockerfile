@@ -101,10 +101,10 @@ RUN \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         gpg-agent && \
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    curl -sL https://deb.nodesource.com/setup_15.x | bash - && \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
-        yarn \
+        nodejs \
         git &&\
     rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/*
 

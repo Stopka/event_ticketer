@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\AdminModule\Controls\Forms;
 
+use DateInput;
 use DateTime;
 use Exception;
 use Nette\Forms\Controls\SelectBox;
@@ -131,12 +132,11 @@ class EarlyFormWrapper extends FormWrapper
             ->setRequired(false);
         /** @var SelectBox $earlyWaveControl */
         $earlyWaveControl = $form["earlyWaveId"];
-        //TODO $wave->addDate('startDate', 'Attribute.Event.StartDate', DateInput::TYPE_DATE)
-        $wave->addText('startDate', 'Attribute.Event.StartDate')
+        $wave->addDate('startDate', 'Attribute.Event.StartDate')
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Early.Description.StartDate')
             ->setDefaultValue(new DateTime())
             ->setRequired(false)
-            ->addRule($form::VALID, 'Form.Rule.Date')
+            //->addRule($form::VALID, 'Form.Rule.Date')
             ->addConditionOn($earlyWaveControl, $form::FILLED)
             ->elseCondition()
             ->addRule($form::FILLED);

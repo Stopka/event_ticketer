@@ -7,6 +7,7 @@ namespace Ticketer\Controls\Forms;
 use Nette\Forms\Container as NetteContainer;
 use Stopka\NetteFormsCheckboxComponent\CheckboxControlContainerTrait;
 use Stopka\NetteFormsHtmlComponent\HtmlControlContainerTrait;
+use Vodacek\Forms\Controls\DateInput;
 
 trait TContainerExtension
 {
@@ -15,7 +16,7 @@ trait TContainerExtension
 
     /**
      * @param int|string $name
-     * @return NetteContainer
+     * @return Container
      */
     public function addContainer($name): NetteContainer
     {
@@ -26,5 +27,19 @@ trait TContainerExtension
         }
 
         return $this[$name] = $control;
+    }
+
+
+    /**
+     * @param string $name
+     * @param string|object|null $label
+     * @return DateInput
+     */
+    public function addDate(string $name, $label): DateInput
+    {
+        $input = new DateInput($label, DateInput::TYPE_DATE, true);
+        $this->addComponent($input, $name);
+
+        return $input;
     }
 }

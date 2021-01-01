@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\AdminModule\Controls\Forms;
 
+use DateTimeImmutable;
 use Nette\Application\AbortException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\Form;
@@ -84,12 +85,12 @@ class EarlyWaveFormWrapper extends FormWrapper
             ->setOption($form::OPTION_KEY_LOGICAL, true);
         $form->addText('name', 'Attribute.Name')
             ->setRequired(false);
-        /** TODO $form->addDate('startDate', 'Attribute.Event.StartDate', DateInput::TYPE_DATE) */
-        $form->addText('startDate', 'Attribute.Event.StartDate')
+        $form->addDate('startDate', 'Attribute.Event.StartDate')
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.EarlyWave.Description.StartDate')
-            ->setDefaultValue(new \DateTime())
+            ->setDefaultValue(new DateTimeImmutable())
             ->setRequired(true)
-            ->addRule($form::VALID, 'Form.Rule.Date');
+        //    ->addRule($form::VALID, 'Form.Rule.Date')
+        ;
     }
 
     /**

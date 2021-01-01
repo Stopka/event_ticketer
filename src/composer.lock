@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8b4c889dfe76b6059d5bca4138ef2dd",
+    "content-hash": "cea6378fd7aec5902248fb14a78380d7",
     "packages": [
         {
             "name": "brick/math",
@@ -5179,58 +5179,6 @@
             "time": "2020-08-18T17:17:46+00:00"
         },
         {
-            "name": "ramsey/uuid-doctrine",
-            "version": "1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ramsey/uuid-doctrine.git",
-                "reference": "9facc4689547e72e03c1e18df4a0ee162b2778b0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid-doctrine/zipball/9facc4689547e72e03c1e18df4a0ee162b2778b0",
-                "reference": "9facc4689547e72e03c1e18df4a0ee162b2778b0",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": "^2.5",
-                "php": "^5.4 | ^7 | ^8",
-                "ramsey/uuid": "^3.5 | ^4"
-            },
-            "require-dev": {
-                "jakub-onderka/php-parallel-lint": "^1",
-                "mockery/mockery": "^0.9 | ^1",
-                "phpunit/phpunit": "^4.8.36 | ^5.7 | ^6.5 | ^7",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Ramsey\\Uuid\\Doctrine\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Allow the use of ramsey/uuid as a Doctrine field type.",
-            "homepage": "https://github.com/ramsey/uuid-doctrine",
-            "keywords": [
-                "database",
-                "doctrine",
-                "guid",
-                "identifier",
-                "uuid"
-            ],
-            "support": {
-                "issues": "https://github.com/ramsey/uuid-doctrine/issues",
-                "rss": "https://github.com/ramsey/uuid-doctrine/releases.atom",
-                "source": "https://github.com/ramsey/uuid-doctrine",
-                "wiki": "https://github.com/ramsey/uuid/wiki"
-            },
-            "time": "2020-01-27T05:09:17+00:00"
-        },
-        {
             "name": "setasign/fpdi",
             "version": "v2.3.5",
             "source": {
@@ -7189,6 +7137,57 @@
                 "source": "https://github.com/contributte/datagrid/tree/v6.5.1"
             },
             "time": "2020-12-10T21:10:29+00:00"
+        },
+        {
+            "name": "voda/date-input",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/voda/DateInput.git",
+                "reference": "5e3da4b13955f6dce4962c7ceb6f6c232f9d4ec9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/voda/DateInput/zipball/5e3da4b13955f6dce4962c7ceb6f6c232f9d4ec9",
+                "reference": "5e3da4b13955f6dce4962c7ceb6f6c232f9d4ec9",
+                "shasum": ""
+            },
+            "require": {
+                "nette/forms": "~2.4|~3.0",
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "nette/tester": "~1.7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vodacek\\Forms\\Controls\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Vodáček",
+                    "email": "ondrej.vodacek@gmail.com"
+                }
+            ],
+            "description": "HTML 5 compatible date / time input field for Nette.",
+            "keywords": [
+                "calendar",
+                "date",
+                "form",
+                "input",
+                "nette"
+            ],
+            "support": {
+                "issues": "https://github.com/voda/DateInput/issues",
+                "source": "https://github.com/voda/DateInput/tree/2.0.0"
+            },
+            "time": "2019-08-25T15:35:23+00:00"
         }
     ],
     "packages-dev": [

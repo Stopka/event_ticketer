@@ -6,7 +6,6 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms;
 
 use DateTimeImmutable;
 use Nette\Forms\Controls\Checkbox;
-use Nette\Forms\IControl;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\Form;
 use Ticketer\Controls\Forms\FormWrapperDependencies;
@@ -124,13 +123,12 @@ class EventFormWrapper extends FormWrapper
 
         /** @var Checkbox $publicControl */
         $publicControl = $form["public"];
-        //TODO $form->addDate('startDate', 'Attribute.Event.StartDate', DateInput::TYPE_DATE)
-        $form->addText('startDate', 'Attribute.Event.StartDate')
+        $form->addDate('startDate', 'Attribute.Event.StartDate')
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.Event.Description.StartDate')
             ->setOption($form::OPTION_KEY_ID, 'startDateControlGroup')
             ->setDefaultValue(new DateTimeImmutable())
             ->setRequired(false)
-            ->addRule($form::VALID, 'Form.Rule.Date')
+            //->addRule($form::VALID, 'Form.Rule.Date')
             ->addConditionOn($publicControl, $form::EQUAL, true)
             ->addRule($form::FILLED);
     }

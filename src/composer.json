@@ -52,7 +52,8 @@
         "stopka/nette-forms-html-component": "^1.0",
         "myclabs/php-enum": "^1.7.6",
         "contributte/monolog": "^0.4.1",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "voda/date-input": "^2.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",

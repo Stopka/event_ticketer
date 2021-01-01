@@ -9,11 +9,10 @@
         <meta charset="utf-8">
 
         <title>Registrace - Letní dětský tábor Pardubice z.s.</title>
-        {include head.latte}
         <link rel="shortcut icon" href="{$basePath}/app/images/logo.ico">
         <meta name="viewport" content="width=device-width">
         {block head}
-            {include head.latte}
+            <link rel="stylesheet" type="text/css" href="{$basePath}/build/index.css" />
         {/block}
     </head>
     <body n:block="body">
@@ -35,7 +34,7 @@
                 {include footer.latte}
             </footer>
             {block scripts}
-                {include scripts.latte}
+                <script type="text/javascript" src="{$basePath}/build/index.js"></script>
             {/block}
         </div>
     </body>
