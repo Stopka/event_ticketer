@@ -1,0 +1,7 @@
+all: Vše
+reset_filter: Zrušit filtr
+action: Akce
+no_item_found: Žádné výsledky
+items: Položky
+from: z celkového počtu
+per_page_submit: Položek na stránku

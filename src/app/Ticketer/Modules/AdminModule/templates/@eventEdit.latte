@@ -2,7 +2,7 @@
 {block content}
     <h1 n:if="$event"><i class="fa fa-calendar-o"></i> {_'Entity.Singular.Event'} <em>{$event->getName()}</em></h1>
     <h1 n:if="!$event"><i class="fa fa-calendar-o"></i> {_'Entity.Singular.Event'}</h1>
-    {var $eventId = $event?$event->getId():null }
+    {var $eventId = $event?$event->getId()->toString():null }
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Event:edit')?active">
@@ -13,7 +13,7 @@
             </li>
             <li n:class="$presenter->isLinkCurrent('Addition:default')?active">
                 <span n:if="!$event"><i class="fa fa-archive"></i> {_'Entity.Plural.Addition'}</span>
-                <a n:if="$event" n:href="Addition:default,$event->getId()">
+                <a n:if="$event" n:href="Addition:default,$event->getId()->toString()">
                     <span><i class="fa fa-archive"></i> {_'Entity.Plural.Addition'}</span>
                 </a>
             </li>

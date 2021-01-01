@@ -16,6 +16,7 @@ Rule:
     MaxLength: 'Pole %label může mít maximálně %d znaků.'
     Email: 'Pole %label musí být platná emailová adresa.'
     Date: 'Pole %label není ve správném tvaru data.'
+    SelectBoxValid: 'AS'
 Action:
     Edit: Upravit
     Create: Vytvořit

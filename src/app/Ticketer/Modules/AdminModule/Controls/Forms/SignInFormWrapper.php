@@ -75,8 +75,7 @@ class SignInFormWrapper extends FormWrapper
                     "Form.SignIn.Message.AdministratorCreated",
                     FlashMessageTypeEnum::INFO()
                 );
-
-                return;
+                $this->redirect('this');
             }
             throw new AuthenticationException(
                 "Error.Authentication.InvalidCredentials",

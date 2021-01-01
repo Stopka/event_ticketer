@@ -186,7 +186,7 @@ class OptionsGridWrapper extends GridWrapper
         $grid->addToolbarButton(
             'Option:add',
             'Presenter.Admin.Option.Add.H1',
-            [$this->additionEntity->getId()]
+            [$this->additionEntity->getId()->toString()]
         )
             ->setIcon('fa fa-plus-circle');
     }

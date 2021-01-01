@@ -4,42 +4,42 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Attributes;
 
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 trait TStartDateAttribute
 {
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var DateTime|null
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @var DateTimeImmutable|null
      */
     private $startDate;
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getStartDate(): ?DateTime
+    public function getStartDate(): ?DateTimeImmutable
     {
         return $this->startDate;
     }
 
     /**
-     * @param DateTime|null $startDate
+     * @param DateTimeImmutable|null $startDate
      */
-    public function setStartDate(?DateTime $startDate): void
+    public function setStartDate(?DateTimeImmutable $startDate): void
     {
         $this->startDate = $startDate;
     }
 
     /**
-     * @param DateTime|null $date
+     * @param DateTimeImmutable|null $date
      * @return bool
      */
-    public function isStarted(?DateTime $date = null): bool
+    public function isStarted(?DateTimeImmutable $date = null): bool
     {
         if (null === $date) {
-            $date = new DateTime();
+            $date = new DateTimeImmutable();
         }
         $startDate = $this->getStartDate();
 

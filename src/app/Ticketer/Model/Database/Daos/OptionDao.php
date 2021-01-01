@@ -37,16 +37,19 @@ class OptionDao extends EntityDao
      */
     public function getOptionsWithLimitedCapacity(EventEntity $event): array
     {
-        return $this->getRepository()->findBy([
-            'addition.event.id' => $event->getId(),
-            'capacity !=' => null
-        ]);
+        return $this->getRepository()->findBy(
+            [
+                'addition.event.id' => $event->getId(),
+                'capacity !=' => null,
+            ]
+        );
     }
 
     public function getAdditionOptionsGridModel(AdditionEntity $additionEntity): IDataSource
     {
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->where(['a.addition' => $additionEntity]);
+        $qb->where($qb->expr()->eq('a.addition', ':addition'))
+            ->setParameters(['addition' => $additionEntity->getId()->toString()]);
 
         return new DoctrineDataSource($qb, 'id');
     }

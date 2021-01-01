@@ -32,10 +32,10 @@ trait TContainerExtension
 
     /**
      * @param string $name
-     * @param string|object|null $label
+     * @param string|null $label
      * @return DateInput
      */
-    public function addDate(string $name, $label): DateInput
+    public function addDate(string $name, ?string $label): DateInput
     {
         $input = new DateInput($label, DateInput::TYPE_DATE, true);
         $this->addComponent($input, $name);

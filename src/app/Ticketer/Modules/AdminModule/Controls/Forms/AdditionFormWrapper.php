@@ -7,6 +7,7 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\Form;
 use Ticketer\Controls\Forms\FormWrapperDependencies;
+use Ticketer\Controls\Forms\Inputs\ApplicationForStateSelect;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\OccupancyIcons;
 use Ticketer\Model\Database\Daos\CurrencyDao;
@@ -106,30 +107,16 @@ class AdditionFormWrapper extends FormWrapper
             ->setOption($form::OPTION_KEY_LOGICAL, true);
         $form->addText('name', 'Attribute.Name')
             ->setRequired();
-        $form->addSelect(
-            'requiredForState',
-            'Attribute.Addition.RequiredForState',
-            [
-                null => 'Value.ForState.None',
-                ApplicationStateEnum::OCCUPIED => 'Value.ForState.Occupied',
-                ApplicationStateEnum::FULFILLED => 'Value.ForState.Fulfilled',
-            ]
-        )
+        $requiredForStateSelect = (new ApplicationForStateSelect('Attribute.Addition.RequiredForState'))
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.RequiredForState")
             ->setDefaultValue(null)
             ->setRequired(false);
-        $form->addSelect(
-            'enoughForState',
-            'Attribute.Addition.EnoughForState',
-            [
-                null => 'Value.ForState.None',
-                ApplicationStateEnum::OCCUPIED => 'Value.ForState.Occupied',
-                ApplicationStateEnum::FULFILLED => 'Value.ForState.Fulfilled',
-            ]
-        )
+        $form->addComponent($requiredForStateSelect, 'requiredForState');
+        $enoughEventStateSelect = (new ApplicationForStateSelect('Attribute.Addition.EnoughForState'))
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.EnoughForState")
             ->setDefaultValue(null)
             ->setRequired(false);
+        $form->addComponent($enoughEventStateSelect, 'enoughForState');
         $form->addCheckboxList('visible', 'Attribute.Addition.Visible', AdditionEntity::getVisiblePlaces())
             ->setDefaultValue(array_keys(AdditionEntity::getVisiblePlaces()))
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Addition.Description.Visible");
@@ -169,14 +156,14 @@ class AdditionFormWrapper extends FormWrapper
                 'Form.Addition.Message.Edit.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Addition:default', [$this->eventEntity->getId()]);
+            $this->getPresenter()->redirect('Addition:default', [$this->eventEntity->getId()->toString()]);
         } else {
             $addition = $this->additionManager->createAdditionFromEventForm($values, $this->eventEntity);
             $this->getPresenter()->flashTranslatedMessage(
                 'Form.Addition.Message.Create.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Option:default', [$addition->getId()]);
+            $this->getPresenter()->redirect('Option:default', [$addition->getId()->toString()]);
         }
     }
 }

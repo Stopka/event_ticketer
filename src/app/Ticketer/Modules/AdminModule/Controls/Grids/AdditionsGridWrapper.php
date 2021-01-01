@@ -116,7 +116,7 @@ class AdditionsGridWrapper extends GridWrapper
         $grid->addToolbarButton(
             "Addition:add",
             "Presenter.Admin.Addition.Add.H1",
-            ['id' => $this->eventEntity->getId()]
+            ['id' => $this->eventEntity->getId()->toString()]
         )
             ->setIcon('fa fa-plus-circle');
     }

@@ -159,7 +159,7 @@ class EventFormWrapper extends FormWrapper
                 'Form.Event.Message.Create.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Addition:default', [$event->getId()]);
+            $this->getPresenter()->redirect('Addition:default', [$event->getId()->toString()]);
         }
     }
 }

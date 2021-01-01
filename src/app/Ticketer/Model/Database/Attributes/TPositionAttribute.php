@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Attributes;
 
+use Complex\conjugateTest;
 use Doctrine\ORM\Mapping as ORM;
 
 trait TPositionAttribute
 {
-
     /**
      * @ORM\Column(type="integer")
      * @var int
      */
-    private $position = PHP_INT_MAX;
+    private $position = 2147483647;
 
     /**
      * @return int

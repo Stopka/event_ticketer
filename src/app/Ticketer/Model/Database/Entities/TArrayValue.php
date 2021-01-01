@@ -67,7 +67,7 @@ trait TArrayValue
             if (method_exists($this, $setterName)) {
                 /** @var callable $setter */
                 $setter = [$this, $setterName];
-                call_user_func($setter, [$value]);
+                call_user_func($setter, $value);
             }
         }
     }
