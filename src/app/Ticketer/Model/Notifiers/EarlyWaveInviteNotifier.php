@@ -180,7 +180,7 @@ class EarlyWaveInviteNotifier implements EventSubscriberInterface
             throw new NotReadyException("Event has no start date");
         }
         $emailService = $this->getEmailService();
-        $link = $emailService->generateLink('Front:Early:', ['id' => $early->getId()]);
+        $link = $emailService->generateLink('Front:Early:', ['id' => $early->getId()->toString()]);
         $message = $emailService->createMessage();
         $message->addTo($emailAddress)
             ->setSubject('Přednostní výdej přihlášek')

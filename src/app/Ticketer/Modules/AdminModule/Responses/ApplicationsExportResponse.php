@@ -51,7 +51,7 @@ class ApplicationsExportResponse implements IResponse
      */
     public function send(IRequest $httpRequest, HttpIResponse $httpResponse): void
     {
-        $response = new SpreadsheetResponse($this->applications, FormatEnum::XLSX());
+        $response = new SpreadsheetResponse($this->applications, FormatEnum::XLSX(), $this->translator);
         $response->setFilenameWithDate('applications-');
         $response->setColumnDelimiter(';');
         $response->addColumn('cart_id', 'Číslo objednávky')

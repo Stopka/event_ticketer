@@ -26,7 +26,7 @@ class Column
 
     protected ITranslator $translator;
 
-    protected ?string $cellFormat;
+    protected ?string $cellFormat = null;
 
     protected DataTypeEnum $dataType;
 
@@ -40,6 +40,7 @@ class Column
         $this->key = $key;
         $this->caption = $caption;
         $this->parent = $parent;
+        $this->translator = $parent->getTranslator();
         $this->setTextRenderer();
         $this->dataType = DataTypeEnum::STRING();
     }

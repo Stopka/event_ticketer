@@ -15,6 +15,7 @@ ENV PHP_FPM_POOL_DIR=${PHP_FPM_DIR}/pool.d
 
 ENV HOST_NAME='Event ticketer'
 ENV HOST_DOMAIN='ticketer.localhost'
+ENV MAIL_TLS='on'
 ENV MAIL_HOST='localhost'
 ENV MAIL_PORT='25'
 ENV MAIL_USER=''

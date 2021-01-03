@@ -24,7 +24,7 @@ class ApplicationPdfResponse implements IResponse
     private $templateFactory;
 
     /** @var ITemplate|null */
-    private ?ITemplate $template;
+    private ?ITemplate $template = null;
 
     /** @var DateFormatter */
     private $dateFormatter;

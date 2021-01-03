@@ -180,7 +180,7 @@ class ReserveApplicationFormWrapper extends FormWrapper
         /** @var array<mixed> $values */
         $values = $form->getValues('array');
         $values = $this->processValues($values);
-        if (count($this->applicationEntities) > 0) {
+        if (0 === count($this->applicationEntities)) {
             $this->reservationManager->createReservedApplicationsFromReservationForm($values, $this->event);
             $this->getPresenter()->flashTranslatedMessage(
                 'Form.Reservation.Message.Create.Success',
@@ -193,7 +193,7 @@ class ReserveApplicationFormWrapper extends FormWrapper
                 FlashMessageTypeEnum::SUCCESS()
             );
         }
-        $this->getPresenter()->redirect('Application:', $this->event->getId());
+        $this->getPresenter()->redirect('Application:', $this->event->getId()->toString());
     }
 
     /**

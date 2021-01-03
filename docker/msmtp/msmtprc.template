@@ -1,7 +1,7 @@
 # Set default values for all following accounts.
 defaults
-auth           on
-tls            on
+auth           <auth>
+tls            <tls>
 tls_trust_file /etc/ssl/certs/ca-certificates.crt
 # logfile        /var/log/msmtp.log
 

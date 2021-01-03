@@ -24,7 +24,7 @@ class ReservationDao extends EntityDao
     {
         return $this->getRepository()->findBy(
             [
-                'event.id' => $event->getId(),
+                'event' => $event,
             ]
         );
     }

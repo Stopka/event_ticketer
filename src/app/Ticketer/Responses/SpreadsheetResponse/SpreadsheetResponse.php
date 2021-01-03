@@ -9,6 +9,7 @@ use Nette\Application\IResponse;
 use Nette\Http\IRequest;
 use Nette\Http\IRequest as HttpRequest;
 use Nette\Http\IResponse as HttpResponse;
+use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -48,6 +49,8 @@ class SpreadsheetResponse implements IResponse
 
     protected FormatEnum $format;
 
+    private ITranslator $translator;
+
     /**************************************/
     /**         Public functions         **/
     /**************************************/
@@ -57,13 +60,22 @@ class SpreadsheetResponse implements IResponse
      * @param iterable<mixed> $dataSource
      * @param FormatEnum|null $format
      */
-    public function __construct(iterable $dataSource, ?FormatEnum $format = null)
+    public function __construct(iterable $dataSource, ?FormatEnum $format = null, ITranslator $translator)
     {
         $this->dataSource = $dataSource;
         $this->setFormat($format);
         $this->setCharset();
         $this->setFilenameWithDate();
         $this->spreadsheet = new Spreadsheet();
+        $this->translator = $translator;
+    }
+
+    /**
+     * @return ITranslator
+     */
+    public function getTranslator(): ITranslator
+    {
+        return $this->translator;
     }
 
     /**

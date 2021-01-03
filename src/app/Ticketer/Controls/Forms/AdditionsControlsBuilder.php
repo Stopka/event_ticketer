@@ -8,6 +8,7 @@ use Contributte\Translation\Wrappers\NotTranslate;
 use Nette\Localization\ITranslator;
 use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
 use Ticketer\Model\Database\Enums\OptionAutoselectEnum;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\FormControlException;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\InvalidStateException;
@@ -229,7 +230,7 @@ class AdditionsControlsBuilder
      * @param array<string> $values
      * @param AdditionEntity $addition
      * @param int $index
-     * @return array<string>
+     * @return array<Uuid>
      * @throws InvalidStateException
      */
     protected function preprocessAdditionValues(array $values, AdditionEntity $addition, int $index = 1): array
@@ -238,19 +239,20 @@ class AdditionsControlsBuilder
         $preselectedOptionIds = $this->getPreselectedOptions($addition, $index);
         $predisabledOptionIds = $this->getPredisabledOptions($addition, $prices);
         foreach ($addition->getOptions() as $option) {
+            $optionIdString = $option->getId()->toString();
             if (
-                !in_array($option->getId()->toString(), $values, true)
-                && in_array($option->getId()->toString(), $preselectedOptionIds, true)
-                && in_array($option->getId()->toString(), $predisabledOptionIds, true)
+                !in_array($optionIdString, $values, true)
+                && in_array($optionIdString, $preselectedOptionIds, true)
+                && in_array($optionIdString, $predisabledOptionIds, true)
             ) {
-                $values[] = $option->getId()->toString();
+                $values[] = $optionIdString;
             }
             if (
-                in_array($option->getId()->toString(), $values, true)
-                && !in_array($option->getId()->toString(), $preselectedOptionIds, true)
-                && in_array($option->getId()->toString(), $predisabledOptionIds, true)
+                in_array($optionIdString, $values, true)
+                && !in_array($optionIdString, $preselectedOptionIds, true)
+                && in_array($optionIdString, $predisabledOptionIds, true)
             ) {
-                $i = array_search($option->getId()->toString(), $values, true);
+                $i = array_search($optionIdString, $values, true);
                 unset($values[$i]);
             }
         }
@@ -262,7 +264,7 @@ class AdditionsControlsBuilder
             throw new InvalidInputException("Error.Addition.Maximum.InvalidInput", $addition->getMaximum());
         }
 
-        return $values;
+        return array_map(static fn(string $id): Uuid => Uuid::fromString($id), $values);
     }
 
     /**
@@ -274,13 +276,19 @@ class AdditionsControlsBuilder
     public function preprocessAdditionsValues(array $values, int $index = 1): array
     {
         $additionsValues = $values[self::CONTAINER_NAME_ADDITIONS];
+
         foreach ($this->getEvent()->getAdditions() as $addition) {
             if (!$addition->getVisibility()->matches($this->visibilityResolver)) {
                 continue;
             }
             try {
-                $additionsValues[$addition->getId()] = $this->preprocessAdditionValues(
-                    $additionsValues[$addition->getId()] ?? [],
+                $additionIdString = $addition->getId()->toString();
+                $additionValues = $additionsValues[$additionIdString] ?? [];
+                if (!is_array($additionValues)) {
+                    $additionValues = [$additionValues];
+                }
+                $additionsValues[$additionIdString] = $this->preprocessAdditionValues(
+                    $additionValues,
                     $addition,
                     $index
                 );
