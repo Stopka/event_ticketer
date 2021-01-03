@@ -163,13 +163,13 @@ class OptionsGridWrapper extends GridWrapper
     protected function appendActions(Grid $grid): void
     {
         $grid->addAction('edit', 'Form.Action.Edit', 'Option:edit')
-            ->setIcon('fa fa-pencil');
+            ->setIcon('pencil');
         $grid->addActionCallback('moveUp', 'Form.Action.MoveUp', [$this, 'onMoveUpClicked'])
-            ->setIcon('fa fa-arrow-up');
+            ->setIcon('arrow-up');
         $grid->addActionCallback('moveDown', 'Form.Action.MoveDown', [$this, 'onMoveDownClicked'])
-            ->setIcon('fa fa-arrow-down');
+            ->setIcon('arrow-down');
         $grid->addActionCallback('delete', 'Form.Action.Delete', [$this, 'onDeleteClicked'])
-            ->setIcon('fa fa-trash')
+            ->setIcon('trash')
             ->setConfirmation(
                 new CallbackConfirmation(
                     function (OptionEntity $optionEntity): string {
@@ -188,7 +188,7 @@ class OptionsGridWrapper extends GridWrapper
             'Presenter.Admin.Option.Add.H1',
             [$this->additionEntity->getId()->toString()]
         )
-            ->setIcon('fa fa-plus-circle');
+            ->setIcon('plus-circle');
     }
 
     /**

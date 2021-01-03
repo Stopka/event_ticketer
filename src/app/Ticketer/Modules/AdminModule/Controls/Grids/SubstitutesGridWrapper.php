@@ -157,7 +157,7 @@ class SubstitutesGridWrapper extends GridWrapper
                     return $substitute->getState()->isActivable();
                 }
             )
-            ->setIcon('fa fa-check-square');
+            ->setIcon('check-square');
         $grid->addActionCallback(
             'link',
             'Attribute.Link',
@@ -165,7 +165,7 @@ class SubstitutesGridWrapper extends GridWrapper
                 $this->getPresenter()->redirect(':Front:Substitute:default', [$uid]);
             }
         )
-            ->setIcon('fa fa-link')
+            ->setIcon('link')
             ->setRenderCondition(
                 function (SubstituteEntity $substituteEntity): bool {
                     return $substituteEntity->isActive() && !$substituteEntity->isOrdered();

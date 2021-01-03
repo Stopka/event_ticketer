@@ -29,7 +29,10 @@ class ApplicationDao extends EntityDao
     public function getCartApplicationsGridModel(CartEntity $cartEntity): IDataSource
     {
         $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->where(['a.cart' => $cartEntity]);
+        $qb->where(
+            $qb->expr()->eq('a.cart', ':cart')
+        )
+            ->setParameters(['cart' => $cartEntity]);
 
         return new DoctrineDataSource($qb, 'id');
     }
@@ -41,14 +44,23 @@ class ApplicationDao extends EntityDao
     public function countOccupiedApplications(EventEntity $event): int
     {
         $states = ApplicationStateEnum::listOccupied();
-        $criteria = Criteria::create()->where(
-            Criteria::expr()->andX(
-                Criteria::expr()->eq('cart.event', $event),
-                Criteria::expr()->in('state', $states)
+
+        $qb = $this->getRepository()->createQueryBuilder('a')
+            ->innerJoin('a.cart', 'c');
+        $qb->select('COUNT(a)');
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.event', ':event'),
+                $qb->expr()->in('a.state', $states)
             )
         );
+        $qb->setParameters(
+            [
+                'event' => $event,
+            ]
+        );
 
-        return $this->getRepository()->matching($criteria)->count();
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -61,7 +73,7 @@ class ApplicationDao extends EntityDao
         $criteria = Criteria::create()
             ->where(
                 Criteria::expr()->andX(
-                    Criteria::expr()->eq('event.id', $event->getId()),
+                    Criteria::expr()->eq('event', $event),
                     Criteria::expr()->notIn('state', $states)
                 )
             );
@@ -76,14 +88,22 @@ class ApplicationDao extends EntityDao
     public function countOccupiedApplicationsWithOption(OptionEntity $option): int
     {
         $states = ApplicationStateEnum::listOccupied();
-        $criteria = Criteria::create()->where(
-            Criteria::expr()->andX(
-                Criteria::expr()->eq('choices.option', $option),
-                Criteria::expr()->in('state', $states)
+        $qb = $this->getRepository()->createQueryBuilder('a')
+            ->innerJoin('a.choices', 'c');
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.option', ':option'),
+                $qb->expr()->in('a.state', $states)
             )
         );
+        $qb->setParameters(
+            [
+                'option' => $option,
+            ]
+        );
+        $qb->select('COUNT(a)');
 
-        return $this->getRepository()->matching($criteria)->count();
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -93,15 +113,22 @@ class ApplicationDao extends EntityDao
     public function countIssuedApplicationsWithOption(OptionEntity $option): int
     {
         $states = ApplicationStateEnum::listNotIssued();
-        $criteria = Criteria::create()
-            ->where(
-                Criteria::expr()->andX(
-                    Criteria::expr()->eq('choices.option.id', $option->getId()),
-                    Criteria::expr()->notIn('state', $states)
-                )
-            );
+        $qb = $this->getRepository()->createQueryBuilder('a')
+            ->innerJoin('a.choices', 'c');
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.option', ':option'),
+                $qb->expr()->notIn('a.state', $states)
+            )
+        );
+        $qb->setParameters(
+            [
+                'option' => $option,
+            ]
+        );
+        $qb->select('COUNT(a)');
 
-        return $this->getRepository()->matching($criteria)->count();
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -112,11 +139,13 @@ class ApplicationDao extends EntityDao
     {
         $qb = $this->getRepository()->createQueryBuilder('a');
         $qb->where(
-            [
-                'a.event' => $event,
-                //'a.state !=' => ApplicationEntity::getStatesNotIssued()
-            ]
-        );
+            $qb->expr()->eq('a.event', ':event')
+        )
+            ->setParameters(
+                [
+                    'event' => $event,
+                ]
+            );
 
         return new DoctrineDataSource($qb, 'id');
     }

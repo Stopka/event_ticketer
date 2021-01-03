@@ -51,8 +51,12 @@ class EarlyDao extends EntityDao
      */
     public function getEventEarliesGridModel(?EventEntity $eventEntity): IDataSource
     {
-        $qb = $this->getRepository()->createQueryBuilder('a');
-        $qb->where(['a.earlyWave.event' => $eventEntity]);
+        $qb = $this->getRepository()->createQueryBuilder('e')
+            ->innerJoin('e.earlyWave', 'ew');
+        $qb->where(
+            $qb->expr()->eq('ew.event', ':event')
+        );
+        $qb->setParameters(['event' => $eventEntity]);
 
         return new DoctrineDataSource($qb, 'id');
     }

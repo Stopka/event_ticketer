@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Model;
 
 use DateTime;
+use DateTimeInterface;
 use Nette\SmartObject;
 
 class DateFormatter
@@ -87,10 +88,10 @@ class DateFormatter
     }
 
     /**
-     * @param DateTime|null $dateTime
+     * @param DateTimeInterface|null $dateTime
      * @return string
      */
-    public function getDateString(?DateTime $dateTime): string
+    public function getDateString(?DateTimeInterface $dateTime): string
     {
         if (null === $dateTime) {
             return "";
@@ -100,10 +101,10 @@ class DateFormatter
     }
 
     /**
-     * @param DateTime|null $dateTime
+     * @param DateTimeInterface|null $dateTime
      * @return string
      */
-    public function getTimeString(?DateTime $dateTime): string
+    public function getTimeString(?DateTimeInterface $dateTime): string
     {
         if (null === $dateTime) {
             return "";
@@ -113,10 +114,10 @@ class DateFormatter
     }
 
     /**
-     * @param DateTime|null $dateTime
+     * @param DateTimeInterface|null $dateTime
      * @return string
      */
-    public function getDateTimeString(?DateTime $dateTime): string
+    public function getDateTimeString(?DateTimeInterface $dateTime): string
     {
         if (null === $dateTime) {
             return "";

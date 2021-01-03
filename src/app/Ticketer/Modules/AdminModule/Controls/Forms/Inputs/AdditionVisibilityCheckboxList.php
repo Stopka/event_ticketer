@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Ticketer\Modules\AdminModule\Controls\Forms\Inputs;
-
 
 use Nette\Forms\Controls\CheckboxList;
 use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
@@ -40,7 +38,7 @@ class AdditionVisibilityCheckboxList extends CheckboxList
             $values = $values->getValueArray(null, ['getId']);
             $result = [];
             foreach ($values as $key => $value) {
-                if (!$value) {
+                if (!(bool)$value) {
                     continue;
                 }
                 $result[] = $key;
@@ -48,7 +46,7 @@ class AdditionVisibilityCheckboxList extends CheckboxList
             $values = $result;
         }
         parent::setValue($values);
+
+        return $this;
     }
-
-
 }

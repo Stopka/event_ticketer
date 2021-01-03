@@ -72,13 +72,13 @@ class EarliesGridWrapper extends GridWrapper
 
     protected function appendEarlyWaveColumns(Grid $grid): void
     {
-        $grid->addColumnText('earlyWave.name', 'Entity.Singular.EarlyWave')
+        $grid->addColumnText('earlyWave_name', 'Entity.Singular.EarlyWave', 'earlyWave.name')
             ->setSortable()
             ->setFilterText();
-        $grid->addColumnDate('earlyWave.startDate', 'Attribute.Event.StartDate')
+        $grid->addColumnDate('earlyWave_startDate', 'Attribute.Event.StartDate', 'earlyWave.startDate')
             ->setSortable()
             ->setFilterDate();
-        $grid->addColumnText('earlyWave.inviteSent', 'Attribute.Event.InviteSent')
+        $grid->addColumnText('earlyWave_inviteSent', 'Attribute.Event.InviteSent', 'earlyWave.inviteSent')
             ->setReplacement([true => 'Value.Boolean.Yes', false => 'Value.Boolean.No'])
             ->setSortable()
             ->setFilterSelect([null => '', true => 'Value.Boolean.Yes', false => 'Value.Boolean.No']);
@@ -88,7 +88,7 @@ class EarliesGridWrapper extends GridWrapper
     protected function appendActions(Grid $grid): void
     {
         $grid->addAction('edit', 'Form.Action.Edit', 'Early:edit')
-            ->setIcon('fa fa-pencil');
+            ->setIcon('pencil');
         $grid->addActionCallback(
             'link',
             'Attribute.Link',
@@ -96,13 +96,13 @@ class EarliesGridWrapper extends GridWrapper
                 $this->getPresenter()->redirect(':Front:Early:default', [$uid]);
             }
         )
-            ->setIcon('fa fa-link')
+            ->setIcon('link')
             ->setRenderCondition(
                 function (EarlyEntity $earlyEntity): bool {
                     return $earlyEntity->isReadyToRegister();
                 }
             );
-        $grid->addToolbarButton('Early:add', 'Presenter.Admin.Early.Add.H1', [$this->eventEntity->getId()])
-            ->setIcon('fa fa-plus-circle');
+        $grid->addToolbarButton('Early:add', 'Presenter.Admin.Early.Add.H1', [$this->eventEntity->getId()->toString()])
+            ->setIcon('plus-circle');
     }
 }

@@ -42,7 +42,7 @@ trait TArrayValue
                 $werb = 'is';
             }
             if (
-                $werb === null
+                null === $werb
                 || in_array($method, $without, true)
                 || count($parameters) > 0
             ) {

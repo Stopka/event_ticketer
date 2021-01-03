@@ -119,25 +119,25 @@ class EventsGridWrapper extends GridWrapper
     protected function appendActions(Grid $grid): void
     {
         $grid->addAction('edit', 'Form.Action.Edit', 'Event:edit')
-            ->setIcon('fa fa-pencil');
+            ->setIcon('pencil');
         $grid->addAction('applications', 'Entity.Plural.Application', 'Application:')
-            ->setIcon('fa fa-ticket');
+            ->setIcon('ticket');
         $grid->addActionCallback('activate', 'Form.Action.Activate', [$this, 'onActivateClicked'])
-            ->setIcon('fa fa-toggle-on')
+            ->setIcon('toggle-on')
             ->setRenderCondition(
                 function (EventEntity $eventEntity): bool {
                     return !$eventEntity->isActive();
                 }
             );
         $grid->addActionCallback('deactivate', 'Form.Action.Deactivate', [$this, 'onDeactivateClicked'])
-            ->setIcon('fa fa-toggle-off')
+            ->setIcon('toggle-off')
             ->setRenderCondition(
                 function (EventEntity $eventEntity): bool {
                     return $eventEntity->isActive();
                 }
             );
         $grid->addActionCallback('cancel', 'Form.Action.Cancel', [$this, 'onCancelClicked'])
-            ->setIcon('fa fa-ban')
+            ->setIcon('ban')
             ->setRenderCondition(
                 function (EventEntity $eventEntity): bool {
                     return $eventEntity->isActive();
@@ -155,7 +155,7 @@ class EventsGridWrapper extends GridWrapper
             );
 
         $grid->addActionCallback('close', 'Form.Action.Close', [$this, 'onCloseClicked'])
-            ->setIcon('fa fa-times-circle')
+            ->setIcon('times-circle')
             ->setRenderCondition(
                 function (EventEntity $eventEntity): bool {
                     return $eventEntity->isActive();
@@ -172,9 +172,9 @@ class EventsGridWrapper extends GridWrapper
                 )
             );
         $grid->addToolbarButton('Event:add', 'Presenter.Admin.Event.Add.H1');
-        /* TODO->setIcon('fa fa-plus-circle') */
+        /* TODO->setIcon('plus-circle') */
         $grid->addToolbarButton('Currency:default', 'Presenter.AdminLayout.Setting.H1');
-        /* ->setIcon('fa fa-wrench') */
+        /* ->setIcon('wrench') */
     }
 
     /**

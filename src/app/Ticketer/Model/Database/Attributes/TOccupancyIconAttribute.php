@@ -6,6 +6,11 @@ namespace Ticketer\Model\Database\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * TODO move to extracted capacity entity?
+ * Trait TOccupancyIconAttribute
+ * @package Ticketer\Model\Database\Attributes
+ */
 trait TOccupancyIconAttribute
 {
 

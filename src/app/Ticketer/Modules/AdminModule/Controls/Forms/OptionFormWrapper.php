@@ -17,6 +17,7 @@ use Ticketer\Model\Database\Entities\OptionEntity;
 use Ticketer\Model\Database\Managers\OptionManager;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\OptionAutoselectSelect;
 
 class OptionFormWrapper extends FormWrapper
 {
@@ -130,17 +131,10 @@ class OptionFormWrapper extends FormWrapper
             ->setRequired();
         $form->addTextArea('description', 'Attribute.Description')
             ->setRequired(false);
-        $form->addSelect(
-            'autoSelect',
-            'Attribute.Addition.AutoSelect',
-            [
-                OptionAutoselectEnum::NONE => "Value.Addition.AutoSelect.None",
-                OptionAutoselectEnum::ALWAYS => "Value.Addition.AutoSelect.Always",
-                OptionAutoselectEnum::SECOND_ON => "Value.Addition.AutoSelect.SecondOn",
-            ]
-        )
+        $autoselectSelect = (new OptionAutoselectSelect('Attribute.Addition.AutoSelect'))
             ->setRequired()
-            ->setDefaultValue(OptionAutoselectEnum::NONE);
+            ->setDefaultValue(OptionAutoselectEnum::NONE());
+        $form->addComponent($autoselectSelect, 'autoSelect');
         $limitCapacity = $form->addExtendedCheckbox('limitCapacity', 'Form.Option.Attribute.LimitCapacity')
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.LimitCapacity");
         $limitCapacity->addCondition($form::EQUAL, true)
@@ -171,15 +165,17 @@ class OptionFormWrapper extends FormWrapper
             ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Option.Description.SetPrice");
         $setPriceControl->addCondition($form::EQUAL, true)
             ->toggle("priceControlGroup");
-        $subgroup = $form->addGroup(
-            (string)Html::el()
-                ->addHtml(
-                    Html::el('i', ['class' => 'fa fa-money'])
-                )
-                ->addText(
-                    ' ' . $this->getTranslator()->translate('Entity.Singular.Price')
-                )
-        )
+        $subgroup = $form->addGroup('Entity.Singular.Price')
+            ->setOption(
+                $form::OPTION_KEY_LABEL,
+                Html::el()
+                    ->addHtml(
+                        Html::el('i', ['class' => 'fa fa-money'])
+                    )
+                    ->addText(
+                        ' ' . $this->getTranslator()->translate('Entity.Singular.Price')
+                    )
+            )
             ->setOption($form::OPTION_KEY_ID, "priceControlGroup");
 
         $container = $form->addContainer('price');
@@ -223,14 +219,14 @@ class OptionFormWrapper extends FormWrapper
                 'Form.Option.Message.Edit.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()]);
+            $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()->toString()]);
         } else {
             $this->optionManager->createOptionFromEventForm($values, $this->additionEntity);
             $this->getPresenter()->flashTranslatedMessage(
                 'Form.Option.Message.Create.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()]);
+            $this->getPresenter()->redirect('Option:default', [$this->additionEntity->getId()->toString()]);
         }
     }
 }

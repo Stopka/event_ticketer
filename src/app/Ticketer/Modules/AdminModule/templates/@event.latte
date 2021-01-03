@@ -4,27 +4,27 @@
     <div class="nav-tabs">
         <ul>
             <li n:class="$presenter->isLinkCurrent('Application:default')?active">
-                <a n:href="Application:default,$event->getId()">
+                <a n:href="Application:default,$event->getId()->toString()">
                     <span><i class="fa fa-ticket"></i> {_'Entity.Plural.Application'}</span>
                 </a>
             </li>
             <li n:class="$presenter->isLinkCurrent('Application:occupancy')?active">
-                <a n:href="Application:occupancy,$event->getId()">
+                <a n:href="Application:occupancy,$event->getId()->toString()">
                     <span><i class="fa fa-adjust"></i> {_'Attribute.Event.Occupancy'}</span>
                 </a>
             </li>
             <li n:class="$presenter->isLinkCurrent('Substitute:default')?active">
-                <a n:href="Substitute:default,$event->getId()">
+                <a n:href="Substitute:default,$event->getId()->toString()">
                     <span><i class="fa fa-retweet"></i> {_'Entity.Plural.Substitute'}</span>
                 </a>
             </li>
             <li n:class=" $presenter->isLinkCurrent('Early:default')?active">
-                <a n:href="Early:default,$event->getId()">
+                <a n:href="Early:default,$event->getId()->toString()">
                     <span><i class="fa fa-star"></i> {_'Entity.Plural.Early'}</span>
                 </a>
             </li>
             <li n:class=" $presenter->isLinkCurrent('EarlyWave:default')?active">
-                <a n:href="EarlyWave:default,$event->getId()">
+                <a n:href="EarlyWave:default,$event->getId()->toString()">
                     <span><i class="fa fa-star-o"></i> {_'Entity.Plural.EarlyWave'}</span>
                 </a>
             </li>

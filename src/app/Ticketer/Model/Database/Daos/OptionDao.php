@@ -37,12 +37,21 @@ class OptionDao extends EntityDao
      */
     public function getOptionsWithLimitedCapacity(EventEntity $event): array
     {
-        return $this->getRepository()->findBy(
+        $qb = $this->getRepository()->createQueryBuilder('o')
+            ->join('o.addition', 'a');
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('a.event', ':event'),
+                $qb->expr()->isNotNull('o.capacity')
+            )
+        );
+        $qb->setParameters(
             [
-                'addition.event.id' => $event->getId(),
-                'capacity !=' => null,
+                'event' => $event,
             ]
         );
+
+        return $qb->getQuery()->getResult();
     }
 
     public function getAdditionOptionsGridModel(AdditionEntity $additionEntity): IDataSource

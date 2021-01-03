@@ -6,9 +6,13 @@ namespace Ticketer\Model\Database\Attributes;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * TODO extract to separate entity?
+ * Trait TCapacityAttribute
+ * @package Ticketer\Model\Database\Attributes
+ */
 trait TCapacityAttribute
 {
-
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @var integer|null

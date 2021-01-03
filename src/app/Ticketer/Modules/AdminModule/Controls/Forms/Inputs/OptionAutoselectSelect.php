@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\AdminModule\Controls\Forms\Inputs;
 
+use InvalidArgumentException;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
-use Ticketer\Model\Database\Enums\ApplicationStateEnum;
+use Ticketer\Model\Database\Enums\OptionAutoselectEnum;
 
-class ApplicationForStateSelect extends SelectBox
+class OptionAutoselectSelect extends SelectBox
 {
     /**
-     * ApplicationForStateSelect constructor.
+     * OptionAutoselectSelect constructor.
      * @param string|object|null $label
      */
     public function __construct($label = null)
@@ -19,29 +20,29 @@ class ApplicationForStateSelect extends SelectBox
         parent::__construct(
             $label,
             [
-                ApplicationStateEnum::OCCUPIED => 'Value.ForState.Occupied',
-                ApplicationStateEnum::FULFILLED => 'Value.ForState.Fulfilled',
+                OptionAutoselectEnum::NONE => 'Value.Addition.AutoSelect.None',
+                OptionAutoselectEnum::ALWAYS => "Value.Addition.AutoSelect.Always",
+                OptionAutoselectEnum::SECOND_ON => "Value.Addition.AutoSelect.SecondOn",
             ]
         );
-        $this->setPrompt('Value.ForState.None');
     }
 
     /**
-     * @param string|int|null|ApplicationStateEnum|mixed $value
+     * @param int|string|null|OptionAutoselectEnum|mixed $value
      * @return $this
      */
     public function setValue($value = null): self
     {
-        if (null === $value || $value instanceof ApplicationStateEnum) {
+        if (null === $value || $value instanceof OptionAutoselectEnum) {
             $this->value = $value;
         } elseif (is_string($value)) {
             if ('' === $value) {
                 $this->value = null;
             } else {
-                $this->value = new ApplicationStateEnum((int)$value);
+                $this->value = new OptionAutoselectEnum((int)$value);
             }
         } else {
-            throw new \InvalidArgumentException("Invalid type for $value.");
+            throw new InvalidArgumentException("Invalid type for $value.");
         }
 
         return $this;

@@ -69,11 +69,11 @@ class CurrenciesGridWrapper extends GridWrapper
     protected function appendActions(Grid $grid): void
     {
         $grid->addAction('edit', 'Form.Action.Edit', 'Currency:edit')
-            ->setIcon('fa fa-pencil');
+            ->setIcon('pencil');
         $grid->addActionCallback('setDefault', 'Attribute.Default', [$this, 'onSetDefaultClicked'])
-            ->setIcon('fa fa-check-square');
+            ->setIcon('check-square');
         $grid->addToolbarButton('Currency:add', 'Presenter.Admin.Currency.Add.H1')
-            ->setIcon('fa fa-plus-circle');
+            ->setIcon('plus-circle');
     }
 
     public function onSetDefaultClicked(string $id): void

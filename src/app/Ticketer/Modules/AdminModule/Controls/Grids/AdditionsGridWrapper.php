@@ -91,15 +91,15 @@ class AdditionsGridWrapper extends GridWrapper
     protected function appendActions(Grid $grid): void
     {
         $grid->addAction('edit', 'Form.Action.Edit', 'Addition:edit')
-            ->setIcon('fa fa-pencil');
+            ->setIcon('pencil');
         $grid->addAction('options', 'Entity.Plural.Option', 'Option:')
-            ->setIcon('fa fa-list-ul');
+            ->setIcon('list-ul');
         $grid->addActionCallback('moveUp', 'Form.Action.MoveUp', [$this, 'onMoveUpClicked'])
-            ->setIcon('fa fa-arrow-up');
+            ->setIcon('arrow-up');
         $grid->addActionCallback('moveDown', 'Form.Action.MoveDown', [$this, 'onMoveDownClicked'])
-            ->setIcon('fa fa-arrow-down');
+            ->setIcon('arrow-down');
         $grid->addActionCallback('delete', 'Form.Action.Delete', [$this, 'onDeleteClicked'])
-            ->setIcon('fa fa-trash')
+            ->setIcon('trash')
             ->setConfirmation(
                 new CallbackConfirmation(
                     function (AdditionEntity $additionEntity): string {
@@ -118,7 +118,7 @@ class AdditionsGridWrapper extends GridWrapper
             "Presenter.Admin.Addition.Add.H1",
             ['id' => $this->eventEntity->getId()->toString()]
         )
-            ->setIcon('fa fa-plus-circle');
+            ->setIcon('plus-circle');
     }
 
     /**

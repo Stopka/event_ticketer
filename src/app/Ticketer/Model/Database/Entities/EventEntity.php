@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Entities;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Criteria;
 use Ticketer\Model\Database\Attributes\TCapacityAttribute;
 use Ticketer\Model\Database\Attributes\TIdentifierAttribute;
@@ -373,10 +374,10 @@ class EventEntity extends BaseEntity
     }
 
     /**
-     * @param \DateTime|null $date
+     * @param DateTimeImmutable|null $date
      * @return bool
      */
-    public function isPublicAvailible(?\DateTime $date = null): bool
+    public function isPublicAvailible(?DateTimeImmutable $date = null): bool
     {
         return $this->isActive() && $this->isStarted($date);
     }

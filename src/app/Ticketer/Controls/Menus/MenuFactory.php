@@ -42,7 +42,7 @@ abstract class MenuFactory
                         return $value;
                     }
 
-                    return $value->getId();
+                    return $value->getId()->toString();
                 }
             )->setLinkParamPreprocessor(
                 CartEntity::class,

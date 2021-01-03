@@ -70,12 +70,12 @@ class EarlyWavesGridWrapper extends GridWrapper
             'Form.Action.Edit',
             'EarlyWave:edit'
         )
-            ->setIcon('fa fa-pencil');
+            ->setIcon('pencil');
         $grid->addToolbarButton(
             'EarlyWave:add',
             'Presenter.Admin.EarlyWave.Add.H1',
-            [$this->eventEntity->getId()]
+            [$this->eventEntity->getId()->toString()]
         )
-            ->setIcon('fa fa-plus-circle');
+            ->setIcon('plus-circle');
     }
 }

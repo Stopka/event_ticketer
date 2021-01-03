@@ -7,6 +7,10 @@ namespace Ticketer\Model\Database\Attributes;
 use Ticketer\Model\Database\Entities\PriceEntity;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Trait TPriceAttribute
+ * @package Ticketer\Model\Database\Attributes
+ */
 trait TPriceAttribute
 {
 

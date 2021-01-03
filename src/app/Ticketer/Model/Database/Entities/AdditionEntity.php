@@ -197,11 +197,14 @@ class AdditionEntity extends BaseEntity implements SortableEntityInterface
         return $this->visibility;
     }
 
+    /**
+     * @param array<string> $visibility
+     */
     public function setVisibility(array $visibility): void
     {
         $values = [];
         foreach (AdditionVisibilityCheckboxList::getItemLabels() as $key => $label) {
-            $values[$key] = in_array($key, $visibility);
+            $values[$key] = in_array($key, $visibility, true);
         }
         $this->visibility->setByValueArray($values);
     }

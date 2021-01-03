@@ -95,28 +95,33 @@ class ApplicationsGridWrapper extends GridWrapper
 
     protected function appendActions(Grid $grid): void
     {
-        $action = $grid->addGroupAction('Presenter.Admin.Reservation.Delegate.H1');
-        /** @phpstan-ignore-next-line */
-        $action->onClick[] = function (array $application_ids): void {
+        $action = $grid->addGroupButtonAction('Presenter.Admin.Reservation.Delegate.H1');
+        $action->onClick[] = function (array $applicationIds): void {
             $this->getPresenter()->redirect(
                 'Reservation:delegate',
                 [
-                    'id' => $this->event->getId(),
-                    'ids' => $application_ids,
+                    'id' => $this->event->getId()->toString(),
+                    'ids' => $applicationIds,
                 ]
             );
         };
-        /*$grid->addActionEvent('detailCart', 'Form.Action.Detail', function ($id) {
-            $application = $this->applicationDao->getApplication($id);
-            if (!$application || !$application->getCart()) {
-                return;
+        $grid->addActionCallback(
+            'detailCart',
+            'Form.Action.Detail',
+            function ($id): void {
+                $application = $this->applicationDao->getApplication($id);
+                if (null === $application || null === $application->getCart()) {
+                    return;
+                }
+                $this->getPresenter()->redirect('Cart:default', $application->getCart()->getId()->toString());
             }
-            $this->getPresenter()->redirect('Cart:default', $application->getCart()->getId());
-        })
-            ->setIcon('fa fa-eye')
-            ->setDisable(function (ApplicationEntity $applicationEntity) {
-                return $applicationEntity->getCart() === null;
-            });*/
+        )
+            ->setIcon('eye')
+            ->setRenderCondition(
+                function (ApplicationEntity $applicationEntity): bool {
+                    return null !== $applicationEntity->getCart();
+                }
+            );
         $grid->addActionCallback(
             'editCart',
             'Form.Action.Edit',
@@ -130,10 +135,10 @@ class ApplicationsGridWrapper extends GridWrapper
                 if (null === $cart) {
                     return;
                 }
-                $this->getPresenter()->redirect('Cart:edit', $cart->getId());
+                $this->getPresenter()->redirect('Cart:edit', $cart->getId()->toString());
             }
         )
-            ->setIcon('fa fa-pencil')
+            ->setIcon('pencil')
             ->setRenderCondition(
                 function (ApplicationEntity $applicationEntity): bool {
                     return null !== $applicationEntity->getCart();
@@ -150,13 +155,13 @@ class ApplicationsGridWrapper extends GridWrapper
                 $this->getPresenter()->redirect(
                     'Application:editReservation',
                     [
-                        'id' => $this->event->getId(),
-                        'ids' => [$application->getId()],
+                        'id' => $this->event->getId()->toString(),
+                        'ids' => [$application->getId()->toString()],
                     ]
                 );
             }
         )
-            ->setIcon('fa fa-pencil')
+            ->setIcon('pencil')
             ->setRenderCondition(
                 function (ApplicationEntity $applicationEntity): bool {
                     return $applicationEntity->getState()->isReserved()
@@ -164,7 +169,7 @@ class ApplicationsGridWrapper extends GridWrapper
                 }
             );
         $grid->addActionCallback('cancel', 'Form.Action.Cancel', [$this, 'onCancelClicked'])
-            ->setIcon('fa fa-ban')
+            ->setIcon('ban')
             ->setConfirmation(
                 new CallbackConfirmation(
                     function (ApplicationEntity $applicationEntity): string {
@@ -181,19 +186,19 @@ class ApplicationsGridWrapper extends GridWrapper
                 }
             );
         $grid->addAction('pdf', 'Entity.Singular.Application', 'Application:pdf')
-            ->setIcon('fa fa-ticket');
+            ->setIcon('ticket');
         $grid->addToolbarButton(
             "Application:reserve",
             'Presenter.Admin.Application.Reserve.H1',
-            ['id' => $this->event->getId()]
+            ['id' => $this->event->getId()->toString()]
         )
-            ->setIcon('fa fa-address-book-o');
+            ->setIcon('address-book-o');
         $grid->addToolbarButton(
             "Application:export",
             'Presenter.Admin.Application.Export.H1',
-            ['id' => $this->event->getId()]
+            ['id' => $this->event->getId()->toString()]
         )
-            ->setIcon('fa fa-download');
+            ->setIcon('download');
     }
 
     protected function appendApplicationColumns(Grid $grid): void
@@ -249,7 +254,7 @@ class ApplicationsGridWrapper extends GridWrapper
                             [
                                 'href' => $this->getPresenter()->link(
                                     'Cart:default',
-                                    $cart->getId()
+                                    $cart->getId()->toString()
                                 ),
                             ]
                         );
@@ -306,7 +311,7 @@ class ApplicationsGridWrapper extends GridWrapper
                             [
                                 'href' => $this->getPresenter()->link(
                                     ':Front:Reservation:register',
-                                    $reservation->getId()
+                                    $reservation->getId()->toString()
                                 ),
                             ]
                         );
@@ -368,7 +373,7 @@ class ApplicationsGridWrapper extends GridWrapper
                                         'title' => $this->getTranslator()->translate('Form.Action.Switch'),
                                         'href' => $this->link(
                                             'inverseChoicePayed!#choice_' . $choice->getId(),
-                                            $choice->getId()
+                                            $choice->getId()->toString()
                                         ),
                                     ]
                                 )
