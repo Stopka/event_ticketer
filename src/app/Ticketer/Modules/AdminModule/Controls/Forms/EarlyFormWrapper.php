@@ -11,15 +11,20 @@ use Nette\Forms\Controls\SelectBox;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\Form;
 use Ticketer\Controls\Forms\FormWrapperDependencies;
+use Ticketer\Model\Database\Entities\EarlyWaveEntity;
 use Ticketer\Model\DateFormatter;
 use Ticketer\Model\Database\Daos\EarlyWaveDao;
 use Ticketer\Model\Database\Entities\EarlyEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Managers\EarlyManager;
 use Nette\Forms\Controls\SubmitButton;
+use Ticketer\Model\Dtos\Uuid;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\UuidSelect;
 
 class EarlyFormWrapper extends FormWrapper
 {
+    private const EARLY_WAVE_GROUP_ID = 'earlyWaveControlGroup';
+
     private EarlyManager $earlyManager;
 
     private ?EventEntity $eventEntity = null;
@@ -126,7 +131,7 @@ class EarlyFormWrapper extends FormWrapper
             ->addCondition($form::FILLED)
             ->toggle('earlyWaveControlGroup', false);
         $form->addGroup("Form.Early.Group.NewEarlyWave")
-            ->setOption($form::OPTION_KEY_ID, 'earlyWaveControlGroup');
+            ->setOption($form::OPTION_KEY_ID, self::EARLY_WAVE_GROUP_ID);
         $wave = $form->addContainer('earlyWave');
         $wave->addText('name', 'Attribute.Name')
             ->setRequired(false);
@@ -154,20 +159,23 @@ class EarlyFormWrapper extends FormWrapper
         }
         /** @var array<mixed> $values */
         $values = $form->getValues('array');
+        if (null !== $values['earlyWaveId']) {
+            $values['earlyWaveId'] = Uuid::fromString($values['earlyWaveId']);
+        }
         if (null !== $this->earlyEntity) {
             $this->earlyManager->editEarlyFromEarlyForm($values, $this->earlyEntity, $this->eventEntity);
             $this->getPresenter()->flashTranslatedMessage(
                 'Form.Early.Message.Edit.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
+            $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()->toString()]);
         } else {
             $this->earlyManager->createEarlyFromEarlyForm($values, $this->eventEntity);
             $this->getPresenter()->flashTranslatedMessage(
                 'Form.Early.Message.Create.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()]);
+            $this->getPresenter()->redirect('Early:default', [$this->eventEntity->getId()->toString()]);
         }
     }
 }

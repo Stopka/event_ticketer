@@ -88,8 +88,7 @@ class EarlyWaveFormWrapper extends FormWrapper
         $form->addDate('startDate', 'Attribute.Event.StartDate')
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Form.EarlyWave.Description.StartDate')
             ->setDefaultValue(new DateTimeImmutable())
-            ->setRequired(true)
-        //    ->addRule($form::VALID, 'Form.Rule.Date')
+            ->setRequired(true)//    ->addRule($form::VALID, 'Form.Rule.Date')
         ;
     }
 
@@ -112,14 +111,14 @@ class EarlyWaveFormWrapper extends FormWrapper
                 'Form.EarlyWave.Message.Edit.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('EarlyWave:default', [$this->eventEntity->getId()]);
+            $this->getPresenter()->redirect('EarlyWave:default', [$this->eventEntity->getId()->toString()]);
         } else {
             $this->earlyWaveManager->createWaveFromWaveForm($values, $this->eventEntity);
             $this->getPresenter()->flashTranslatedMessage(
                 'Form.EarlyWave.Message.Create.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('EarlyWave:default', [$this->eventEntity->getId()]);
+            $this->getPresenter()->redirect('EarlyWave:default', [$this->eventEntity->getId()->toString()]);
         }
     }
 }
