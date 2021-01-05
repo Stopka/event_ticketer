@@ -131,6 +131,6 @@ class DelegateReservationFormWrapper extends FormWrapper
             'Form.Reservation.Message.Delegate.Success',
             FlashMessageTypeEnum::SUCCESS()
         );
-        $this->getPresenter()->redirect('Application:', $this->event->getId());
+        $this->getPresenter()->redirect('Application:', $this->event->getId()->toString());
     }
 }

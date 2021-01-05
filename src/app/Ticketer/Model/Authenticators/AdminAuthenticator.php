@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Authenticators;
 
+use Nette\Security\Authenticator;
+use Nette\Security\SimpleIdentity;
 use Ticketer\Model\Database\Daos\AdministratorDao;
 use Nette\Security\AuthenticationException;
-use Nette\Security\IAuthenticator;
 use Nette\Security\Identity;
 use Nette\Security\IIdentity;
 use Nette\SmartObject;
 
-class AdminAuthenticator implements IAuthenticator
+class AdminAuthenticator implements Authenticator
 {
     use SmartObject;
 
@@ -27,14 +28,14 @@ class AdminAuthenticator implements IAuthenticator
     /**
      * Performs an authentication against e.g. database.
      * and returns IIdentity on success or throws AuthenticationException
-     * @param mixed[] $credentials
+     * @param string $user
+     * @param string $password
      * @return IIdentity
      * @throws AuthenticationException
      */
-    public function authenticate(array $credentials): IIdentity
+    public function authenticate(string $user, string $password): IIdentity
     {
-        [$username, $password] = $credentials;
-        $admin = $this->administratorDao->getAdministratorByUsername($username);
+        $admin = $this->administratorDao->getAdministratorByUsername($user);
         if (null === $admin) {
             throw new AuthenticationException('Admin does not exist');
         }
@@ -42,6 +43,6 @@ class AdminAuthenticator implements IAuthenticator
             throw new AuthenticationException('Wrong password');
         }
 
-        return new Identity($admin->getId(), 'administrator', $admin->getValueArray());
+        return new SimpleIdentity($admin->getId(), 'administrator', $admin->getValueArray());
     }
 }

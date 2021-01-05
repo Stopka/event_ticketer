@@ -16,7 +16,6 @@ use Stopka\NetteFormRenderer\Forms\IFormOptionKeys;
  * @package Ticketer\Controls\Forms
  * @method ReCaptchaField addReCaptcha()
  * @method InvisibleReCaptchaField addInvisibleReCaptcha()
- * @method Multiplier addMultiplier(string $name, callable $factory, int $copies, int|null $maxCopies)
  */
 class Form extends NetteForm implements IFormOptionKeys
 {

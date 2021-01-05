@@ -50,10 +50,10 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param string|null $id
      * @throws AbortException
      */
-    public function actionDefault(?int $id = null): void
+    public function actionDefault(?string $id = null): void
     {
         if (null === $id) {
             $events = $this->eventDao->getPublicAvailibleEvents();
@@ -73,7 +73,7 @@ class EventPresenter extends BasePresenter
             if (1 !== $eventsCount) {
                 $this->redirect('Homepage:default');
             }
-            $id = $events[0]->getId();
+            $id = $events[0]->getId()->toString();
         }
         $this->redirect('register', $id);
     }

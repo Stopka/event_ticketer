@@ -43,13 +43,12 @@ class ReservationDao extends EntityDao
 
     /**
      * Returns reservation ready to register
-     * @param string $id
+     * @param Uuid $id
      * @return ReservationEntity|null
      */
-    public function getRegisterReadyReservationByUid(string $id): ?ReservationEntity
+    public function getRegisterReadyReservation(Uuid $id): ?ReservationEntity
     {
-        /** @var ReservationEntity|null $reservation */
-        $reservation = $this->getRepository()->findOneBy(['uid' => $id]);
+        $reservation = $this->getReservation($id);
         if (null !== $reservation && $reservation->isRegisterReady()) {
             return $reservation;
         }

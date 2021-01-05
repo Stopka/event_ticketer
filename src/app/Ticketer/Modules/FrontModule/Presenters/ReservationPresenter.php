@@ -10,6 +10,7 @@ use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Controls\Forms\ICartFormWrapperFactory;
 use Ticketer\Model\Database\Daos\ReservationDao;
 use Ticketer\Model\Database\Entities\ReservationEntity;
+use Ticketer\Model\Dtos\Uuid;
 
 class ReservationPresenter extends BasePresenter
 {
@@ -48,7 +49,8 @@ class ReservationPresenter extends BasePresenter
      */
     public function actionRegister(string $id): void
     {
-        $reservation = $this->reservationDao->getRegisterReadyReservationByUid($id);
+        $uuid = Uuid::fromString($id);
+        $reservation = $this->reservationDao->getRegisterReadyReservation($uuid);
         if (null === $reservation) {
             $this->flashTranslatedMessage('Error.Reservation.NotFound', FlashMessageTypeEnum::WARNING());
             $this->redirect('Homepage:');

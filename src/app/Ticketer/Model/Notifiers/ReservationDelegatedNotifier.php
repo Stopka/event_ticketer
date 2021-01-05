@@ -58,7 +58,7 @@ class ReservationDelegatedNotifier implements EventSubscriberInterface
             throw new RuntimeException('Missing email address');
         }
 
-        $link = $emailService->generateLink('Front:Reservation:', ['id' => $reservationEntity->getId()]);
+        $link = $emailService->generateLink('Front:Reservation:', ['id' => $reservationEntity->getId()->toString()]);
         $message = $emailService->createMessage();
         $message->addTo($email, $reservationEntity->getFullName());
         $message->setSubject('Rezervace místa na ' . $event->getName());

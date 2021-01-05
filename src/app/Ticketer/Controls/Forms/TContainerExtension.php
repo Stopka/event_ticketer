@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Ticketer\Controls\Forms;
 
+use Contributte\FormMultiplier\Multiplier;
 use Nette\Forms\Container as NetteContainer;
 use Stopka\NetteFormsCheckboxComponent\CheckboxControlContainerTrait;
 use Stopka\NetteFormsHtmlComponent\HtmlControlContainerTrait;
+use Ticketer\Controls\Forms\Inputs\MultiplierContainer;
 use Vodacek\Forms\Controls\DateInput;
 
 trait TContainerExtension
@@ -41,5 +43,19 @@ trait TContainerExtension
         $this->addComponent($input, $name);
 
         return $input;
+    }
+
+    public function addMultiplier(
+        string $name,
+        callable $factory,
+        int $createDefault = 0,
+        bool $forceDefault = false
+    ): MultiplierContainer {
+        $multiplier = new MultiplierContainer($factory, $createDefault, $forceDefault);
+        $multiplier->setCurrentGroup($this->getCurrentGroup());
+
+        $this->addComponent($multiplier, $name);
+
+        return $multiplier;
     }
 }

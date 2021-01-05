@@ -7,7 +7,7 @@
 <ul n:if="$events">
     <li n:foreach="$events as $event">
         <strong>
-            <a n:href="Event:,$event->getId()">
+            <a n:href="Event:,$event->getId()->toString()">
                 <i class="fa fa-calendar-check-o"></i>
                 <span>{$event->getName()}</span>
             </a>

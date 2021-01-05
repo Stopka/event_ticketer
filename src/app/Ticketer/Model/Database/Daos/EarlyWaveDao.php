@@ -38,9 +38,15 @@ class EarlyWaveDao extends EntityDao
         $qb->where(
             $qb->expr()->andX(
                 $qb->expr()->eq('e.state', EventStateEnum::ACTIVE()),
-                $qb->expr()->lte('ew.startDate', new DateTimeImmutable()),
-                $qb->expr()->eq('ew.inviteSent', false)
+                $qb->expr()->lte('ew.startDate', ':startDate'),
+                $qb->expr()->eq('ew.inviteSent', ':inviteSent')
             )
+        );
+        $qb->setParameters(
+            [
+                'startDate' => new DateTimeImmutable(),
+                'inviteSent' => false,
+            ]
         );
 
         return $qb->getQuery()->getResult();

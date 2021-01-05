@@ -6,6 +6,7 @@ namespace Ticketer\Controls\Forms;
 
 use DateTime;
 use Exception;
+use Kdyby\Replicator\Container as KdybyContainer;
 use Nette\Application\AbortException;
 use RuntimeException;
 use Ticketer\Controls\FlashMessageTypeEnum;
@@ -26,7 +27,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\ReservationEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\Managers\CartManager;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
 use Vodacek\Forms\Controls\DateInput;
@@ -447,7 +447,7 @@ class CartFormWrapper extends FormWrapper
 
     protected function appendApplicationsControls(Form $form): void
     {
-        $form->addGroup('Přihlášky');
+        $group = $form->addGroup('Přihlášky');
         $multiplier = $form->addMultiplier(
             self::CONTAINER_NAME_APPLICATIONS,
             function (Container $applicationContainer) use ($form): void {
@@ -466,15 +466,34 @@ class CartFormWrapper extends FormWrapper
 
                 $this->appendApplicationControls($form, $applicationContainer);
                 $this->appendAdditionsControls($applicationContainer, $applicationIndex);
+                if (null === $this->cart) {
+                    $applicationContainer->addSubmit('remove', 'Zrušit tuto přihlášku')
+                        ->setValidationScope([])
+                        ->onClick[] = function (SubmitButton $button): void {
+                        /** @var Container|null $container */
+                            $container = $button->getParent();
+                            if (null === $container) {
+                                return;
+                            }
+                            /** @var KdybyContainer|null $item */
+                            $item = $container->getParent();
+                            if (null === $item) {
+                                return;
+                            }
+                            $item->remove($container, true);
+                        };
+                }
             },
             $this->getApplicationCount(),
-            $this->isApplicationCountFixed() ? $this->getApplicationCount() : null,
+            $this->isApplicationCountFixed()
         );
         if (null === $this->substitute && null === $this->cart && null === $this->reservation) {
-            $multiplier->addCreateButton('Přidat další přihlášku');
-        }
-        if (null === $this->cart) {
-            $multiplier->addRemoveButton('Zrušit tuto přihlášku');
+            $form->setCurrentGroup($group);
+            $form->addSubmit('add', 'Přidat další přihlášku')
+                ->setValidationScope([])
+                ->onClick[] = function (SubmitButton $button) use ($multiplier): void {
+                    $multiplier->createOne();
+                };
         }
     }
 
@@ -510,16 +529,16 @@ class CartFormWrapper extends FormWrapper
     private function isApplicationCountFixed(): bool
     {
         if (null !== $this->cart) {
-            return false;
+            return true;
         }
         if (null !== $this->reservation) {
-            return false;
+            return true;
         }
         if (null !== $this->substitute) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     protected function appendApplicationControls(Form $form, Container $container): void
@@ -540,11 +559,11 @@ class CartFormWrapper extends FormWrapper
             ]
         )
             ->setRequired();
-        //TODO date input
         $applicationContainer->addText('birthDate', 'Datum narození')
-            ->setRequired()
             ->setOption($form::OPTION_KEY_DESCRIPTION, 'Ve formátu dd.mm.rrrr')
-            ->addRule($form::PATTERN, 'Vloženo chybné datum!', '[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}');
+            ->addRule($form::PATTERN, 'Vloženo chybné datum!', '[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}')
+            //$applicationContainer->addDate('birthDate', 'Datum narození')
+            ->setRequired();
         $applicationContainer->addSelect(
             'insuranceCompanyId',
             'Zdravotní pojišťovna',

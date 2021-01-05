@@ -1,5 +1,5 @@
-extensions:
-    forms.multiplier: Contributte\FormMultiplier\DI\MultiplierExtension
+#extensions:
+#    forms.multiplier: Contributte\FormMultiplier\DI\MultiplierExtension
 
 forms:
     messages:
