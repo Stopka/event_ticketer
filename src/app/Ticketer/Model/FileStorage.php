@@ -27,11 +27,7 @@ class FileStorage
     {
         $this->dir = $baseDir;
         if ($create) {
-            $path = explode('/', $subDir);
-            array_shift($path);
-            foreach ($path as $dir) {
-                $this->createDir('/' . $dir);
-            }
+            $this->createDir('/' . $subDir);
         }
         $this->dir = $baseDir . $subDir;
         if (!is_dir($this->dir)) {
@@ -61,7 +57,9 @@ class FileStorage
         $dir = $this->getFullPath($dir);
         if (!is_dir($dir)) {
             umask(0);
-            mkdir($dir, 0777);
+            if (!mkdir($dir, 0777, true) && !is_dir($dir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            }
         }
     }
 

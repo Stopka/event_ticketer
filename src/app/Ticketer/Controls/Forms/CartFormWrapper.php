@@ -475,7 +475,7 @@ class CartFormWrapper extends FormWrapper
                             if (null === $container) {
                                 return;
                             }
-                            /** @var KdybyContainer|null $item */
+                        /** @var KdybyContainer|null $item */
                             $item = $container->getParent();
                             if (null === $item) {
                                 return;
@@ -492,7 +492,8 @@ class CartFormWrapper extends FormWrapper
             $form->addSubmit('add', 'Přidat další přihlášku')
                 ->setValidationScope([])
                 ->onClick[] = function (SubmitButton $button) use ($multiplier): void {
-                    $multiplier->createOne();
+                    $count = iterator_count($multiplier->getContainers());
+                    $multiplier->createOne(self::VALUE_APPLICATION_NEW . ($count + 1));
                 };
         }
     }

@@ -72,7 +72,7 @@ class CartCreatedNotifier implements EventSubscriberInterface
             throw new NotReadyException("Cart has no event");
         }
         $emailService = $this->getEmailService();
-        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getId()]);
+        $link = $emailService->generateLink('Front:Cart:', ['id' => $cartEntity->getId()->toString()]);
         $message = $emailService->createMessage();
         $message->addTo($emailAddress, $cartEntity->getFullName());
         $message->setSubject('Přihláška na ' . $event->getName());
