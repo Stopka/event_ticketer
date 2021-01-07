@@ -11,6 +11,7 @@ use Nette\Application\AbortException;
 use RuntimeException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\EmptyException;
 use Ticketer\Model\Exceptions\FormControlException;
 use Ticketer\Model\Exceptions\InvalidInputException;
@@ -18,7 +19,6 @@ use Ticketer\Model\Database\Enums\GenderEnum;
 use Ticketer\Model\Database\Daos\ApplicationDao;
 use Ticketer\Model\Database\Daos\CurrencyDao;
 use Ticketer\Model\Database\Daos\InsuranceCompanyDao;
-use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
 use Ticketer\Model\Database\Entities\CartEntity;
 use Ticketer\Model\Database\Entities\CurrencyEntity;
@@ -29,7 +29,7 @@ use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\Managers\CartManager;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Html;
-use Vodacek\Forms\Controls\DateInput;
+use UnexpectedValueException;
 
 class CartFormWrapper extends FormWrapper
 {
@@ -313,6 +313,19 @@ class CartFormWrapper extends FormWrapper
                     ['birthDate']
                 );
             }
+            try {
+                $applicationValues[self::CONTAINER_NAME_APPLICATION]['gender'] = new GenderEnum(
+                    $applicationValues[self::CONTAINER_NAME_APPLICATION]['gender']
+                );
+            } catch (UnexpectedValueException $exception) {
+                throw new FormControlException(
+                    new InvalidInputException('Chybný výběr pohlaví'),
+                    ['gender']
+                );
+            }
+            $applicationValues[self::CONTAINER_NAME_APPLICATION]['insuranceCompanyId'] = Uuid::fromString(
+                $applicationValues[self::CONTAINER_NAME_APPLICATION]['insuranceCompanyId']
+            );
             $builder->resetPreselectedOptions();
             if (null !== $this->reservation) {
                 $application = $this->applicationDao->getApplication($applicationId);

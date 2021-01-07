@@ -108,8 +108,9 @@ class ApplicationsGridWrapper extends GridWrapper
         $grid->addActionCallback(
             'detailCart',
             'Form.Action.Detail',
-            function ($id): void {
-                $application = $this->applicationDao->getApplication($id);
+            function (string $id): void {
+                $uuid = Uuid::fromString($id);
+                $application = $this->applicationDao->getApplication($uuid);
                 if (null === $application || null === $application->getCart()) {
                     return;
                 }

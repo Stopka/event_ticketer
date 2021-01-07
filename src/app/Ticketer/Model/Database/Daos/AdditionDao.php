@@ -54,7 +54,7 @@ class AdditionDao extends EntityDao
         /** @var AdditionEntity[] $additions */
         $additions = $this->getRepository()->findBy(
             [
-                'event.id' => $event->getId(),
+                'event' => $event,
             ]
         );
         $result = [];

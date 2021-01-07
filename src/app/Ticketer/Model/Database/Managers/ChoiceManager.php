@@ -173,7 +173,7 @@ class ChoiceManager
                 $processedOptionIds[] = $option->getId()->toString();
             }
             foreach ($optionIds as $optionId) {
-                if (in_array($optionId, $processedOptionIds, true)) {
+                if (in_array($optionId->toString(), $processedOptionIds, true)) {
                     continue;
                 }
                 $this->addChoice($optionId, $application);

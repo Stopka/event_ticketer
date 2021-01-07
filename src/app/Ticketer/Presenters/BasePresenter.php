@@ -9,6 +9,7 @@ use Ticketer\Controls\TInjectTranslator;
 use Ticketer\Model\Database\Daos\AdministratorDao;
 use Ticketer\Model\Database\Entities\AdministratorEntity;
 use Nette;
+use Ticketer\Model\Dtos\Uuid;
 
 /**
  * Base presenter for all application presenters.
@@ -40,7 +41,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         parent::startup();
         if ($this->getUser()->isLoggedIn()) {
-            $administratorEntity = $this->administratorDao->getAdministrator($this->getUser()->getId());
+            $userUuid = Uuid::fromString($this->getUser()->getId());
+            $administratorEntity = $this->administratorDao->getAdministrator($userUuid);
             if (null === $administratorEntity) {
                 $this->getUser()->logout(true);
                 $this->redirect('this');

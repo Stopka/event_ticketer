@@ -6,6 +6,7 @@ namespace Ticketer\Modules\FrontModule\Presenters;
 
 use Nette\Application\AbortException;
 use Ticketer\Controls\FlashMessageTypeEnum;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\FrontModule\Controls\Grids\CartApplicationsGridWrapper;
 use Ticketer\Modules\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFactory;
 use Ticketer\Model\DateFormatter;
@@ -39,7 +40,8 @@ class CartPresenter extends BasePresenter
      */
     public function actionDefault(string $id): void
     {
-        $cart = $this->cartDao->getViewableCartByUid($id);
+        $uuid = Uuid::fromString($id);
+        $cart = $this->cartDao->getViewableCartByUid($uuid);
         if (null === $cart) {
             $this->flashTranslatedMessage('Error.Cart.NotFound', FlashMessageTypeEnum::ERROR());
             $this->redirect('Homepage:');

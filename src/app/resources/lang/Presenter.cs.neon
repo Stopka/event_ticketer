@@ -63,7 +63,7 @@ Front:
     Substitute:
         Register:
             H1: 'Registrace náhradníka'
-    OrderEnum:
+    Order:
         Default:
             H1: 'Objednávka #%cart_id%'
             EarlyLabel: 'Přednostně na jméno'

@@ -16,13 +16,12 @@ class CartDao extends EntityDao
     }
 
     /**
-     * @param string $uid
+     * @param Uuid $uuid
      * @return CartEntity|null
      */
-    public function getViewableCartByUid(string $uid): ?CartEntity
+    public function getViewableCartByUid(Uuid $uuid): ?CartEntity
     {
-        /** @var CartEntity|null $cart */
-        $cart = $this->getRepository()->findOneBy(['uid' => $uid]);
+        $cart = $this->getCart($uuid);
         if (null !== $cart && CartEntity::STATE_ORDERED === $cart->getState()) {
             return $cart;
         }

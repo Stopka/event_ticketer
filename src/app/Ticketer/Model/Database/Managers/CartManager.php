@@ -115,9 +115,8 @@ class CartManager
             // if exisitning application is not matched with event
             $applicationEvent = null !== $application ? $application->getEvent() : null;
             if (
-                null === $applicationEvent ||
                 null === $event ||
-                (null !== $application && $applicationEvent->getId() != $event->getId())
+                (null !== $applicationEvent && !$applicationEvent->getId()->equals($event->getId()))
             ) {
                 continue;
             }
@@ -137,11 +136,11 @@ class CartManager
                     $event
                 );
             }
-            $processedApplicationIds[] = $application->getId();
+            $processedApplicationIds[] = $application->getId()->toString();
             $application->setCart($cart);
         }
         foreach ($cart->getApplications() as $application) {
-            if (!in_array($application->getId(), $processedApplicationIds, true)) {
+            if (!in_array($application->getId()->toString(), $processedApplicationIds, true)) {
                 $application->setCart(null);
             }
         }

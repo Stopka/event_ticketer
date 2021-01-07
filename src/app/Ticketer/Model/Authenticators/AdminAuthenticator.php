@@ -43,6 +43,6 @@ class AdminAuthenticator implements Authenticator
             throw new AuthenticationException('Wrong password');
         }
 
-        return new SimpleIdentity($admin->getId(), 'administrator', $admin->getValueArray());
+        return new SimpleIdentity($admin->getId()->toString(), 'administrator', $admin->getValueArray());
     }
 }

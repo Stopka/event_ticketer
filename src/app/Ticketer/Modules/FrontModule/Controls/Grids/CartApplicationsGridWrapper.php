@@ -125,24 +125,24 @@ class CartApplicationsGridWrapper extends GridWrapper
         if (null === $event) {
             return;
         }
-        foreach ($event->getAdditions() as $option) {
-            if (!$this->isVisible($option)) {
+        foreach ($event->getAdditions() as $addition) {
+            if (!$this->isVisible($addition)) {
                 continue;
             }
-            $grid->addColumnText('addition' . $option->getId(), (string)$option->getName())
+            $grid->addColumnText('addition' . $addition->getId(), (string)$addition->getName())
                 ->setRenderer(
-                    function (ApplicationEntity $application) use ($option): Html {
+                    function (ApplicationEntity $application) use ($addition): Html {
                         $result = Html::el();
                         foreach ($application->getChoices() as $choice) {
                             $option = $choice->getOption();
                             if (null === $option) {
                                 continue;
                             }
-                            $addition = $option->getAddition();
-                            if (null === $addition) {
+                            $choiceAddition = $option->getAddition();
+                            if (null === $choiceAddition) {
                                 continue;
                             }
-                            if ($addition->getId() !== $option->getId()) {
+                            if (!$addition->getId()->equals($choiceAddition->getId())) {
                                 continue;
                             }
                             $isPayedLink = Html::el(

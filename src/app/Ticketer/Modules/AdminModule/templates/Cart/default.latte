@@ -10,7 +10,7 @@
     <li n:if="$cart->getPhone()">{_'Attribute.Person.Phone'}: <strong><a
                     href="tel:{$cart->getPhone()}">{$cart->getPhone()}</a></strong></li>
     <li n:if="$cart->getEmail()">{_'Attribute.Person.Email'}: <strong><a href="mailto:{$cart->getEmail()}">{$cart->getEmail()}</a></strong></li>
-    {var $link = $control->link('//:Front:Cart:default',$cart->getUid())}
+    {var $link = $control->link('//:Front:Cart:default',$cart->getId()->toString())}
     <li>{_'Attribute.Link'}: <strong><a href="{$link}">{$link}</a></strong></li>
     <li n:if="$cart->getEarly()">
         {_'Entity.Singular.Early'}:
@@ -18,7 +18,7 @@
         <ul>
             <li n:if="$early->getFirstName()">{_'Attribute.Person.FirstName'}: <strong>{$early->getFirstName()}</strong></li>
             <li n:if="$early->getLastName()">{_'Attribute.Person.LastName'}: <strong>{$early->getLastName()}</strong></li>
-            {var $link = $control->link('//:Front:Early:default',$cart->getUid())}
+            {var $link = $control->link('//:Front:Early:default',$cart->getId()->toString())}
             <li>{_'Attribute.Link'}: <strong><a href="{$link}">{$link}</a></strong></li>
         </ul>
     </li>
