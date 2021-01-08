@@ -122,7 +122,7 @@ class ApplicationPdfResponse implements IResponse
         $pdf = $this->pdfResponseFactory->create($template);
         $pdf->setSaveMode($this->getSaveMode());
         $pdf->setPageFormat("A4");
-        $title = "Application form " . Strings::padLeft((string)$this->application->getId(), 5, '0');
+        $title = "Application form " . (string)$this->application->getId();
         $pdf->setDocumentTitle($title);
         $pdf->setDocumentAuthor("ldtpardubice.cz");
         $pdf->setPageMargins("13,13,13,13,10,10");
@@ -166,5 +166,15 @@ class ApplicationPdfResponse implements IResponse
     {
         $pdfResponse = $this->buildPdfResponse();
         $pdfResponse->save($dir, $filename);
+    }
+
+    /**
+     * Saves pdf into file without tampering the file name
+     * @param string $filePath
+     */
+    public function saveToFilePath(string $filePath): void
+    {
+        $pdfResponse = $this->buildPdfResponse();
+        file_put_contents($filePath, (string)$pdfResponse);
     }
 }

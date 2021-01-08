@@ -96,8 +96,7 @@ class GeneratingApplicationPdfManager implements IApplicationPdfManager
     {
         $response = $this->applicationPdfResponse;
         $response->setApplication($application);
-        $path = $this->getDestinationStorage()->getFullPath();
-        $filename = $this->getFileName($application);
-        $response->save($path, $filename);
+        $filePath = $this->getDestinationStorage()->getFullPath('/' . $this->getFileName($application));
+        $response->saveToFilePath($filePath);
     }
 }
