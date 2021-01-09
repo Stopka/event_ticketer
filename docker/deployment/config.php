@@ -10,10 +10,9 @@ return [
     'ignore' => '
 			/deployment*
       .git*
-      /www/sites
-      /tmp
+      /public/var
+      /var
 		',
-
     'allowDelete' => true,
   ],
 
