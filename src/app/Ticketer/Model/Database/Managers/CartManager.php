@@ -19,8 +19,10 @@ use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\EntityManager as EntityManagerWrapper;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
+use Ticketer\Model\Database\Enums\ReservationStateEnum;
 use Ticketer\Model\Database\Managers\Events\CartCreatedEvent;
 use Ticketer\Model\Database\Managers\Events\CartUpdatedEvent;
+use Ticketer\Model\Dtos\Uuid;
 
 class CartManager
 {
@@ -99,17 +101,23 @@ class CartManager
         } else {
             $cart = $cartInput;
         }
+        if (null !== $reservation) {
+            $reservation->setState(ReservationStateEnum::ORDERED());
+            $entityManager->persist($reservation);
+        }
         $cart->setByValueArray($values);
         $entityManager->persist($cart);
         $commonValues = $values[CartFormWrapper::CONTAINER_NAME_COMMONS];
         // go through all applications from form
         $processedApplicationIds = [];
-        foreach ($values[CartFormWrapper::CONTAINER_NAME_APPLICATIONS] as $applicationId => $applicationValues) {
+        foreach ($values[CartFormWrapper::CONTAINER_NAME_APPLICATIONS] as $applicationIdString => $applicationValues) {
             $application = null;
             // is existing application?
-            if (!Strings::startsWith($applicationId, CartFormWrapper::VALUE_APPLICATION_NEW)) {
+            if (!Strings::startsWith($applicationIdString, CartFormWrapper::VALUE_APPLICATION_NEW)) {
                 // find application by id
-                $application = $this->applicationDao->getApplication($applicationId);
+                $application = $this->applicationDao->getApplication(
+                    Uuid::fromString($applicationIdString)
+                );
                 //TODO zkontrolovat přijátá ID a zrušit nepoužité přihlášky
             }
             // if exisitning application is not matched with event

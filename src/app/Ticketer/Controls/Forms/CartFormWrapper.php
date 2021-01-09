@@ -286,22 +286,22 @@ class CartFormWrapper extends FormWrapper
     protected function preprocessValues(array $values): array
     {
         $index = 1;
-        $applicationIds = [];
+        $applicationIdStrings = [];
         foreach ($this->applications as $application) {
-            $applicationIds[] = $application->getId();
+            $applicationIdStrings[] = $application->getId()->toString();
         }
-        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $applicationId => $applicationValues) {
-            if (count($this->applications) > 0 && !in_array($applicationId, $applicationIds, true)) {
-                unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationId]);
+        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $applicationIdString => $applicationValues) {
+            if (count($this->applications) > 0 && !in_array($applicationIdString, $applicationIdStrings, true)) {
+                unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationIdString]);
             }
         }
         if (0 === count($values[self::CONTAINER_NAME_APPLICATIONS])) {
             throw new EmptyException("Error.Application.Empty");
         }
         $builder = $this->getAdditionsControlsBuilder();
-        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $applicationId => $applicationValues) {
-            if (count($this->applications) > 0 && !in_array($applicationId, $applicationIds, true)) {
-                unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationId]);
+        foreach ($values[self::CONTAINER_NAME_APPLICATIONS] as $applicationIdString => $applicationValues) {
+            if (count($this->applications) > 0 && !in_array($applicationIdString, $applicationIdStrings, true)) {
+                unset($values[self::CONTAINER_NAME_APPLICATIONS][$applicationIdString]);
             }
             $applicationValues[self::CONTAINER_NAME_APPLICATION]['birthDate'] = DateTime::createFromFormat(
                 'd.m.Y',
@@ -328,7 +328,9 @@ class CartFormWrapper extends FormWrapper
             );
             $builder->resetPreselectedOptions();
             if (null !== $this->reservation) {
-                $application = $this->applicationDao->getApplication($applicationId);
+                $application = $this->applicationDao->getApplication(
+                    Uuid::fromString($applicationIdString)
+                );
 
                 /** @var string[] $preselectedOptionIds */
                 $preselectedOptionIds = [];
@@ -346,10 +348,10 @@ class CartFormWrapper extends FormWrapper
             try {
                 $applicationValues = $builder->preprocessAdditionsValues($applicationValues, $index);
             } catch (FormControlException $e) {
-                throw $e->prependControlPath($applicationId)
+                throw $e->prependControlPath($applicationIdString)
                     ->prependControlPath(self::CONTAINER_NAME_APPLICATIONS);
             }
-            $values[self::CONTAINER_NAME_APPLICATIONS][$applicationId] = $applicationValues;
+            $values[self::CONTAINER_NAME_APPLICATIONS][$applicationIdString] = $applicationValues;
             $index++;
         }
 
@@ -518,7 +520,7 @@ class CartFormWrapper extends FormWrapper
             $builder->setVisibleCountLeft(false);
             $builder->setPredisabledAdditionVisibilityResolver(
                 static function (AdditionVisibilityEntity $visibility): bool {
-                    return $visibility->isReservation();
+                    return !$visibility->isReservation();
                 }
             );
         }

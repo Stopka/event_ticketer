@@ -105,7 +105,7 @@ class ApplicationsGridWrapper extends GridWrapper
                 ]
             );
         };
-        $grid->addActionCallback(
+        /*$grid->addActionCallback(
             'detailCart',
             'Form.Action.Detail',
             function (string $id): void {
@@ -122,7 +122,7 @@ class ApplicationsGridWrapper extends GridWrapper
                 function (ApplicationEntity $applicationEntity): bool {
                     return null !== $applicationEntity->getCart();
                 }
-            );
+            );*/
         $grid->addActionCallback(
             'editCart',
             'Form.Action.Edit',
@@ -307,14 +307,22 @@ class ApplicationsGridWrapper extends GridWrapper
                     $html = Html::el();
                     $reservation = $applicationEntity->getReservation();
                     if (null !== $reservation) {
-                        $html = Html::el(
-                            'a',
-                            [
-                                'href' => $this->getPresenter()->link(
-                                    ':Front:Reservation:register',
-                                    $reservation->getId()->toString()
-                                ),
-                            ]
+                        $html = Html::el();
+                        if ($reservation->isRegisterReady()) {
+                            $html = Html::el(
+                                'a',
+                                [
+                                    'href' => $this->getPresenter()->link(
+                                        ':Front:Reservation:register',
+                                        $reservation->getId()->toString()
+                                    ),
+                                ]
+                            );
+                        }
+                        $html->addHtml(
+                            Html::el('div', ['class' => 'reservation-id id'])->addText(
+                                '#' . $reservation->getId()->toString()
+                            )
                         );
                         $html->addHtml(
                             Html::el('div', ['class' => 'reservation-fullName fullName'])->addText(

@@ -96,7 +96,7 @@ class EventsGridWrapper extends GridWrapper
         $grid->addColumnNumber('capacity', 'Attribute.Event.Capacity')
             ->setFormat(0)
             ->setSortable()
-            ->setFilterRange();
+            ->setFilterText();
         $grid->addColumnNumber('occupnacyIcon', 'Attribute.Event.OccupancyIcon')
             ->setSortable()
             ->setRenderer(
@@ -112,7 +112,7 @@ class EventsGridWrapper extends GridWrapper
         $grid->addColumnDate('startDate', 'Attribute.Event.Public')
             ->setSortable()
             ->setSort('ASC')
-            ->setFilterDateRange();
+            ->setFilterDate();
     }
 
 
@@ -171,10 +171,10 @@ class EventsGridWrapper extends GridWrapper
                     }
                 )
             );
-        $grid->addToolbarButton('Event:add', 'Presenter.Admin.Event.Add.H1');
-        /* TODO->setIcon('plus-circle') */
-        $grid->addToolbarButton('Currency:default', 'Presenter.AdminLayout.Setting.H1');
-        /* ->setIcon('wrench') */
+        $grid->addToolbarButton('Event:add', 'Presenter.Admin.Event.Add.H1')
+            ->setIcon('plus-circle');
+        $grid->addToolbarButton('Currency:default', 'Presenter.AdminLayout.Setting.H1')
+            ->setIcon('wrench');
     }
 
     /**
