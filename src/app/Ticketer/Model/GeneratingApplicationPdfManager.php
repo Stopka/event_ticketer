@@ -46,7 +46,7 @@ class GeneratingApplicationPdfManager implements IApplicationPdfManager
     {
         if (null === $this->destinationStorage) {
             $path = $this->basePath;
-            $this->destinationStorage = $this->fileStorageFactory->create($path);
+            $this->destinationStorage = $this->fileStorageFactory->create($path, true);
         }
 
         return $this->destinationStorage;

@@ -5,8 +5,11 @@ includes:
 services:
     - Ticketer\Model\Cron\CronService
     - Ticketer\Model\Authenticators\AdminAuthenticator
-    - Ticketer\Model\FileStorageFactory(%appDir%/resources)
-    - Ticketer\Model\GeneratingApplicationPdfManager
+    fileStorage.resources: Ticketer\Model\FileStorageFactory(%appDir%/resources)
+    fileStorage.temp: Ticketer\Model\FileStorageFactory(%tempDir%/)
+    - factory: Ticketer\Model\GeneratingApplicationPdfManager
+      arguments:
+          fileStorageFactory: @fileStorage.temp
     - Ticketer\Model\DateFormatter(%format.date%,%format.time%,%format.dateTime%)
     -
         class: Ticketer\Model\OccupancyIcons

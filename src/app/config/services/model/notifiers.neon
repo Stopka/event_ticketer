@@ -1,5 +1,7 @@
 services:
-    - Ticketer\Model\Notifiers\IEventMessageAtachmentManagerFactory
+    - implement: Ticketer\Model\Notifiers\IEventMessageAtachmentManagerFactory
+      arguments:
+          fileStorageFactory: @fileStorage.resources
     - Ticketer\Model\Notifiers\EmailMessageFactory(%email.from%, %email.replyTo%)
     - Ticketer\Model\Notifiers\EmailService
     - Ticketer\Model\Notifiers\EarlyWaveInviteNotifier
