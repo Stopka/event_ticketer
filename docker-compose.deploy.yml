@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  event_ticketer:
+    environment:
+        REMOTE: ${REMOTE}
+    build:
+      target: deploy
+    image: stopka/event_ticketer:deploy
+    ports:
+      - 80:80
+  event_ticketer-mariadb:
+    ports:
+      - 3306:3306

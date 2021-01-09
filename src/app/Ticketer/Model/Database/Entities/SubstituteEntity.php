@@ -17,7 +17,7 @@ use Ticketer\Model\Database\Enums\SubstituteStateEnum;
  * @package App\Model\Entities
  * @ORM\Entity
  */
-class SubstituteEntity extends BaseEntity
+class SubstituteEntity extends BaseEntity implements NumberableInterface
 {
     use TIdentifierAttribute;
     use TPersonNameAttribute;
@@ -30,6 +30,12 @@ class SubstituteEntity extends BaseEntity
      * @var SubstituteStateEnum
      */
     private SubstituteStateEnum $state;
+
+    /**
+     * @ORM\OneToOne(targetEntity="SubstituteNumberEntity", cascade={"persist", "remove"})
+     * @var SubstituteNumberEntity
+     */
+    private SubstituteNumberEntity $number;
 
     /**
      * @ORM\ManyToOne(targetEntity="EventEntity", inversedBy="substitutes")
@@ -63,6 +69,7 @@ class SubstituteEntity extends BaseEntity
         parent::__construct();
         $this->setCreated();
         $this->state = SubstituteStateEnum::WAITING();
+        $this->number = new SubstituteNumberEntity();
     }
 
     /**
@@ -208,5 +215,10 @@ class SubstituteEntity extends BaseEntity
     {
         $this->cart = $cart;
         $this->updateState();
+    }
+
+    public function getNumber(): int
+    {
+        return $this->number->getId();
     }
 }

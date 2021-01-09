@@ -109,12 +109,12 @@ class SubstitutesGridWrapper extends GridWrapper
         $grid->addColumnDateTime('created', 'Attribute.Created')
             ->setSortable()
             ->setSort('ASC')
-            ->setFilterDateRange();
+            ->setFilterDate();
         $grid->addColumnNumber('count', 'Attribute.Application.Count')
             ->setSortable()
-            ->setFilterRange();
+            ->setFilterText();
         $grid->addColumnDateTime('endDate', 'Attribute.Event.EndDate')
-            ->setFilterDateRange();
+            ->setFilterDate();
     }
 
     /**

@@ -5,32 +5,33 @@ declare(strict_types=1);
 namespace Ticketer\Model\Database\Attributes;
 
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 trait TCreatedAttribute
 {
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var DateTime|null
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @var DateTimeImmutable|null
      */
-    private $created;
+    private ?DateTimeImmutable $created = null;
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable|null
      */
-    public function getCreated(): ?DateTime
+    public function getCreated(): ?DateTimeImmutable
     {
         return $this->created;
     }
 
     /**
-     * @param DateTime|NULL $created
+     * @param DateTimeImmutable|NULL $created
      */
-    protected function setCreated(?DateTime $created = null): void
+    protected function setCreated(?DateTimeImmutable $created = null): void
     {
         if (null === $created) {
-            $created = new DateTime();
+            $created = new DateTimeImmutable();
         }
         $this->created = $created;
     }

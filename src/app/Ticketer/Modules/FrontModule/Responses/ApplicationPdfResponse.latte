@@ -92,19 +92,22 @@
 <body style="background-image: url('{$baseDir|noescape}/ApplicationPdfResponse/watermark.png')">
 <table>
     <tr style="height: 4cm">
-        <td style="width: 25%; text-align: center;">
-            <img src="{$baseDir|noescape}/ApplicationPdfResponse/netopyr.png" style="max-height: 2cm; max-width: 100%;">
+        <td style="width: 20%; text-align: center;">
             <img src="{$baseDir|noescape}/ApplicationPdfResponse/landa.jpg" style="max-height: 2cm; max-width: 100%;">
         </td>
-        <td style="width: 25%; text-align: center;">
+        <td style="width: 39%; text-align: center;">
             <h1>
                 <small>Závazná přihláška na</small>
                 <br>
                 <span>Letní dětský tábor Pardubice, z.s.</span>
             </h1>
         </td>
-        <td style="width: 25%; text-align: center; border-width: 1mm; border-color: black; font-weight: bold; font-size: 4em; color: darkred">
-            {$id}
+        <td style="width: 20%; text-align: center; border-width: 1mm; border-color: black;">
+            {$id}<br>
+            <span style="font-weight: bold; font-size: 4em; color: darkred">{$application->getNumber()}</span>
+        </td>
+        <td style="width:20%">
+            <img src="https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={$id}&choe=UTF-8%22">
         </td>
     </tr>
 </table>

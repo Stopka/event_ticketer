@@ -32,4 +32,26 @@ class TicketerConfigurator extends Configurator
 
         return $parameters;
     }
+
+    public function setTempDirectory(string $path)
+    {
+        $this->tryCreateDir($path);
+
+        return parent::setTempDirectory($path);
+    }
+
+
+    public function enableTracy(?string $logDirectory = null, ?string $email = null): void
+    {
+        $this->tryCreateDir($logDirectory);
+        parent::enableTracy($logDirectory, $email);
+    }
+
+    private function tryCreateDir(?string $directory): void
+    {
+        if (null === $directory || is_dir($directory)) {
+            return;
+        }
+        @mkdir($directory, 0777, true);
+    }
 }

@@ -15,7 +15,7 @@ class Bootstrap
 
         $configurator->setDebugMode(true);
         $configurator->enableTracy(__DIR__ . '/../../var/log');
-        $configurator->setTempDirectory(__DIR__ . '/../../var/temp');
+        $configurator->setTempDirectory(__DIR__ . '/../../var/tmp');
 
         $confDir = __DIR__ . '/../config';
         $configurator->addConfig("$confDir/main.neon");

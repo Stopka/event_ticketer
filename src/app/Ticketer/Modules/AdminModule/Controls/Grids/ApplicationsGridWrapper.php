@@ -207,7 +207,7 @@ class ApplicationsGridWrapper extends GridWrapper
         $grid->addColumnNumber('id', 'Attribute.Id')
             ->setSortable()
             ->setSort(OrderEnum::ASC()->getValue())
-            ->setFilterRange();
+            ->setFilterText();
         $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
             ->setReplacement(ApplicationStateEnum::getLabels())
@@ -236,10 +236,10 @@ class ApplicationsGridWrapper extends GridWrapper
             );
         $grid->addColumnDate('birthDate', 'Datum narození')
             ->setSortable()
-            ->setFilterDateRange();
+            ->setFilterDate();
         $grid->addColumnDateTime('created', 'Attribute.Created')
             ->setSortable()
-            ->setFilterDateRange();
+            ->setFilterDate();
     }
 
     protected function appendCartColumns(Grid $grid): void

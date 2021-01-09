@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Entities;
 
+use Doctrine\ORM\EntityRepository;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\InvalidStateException;
@@ -19,10 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Jedna konkrétní vydaná přihláška
  * @package App\Model\Entities
- * @ORM\Table(name="application")
  * @ORM\Entity
  */
-class ApplicationEntity extends BaseEntity
+class ApplicationEntity extends BaseEntity implements NumberableInterface
 {
     use TIdentifierAttribute;
     use TPersonNameAttribute;
@@ -31,6 +31,11 @@ class ApplicationEntity extends BaseEntity
     use TBirthDateAttribute;
     use TCreatedAttribute;
 
+    /**
+     * @ORM\OneToOne(targetEntity="ApplicationNumberEntity", cascade={"persist","remove"})
+     * @var ApplicationNumberEntity
+     */
+    private ApplicationNumberEntity $number;
 
     /**
      * @ORM\OneToMany(targetEntity="ChoiceEntity", mappedBy="application", cascade={"persist","remove"}))
@@ -88,7 +93,13 @@ class ApplicationEntity extends BaseEntity
             ? ApplicationStateEnum::RESERVED()
             : ApplicationStateEnum::WAITING();
         $this->choices = new ArrayCollection();
+        $this->number = new ApplicationNumberEntity();
         $this->setCreated();
+    }
+
+    public function getNumber(): int
+    {
+        return $this->number->getId();
     }
 
     /**
@@ -420,5 +431,17 @@ class ApplicationEntity extends BaseEntity
             $this->reservation->addInversedApplication($this);
         }
         $this->updateState();
+    }
+
+    protected function findLastNumber(EntityRepository $repository): int
+    {
+        $qb = $repository->createQueryBuilder('a');
+        $qb->select('MAX(a.number)');
+        $qb->where(
+            $qb->expr()->eq('a.event', ':event')
+        );
+        $qb->setParameters(['event' => $this->getEvent()]);
+
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 }

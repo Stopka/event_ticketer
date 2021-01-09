@@ -90,6 +90,8 @@ RUN chmod ug+rx /usr/sbin/fix_permissions.sh
 # APP
 WORKDIR /srv
 ADD ./src .
+RUN rm -rf var/* vendor/* node_modules/* public/build/* public/var/* app/config/parameters.local.neon
+
 EXPOSE 80
 CMD ["supervisord", "--nodaemon", "--configuration", "/etc/supervisor/supervisord.conf"]
 
@@ -125,13 +127,20 @@ ADD ./docker/php/xdebug-custom.ini ${PHP_CLI_CONF_DIR}/
 FROM libtools AS libs
 RUN \
     composer install && \
-    yarn install
+    npm install && \
+    npm run build
 
 
 FROM build AS test
-COPY --from=libs ./srv/vendor ./srv/bin ./
-#COPY --from=node ./srv/public/build ./public/build
+COPY --from=libs /srv/vendor ./vendor
+COPY --from=libs /srv/public/build ./public/build
 
 
 FROM test AS prod
-RUN rm -r ./tests ./node_modules composer* package*
+RUN rm -r ./assets ./tests ./node_modules composer* package* gulp*
+
+FROM prod AS deploy
+RUN mkdir deployment && \
+    curl -L https://github.com/dg/ftp-deployment/releases/download/v3.3.0/deployment.phar --output deployment/app.phar
+ADD ./docker/deployment/deployment.sh /srv
+ADD ./docker/deployment/config.php /srv/deployment

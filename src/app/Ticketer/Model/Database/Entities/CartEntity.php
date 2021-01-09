@@ -7,6 +7,7 @@ namespace Ticketer\Model\Database\Entities;
 use Ticketer\Model\Database\Attributes\TCreatedAttribute;
 use Ticketer\Model\Database\Attributes\TEmailAttribute;
 use Ticketer\Model\Database\Attributes\TIdentifierAttribute;
+use Ticketer\Model\Database\Attributes\TNumberAttribute;
 use Ticketer\Model\Database\Attributes\TPersonNameAttribute;
 use Ticketer\Model\Database\Attributes\TPhoneAttribute;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="cart")
  * @ORM\Entity
  */
-class CartEntity extends BaseEntity
+class CartEntity extends BaseEntity implements NumberableInterface
 {
     use TIdentifierAttribute;
     use TPersonNameAttribute;
@@ -28,6 +29,11 @@ class CartEntity extends BaseEntity
 
     public const STATE_ORDERED = 1;
 
+    /**
+     * @ORM\OneToOne(targetEntity="CartNumberEntity", cascade={"persist","remove"})
+     * @var CartNumberEntity
+     */
+    private CartNumberEntity $number;
 
     /**
      * @ORM\Column(type="integer")
@@ -66,6 +72,7 @@ class CartEntity extends BaseEntity
     {
         parent::__construct();
         $this->applications = new ArrayCollection();
+        $this->number = new CartNumberEntity();
         $this->setCreated();
     }
 
@@ -187,5 +194,10 @@ class CartEntity extends BaseEntity
         if (null !== $this->substitute) {
             $this->substitute->setInversedCart($this);
         }
+    }
+
+    public function getNumber(): int
+    {
+        return $this->number->getId();
     }
 }

@@ -17,7 +17,7 @@ use Ticketer\Model\Database\Enums\ReservationStateEnum;
  * @package App\Model\Entities
  * @ORM\Entity
  */
-class ReservationEntity extends BaseEntity
+class ReservationEntity extends BaseEntity implements NumberableInterface
 {
     use TIdentifierAttribute;
     use TPersonNameAttribute;
@@ -43,6 +43,12 @@ class ReservationEntity extends BaseEntity
     private $event;
 
     /**
+     * @ORM\OneToOne(targetEntity="ReservationNumberEntity", cascade={"persist","remove"})
+     * @var ReservationNumberEntity
+     */
+    private ReservationNumberEntity $number;
+
+    /**
      * CartEntity constructor
      */
     public function __construct()
@@ -50,7 +56,16 @@ class ReservationEntity extends BaseEntity
         parent::__construct();
         $this->applications = new ArrayCollection();
         $this->setCreated();
+        $this->number = new ReservationNumberEntity();
         $this->state = ReservationStateEnum::WAITING();
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumber(): int
+    {
+        return $this->number->getId();
     }
 
     /**
