@@ -6,6 +6,7 @@ namespace Ticketer\Model\Database\Managers;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Ticketer\Model\Database\Managers\Events\ReservationDelegatedEvent;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\DelegateReservationControlsBuilder;
 use Ticketer\Modules\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
 use Ticketer\Model\Exceptions\EmptyException;
@@ -77,7 +78,7 @@ class ReservationManager
         } else { //else means delegated to existing person
             //find reservation
             $reservation = $this->reservationDao->getReservation(
-                $values[DelegateReservationControlsBuilder::FIELD_DELEGATE]
+                Uuid::fromString($values[DelegateReservationControlsBuilder::FIELD_DELEGATE])
             );
             if (null === $reservation) {
                 return;

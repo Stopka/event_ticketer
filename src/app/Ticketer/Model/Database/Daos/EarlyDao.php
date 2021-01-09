@@ -31,13 +31,12 @@ class EarlyDao extends EntityDao
     }
 
     /**
-     * @param string $uid
+     * @param Uuid $id
      * @return EarlyEntity|null
      */
-    public function getReadyEarlyByUid(string $uid): ?EarlyEntity
+    public function getReadyEarly(Uuid $id): ?EarlyEntity
     {
-        /** @var EarlyEntity|null $early */
-        $early = $this->getRepository()->findOneBy(['uid' => $uid]);
+        $early = $this->getEarly($id);
         if (null !== $early && $early->isReadyToRegister()) {
             return $early;
         }

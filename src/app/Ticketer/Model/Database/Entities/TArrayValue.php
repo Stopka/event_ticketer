@@ -17,6 +17,7 @@ trait TArrayValue
     public function getValueArray(?array $with = null, array $without = []): array
     {
         $without[] = 'getValueArray';
+        $without[] = 'getNumber';
         $without = $this->prepareGetters($without);
         /** @var string[] $methods */
         $methods = get_class_methods($this);

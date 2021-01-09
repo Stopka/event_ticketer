@@ -8,6 +8,7 @@ use Nette\Application\AbortException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Controls\Forms\ICartFormWrapperFactory;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use Ticketer\Modules\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use Ticketer\Model\Database\Daos\ApplicationDao;
@@ -62,7 +63,8 @@ class EarlyPresenter extends BasePresenter
      */
     public function actionRegister(string $id): void
     {
-        $early = $this->earlyDao->getReadyEarlyByUid($id);
+        $uuid = Uuid::fromString($id);
+        $early = $this->earlyDao->getReadyEarly($uuid);
         if (null === $early) {
             $this->flashTranslatedMessage('Error.Early.NotReady', FlashMessageTypeEnum::WARNING());
             $this->redirect('Homepage:');
@@ -94,7 +96,8 @@ class EarlyPresenter extends BasePresenter
      */
     public function actionSubstitute(string $id): void
     {
-        $early = $this->earlyDao->getReadyEarlyByUid($id);
+        $uuid = Uuid::fromString($id);
+        $early = $this->earlyDao->getReadyEarly($uuid);
         if (null === $early) {
             $this->flashTranslatedMessage('Error.Early.NotReady', FlashMessageTypeEnum::WARNING());
             $this->redirect('Homepage:');
