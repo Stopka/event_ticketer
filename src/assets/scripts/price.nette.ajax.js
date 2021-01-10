@@ -118,7 +118,7 @@
                     }
                 }
                 var prices = el.data('price-value');
-                if (prices[value] && prices[value].currency != currency) {//pokud nesouhlasí měna
+                if (prices[value] && prices[value].currency !== currency) {//pokud nesouhlasí měna
                     return;
                 }
                 sum += Number(prices[value].amount);
