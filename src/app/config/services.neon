@@ -12,3 +12,5 @@ services:
     - Ticketer\Modules\ApiModule\Presenters\BasePresenterDependencies
     - Ticketer\Modules\AdminModule\Presenters\BasePresenterDependencies
     - Ticketer\Modules\FrontModule\Presenters\BasePresenterDependencies
+    - SensioLabs\AnsiConverter\AnsiToHtmlConverter
+    - Ticketer\Modules\ApiModule\Http\ApiHttpAuthenticator(%api.users%)

@@ -640,3 +640,9 @@ i {
 .occupancy_visual .occupancy-item.free .occupancy-icon {
     color: rgba(27, 94, 32, 0.2);
 }
+
+.form-inline,
+.input-group {
+    display: flex;
+    flex-wrap: nowrap;
+}

@@ -41,6 +41,7 @@
         "contributte/console": "^0.8.0",
         "contributte/translation": "^0.7.1",
         "contributte/recaptcha": "^3.1.0",
+        "contributte/http": "0.5.x-dev",
         "ublaboo/datagrid": "^6.0",
         "ramsey/uuid": "^4.1",
         "radekdostal/nette-datetimepicker": "^3.0",
@@ -53,7 +54,8 @@
         "contributte/monolog": "^0.4.1",
         "ext-iconv": "*",
         "voda/date-input": "^2.0",
-        "kdyby/forms-replicator": "^2.0"
+        "kdyby/forms-replicator": "^2.0",
+        "sensiolabs/ansi-to-html": "^1.2"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",

@@ -16,3 +16,5 @@ parameters:
     email:
         from: [system@%host.domain%, %host.name%]
         replyTo: %email.from%
+    api:
+        users: []

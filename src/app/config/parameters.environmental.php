@@ -23,5 +23,8 @@ return [
             'from' => [getenv('MAIL_FROM'), getenv('MAIL_FROM_NAME')],
             'replyTo' => [getenv('MAIL_REPLY_TO'), getenv('MAIL_REPLY_TO_NAME')],
         ],
+        'api' => [
+            "users" => json_decode(getenv('API_USERS'), true, 512, JSON_THROW_ON_ERROR),
+        ],
     ],
 ];

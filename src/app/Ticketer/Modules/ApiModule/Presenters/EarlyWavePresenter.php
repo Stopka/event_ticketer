@@ -10,7 +10,7 @@ use Ticketer\Model\Notifiers\EarlyWaveInviteNotifier;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 
-class EarlyWavePresenter extends DebugPresenter
+class EarlyWavePresenter extends BasePresenter
 {
 
     private EarlyWaveInviteNotifier $earlyWaveInviteNotifier;
