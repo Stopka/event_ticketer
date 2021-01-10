@@ -132,7 +132,7 @@ class SubstituteEntity extends BaseEntity implements NumberableInterface
         }
         $this->setState(SubstituteStateEnum::ACTIVE());
         if (null !== $interval) {
-            $date = new \DateTime();
+            $date = new \DateTimeImmutable();
             $date = $date->add($interval);
         } else {
             $date = null;

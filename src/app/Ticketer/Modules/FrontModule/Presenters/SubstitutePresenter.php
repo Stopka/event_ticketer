@@ -10,6 +10,7 @@ use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Controls\Forms\ICartFormWrapperFactory;
 use Ticketer\Model\Database\Daos\SubstituteDao;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
+use Ticketer\Model\Dtos\Uuid;
 
 class SubstitutePresenter extends BasePresenter
 {
@@ -48,7 +49,8 @@ class SubstitutePresenter extends BasePresenter
      */
     public function actionRegister(string $id): void
     {
-        $substitute = $this->substituteDao->getReadySubstituteByUid($id);
+        $uuid = Uuid::fromString($id);
+        $substitute = $this->substituteDao->getReadySubstitute($uuid);
         if (null === $substitute) {
             $this->flashTranslatedMessage('Error.Substitute.NotFound', FlashMessageTypeEnum::WARNING());
             $this->redirect('Homepage:');

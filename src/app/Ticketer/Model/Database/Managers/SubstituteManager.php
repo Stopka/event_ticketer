@@ -15,6 +15,7 @@ use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\EntityManager;
 use Nette\SmartObject;
+use Ticketer\Model\Database\Managers\Events\SubstituteActivatedEvent;
 use Ticketer\Model\Database\Managers\Events\SubstituteCreatedEvent;
 
 class SubstituteManager implements EventSubscriberInterface
@@ -72,7 +73,7 @@ class SubstituteManager implements EventSubscriberInterface
         }
         $substitute->activate(new \DateInterval('P7D'));
         $this->getEntityManager()->flush();
-        $this->eventDispatcher->dispatch(new SubstituteCreatedEvent($substitute));
+        $this->eventDispatcher->dispatch(new SubstituteActivatedEvent($substitute));
     }
 
     /**

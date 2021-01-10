@@ -113,7 +113,10 @@ class CartManager
         foreach ($values[CartFormWrapper::CONTAINER_NAME_APPLICATIONS] as $applicationIdString => $applicationValues) {
             $application = null;
             // is existing application?
-            if (!Strings::startsWith($applicationIdString, CartFormWrapper::VALUE_APPLICATION_NEW)) {
+            if (
+                is_string($applicationIdString)
+                && !Strings::startsWith($applicationIdString, CartFormWrapper::VALUE_APPLICATION_NEW)
+            ) {
                 // find application by id
                 $application = $this->applicationDao->getApplication(
                     Uuid::fromString($applicationIdString)

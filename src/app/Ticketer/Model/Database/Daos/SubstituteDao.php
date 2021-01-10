@@ -45,13 +45,13 @@ class SubstituteDao extends EntityDao
     }
 
     /**
-     * @param string $uid
+     * @param Uuid $id
      * @return SubstituteEntity|null
      */
-    public function getReadySubstituteByUid(string $uid): ?SubstituteEntity
+    public function getReadySubstitute(Uuid $id): ?SubstituteEntity
     {
         /** @var SubstituteEntity|null $substitute */
-        $substitute = $this->getRepository()->findOneBy(['uid' => $uid]);
+        $substitute = $this->getSubstitute($id);
         if (null === $substitute || !$substitute->isActive()) {
             return null;
         }

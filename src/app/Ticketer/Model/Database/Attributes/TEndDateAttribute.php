@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace Ticketer\Model\Database\Attributes;
 
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 trait TEndDateAttribute
 {
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @var DateTime|null
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @var DateTimeImmutable|null
      */
     private $endDate;
 
     /**
-     * @return DateTime|null
+     * @return DateTimeImmutable|null
      */
     public function getEndDate()
     {
@@ -25,7 +26,7 @@ trait TEndDateAttribute
     }
 
     /**
-     * @param DateTime|null $endDate
+     * @param DateTimeImmutable|null $endDate
      */
     public function setEndDate($endDate): void
     {
@@ -33,13 +34,13 @@ trait TEndDateAttribute
     }
 
     /**
-     * @param DateTime|null $date
+     * @param DateTimeImmutable|null $date
      * @return bool
      */
-    public function isEnded(DateTime $date = null)
+    public function isEnded(DateTimeImmutable $date = null)
     {
         if (null === $date) {
-            $date = new DateTime();
+            $date = new DateTimeImmutable();
         }
         $endDate = $this->getEndDate();
 
