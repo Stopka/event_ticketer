@@ -32,7 +32,7 @@
         restorePrechecked: function(){
             $('[data-price-value][data-price-prechecked]').each(function (index,elem) {
                 var el = $(elem);
-                var val = parseInt(el.val());
+                var val = el.val();
                 if (!val || !el.data('price-prechecked').includes(val)) {
                     return;
                 }
@@ -42,7 +42,7 @@
         restorePredisabled: function(){
             $('[data-price-value][data-price-predisabled]').each(function (index,elem) {
                 var el = $(elem);
-                var val = parseInt(el.val());
+                var val = el.val();
                 if (!val || !el.data('price-predisabled').includes(val)) {
                     return;
                 }
