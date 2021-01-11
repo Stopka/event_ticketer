@@ -24,7 +24,12 @@ return [
             'replyTo' => [getenv('MAIL_REPLY_TO'), getenv('MAIL_REPLY_TO_NAME')],
         ],
         'api' => [
-            "users" => json_decode(getenv('API_USERS'), true, 512, JSON_THROW_ON_ERROR),
+            "users" => json_decode(
+                (string)getenv('API_USERS'),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            ),
         ],
     ],
 ];

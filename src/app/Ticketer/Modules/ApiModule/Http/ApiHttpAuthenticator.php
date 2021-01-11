@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Ticketer\Modules\ApiModule\Http;
-
 
 use Contributte\Http\Auth\BasicAuthenticator;
 
@@ -21,8 +19,7 @@ class ApiHttpAuthenticator extends BasicAuthenticator
     {
         parent::__construct($title);
         foreach ($users as $user => $password) {
-            $this->addUser($user, password_hash($password, PASSWORD_DEFAULT), false);
+            $this->addUser($user, (string)password_hash($password, PASSWORD_DEFAULT), false);
         }
     }
-
 }

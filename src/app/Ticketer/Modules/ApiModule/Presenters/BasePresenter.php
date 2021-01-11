@@ -30,6 +30,4 @@ abstract class BasePresenter extends UpperBasePresenter
         $this->assertAuthentication();
         parent::startup();
     }
-
-
 }

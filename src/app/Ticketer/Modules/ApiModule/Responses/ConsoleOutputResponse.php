@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Ticketer\Modules\ApiModule\Responses;
-
 
 use Nette\Application\IResponse as ApplicationResponseInterface;
 use Nette\Http\IRequest;
@@ -30,10 +28,10 @@ class ConsoleOutputResponse implements ApplicationResponseInterface
     }
 
 
-    function send(IRequest $httpRequest, IResponse $httpResponse): void
+    public function send(IRequest $httpRequest, IResponse $httpResponse): void
     {
         $httpResponse->setCode(
-            $this->result === Command::SUCCESS
+            Command::SUCCESS === $this->result
                 ? $httpResponse::S200_OK
                 : $httpResponse::S500_INTERNAL_SERVER_ERROR
         );
@@ -41,7 +39,7 @@ class ConsoleOutputResponse implements ApplicationResponseInterface
         $content = $this->converter->convert(
             $this->output->fetch()
         );
-        $content = str_replace("\n",'<br />',$content);
+        $content = str_replace("\n", '<br />', $content);
         echo "<!doctype html>
 <html lang=en>
     <head>
