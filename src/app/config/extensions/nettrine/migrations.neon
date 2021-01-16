@@ -6,4 +6,3 @@ nettrine.migrations:
 	column: version
 	directory: %appDir%/Ticketer/Model/Database/Migrations
 	namespace: Ticketer\Model\Database\Migrations
-	versionsOrganization: year

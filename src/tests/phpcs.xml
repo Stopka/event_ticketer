@@ -13,6 +13,7 @@
             <property name="lineLimit" value="120"/>
             <property name="absoluteLineLimit" value="0"/>
         </properties>
+        <exclude-pattern>*Model/Database/Migrations</exclude-pattern>
     </rule>
     <rule ref="PSR1.Files.SideEffects">
         <exclude-pattern>*/tests/*</exclude-pattern>
