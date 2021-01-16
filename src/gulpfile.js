@@ -31,7 +31,7 @@ function javascript(cb) {
         .pipe(src(files))
         .pipe(babel())
         .pipe(concat('index.js'))
-        .pipe(dest('./public/build'))
+        .pipe(dest('./www/build'))
     cb()
 }
 
