@@ -36,6 +36,7 @@ class MigrationsPresenter extends BasePresenter
                 'version' => $version,
                 '--no-interaction' => true,
                 '--all-or-nothing' => true,
+                '--ansi' => true
             ]
         );
         $output = new BufferedOutput();
