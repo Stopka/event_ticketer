@@ -20,8 +20,18 @@ return [
             'domain' => getenv('HOST_DOMAIN'),
         ],
         'email' => [
-            'from' => [getenv('MAIL_FROM'), getenv('MAIL_FROM_NAME')],
-            'replyTo' => [getenv('MAIL_REPLY_TO'), getenv('MAIL_REPLY_TO_NAME')],
+            'from' => [
+                'address' => (string)getenv('MAIL_FROM_ADDRESS'),
+                'name' => (bool)getenv('MAIL_FROM_NAME') ? getenv('MAIL_FROM_NAME') : null,
+            ],
+            'replyTo' => [
+                'address' => (bool)getenv('MAIL_REPLY_TO_ADDRESS') ?
+                    getenv('MAIL_REPLY_TO_ADDRESS') :
+                    null,
+                'name' => (bool)getenv('MAIL_REPLY_TO_NAME')
+                    ? getenv('MAIL_REPLY_TO_NAME')
+                    : null,
+            ],
         ],
         'api' => [
             "users" => json_decode(
@@ -32,6 +42,14 @@ return [
             ),
             "authTokens" => json_decode(
                 (string)getenv('API_AUTH_TOKENS'),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            ),
+        ],
+        'debugger' => [
+            "emails" => json_decode(
+                (string)getenv('DEBUGGER_EMAILS'),
                 true,
                 512,
                 JSON_THROW_ON_ERROR

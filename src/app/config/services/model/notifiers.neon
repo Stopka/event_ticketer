@@ -2,7 +2,12 @@ services:
     - implement: Ticketer\Model\Notifiers\IEventMessageAtachmentManagerFactory
       arguments:
           fileStorageFactory: @fileStorage.resources
-    - Ticketer\Model\Notifiers\EmailMessageFactory(%email.from%, %email.replyTo%)
+    - class: Ticketer\Model\Notifiers\EmailMessageFactory
+      arguments:
+        - %email.from.address%
+        - %email.from.name%
+        - %email.replyTo.address%
+        - %email.replyTo.name%
     - Ticketer\Model\Notifiers\EmailService
     - Ticketer\Model\Notifiers\EarlyWaveInviteNotifier
     - Ticketer\Model\Notifiers\CartCreatedNotifier

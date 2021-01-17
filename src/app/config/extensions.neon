@@ -10,3 +10,4 @@ includes:
     - extensions/session.neon
     - extensions/tracy.neon
     - extensions/translation.neon
+    - extensions/mail.neon

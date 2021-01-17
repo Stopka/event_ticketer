@@ -1,2 +1,3 @@
 tracy:
-    email: stopka@ldtpardubice.cz
+    email: %debugger.emails%
+    fromEmail: %email.from.address%

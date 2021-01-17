@@ -14,8 +14,14 @@ parameters:
         name: Event ticketer
         domain: ticketer.localhost
     email:
-        from: [system@%host.domain%, %host.name%]
-        replyTo: %email.from%
+        from:
+            address: system@%host.domain%
+            name: %host.name%
+        replyTo:
+            address: %email.from.address%
+            name: null
     api:
         users: []
         authTokens: []
+    debugger:
+        emails: []

@@ -4,65 +4,53 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Notifiers;
 
-use Ticketer\Model\Exceptions\InvalidInputException;
 use Nette\Mail\Message;
-use Nette\SmartObject;
 
 class EmailMessageFactory
 {
-    use SmartObject;
+    private string $from;
 
-    /** @var  array<int,string|null> */
-    private $from;
-    /** @var array<int,string|null> */
-    private $replyTo;
+    private ?string $fromName;
+
+    private ?string $replyTo;
+
+    private ?string $replyToName;
 
     /**
      * EmailMessageFactory constructor.
-     * @param string|array<int,string|null> $form
-     * @param null|string|array<int,string|null> $replyTo
+     * @param string $form
+     * @param string|null $fromName
+     * @param string|null $replyTo
+     * @param string|null $replyToName
      */
-    public function __construct($form, $replyTo = null)
-    {
-        $this->setFrom($form);
-        $this->setReplyTo($replyTo);
+    public function __construct(
+        string $form,
+        ?string $fromName = null,
+        ?string $replyTo = null,
+        ?string $replyToName = null
+    ) {
+        $this->setFrom($form, $fromName);
+        $this->setReplyTo($replyTo, $replyToName);
     }
 
     /**
-     * @return array<int,string|null>
+     * @param string $address
+     * @param string|null $name
      */
-    public function getFrom(): array
+    public function setFrom(string $address, ?string $name = null): void
     {
-        return $this->from;
+        $this->from = $address;
+        $this->fromName = $name;
     }
 
     /**
-     * @param array<int,string|null>|string $from
+     * @param string|null $address
+     * @param string|null $name
      */
-    public function setFrom($from): void
+    public function setReplyTo(?string $address = null, ?string $name = null): void
     {
-        $this->from = $this->getAddressNamePair($from);
-    }
-
-    /**
-     * @return array<int,string|null>
-     */
-    public function getReplyTo(): array
-    {
-        return $this->replyTo;
-    }
-
-    /**
-     * @param string|array<int,string|null>|null $replyTo
-     */
-    public function setReplyTo($replyTo = null): void
-    {
-        if (null === $replyTo) {
-            $this->replyTo = [null, null];
-
-            return;
-        }
-        $this->replyTo = $this->getAddressNamePair($replyTo);
+        $this->replyTo = $address;
+        $this->replyToName = $name;
     }
 
     /**
@@ -71,32 +59,11 @@ class EmailMessageFactory
     public function create(): Message
     {
         $message = new Message();
-        [$address, $name] = $this->getFrom();
-        $message->setFrom((string)$address, $name);
-        [$address, $name] = $this->getReplyTo();
-        if (null !== $address) {
-            $message->addReplyTo($address, $name);
+        $message->setFrom($this->from, $this->fromName);
+        if (null !== $this->replyTo) {
+            $message->addReplyTo($this->replyTo, $this->replyToName);
         }
 
         return $message;
-    }
-
-    /**
-     * @param string|array<string|null> $param
-     * @return array<string|null> address,name
-     * @throws InvalidInputException
-     */
-    protected function getAddressNamePair($param): array
-    {
-        if (is_string($param)) {
-            return [$param, null];
-        }
-        if (isset($param[0]) && is_string($param[0])) {
-            return [
-                $param[0],
-                isset($param[1]) && is_string($param[1]) ? $param[1] : null,
-            ];
-        }
-        throw new InvalidInputException("Invalid email address input");
     }
 }
