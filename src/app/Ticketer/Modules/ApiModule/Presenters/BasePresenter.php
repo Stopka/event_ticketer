@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\ApiModule\Presenters;
 
-use Ticketer\Modules\ApiModule\Http\ApiHttpAuthenticator;
+use Ticketer\Modules\ApiModule\Http\HttpAuthenticatorInterface;
 use Ticketer\Presenters\BasePresenter as UpperBasePresenter;
 
 /**
@@ -12,7 +12,7 @@ use Ticketer\Presenters\BasePresenter as UpperBasePresenter;
  */
 abstract class BasePresenter extends UpperBasePresenter
 {
-    private ApiHttpAuthenticator $httpAuthenticator;
+    private HttpAuthenticatorInterface $httpAuthenticator;
 
     public function __construct(BasePresenterDependencies $dependencies)
     {

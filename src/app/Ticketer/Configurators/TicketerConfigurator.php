@@ -22,6 +22,21 @@ class TicketerConfigurator extends Configurator
     }
 
     /**
+     * @param string $config
+     * @return $this
+     */
+    public function setDebugModeConfigIfExists(string $config): self
+    {
+        $debugMode = false;
+        if (is_file($config)) {
+            $debugMode = require $config;
+        }
+        $this->setDebugMode($debugMode);
+
+        return $this;
+    }
+
+    /**
      * @return array<mixed>
      */
     protected function getDefaultParameters(): array

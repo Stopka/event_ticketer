@@ -31,6 +31,7 @@ ENV DATABASE_NAME='event_ticketer'
 ENV DATABASE_USER='root'
 ENV DATABASE_PASSWORD=''
 ENV API_USERS='{}'
+ENV API_AUTH_TOKENS='[]'
 
 RUN \
     # INSTALLATION
@@ -138,7 +139,7 @@ COPY --from=libs /srv/public/build ./public/build
 
 
 FROM test AS prod
-RUN rm -r ./assets ./tests ./node_modules composer* package* gulp*
+RUN rm -r ./assets ./tests ./node_modules composer* package* gulp* ./app/config/debug.php
 
 FROM prod AS deploy
 RUN mkdir deployment && \

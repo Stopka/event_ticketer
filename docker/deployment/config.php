@@ -8,9 +8,12 @@ return [
     'local' => '/srv',
     'test' => false,
     'ignore' => '
-			/deployment*
+	  /deployment*
       .git*
-      /public/var
+      /app/config/debug.php
+      /app/config/parameters.environmental.php
+      /app/config/parameters.local.php
+      /www/var
       /var
 		',
     'allowDelete' => true,

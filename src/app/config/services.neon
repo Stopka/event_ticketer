@@ -9,8 +9,17 @@ services:
     - Ticketer\Modules\FrontModule\Responses\ApplicationPdfResponse
     router: Ticketer\Routers\RouterFactory::createRouter
     - Ticketer\Presenters\BasePresenterDependencies
-    - Ticketer\Modules\ApiModule\Presenters\BasePresenterDependencies
+    - class: Ticketer\Modules\ApiModule\Presenters\BasePresenterDependencies
+      arguments:
+          httpAuthenticator: @api.authenticator.composite
     - Ticketer\Modules\AdminModule\Presenters\BasePresenterDependencies
     - Ticketer\Modules\FrontModule\Presenters\BasePresenterDependencies
     - SensioLabs\AnsiConverter\AnsiToHtmlConverter
-    - Ticketer\Modules\ApiModule\Http\ApiHttpAuthenticator(%api.users%)
+    api.authenticator.basic: Ticketer\Modules\ApiModule\Http\BasicHttpAuthenticator(%api.users%)
+    api.authenticator.token: Ticketer\Modules\ApiModule\Http\TokenAuthenticator(%api.authTokens%)
+    api.authenticator.composite:
+        class: Ticketer\Modules\ApiModule\Http\CompositeAuthenticator
+        arguments:
+            authenticators:
+                - @api.authenticator.token
+                - @api.authenticator.basic

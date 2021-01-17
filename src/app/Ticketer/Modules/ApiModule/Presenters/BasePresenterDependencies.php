@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\ApiModule\Presenters;
 
-use Ticketer\Modules\ApiModule\Http\ApiHttpAuthenticator;
+use Ticketer\Modules\ApiModule\Http\BasicHttpAuthenticator;
+use Ticketer\Modules\ApiModule\Http\HttpAuthenticatorInterface;
 use Ticketer\Presenters\BasePresenterDependencies as ParentPresenterDependencies;
 
 class BasePresenterDependencies
 {
     private ParentPresenterDependencies $parentDependencies;
 
-    private ApiHttpAuthenticator $httpAuthenticator;
+    private HttpAuthenticatorInterface $httpAuthenticator;
 
-    public function __construct(ParentPresenterDependencies $dependencies, ApiHttpAuthenticator $httpAuthenticator)
-    {
+    public function __construct(
+        ParentPresenterDependencies $dependencies,
+        HttpAuthenticatorInterface $httpAuthenticator
+    ) {
         $this->parentDependencies = $dependencies;
         $this->httpAuthenticator = $httpAuthenticator;
     }
@@ -28,9 +31,9 @@ class BasePresenterDependencies
     }
 
     /**
-     * @return ApiHttpAuthenticator
+     * @return HttpAuthenticatorInterface
      */
-    public function getHttpAuthenticator(): ApiHttpAuthenticator
+    public function getHttpAuthenticator(): HttpAuthenticatorInterface
     {
         return $this->httpAuthenticator;
     }

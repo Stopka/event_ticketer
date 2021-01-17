@@ -30,6 +30,12 @@ return [
                 512,
                 JSON_THROW_ON_ERROR
             ),
+            "authTokens" => json_decode(
+                (string)getenv('API_AUTH_TOKENS'),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            ),
         ],
     ],
 ];

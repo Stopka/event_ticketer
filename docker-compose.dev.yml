@@ -9,7 +9,7 @@ services:
       MAIL_PORT: "1025"
       MAIL_USER: ""
       MAIL_PASS: ""
-      API_USERS: "{\"cron\": \"heslo\"}"
+      API_AUTH_TOKENS: '["AeDaipaingeengoiX6aeleaRee5EuphooyohkeeQu7fehudunidaeb0al1aziith"]'
     build:
       target: dev
     image: stopka/event_ticketer:dev

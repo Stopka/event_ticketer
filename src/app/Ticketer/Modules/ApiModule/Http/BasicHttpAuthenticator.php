@@ -6,9 +6,11 @@ namespace Ticketer\Modules\ApiModule\Http;
 
 use Contributte\Http\Auth\BasicAuthenticator;
 
-class ApiHttpAuthenticator extends BasicAuthenticator
+class BasicHttpAuthenticator extends BasicAuthenticator implements HttpAuthenticatorInterface
 {
     private const TITLE = 'Ticketer API';
+
+    private bool $hasUsers = false;
 
     /**
      * ApiHttpAuthenticator constructor.
@@ -21,5 +23,17 @@ class ApiHttpAuthenticator extends BasicAuthenticator
         foreach ($users as $user => $password) {
             $this->addUser($user, (string)password_hash($password, PASSWORD_DEFAULT), false);
         }
+    }
+
+    public function addUser(string $user, string $password, bool $unsecured): BasicAuthenticator
+    {
+        $this->hasUsers = true;
+
+        return parent::addUser($user, $password, $unsecured);
+    }
+
+    public function hasCredentials(): bool
+    {
+        return $this->hasUsers;
     }
 }

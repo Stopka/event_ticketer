@@ -12,12 +12,13 @@ class Bootstrap
     public static function boot(): TicketerConfigurator
     {
         $configurator = new TicketerConfigurator();
+        $confDir = __DIR__ . '/../config';
 
-        $configurator->setDebugMode(true);
+        $configurator->setDebugModeConfigIfExists($confDir . '/debug.php');
+
         $configurator->enableTracy(__DIR__ . '/../../var/log');
         $configurator->setTempDirectory(__DIR__ . '/../../var/tmp');
 
-        $confDir = __DIR__ . '/../config';
         $configurator->addConfig("$confDir/main.neon");
         $configurator->addConfigIfExists("$confDir/parameters.environmental.php");
         $configurator->addConfigIfExists("$confDir/parameters.local.neon");
