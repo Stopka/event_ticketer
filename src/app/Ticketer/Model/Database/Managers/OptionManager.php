@@ -80,7 +80,7 @@ class OptionManager
         $additionEntity->addOption($optionEntity);
         $em->persist($optionEntity);
         $priceValues = $values['price'];
-        if (count($priceValues) > 0) {
+        if (null !== $priceValues && count($priceValues) > 0) {
             $priceEntity = new PriceEntity();
             $optionEntity->setPrice($priceEntity);
             $em->persist($priceEntity);

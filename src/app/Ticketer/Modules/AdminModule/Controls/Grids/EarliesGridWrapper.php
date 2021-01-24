@@ -72,16 +72,15 @@ class EarliesGridWrapper extends GridWrapper
 
     protected function appendEarlyWaveColumns(Grid $grid): void
     {
-        $grid->addColumnText('earlyWave_name', 'Entity.Singular.EarlyWave', 'earlyWave.name')
-            ->setSortable()
-            ->setFilterText();
-        $grid->addColumnDate('earlyWave_startDate', 'Attribute.Event.StartDate', 'earlyWave.startDate')
-            ->setSortable()
-            ->setFilterDate();
+        $grid->addColumnText('earlyWave_name', 'Entity.Singular.EarlyWave', 'earlyWave.name');
+            //->setSortable()->setFilterText()
+
+        $grid->addColumnDate('earlyWave_startDate', 'Attribute.Event.StartDate', 'earlyWave.startDate');
+            //->setSortable()->setFilterDate()
         $grid->addColumnText('earlyWave_inviteSent', 'Attribute.Event.InviteSent', 'earlyWave.inviteSent')
-            ->setReplacement([true => 'Value.Boolean.Yes', false => 'Value.Boolean.No'])
-            ->setSortable()
-            ->setFilterSelect([null => '', true => 'Value.Boolean.Yes', false => 'Value.Boolean.No']);
+            ->setReplacement([true => 'Value.Boolean.Yes', false => 'Value.Boolean.No']);
+            //->setSortable()
+            //->setFilterSelect([null => '', true => 'Value.Boolean.Yes', false => 'Value.Boolean.No']);
     }
 
 

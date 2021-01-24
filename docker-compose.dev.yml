@@ -9,6 +9,7 @@ services:
       MAIL_PORT: "1025"
       MAIL_USER: ""
       MAIL_PASS: ""
+      MAIL_FROM_ADDRESS: "system@test.foo"
       API_AUTH_TOKENS: '["AeDaipaingeengoiX6aeleaRee5EuphooyohkeeQu7fehudunidaeb0al1aziith"]'
     build:
       target: dev
@@ -24,6 +25,14 @@ services:
   event_ticketer-mariadb:
     ports:
       - 3306:3306
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8080:8080
+    networks:
+      - event_ticketer-mariadb
+
   mailhog:
     image: mailhog/mailhog:latest
     ports:

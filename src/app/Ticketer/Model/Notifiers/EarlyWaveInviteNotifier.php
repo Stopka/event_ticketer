@@ -188,21 +188,13 @@ class EarlyWaveInviteNotifier implements EventSubscriberInterface
                 "<p>Dobrý den,<br/>
 Velice si vážíme Vaší podpory v minulém roce,
 a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek na
-<a href='https://ldtpardubice.cz/event/612'>" . $event->getName() . "</a>.
+<a href='https://ldtpardubice.cz/event/699/ldt_2021'>" . $event->getName() . "</a>.
 Běžný výdej přihlášek započne " . $startDate->format('d. m. Y') . ",
 pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu,
-kde standardním způsobem vyplníte registrační formulář. Učinit tak můžete do 25. 1. 2019.<br/>
+kde standardním způsobem vyplníte registrační formulář. Učinit tak můžete do 1. 2. 2021.<br/>
 $link</p>
-<p>Tábor se bude konat v termínu <strong>21. 7. - 4. 8. 2019</strong> v areálu
-<a href='https://ldtpardubice.cz/event_place/havlisuv_mlyn_u_zeletavy'>Havlišův mlýn u Želetavy</a>.</p>
-<p>Zároveň bychom Vás při této příležitosti chtěli pozvat na
-<a href='https://ldtpardubice.cz/event/611'>Sváteční setkání</a>, které proběhne dne 15. 12. 2018 v budově
-<a href='https://ldtpardubice.cz/event_place/sdh_slovany'>SDH Slovany</a>,
-ul. Krátká 673, Pardubice (informace k akci i na
-<a href = 'https://www.facebook.com/events/186098655600221/'>facebooku</a>). Na tomto setkání proběhne
-<strong>křest</strong> našeho nového <strong>maskota</strong>
-a rodiče budou mít možnost zajistit přihlášky pro své příbuzné a kamarády. Vše v krásné
-<strong>vánoční atmosféře</strong> s punčem, cukrovím, stromečkem, za znění tradičních koled.</p>
+<p>Tábor se bude konat v termínu <strong>18. 7. - 31. 7. 2021</strong> v areálu
+<a href='https://ldtpardubice.cz/event_place/vranovska_prehrada'>Vranovská přehrada</a>.</p>
 <p>Tým LDTPardubice</p>
 
 <p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz

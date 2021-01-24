@@ -1,7 +1,7 @@
 parameters:
     timezone: Europe/Prague
     format:
-        date: 'd.m.Y'
+        date: 'Y-m-d'
         time: 'H:i:s'
         dateTime: '%%date%% %%time%%'
     database:

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\FrontModule\Presenters;
 
+use DateTimeImmutable;
 use Nette\Application\AbortException;
 use Ticketer\Model\DateFormatter;
 use Ticketer\Model\Database\Daos\ApplicationDao;
@@ -60,10 +61,10 @@ class HomepagePresenter extends BasePresenter
     }
 
     /**
-     * @param \DateTime $dateTime
+     * @param DateTimeImmutable $dateTime
      * @return string
      */
-    public function formatDate(\DateTime $dateTime): string
+    public function formatDate(DateTimeImmutable $dateTime): string
     {
         return $this->dateFormatter->getDateString($dateTime);
     }

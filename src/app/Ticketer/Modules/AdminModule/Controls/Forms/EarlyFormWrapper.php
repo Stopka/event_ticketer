@@ -99,7 +99,7 @@ class EarlyFormWrapper extends FormWrapper
      */
     protected function getEarlyFormSelectArray(): array
     {
-        $result = [null => 'Form.Early.EarlyWave.CreateNew'];
+        $result = ['' => 'Form.Early.EarlyWave.CreateNew'];
         $waves = $this->earlyWaveDao->getEventEearlyWaves($this->eventEntity);
         foreach ($waves as $wave) {
             $result[$wave->getId()->toString()] = $wave->getName() . ' - ' . $this->dateFormatter->getDateString(
@@ -159,7 +159,7 @@ class EarlyFormWrapper extends FormWrapper
         }
         /** @var array<mixed> $values */
         $values = $form->getValues('array');
-        if (null !== $values['earlyWaveId']) {
+        if ('' !== $values['earlyWaveId']) {
             $values['earlyWaveId'] = Uuid::fromString($values['earlyWaveId']);
         }
         if (null !== $this->earlyEntity) {

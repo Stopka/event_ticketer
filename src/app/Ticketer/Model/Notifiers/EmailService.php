@@ -6,7 +6,7 @@ namespace Ticketer\Model\Notifiers;
 
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Mail\IMailer;
+use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\Mail\SendException;
 use Nette\SmartObject;
@@ -22,7 +22,7 @@ class EmailService
     /** @var  LinkGenerator */
     private $linkGenerator;
 
-    /** @var  IMailer */
+    /** @var  Mailer */
     private $mailer;
 
     /** @var  callable[] */
@@ -32,9 +32,9 @@ class EmailService
      * EmailService constructor.
      * @param EmailMessageFactory $emailMessageFactory
      * @param LinkGenerator $linkGenerator
-     * @param IMailer $mailer
+     * @param Mailer $mailer
      */
-    public function __construct(EmailMessageFactory $emailMessageFactory, LinkGenerator $linkGenerator, IMailer $mailer)
+    public function __construct(EmailMessageFactory $emailMessageFactory, LinkGenerator $linkGenerator, Mailer $mailer)
     {
         $this->emailMessageFactory = $emailMessageFactory;
         $this->linkGenerator = $linkGenerator;

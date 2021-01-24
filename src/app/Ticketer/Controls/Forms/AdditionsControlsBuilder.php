@@ -505,10 +505,11 @@ class AdditionsControlsBuilder
                     ->setText($this->getTranslator()->translate('Occupancy.Left.Options', $left))
             );
         }
-        if (null !== $option->getDescription()) {
+        $description = $option->getDescription();
+        if (null !== $description && '' !== $description) {
             $result->addHtml(
                 Html::el('span', ['class' => 'description'])
-                    ->setHtml($option->getDescription())
+                    ->setHtml($description)
             );
         }
 
