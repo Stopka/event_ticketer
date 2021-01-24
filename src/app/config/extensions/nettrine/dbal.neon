@@ -13,6 +13,7 @@ nettrine.dbal:
 		user: %database.user%
 		password: %database.password%
 		dbname: %database.dbname%
+		charset: utf8mb4
 		types:
 			uuid: Ticketer\Model\Database\Doctrine\Types\UuidType
 			gender_enum: Ticketer\Model\Database\Doctrine\Types\Enums\GenderEnumType
