@@ -8,7 +8,7 @@ extensions:
 nettrine.orm:
     entityManagerDecoratorClass: Ticketer\Model\Database\EntityManager
     configuration:
-        autoGenerateProxyClasses: %debugMode%
+        autoGenerateProxyClasses: true
         namingStrategy: Ticketer\Model\Database\Doctrine\PostfixedUnderscoreNamingStrategy
 
 nettrine.orm.annotations:
