@@ -1,4 +1,5 @@
 application:
-    errorPresenter: Error
+    errorPresenter: Error:Error
     mapping:
+        Error: Ticketer\Presenters\*Presenter
         *: Ticketer\Modules\*Module\Presenters\*Presenter
