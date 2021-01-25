@@ -168,12 +168,29 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
      */
     public function getAdditionChoices(AdditionEntity $addition): array
     {
+        /* TODO rewrite to criteria
         $criteria = Criteria::create();
         $criteria->where(
             $criteria::expr()->in('option', $addition->getOptions())
         );
 
         return $this->choices->matching($criteria)->toArray();
+        */
+        $results = [];
+        foreach ($this->choices->toArray() as $choice) {
+            /** @var ChoiceEntity $choice */
+            $option = $choice->getOption();
+            if (null === $option) {
+                continue;
+            }
+            $addition = $option->getAddition();
+            if (null === $addition || !$addition->getId()->equals($addition->getId())) {
+                continue;
+            }
+            $results[] = $choice;
+        }
+
+        return $results;
     }
 
     /**
