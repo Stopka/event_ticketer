@@ -204,7 +204,7 @@ class ApplicationsGridWrapper extends GridWrapper
 
     protected function appendApplicationColumns(Grid $grid): void
     {
-        $grid->addColumnNumber('number_id', 'Attribute.Number')
+        $grid->addColumnNumber('number', 'Attribute.Number')
             ->setSortable()
             ->setFilterText();
         $grid->addColumnText('state', 'Attribute.State')
