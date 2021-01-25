@@ -2,8 +2,9 @@
  * @param EventEntity[] $events
  *}
 {block content}
-<h1><i class="fa fa-shopping-cart"></i> {_'Entity.Singular.Cart'} #{$cart->getId()}</h1>
+<h1><i class="fa fa-shopping-cart"></i> {_'Entity.Singular.Cart'} #{$cart->getNumber()}</h1>
 <ul>
+    <li>{_'Attribute.Id'}: <strong>{$cart->getId()}</strong></li>
     <li>{_'Entity.Singular.Event'}: <strong>{$cart->getEvent()->getName()}</strong></li>
     <li n:if="$cart->getFirstName()">{_'Attribute.Person.FirstName'}: <strong>{$cart->getFirstName()}</strong></li>
     <li n:if="$cart->getLastName()">{_'Attribute.Person.LastName'}: <strong>{$cart->getLastName()}</strong></li>

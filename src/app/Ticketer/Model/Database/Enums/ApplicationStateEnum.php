@@ -77,4 +77,36 @@ final class ApplicationStateEnum extends Enum
             self::CANCELLED => "Value.Application.State.Cancelled",
         ];
     }
+
+    public static function getMax(ApplicationStateEnum ...$states): ApplicationStateEnum
+    {
+        $max = array_pop($states);
+        if (null === $max) {
+            return self::RESERVED();
+        }
+        while (count($states) > 0) {
+            $item = array_pop($states);
+            if ($item->getValue() > $max->getValue()) {
+                $max = $item;
+            }
+        }
+
+        return $max;
+    }
+
+    public static function getMin(ApplicationStateEnum ...$states): ApplicationStateEnum
+    {
+        $min = array_pop($states);
+        if (null === $min) {
+            return self::RESERVED();
+        }
+        while (count($states) > 0) {
+            $item = array_pop($states);
+            if ($item->getValue() < $min->getValue()) {
+                $min = $item;
+            }
+        }
+
+        return $min;
+    }
 }

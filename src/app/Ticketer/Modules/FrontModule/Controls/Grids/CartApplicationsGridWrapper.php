@@ -93,6 +93,8 @@ class CartApplicationsGridWrapper extends GridWrapper
     {
         $grid->addColumnNumber('id', 'Attribute.Id')
             ->setSort('ASC');
+        $grid->addColumnNumber('number', 'Attribute.Number')
+            ->setSort('ASC');
         $grid->addColumnText('state', 'Attribute.State')
             ->setReplacement(
                 [

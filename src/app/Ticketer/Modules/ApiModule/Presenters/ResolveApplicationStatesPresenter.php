@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Ticketer\Modules\ApiModule\Responses\ConsoleOutputResponse;
 
-class MigrationsPresenter extends BasePresenter
+class ResolveApplicationStatesPresenter extends BasePresenter
 {
     private Application $application;
 
@@ -21,20 +21,19 @@ class MigrationsPresenter extends BasePresenter
     }
 
     /**
-     * @param string $version
+     * @param string $eventId
      * @throws AbortException
      */
-    public function actionMigrate(string $version = 'latest'): void
+    public function actionDefault(string $eventId): void
     {
         $this->application->setAutoExit(false);
 
         $input = new ArrayInput(
             [
-                'command' => 'migrations:migrate',
-                'version' => $version,
+                'command' => 'debug:resolveApplicationStates',
+                'eventId' => $eventId,
                 '--no-interaction' => true,
-                '--all-or-nothing' => true,
-                '--ansi' => true
+                '--ansi' => true,
             ]
         );
         $output = new BufferedOutput();

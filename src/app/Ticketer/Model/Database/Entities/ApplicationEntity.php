@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Entities;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Ticketer\Model\ApplicationStateResolver;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\InvalidStateException;
@@ -85,6 +87,8 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
      */
     private $info;
 
+    private static ?ApplicationStateResolver $stateResolver = null;
+
     public function __construct(bool $reserved = false)
     {
         parent::__construct();
@@ -156,6 +160,20 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
     public function getChoices(): array
     {
         return $this->choices->toArray();
+    }
+
+    /**
+     * @param AdditionEntity $addition
+     * @return ChoiceEntity[]
+     */
+    public function getAdditionChoices(AdditionEntity $addition): array
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria::expr()->in('option', $addition->getOptions())
+        );
+
+        return $this->choices->matching($criteria)->toArray();
     }
 
     /**
@@ -275,87 +293,9 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
 
     public function updateState(): void
     {
-        if (!$this->getState()->isIssued()) {
-            return;
-        }
-        if ($this->getState()->isReserved()) {
-            if (null !== $this->getReservation()) {
-                $this->state = ApplicationStateEnum::DELEGATED();
-            } else {
-                $this->state = ApplicationStateEnum::RESERVED();
-            }
-        }
-        $cart = $this->getCart();
-        $event = null !== $cart ? $cart->getEvent() : null;
-        if (null !== $cart && null !== $event) {
-            $this->state = ApplicationStateEnum::WAITING();
-            $required_states = [];
-            $required_additions = [];
-            $enough = [];
-            foreach ($event->getAdditions() as $addition) {
-                $additionId = $addition->getId()->toString();
-                $state = $addition->getEnoughForState();
-                if (null !== $state) {
-                    $enough[$additionId] = $state;
-                }
-                $minState = $addition->getRequiredForState();
-                if (null !== $minState) {
-                    for (
-                        $state = $minState->getValue();
-                        $state <= ApplicationStateEnum::FULFILLED()->getValue();
-                        $state++
-                    ) {
-                        if (!isset($required_states[$state])) {
-                            $required_states[$state] = [];
-                        }
-                        $required_states[$state][] = $addition->getId();
-                        if (!isset($required_additions[$additionId])) {
-                            $required_additions[$additionId] = [];
-                        }
-                        $required_additions[$additionId][] = $state;
-                    }
-                }
-            }
-            $choices = $this->getChoicesByAdditionId();
-            foreach ($event->getAdditions() as $addition) {
-                $areChoicesPayed = true;
-                $additionId = $addition->getId()->toString();
-                if (isset($choices[$additionId])) {
-                    foreach ($choices[$additionId] as $choice) {
-                        if (!$choice->isPayed()) {
-                            $areChoicesPayed = false;
-                            break;
-                        }
-                    }
-                }
-                if (isset($enough[$additionId]) && $areChoicesPayed && $enough[$additionId] > $this->state) {
-                    $this->state = $enough[$additionId];
-                }
-                if (isset($required_additions[$additionId]) && $areChoicesPayed) {
-                    foreach ($required_additions[$additionId] as $state) {
-                        $index = array_search($additionId, $required_states[$state], true);
-                        unset($required_states[$state][$index]);
-                    }
-                }
-            }
-            for (
-                $state = ApplicationStateEnum::WAITING()->getValue();
-                $state <= ApplicationStateEnum::FULFILLED()->getValue();
-                $state++
-            ) {
-                if ($this->state->getValue() > $state) {
-                    continue;
-                }
-                if (!array_key_exists($state, $required_states)) {
-                    continue;
-                }
-                /* TODO check if not needed
-                 * if (count($required_states[$state]) > 0) {
-                    continue;
-                }*/
-                $this->state = new ApplicationStateEnum($state);
-            }
-        }
+        $this->state = self::getStateResolver()->resolveState($this);
+
+        $event = $this->getEvent();
         if (null !== $event) {
             $event->updateCapacityFull();
         }
@@ -443,5 +383,14 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
         $qb->setParameters(['event' => $this->getEvent()]);
 
         return (int)$qb->getQuery()->getSingleScalarResult();
+    }
+
+    protected static function getStateResolver(): ApplicationStateResolver
+    {
+        if (null === self::$stateResolver) {
+            self::$stateResolver = new ApplicationStateResolver();
+        }
+
+        return self::$stateResolver;
     }
 }

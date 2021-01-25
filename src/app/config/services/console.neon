@@ -3,3 +3,4 @@ services:
     - Ticketer\Console\Commands\GenerateUidCommand
     - Ticketer\Console\Commands\SendEarlyInvitesCommand
     - Ticketer\Console\Commands\SendCartCreatedCommand
+    - Ticketer\Console\Commands\ResolveApplicationStatesCommand
