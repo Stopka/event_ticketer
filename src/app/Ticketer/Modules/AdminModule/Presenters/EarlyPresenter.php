@@ -6,6 +6,7 @@ namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Mpdf\Tag\U;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\EarlyFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\IEarlyFormWrapperFactory;
@@ -45,10 +46,11 @@ class EarlyPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionDefault(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect("Event:edit");
@@ -63,10 +65,11 @@ class EarlyPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionAdd(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
@@ -83,10 +86,11 @@ class EarlyPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionEdit(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $early = $this->earlyDao->getEarly($uuid);
         if (null === $early) {
             $this->flashTranslatedMessage('Error.Addition.NotFound', FlashMessageTypeEnum::ERROR());

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\FrontModule\Presenters;
 
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Controls\Forms\ICartFormWrapperFactory;
@@ -81,10 +82,11 @@ class EventPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionRegister(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event || !$event->isActive()) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
@@ -108,10 +110,11 @@ class EventPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionSubstitute(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getPublicAvailibleEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage('Error.Event.NotFound', FlashMessageTypeEnum::ERROR());
@@ -154,6 +157,7 @@ class EventPresenter extends BasePresenter
      * @param string|null $id
      * @param bool $showHeaders
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function renderOccupancy(?string $id = null, bool $showHeaders = true): void
     {
@@ -168,7 +172,7 @@ class EventPresenter extends BasePresenter
             }
             $event = null;
         } else {
-            $uuid = Uuid::fromString($id);
+            $uuid = $this->deserializeUuid($id);
             $event = $this->eventDao->getEvent($uuid);
         }
         $template = $this->getTemplate();

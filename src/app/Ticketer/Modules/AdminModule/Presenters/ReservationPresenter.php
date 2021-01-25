@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\AdminModule\Presenters;
 
+use Nette\Application\BadRequestException;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\DelegateReservationFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\IDelegateReservationFormWrapperFactory;
@@ -37,10 +38,11 @@ class ReservationPresenter extends BasePresenter
      * @param string $id    event id
      * @param string[] $ids applications
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionDelegate(string $id, array $ids = []): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->flashTranslatedMessage("Error.Event.NotFound", FlashMessageTypeEnum::ERROR());

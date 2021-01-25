@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\IOptionFormWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Forms\OptionFormWrapper;
@@ -44,10 +45,11 @@ class OptionPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionDefault(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $addition = $this->additionDao->getAddition($uuid);
         if (null === $addition) {
             $this->flashTranslatedMessage('Addition.NotFound', FlashMessageTypeEnum::ERROR());
@@ -63,10 +65,11 @@ class OptionPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionAdd(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $addition = $this->additionDao->getAddition($uuid);
         if (null === $addition) {
             $this->flashTranslatedMessage('Addition.NotFound', FlashMessageTypeEnum::ERROR());
@@ -83,10 +86,11 @@ class OptionPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionEdit(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $option = $this->optionDao->getOption($uuid);
         if (null === $option) {
             $this->flashTranslatedMessage('Addition.NotFound', FlashMessageTypeEnum::ERROR());

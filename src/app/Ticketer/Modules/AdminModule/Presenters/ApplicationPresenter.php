@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Forms\IReserveApplicationFormWrapperFactory;
 use Ticketer\Modules\AdminModule\Controls\Forms\ReserveApplicationFormWrapper;
@@ -66,10 +67,11 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionDefault(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
@@ -84,10 +86,11 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionOccupancy(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
@@ -103,10 +106,11 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionReserve(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
@@ -122,10 +126,11 @@ class ApplicationPresenter extends BasePresenter
      * @param string $id
      * @param string[] $ids
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionEditReservation(string $id, array $ids): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $eventEntity = $this->eventDao->getEvent($uuid);
         if (null === $eventEntity) {
             $this->redirect('Homepage:');
@@ -145,10 +150,11 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function renderExport(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $event = $this->eventDao->getEvent($uuid);
         if (null === $event) {
             $this->redirect('Homepage:');
@@ -164,10 +170,11 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @param string $id application id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function renderPdf(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $application = $this->applicationDao->getApplication($uuid);
         if (null === $application) {
             throw new NotFoundException();

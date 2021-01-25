@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\ApiModule\Presenters;
 
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Notifiers\EarlyWaveInviteNotifier;
@@ -28,10 +29,11 @@ class EarlyWavePresenter extends BasePresenter
      * @param string $id
      * @throws AbortException
      * @throws InvalidLinkException
+     * @throws BadRequestException
      */
     public function actionSend(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $this->earlyWaveInviteNotifier->sendDebugEarlyWaveInvites($uuid);
         $this->sendResponse(new TextResponse("OK"));
     }

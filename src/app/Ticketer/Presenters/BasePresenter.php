@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Ticketer\Presenters;
 
+use Nette\Application\BadRequestException;
+use Nette\Http\IResponse;
+use Ramsey\Uuid\Exception\InvalidArgumentException;
 use Ticketer\Controls\TFlashTranslatedMessage;
 use Ticketer\Controls\TInjectTranslator;
 use Ticketer\Model\Database\Daos\AdministratorDao;
@@ -55,5 +58,20 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         parent::beforeRender();
         $this->getTemplate()->administratorEntity = $this->administratorEntity;
+    }
+
+    /**
+     * @param string $uuidString
+     * @param string $errorMessage
+     * @return Uuid
+     * @throws BadRequestException
+     */
+    protected function deserializeUuid(string $uuidString, string $errorMessage = 'Invalid identificator'): Uuid
+    {
+        try {
+            return Uuid::fromString($uuidString);
+        } catch (InvalidArgumentException $exception) {
+            throw new BadRequestException($errorMessage, IResponse::S404_NOT_FOUND, $exception);
+        }
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\AdminModule\Controls\Grids\CartApplicationsGridWrapper;
 use Ticketer\Modules\AdminModule\Controls\Grids\ICartApplicationsGridWrapperFactory;
@@ -51,10 +52,11 @@ class CartPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionDefault(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $cart = $this->cartDao->getCart($uuid);
         if (null === $cart) {
             $this->flashTranslatedMessage('Error.Cart.NotFound', FlashMessageTypeEnum::ERROR());
@@ -71,10 +73,11 @@ class CartPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionEdit(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $cart = $this->cartDao->getCart($uuid);
         if (null === $cart) {
             $this->flashTranslatedMessage('Error.Cart.NotFound', FlashMessageTypeEnum::ERROR());

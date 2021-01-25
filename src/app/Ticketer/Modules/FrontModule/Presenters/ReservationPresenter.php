@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ticketer\Modules\FrontModule\Presenters;
 
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Controls\Forms\ICartFormWrapperFactory;
@@ -46,10 +47,11 @@ class ReservationPresenter extends BasePresenter
     /**
      * @param string $id
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function actionRegister(string $id): void
     {
-        $uuid = Uuid::fromString($id);
+        $uuid = $this->deserializeUuid($id);
         $reservation = $this->reservationDao->getRegisterReadyReservation($uuid);
         if (null === $reservation) {
             $this->flashTranslatedMessage('Error.Reservation.NotFound', FlashMessageTypeEnum::WARNING());
