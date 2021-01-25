@@ -204,9 +204,8 @@ class ApplicationsGridWrapper extends GridWrapper
 
     protected function appendApplicationColumns(Grid $grid): void
     {
-        $grid->addColumnNumber('id', 'Attribute.Id')
+        $grid->addColumnNumber('number_id', 'Attribute.Number')
             ->setSortable()
-            ->setSort(OrderEnum::ASC()->getValue())
             ->setFilterText();
         $grid->addColumnText('state', 'Attribute.State')
             ->setSortable()
@@ -239,6 +238,7 @@ class ApplicationsGridWrapper extends GridWrapper
             ->setFilterDate();
         $grid->addColumnDateTime('created', 'Attribute.Created')
             ->setSortable()
+            ->setSort(OrderEnum::ASC()->getValue())
             ->setFilterDate();
     }
 
@@ -262,7 +262,7 @@ class ApplicationsGridWrapper extends GridWrapper
                         $html->addHtml(
                             Html::el('div', ['class' => 'cart-id id'])
                                 ->addText('#')
-                                ->addText((string)$cart->getId())
+                                ->addText((string)$cart->getNumber())
                         );
                         $html->addHtml(
                             Html::el('div', ['class' => 'cart-fullName fillName'])
