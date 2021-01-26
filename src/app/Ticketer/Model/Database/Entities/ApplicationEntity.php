@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Ticketer\Model\ApplicationStateResolver;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
+use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Exceptions\InvalidInputException;
 use Ticketer\Model\Exceptions\InvalidStateException;
 use Ticketer\Model\Database\Attributes\TAddressAttribute;
@@ -163,10 +164,10 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
     }
 
     /**
-     * @param AdditionEntity $addition
+     * @param Uuid $additionId
      * @return ChoiceEntity[]
      */
-    public function getAdditionChoices(AdditionEntity $addition): array
+    public function getAdditionChoices(Uuid $additionId): array
     {
         /* TODO rewrite to criteria
         $criteria = Criteria::create();
@@ -176,21 +177,19 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
 
         return $this->choices->matching($criteria)->toArray();
         */
-        $results = [];
-        foreach ($this->choices->toArray() as $choice) {
-            /** @var ChoiceEntity $choice */
-            $option = $choice->getOption();
-            if (null === $option) {
-                continue;
-            }
-            $addition = $option->getAddition();
-            if (null === $addition || !$addition->getId()->equals($addition->getId())) {
-                continue;
-            }
-            $results[] = $choice;
-        }
+        return array_filter(
+            $this->choices->toArray(),
+            static function (ChoiceEntity $choice) use ($additionId): bool {
+                $option = $choice->getOption();
+                if (null === $option) {
+                    return false;
+                }
+                $addition = $option->getAddition();
 
-        return $results;
+                return null !== $addition
+                    && $addition->getId()->equals($additionId);
+            }
+        );
     }
 
     /**

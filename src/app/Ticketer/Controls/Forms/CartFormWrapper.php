@@ -384,7 +384,7 @@ class CartFormWrapper extends FormWrapper
                 'Form.Cart.Message.Edit.Success',
                 FlashMessageTypeEnum::SUCCESS()
             );
-            $this->getPresenter()->redirect('Application:', $this->event->getId());
+            $this->getPresenter()->redirect('Application:', $this->event->getId()->toString());
         } else {
             $this->cartManager->createCartFromCartForm(
                 $values,

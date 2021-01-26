@@ -155,10 +155,14 @@ class ChoiceManager
             if (!is_array($optionIds)) {
                 $optionIds = [$optionIds];
             }
+            $optionIdStrings = array_map(
+                static fn(Uuid $uuid): string => $uuid->toString(),
+                $optionIds
+            );
             $additionUuid = Uuid::fromString($additionId);
             $processedOptionIds = [];
-            $choices = $application->getChoices();
-            foreach ($choices as $choice) {
+            $additionChoices = $application->getAdditionChoices($additionUuid);
+            foreach ($additionChoices as $choice) {
                 $option = $choice->getOption();
                 if (null === $option) {
                     continue;
@@ -167,7 +171,7 @@ class ChoiceManager
                 if (null === $addition || !$addition->getId()->equals($additionUuid)) {
                     continue;
                 }
-                if (!in_array($option->getId()->toString(), $optionIds, true)) {
+                if (!in_array($option->getId()->toString(), $optionIdStrings, true)) {
                     $this->getEntityManager()->remove($choice);
                 }
                 $processedOptionIds[] = $option->getId()->toString();

@@ -82,7 +82,7 @@ class ApplicationStateResolver
     private function areAllAdditionChoicesPayed(ApplicationEntity $application, AdditionEntity $addition): bool
     {
         $notPayedChoices = array_filter(
-            $application->getAdditionChoices($addition),
+            $application->getAdditionChoices($addition->getId()),
             static fn(ChoiceEntity $choice): bool => !$choice->isPayed()
         );
 
