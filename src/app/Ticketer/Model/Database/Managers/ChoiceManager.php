@@ -146,7 +146,7 @@ class ChoiceManager
     }
 
     /**
-     * @param array<mixed> $values
+     * @param array<string,Uuid|array<Uuid>> $values
      * @param ApplicationEntity $application
      */
     private function updateVisibleAdditions(array $values, ApplicationEntity $application): void

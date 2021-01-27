@@ -518,11 +518,6 @@ class CartFormWrapper extends FormWrapper
         $builder = $this->getAdditionsControlsBuilder();
         if (null !== $this->reservation) {
             $builder->setVisibleCountLeft(false);
-            $builder->setPredisabledAdditionVisibilityResolver(
-                static function (AdditionVisibilityEntity $visibility): bool {
-                    return !$visibility->isReservation();
-                }
-            );
         }
         $builder->appendAdditionsControls($applicationContainer, $applicationIndex);
     }
