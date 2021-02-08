@@ -6,6 +6,7 @@ namespace Ticketer\Modules\AdminModule\Presenters;
 
 use Nette\Application\BadRequestException;
 use Ticketer\Model\Dtos\Uuid;
+use Ticketer\Model\Exceptions\TranslatedException;
 use Ticketer\Modules\AdminModule\Controls\Forms\DelegateReservationFormWrapper;
 use Ticketer\Modules\AdminModule\Controls\Forms\IDelegateReservationFormWrapperFactory;
 use Ticketer\Controls\FlashMessageTypeEnum;
@@ -51,7 +52,15 @@ class ReservationPresenter extends BasePresenter
         $applications = $this->applicationDao->getApplicationsForReservationDelegation($ids, $event);
         /** @var DelegateReservationFormWrapper $delegateForm */
         $delegateForm = $this->getComponent('delegateForm');
-        $delegateForm->setApplications($applications);
+        try {
+            $delegateForm->setApplications($applications);
+        } catch (TranslatedException $exception) {
+            $this->flashMessage(
+                $exception->getTranslatedMessage($this->getTranslator()),
+                FlashMessageTypeEnum::ERROR()->getValue()
+            );
+            $this->redirect('Application:default', ['id' => $event->getId()->toString()]);
+        }
     }
 
     protected function createComponentDelegateForm(): DelegateReservationFormWrapper

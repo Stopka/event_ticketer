@@ -19,7 +19,7 @@ Application:
     Empty: 'Musíte přidat alespoň jednu přihlášku'
 Reservation:
     InvalidState: 'Jedna z přihlášek není ve stavu vhodném pro delegaci rezervace.'
-    Empty: 'Chybí přihlášky.'
+    Empty: 'Nebyly vybrány vhodné přihlášky. Delegovat lze pouze přihlášky, které jsou ve stavu "Rezerovováno" nebo "Delegováno".'
     NotFound: 'Rezervace nenalezena'
 Authentication:
     InvalidCredentials: 'Neplatné přihlašovací údaje'
