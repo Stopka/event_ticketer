@@ -2,13 +2,14 @@ language: php
 php:
     - 7.4
 
+before_install: cd src
 install:
     - travis_retry composer install --no-progress --prefer-dist
 
 before_script: cd src
-
 script:
     - composer test
+
 after_success:
     - composer require --dev php-coveralls/php-coveralls
     - travis_retry php vendor/bin/php-coveralls --config ./tests/.coveralls.yml
