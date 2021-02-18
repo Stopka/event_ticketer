@@ -16,7 +16,11 @@ use Ticketer\Modules\FrontModule\Controls\IOccupancyControlFactory;
 use Ticketer\Modules\FrontModule\Controls\OccupancyControl;
 use Ticketer\Model\Database\Daos\EventDao;
 use Ticketer\Model\Database\Entities\EventEntity;
+use Ticketer\Modules\FrontModule\Templates\EventTemplate;
 
+/**
+ * @method EventTemplate getTemplate()
+ */
 class EventPresenter extends BasePresenter
 {
 
@@ -26,28 +30,23 @@ class EventPresenter extends BasePresenter
 
     public ISubstituteFormWrapperFactory $substituteFormWrapperFactory;
 
-    public IOccupancyControlFactory $occupancyControlFactory;
-
     /**
      * EventPresenter constructor.
      * @param BasePresenterDependencies $dependencies
      * @param EventDao $additionDao
      * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param ISubstituteFormWrapperFactory $substituteFormWrapperFactory
-     * @param IOccupancyControlFactory $occupancyControlFactory
      */
     public function __construct(
         BasePresenterDependencies $dependencies,
         EventDao $additionDao,
         ICartFormWrapperFactory $cartFormWrapperFactory,
-        ISubstituteFormWrapperFactory $substituteFormWrapperFactory,
-        IOccupancyControlFactory $occupancyControlFactory
+        ISubstituteFormWrapperFactory $substituteFormWrapperFactory
     ) {
         parent::__construct($dependencies);
         $this->eventDao = $additionDao;
         $this->cartFormWrapperFactory = $cartFormWrapperFactory;
         $this->substituteFormWrapperFactory = $substituteFormWrapperFactory;
-        $this->occupancyControlFactory = $occupancyControlFactory;
     }
 
     /**
@@ -104,7 +103,8 @@ class EventPresenter extends BasePresenter
         /** @var CartFormWrapper $cartForm */
         $cartForm = $this->getComponent('cartForm');
         $cartForm->setEvent($event);
-        $this->template->event = $event;
+        $template = $this->getTemplate();
+        $template->event = $event;
     }
 
     /**
@@ -143,45 +143,5 @@ class EventPresenter extends BasePresenter
     protected function createComponentSubstituteForm(): SubstituteFormWrapper
     {
         return $this->substituteFormWrapperFactory->create();
-    }
-
-    /**
-     * @return OccupancyControl
-     */
-    protected function createComponentOccupancy(): OccupancyControl
-    {
-        return $this->occupancyControlFactory->create();
-    }
-
-    /**
-     * @param string|null $id
-     * @param bool $showHeaders
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function renderOccupancy(?string $id = null, bool $showHeaders = true): void
-    {
-        if (null === $id) {
-            $events = $this->eventDao->getPublicAvailibleEvents();
-            if (count($events) > 0) {
-                $this->redirect('this', $events[0]->getId()->toString());
-            }
-            $events = $this->eventDao->getPublicFutureEvents();
-            if (count($events) > 0) {
-                $this->redirect('this', $events[0]->getId()->toString());
-            }
-            $event = null;
-        } else {
-            $uuid = $this->deserializeUuid($id);
-            $event = $this->eventDao->getEvent($uuid);
-        }
-        $template = $this->getTemplate();
-        $template->event = $event;
-        $template->showHeaders = $showHeaders;
-        if (null !== $event) {
-            /** @var OccupancyControl $occupancy */
-            $occupancy = $this->getComponent('occupancy');
-            $occupancy->setEvent($event);
-        }
     }
 }

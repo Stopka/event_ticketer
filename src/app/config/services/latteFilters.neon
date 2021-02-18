@@ -1,0 +1,8 @@
+services:
+    - Ticketer\Templates\AddFiltersToTemplate
+    latte.templateFactory:
+        setup:
+            - '$onCreate[]' = @Ticketer\Templates\AddFiltersToTemplate
+    - Ticketer\Templates\Filters\FormatDate
+    - Ticketer\Templates\Filters\FormatTime
+    - Ticketer\Templates\Filters\FormatDateTime

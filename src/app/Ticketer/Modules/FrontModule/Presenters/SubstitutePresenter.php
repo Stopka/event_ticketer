@@ -12,7 +12,11 @@ use Ticketer\Controls\Forms\ICartFormWrapperFactory;
 use Ticketer\Model\Database\Daos\SubstituteDao;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Dtos\Uuid;
+use Ticketer\Modules\FrontModule\Templates\SubstituteTemplate;
 
+/**
+ * @method SubstituteTemplate getTemplate()
+ */
 class SubstitutePresenter extends BasePresenter
 {
     public ICartFormWrapperFactory $cartFormWrapperFactory;
@@ -62,7 +66,12 @@ class SubstitutePresenter extends BasePresenter
         $cartFormWrapper = $this->getComponent('cartForm');
         $cartFormWrapper->setSubstitute($substitute);
         $event = $substitute->getEvent();
-        $this->template->event = $event;
+        if (null === $event) {
+            $this->flashTranslatedMessage('Error.Substitute.NotFound', FlashMessageTypeEnum::WARNING());
+            $this->redirect('Homepage:');
+        }
+        $template = $this->getTemplate();
+        $template->event = $event;
     }
 
     /**

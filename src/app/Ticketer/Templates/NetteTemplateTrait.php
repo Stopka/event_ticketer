@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ticketer\Presenters;
+namespace Ticketer\Templates;
 
 use Nette\Security\User;
+use Ticketer\Presenters\FlashMessage;
 
 trait NetteTemplateTrait
 {

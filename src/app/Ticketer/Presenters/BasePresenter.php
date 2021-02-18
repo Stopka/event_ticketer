@@ -13,6 +13,7 @@ use Ticketer\Model\Database\Daos\AdministratorDao;
 use Ticketer\Model\Database\Entities\AdministratorEntity;
 use Nette;
 use Ticketer\Model\Dtos\Uuid;
+use Ticketer\Templates\BaseTemplate;
 
 /**
  * Base presenter for all application presenters.

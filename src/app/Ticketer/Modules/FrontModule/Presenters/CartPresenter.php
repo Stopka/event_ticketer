@@ -13,7 +13,11 @@ use Ticketer\Modules\FrontModule\Controls\Grids\ICartApplicationsGridWrapperFact
 use Ticketer\Model\DateFormatter;
 use Ticketer\Model\Database\Daos\CartDao;
 use Ticketer\Model\Database\Entities\CartEntity;
+use Ticketer\Modules\FrontModule\Templates\CartTemplate;
 
+/**
+ * @method CartTemplate getTemplate()
+ */
 class CartPresenter extends BasePresenter
 {
 
@@ -52,8 +56,8 @@ class CartPresenter extends BasePresenter
         /** @var CartApplicationsGridWrapper $applicationsGrid */
         $applicationsGrid = $this->getComponent('applicationsGrid');
         $applicationsGrid->setCart($cart);
-        $this->template->cart = $cart;
-        $this->template->dateFormatter = $this->dateFormatter;
+        $template = $this->getTemplate();
+        $template->cart = $cart;
     }
 
     /**

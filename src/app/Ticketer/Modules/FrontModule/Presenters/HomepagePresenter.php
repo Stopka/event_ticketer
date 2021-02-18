@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Ticketer\Modules\FrontModule\Presenters;
 
-use DateTimeImmutable;
-use Nette\Application\AbortException;
-use Ticketer\Model\DateFormatter;
 use Ticketer\Model\Database\Daos\ApplicationDao;
 use Ticketer\Model\Database\Daos\EventDao;
 use Ticketer\Model\Database\Entities\EventEntity;
+use Ticketer\Modules\FrontModule\Templates\HomepageTemplate;
 
+/**
+ * @method HomepageTemplate getTemplate()
+ */
 class HomepagePresenter extends BasePresenter
 {
 
@@ -18,37 +19,29 @@ class HomepagePresenter extends BasePresenter
 
     public ApplicationDao $applicationDao;
 
-    public DateFormatter $dateFormatter;
-
     /**
      * HomepagePresenter constructor.
      * @param BasePresenterDependencies $dependencies
      * @param EventDao $additionDao
      * @param ApplicationDao $applicationDao
-     * @param DateFormatter $dateFormatter
      */
     public function __construct(
         BasePresenterDependencies $dependencies,
         EventDao $additionDao,
-        ApplicationDao $applicationDao,
-        DateFormatter $dateFormatter
+        ApplicationDao $applicationDao
     ) {
         parent::__construct($dependencies);
         $this->eventDao = $additionDao;
         $this->applicationDao = $applicationDao;
-        $this->dateFormatter = $dateFormatter;
     }
 
-    /**
-     * @throws AbortException
-     */
     public function renderDefault(): void
     {
         $events = $this->eventDao->getPublicAvailibleEvents();
-        $future_events = $this->eventDao->getPublicFutureEvents();
+        $futureEvents = $this->eventDao->getPublicFutureEvents();
         $template = $this->getTemplate();
         $template->events = $events;
-        $template->future_events = $future_events;
+        $template->futureEvents = $futureEvents;
     }
 
     /**
@@ -58,14 +51,5 @@ class HomepagePresenter extends BasePresenter
     public function countApplications(EventEntity $event): int
     {
         return $this->applicationDao->countIssuedApplications($event);
-    }
-
-    /**
-     * @param DateTimeImmutable $dateTime
-     * @return string
-     */
-    public function formatDate(DateTimeImmutable $dateTime): string
-    {
-        return $this->dateFormatter->getDateString($dateTime);
     }
 }

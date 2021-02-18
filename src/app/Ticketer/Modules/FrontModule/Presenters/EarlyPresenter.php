@@ -9,13 +9,16 @@ use Nette\Application\BadRequestException;
 use Ticketer\Controls\FlashMessageTypeEnum;
 use Ticketer\Controls\Forms\CartFormWrapper;
 use Ticketer\Controls\Forms\ICartFormWrapperFactory;
-use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Modules\FrontModule\Controls\Forms\ISubstituteFormWrapperFactory;
 use Ticketer\Modules\FrontModule\Controls\Forms\SubstituteFormWrapper;
 use Ticketer\Model\Database\Daos\ApplicationDao;
 use Ticketer\Model\Database\Daos\EarlyDao;
 use Ticketer\Model\Database\Entities\EarlyEntity;
+use Ticketer\Modules\FrontModule\Templates\EarlyTemplate;
 
+/**
+ * @method EarlyTemplate getTemplate()
+ */
 class EarlyPresenter extends BasePresenter
 {
 
@@ -89,7 +92,8 @@ class EarlyPresenter extends BasePresenter
             $this->flashTranslatedMessage('Error.Event.Full', FlashMessageTypeEnum::WARNING());
             $this->redirect('substitute', $id);
         }
-        $this->template->event = $event;
+        $template = $this->getTemplate();
+        $template->event = $event;
     }
 
     /**
@@ -122,7 +126,8 @@ class EarlyPresenter extends BasePresenter
         if (!$event->isCapacityFull()) {
             $this->redirect('register', $id);
         }
-        $this->template->event = $event;
+        $template = $this->getTemplate();
+        $template->event = $event;
     }
 
     /**

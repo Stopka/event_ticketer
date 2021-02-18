@@ -12,7 +12,11 @@ use Ticketer\Controls\Forms\ICartFormWrapperFactory;
 use Ticketer\Model\Database\Daos\ReservationDao;
 use Ticketer\Model\Database\Entities\ReservationEntity;
 use Ticketer\Model\Dtos\Uuid;
+use Ticketer\Modules\FrontModule\Templates\ReservationTemplate;
 
+/**
+ * @method ReservationTemplate getTemplate()
+ */
 class ReservationPresenter extends BasePresenter
 {
 
@@ -22,6 +26,7 @@ class ReservationPresenter extends BasePresenter
 
     /**
      * SubstitutePresenter constructor.
+     * @param BasePresenterDependencies $dependencies
      * @param ICartFormWrapperFactory $cartFormWrapperFactory
      * @param ReservationDao $reservationDao
      */
@@ -62,7 +67,12 @@ class ReservationPresenter extends BasePresenter
         $cartFormWrapper = $this->getComponent('cartForm');
         $cartFormWrapper->setReservation($reservation);
         $event = $reservation->getEvent();
-        $this->template->event = $event;
+        if (null === $event) {
+            $this->flashTranslatedMessage('Error.Reservation.NotFound', FlashMessageTypeEnum::WARNING());
+            $this->redirect('Homepage:');
+        }
+        $template = $this->getTemplate();
+        $template->event = $event;
     }
 
     /**

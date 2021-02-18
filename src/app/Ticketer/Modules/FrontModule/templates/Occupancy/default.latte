@@ -1,15 +1,10 @@
-{**
- * @param EventEntity $event
- * @param int $event_issued
- * @param int $event_reserved
- * @param OptionEntity[] $options
- *}
+{templateType Ticketer\Modules\FrontModule\Templates\OccupancyTemplate}
 <!DOCTYPE html>
 <html lang="cs">
     <head>
         <meta charset="utf-8">
 
-        <title>{_'Attribute.Event.Occupancy'} - {$event->getName()}</title>
+        <title>{_'Attribute.Event.Occupancy'}{if $event !== null} - {$event->getName()}{/if}</title>
         <link rel="shortcut icon" href="{$basePath}/app/images/logo.ico">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" type="text/css" href="{$basePath}/vendor/normalize-css/normalize.css"/>

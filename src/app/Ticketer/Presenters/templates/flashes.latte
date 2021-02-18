@@ -1,4 +1,4 @@
-{templateType Ticketer\Presenters\BaseTemplate}
+{templateType Ticketer\Templates\BaseTemplate}
 <div class="layout_row" n:if="count($flashes)">
     <div class="layout_row_content">
         <div n:foreach="$flashes as $flash" n:class="alert, 'alert-'.$flash->type">
