@@ -1,9 +1,10 @@
 language: php
 php:
     - 7.4
-
+before_install:
+    - cd src
 install:
-    - travis_retry cd src && composer install --no-progress --prefer-dist
+    - travis_retry composer install --no-progress --prefer-dist
 
 before_script: cd src
 script:
