@@ -9,6 +9,7 @@ use Ticketer\Model\Database\Daos\TDoctrineEntityManager;
 use Ticketer\Model\Database\Entities\CurrencyEntity;
 use Ticketer\Model\Database\EntityManager as EntityManagerWrapper;
 use Nette\SmartObject;
+use Ticketer\Modules\AdminModule\Controls\Forms\Values\CurrencyFormValue;
 
 class CurrencyManager
 {
@@ -30,27 +31,34 @@ class CurrencyManager
     }
 
     /**
-     * @param array<mixed> $values
+     * @param CurrencyFormValue $values
      * @param CurrencyEntity $currencyEntity
      * @return CurrencyEntity
      */
-    public function editCurrencyFromCurrencyForm(array $values, CurrencyEntity $currencyEntity): CurrencyEntity
-    {
+    public function editCurrencyFromCurrencyForm(
+        CurrencyFormValue $values,
+        CurrencyEntity $currencyEntity
+    ): CurrencyEntity {
         $em = $this->getEntityManager();
-        $currencyEntity->setByValueArray($values);
+        $currencyEntity->setName($values->name);
+        $currencyEntity->setCode($values->code);
+        $currencyEntity->setSymbol($values->symbol);
         $em->flush();
 
         return $currencyEntity;
     }
 
     /**
-     * @param array<mixed> $values
+     * @param CurrencyFormValue $values
      * @return CurrencyEntity
      */
-    public function createCurrencyFromCurrencyForm(array $values): CurrencyEntity
+    public function createCurrencyFromCurrencyForm(CurrencyFormValue $values): CurrencyEntity
     {
         $em = $this->getEntityManager();
         $currencyEntity = new CurrencyEntity();
+        $currencyEntity->setName($values->name);
+        $currencyEntity->setCode($values->code);
+        $currencyEntity->setSymbol($values->symbol);
         $em->persist($currencyEntity);
 
         return $this->editCurrencyFromCurrencyForm($values, $currencyEntity);

@@ -11,6 +11,10 @@ use Ticketer\Controls\Forms\FormWrapperDependencies;
 use Ticketer\Model\Database\Entities\CurrencyEntity;
 use Ticketer\Model\Database\Managers\CurrencyManager;
 use Nette\Forms\Controls\SubmitButton;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\CurrencyCodeInput;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\CurrencySymbolInput;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\NameInput;
+use Ticketer\Modules\AdminModule\Controls\Forms\Values\CurrencyFormValue;
 
 class CurrencyFormWrapper extends FormWrapper
 {
@@ -60,15 +64,21 @@ class CurrencyFormWrapper extends FormWrapper
 
     protected function appendCurrencyControls(Form $form): void
     {
-        $form->addText('name', 'Attribute.Name')
-            ->setRequired();
-        $form->addText('code', 'Attribute.Currency.Code')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Currency.Description.Code")
-            ->setRequired()
-            ->addRule($form::PATTERN, "Form.Currency.Rule.Code.Pattern", '[A-Z]{3}');
-        $form->addText('symbol', 'Attribute.Currency.Symbol')
-            ->setOption($form::OPTION_KEY_DESCRIPTION, "Form.Currency.Description.Symbol")
-            ->setRequired();
+        $form->addComponent(
+            (new NameInput())
+                ->setRequired(),
+            'name'
+        );
+        $form->addComponent(
+            (new CurrencyCodeInput())
+                ->setRequired(),
+            'code'
+        );
+        $form->addComponent(
+            (new CurrencySymbolInput())
+                ->setRequired(),
+            'symbol'
+        );
     }
 
     /**
@@ -81,8 +91,8 @@ class CurrencyFormWrapper extends FormWrapper
         if (null === $form) {
             return;
         }
-        /** @var array<mixed> $values */
-        $values = $form->getValues('array');
+        /** @var CurrencyFormValue $values */
+        $values = $form->getValues(CurrencyFormValue::class);
         if (null !== $this->currencyEntity) {
             $this->currencyManager->editCurrencyFromCurrencyForm($values, $this->currencyEntity);
             $this->getPresenter()->flashTranslatedMessage(
