@@ -7,11 +7,18 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms\Inputs;
 use Nette\Forms\Controls\TextInput;
 use Ticketer\Controls\Forms\Form;
 
-class NameInput extends TextInput
+final class NameInput extends TextInput
 {
-    public function __construct($label = 'Attribute.Name')
+    use FormAppendableTrait;
+
+    public function __construct(string $label)
     {
         parent::__construct($label);
         $this->addRule(Form::MIN_LENGTH, null, 2);
+    }
+
+    public static function getDefaultCaption(): string
+    {
+        return 'Attribute.Name';
     }
 }

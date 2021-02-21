@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Ticketer\Model\Database\Entities\AdditionVisibilityEntity;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\AdditionEntity;
@@ -27,7 +29,13 @@ class AdditionDao extends EntityDao
     {
         $qb = $this->getRepository()->createQueryBuilder('a');
         $qb->where($qb->expr()->eq('a.event', ':event'))
-            ->setParameters(['event' => $eventEntity->getId()->toString()]);
+            ->setParameters(
+                new ArrayCollection(
+                    [
+                        new Parameter('event', $eventEntity->getId()->toString()),
+                    ]
+                )
+            );
 
         return new DoctrineDataSource($qb, 'id');
     }

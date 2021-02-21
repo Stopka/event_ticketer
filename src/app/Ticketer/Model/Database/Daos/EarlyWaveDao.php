@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Ticketer\Model\Database\Daos;
 
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Ticketer\Model\Database\Enums\EventStateEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\EarlyWaveEntity;
@@ -43,10 +45,12 @@ class EarlyWaveDao extends EntityDao
             )
         );
         $qb->setParameters(
-            [
-                'startDate' => new DateTimeImmutable(),
-                'inviteSent' => false,
-            ]
+            new ArrayCollection(
+                [
+                    new Parameter('startDate', new DateTimeImmutable()),
+                    new Parameter('inviteSent', false),
+                ]
+            )
         );
 
         return $qb->getQuery()->getResult();
@@ -76,9 +80,11 @@ class EarlyWaveDao extends EntityDao
             $qb->expr()->eq('ew.event', ':event')
         );
         $qb->setParameters(
-            [
-                'event' => $eventEntity,
-            ]
+            new ArrayCollection(
+                [
+                    new Parameter('event', $eventEntity),
+                ]
+            )
         );
 
         return new DoctrineDataSource($qb, 'id');

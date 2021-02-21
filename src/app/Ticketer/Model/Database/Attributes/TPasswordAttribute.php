@@ -21,12 +21,7 @@ trait TPasswordAttribute
     public function setPassword(string $password): void
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        if (is_string($hash)) {
-            $this->password = $hash;
-
-            return;
-        }
-        $this->password = null;
+        $this->password = $hash;
     }
 
     /**

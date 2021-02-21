@@ -12,7 +12,7 @@ use Ticketer\Model\Database\Entities\SortableEntityInterface;
 class PositionSorter
 {
 
-    /** @var EntityRepository */
+    /** @var EntityRepository<SortableEntityInterface> */
     private $entityRepository;
 
     /** @var int|null */
@@ -25,7 +25,6 @@ class PositionSorter
     public function setEndPosition(SortableEntityInterface $positionable): int
     {
         if (null === $this->lastPosition) {
-            /** @var SortableEntityInterface|null $last */
             $last = $this->entityRepository->findOneBy([], ['position' => OrderEnum::DESC()->getValue()]);
             if (null === $last) {
                 $this->lastPosition = 0;
@@ -60,7 +59,6 @@ class PositionSorter
     {
         $this->lastPosition = null;
         $position = 1;
-        /** @var SortableEntityInterface|null $previousEntity */
         $previousEntity = null;
         foreach ($entities as $entity) {
             if ($item->getId() === $entity->getId() && null !== $previousEntity) {

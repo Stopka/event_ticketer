@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
@@ -46,9 +48,11 @@ class OptionDao extends EntityDao
             )
         );
         $qb->setParameters(
-            [
-                'event' => $event,
-            ]
+            new ArrayCollection(
+                [
+                    new Parameter('event', $event),
+                ]
+            )
         );
 
         return $qb->getQuery()->getResult();
@@ -58,7 +62,13 @@ class OptionDao extends EntityDao
     {
         $qb = $this->getRepository()->createQueryBuilder('a');
         $qb->where($qb->expr()->eq('a.addition', ':addition'))
-            ->setParameters(['addition' => $additionEntity->getId()->toString()]);
+            ->setParameters(
+                new ArrayCollection(
+                    [
+                        new Parameter('addition', $additionEntity->getId()->toString()),
+                    ]
+                )
+            );
 
         return new DoctrineDataSource($qb, 'id');
     }

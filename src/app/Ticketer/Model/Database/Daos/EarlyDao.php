@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 use Ticketer\Model\Database\Entities\EarlyEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Dtos\Uuid;
@@ -55,7 +57,13 @@ class EarlyDao extends EntityDao
         $qb->where(
             $qb->expr()->eq('ew.event', ':event')
         );
-        $qb->setParameters(['event' => $eventEntity]);
+        $qb->setParameters(
+            new ArrayCollection(
+                [
+                    new Parameter('event', $eventEntity),
+                ]
+            )
+        );
 
         return new DoctrineDataSource($qb, 'id');
     }

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Ticketer\Model\Database\Daos;
 
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query\Parameter;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Ticketer\Model\Database\Entities\SubstituteEntity;
 use Ticketer\Model\Database\Enums\SubstituteStateEnum;
@@ -31,7 +33,13 @@ class SubstituteDao extends EntityDao
         $queryBuilder->where(
             $queryBuilder->expr()->eq('s.event', ':event')
         );
-        $queryBuilder->setParameters(['event' => $event]);
+        $queryBuilder->setParameters(
+            new ArrayCollection(
+                [
+                    new Parameter('event', $event),
+                ]
+            )
+        );
 
         return new DoctrineDataSource($queryBuilder, 'id');
     }

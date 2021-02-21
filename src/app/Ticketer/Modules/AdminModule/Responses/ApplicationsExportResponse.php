@@ -54,12 +54,12 @@ class ApplicationsExportResponse implements IResponse
         $response = new SpreadsheetResponse($this->applications, FormatEnum::XLSX(), $this->translator);
         $response->setFilenameWithDate('applications-');
         $response->setColumnDelimiter(';');
-        $response->addColumn('cart_id', 'Číslo objednávky')
+        $response->addColumn('cart_number', 'Číslo objednávky')
             ->setRenderer(
                 function (ApplicationEntity $application): string {
                     $cart = $application->getCart();
 
-                    return null !== $cart ? (string)$cart->getId() : '';
+                    return null !== $cart ? (string)$cart->getNumber() : '';
                 }
             );
         $response->addColumn('cart_email', 'Email')
@@ -106,10 +106,10 @@ class ApplicationsExportResponse implements IResponse
                     return null !== $created ? $created->format('Y-m-d H:i:s') : '';
                 }
             );
-        $response->addColumn('id', 'Id přihlášky')
+        $response->addColumn('number', 'Číslo přihlášky')
             ->setRenderer(
                 function (ApplicationEntity $applicaiton): string {
-                    return (string)$applicaiton->getId();
+                    return (string)$applicaiton->getNumber();
                 }
             );
         $response->addColumn('state', 'Stav')

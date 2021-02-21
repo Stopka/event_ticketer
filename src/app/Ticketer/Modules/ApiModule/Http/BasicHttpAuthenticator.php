@@ -21,7 +21,7 @@ class BasicHttpAuthenticator extends BasicAuthenticator implements HttpAuthentic
     {
         parent::__construct($title);
         foreach ($users as $user => $password) {
-            $this->addUser($user, (string)password_hash($password, PASSWORD_DEFAULT), false);
+            $this->addUser($user, password_hash($password, PASSWORD_DEFAULT), false);
         }
     }
 

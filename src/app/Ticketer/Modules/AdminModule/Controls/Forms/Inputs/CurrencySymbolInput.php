@@ -7,12 +7,19 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms\Inputs;
 use Nette\Forms\Controls\TextInput;
 use Ticketer\Controls\Forms\Form;
 
-class CurrencySymbolInput extends TextInput
+final class CurrencySymbolInput extends TextInput
 {
-    public function __construct($label = 'Attribute.Currency.Symbol')
+    use FormAppendableTrait;
+
+    public function __construct(string $label)
     {
         parent::__construct($label);
         $this->setOption(Form::OPTION_KEY_DESCRIPTION, "Form.Currency.Description.Symbol");
         $this->addRule(Form::MIN_LENGTH, null, 1);
+    }
+
+    public static function getDefaultCaption(): string
+    {
+        return 'Attribute.Currency.Symbol';
     }
 }

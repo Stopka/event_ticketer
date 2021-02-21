@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Daos;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query\Parameter;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Dtos\Uuid;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
@@ -32,7 +34,13 @@ class ApplicationDao extends EntityDao
         $qb->where(
             $qb->expr()->eq('a.cart', ':cart')
         )
-            ->setParameters(['cart' => $cartEntity]);
+            ->setParameters(
+                new ArrayCollection(
+                    [
+                        new Parameter('cart', $cartEntity),
+                    ]
+                )
+            );
 
         return new DoctrineDataSource($qb, 'id');
     }
@@ -55,9 +63,11 @@ class ApplicationDao extends EntityDao
             )
         );
         $qb->setParameters(
-            [
-                'event' => $event,
-            ]
+            new ArrayCollection(
+                [
+                    new Parameter('event', $event),
+                ]
+            )
         );
 
         return (int)$qb->getQuery()->getSingleScalarResult();
@@ -97,9 +107,11 @@ class ApplicationDao extends EntityDao
             )
         );
         $qb->setParameters(
-            [
-                'option' => $option,
-            ]
+            new ArrayCollection(
+                [
+                    new Parameter('option', $option),
+                ]
+            )
         );
         $qb->select('COUNT(a)');
 
@@ -122,9 +134,11 @@ class ApplicationDao extends EntityDao
             )
         );
         $qb->setParameters(
-            [
-                'option' => $option,
-            ]
+            new ArrayCollection(
+                [
+                    new Parameter('option', $option),
+                ]
+            )
         );
         $qb->select('COUNT(a)');
 
@@ -142,9 +156,11 @@ class ApplicationDao extends EntityDao
             $qb->expr()->eq('a.event', ':event')
         )
             ->setParameters(
-                [
-                    'event' => $event,
-                ]
+                new ArrayCollection(
+                    [
+                        new Parameter('event', $event),
+                    ]
+                )
             );
 
         return new DoctrineDataSource($qb, 'id');

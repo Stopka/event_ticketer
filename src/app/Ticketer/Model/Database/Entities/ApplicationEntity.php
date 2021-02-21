@@ -6,6 +6,9 @@ namespace Ticketer\Model\Database\Entities;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Parameter;
 use Ticketer\Model\ApplicationStateResolver;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Dtos\Uuid;
@@ -389,6 +392,12 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
         $this->updateState();
     }
 
+    /**
+     * @param EntityRepository<ApplicationEntity> $repository
+     * @return int
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
     protected function findLastNumber(EntityRepository $repository): int
     {
         $qb = $repository->createQueryBuilder('a');
@@ -396,7 +405,13 @@ class ApplicationEntity extends BaseEntity implements NumberableInterface
         $qb->where(
             $qb->expr()->eq('a.event', ':event')
         );
-        $qb->setParameters(['event' => $this->getEvent()]);
+        $qb->setParameters(
+            new ArrayCollection(
+                [
+                    new Parameter('event', $this->getEvent()),
+                ]
+            )
+        );
 
         return (int)$qb->getQuery()->getSingleScalarResult();
     }

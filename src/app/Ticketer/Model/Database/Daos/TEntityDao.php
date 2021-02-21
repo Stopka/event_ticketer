@@ -25,11 +25,11 @@ trait TEntityDao
     abstract protected function getEntityManager(): EntityManagerWrapper;
 
     /**
-     * @return EntityRepository
+     * @return EntityRepository<mixed>
      */
     protected function getRepository(): EntityRepository
     {
-        /** @var EntityRepository $repository */
+        /** @var EntityRepository<mixed> $repository */
         $repository = $this->getEntityManager()->getRepository($this->getEntityClass());
 
         return $repository;
