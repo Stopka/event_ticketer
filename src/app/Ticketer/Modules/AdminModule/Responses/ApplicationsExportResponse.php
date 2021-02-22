@@ -7,6 +7,7 @@ namespace Ticketer\Modules\AdminModule\Responses;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse as HttpIResponse;
 use Nette\Localization\ITranslator;
+use Nette\Utils\Strings;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Database\Enums\GenderEnum;
 use Ticketer\Model\Database\Entities\AdditionEntity;
@@ -54,12 +55,12 @@ class ApplicationsExportResponse implements IResponse
         $response = new SpreadsheetResponse($this->applications, FormatEnum::XLSX(), $this->translator);
         $response->setFilenameWithDate('applications-');
         $response->setColumnDelimiter(';');
-        $response->addColumn('cart_id', 'Číslo objednávky')
+        $response->addColumn('cart_number', 'Číslo objednávky')
             ->setRenderer(
                 function (ApplicationEntity $application): string {
                     $cart = $application->getCart();
 
-                    return null !== $cart ? (string)$cart->getId() : '';
+                    return null !== $cart ? Strings::padLeft((string)$cart->getNumber(), 6, '0') : '';
                 }
             );
         $response->addColumn('cart_email', 'Email')
@@ -106,10 +107,10 @@ class ApplicationsExportResponse implements IResponse
                     return null !== $created ? $created->format('Y-m-d H:i:s') : '';
                 }
             );
-        $response->addColumn('id', 'Id přihlášky')
+        $response->addColumn('number', 'Číslo přihlášky')
             ->setRenderer(
                 function (ApplicationEntity $applicaiton): string {
-                    return (string)$applicaiton->getId();
+                    return Strings::padLeft((string)$applicaiton->getNumber(), 6, '0');
                 }
             );
         $response->addColumn('state', 'Stav')
