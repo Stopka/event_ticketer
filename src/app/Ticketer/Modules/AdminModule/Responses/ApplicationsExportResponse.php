@@ -13,6 +13,7 @@ use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Nette\Application\IResponse;
+use Ticketer\Responses\SpreadsheetResponse\DataTypeEnum;
 use Ticketer\Responses\SpreadsheetResponse\FormatEnum;
 use Ticketer\Responses\SpreadsheetResponse\SpreadsheetResponse;
 
@@ -59,9 +60,10 @@ class ApplicationsExportResponse implements IResponse
                 function (ApplicationEntity $application): string {
                     $cart = $application->getCart();
 
-                    return null !== $cart ? (string)$cart->getNumber() : '';
+                    return null !== $cart ? (string)$cart->getNumber() : '0';
                 }
-            );
+            )
+            ->setDataType(DataTypeEnum::NUMERIC());
         $response->addColumn('cart_email', 'Email')
             ->setRenderer(
                 function (ApplicationEntity $application): string {
@@ -111,7 +113,8 @@ class ApplicationsExportResponse implements IResponse
                 function (ApplicationEntity $applicaiton): string {
                     return (string)$applicaiton->getNumber();
                 }
-            );
+            )
+            ->setDataType(DataTypeEnum::NUMERIC());
         $response->addColumn('state', 'Stav')
             ->setRenderer(
                 function (ApplicationEntity $applicaiton): string {
