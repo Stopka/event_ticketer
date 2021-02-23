@@ -1,0 +1,3 @@
+services:
+    - Ticketer\Model\Database\Handlers\CreateCurrencyByFormHandler
+    - Ticketer\Model\Database\Handlers\EditCurrencyByFormHandler

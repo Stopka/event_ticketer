@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Ticketer\Model\Database\Handlers;
 
-use Ticketer\Model\Database\Daos\TDoctrineEntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Ticketer\Model\Database\Entities\CurrencyEntity;
 use Ticketer\Modules\AdminModule\Controls\Forms\Values\CurrencyFormValue;
 
 class CreateCurrencyByFormHandler
 {
-    use TDoctrineEntityManager;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
 
     /**
      * @param CurrencyFormValue $values
@@ -19,7 +25,7 @@ class CreateCurrencyByFormHandler
     public function handle(
         CurrencyFormValue $values,
     ): CurrencyEntity {
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
         $currencyEntity = new CurrencyEntity();
         $currencyEntity->setName($values->name);
         $currencyEntity->setCode($values->code);

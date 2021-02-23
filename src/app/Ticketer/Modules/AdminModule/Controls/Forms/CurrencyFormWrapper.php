@@ -15,9 +15,8 @@ use Nette\Forms\Controls\SubmitButton;
 use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\CurrencyCodeInput;
 use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\CurrencySymbolInput;
 use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\NameInput;
+use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\PrimarySubmitButton;
 use Ticketer\Modules\AdminModule\Controls\Forms\Values\CurrencyFormValue;
-
-use function _HumbugBoxfac515c46e83\RingCentral\Psr7\str;
 
 class CurrencyFormWrapper extends FormWrapper
 {
@@ -49,13 +48,15 @@ class CurrencyFormWrapper extends FormWrapper
         $this->currencyEntity = $currencyEntity;
     }
 
-    /**
-     * @param Form $form
-     */
     protected function appendFormControls(Form $form): void
     {
-        $this->appendCurrencyControls($form);
-        $this->appendSubmitControls(
+        NameInput::appendToForm($form, 'name')
+            ->setRequired();
+        CurrencyCodeInput::appendToForm($form, 'code')
+            ->setRequired();
+        CurrencySymbolInput::appendToForm($form, 'symbol')
+            ->setRequired();
+        PrimarySubmitButton::appendToForm(
             $form,
             null !== $this->currencyEntity ? 'Form.Action.Edit' : 'Form.Action.Create',
             [$this, 'submitClicked']
@@ -75,21 +76,11 @@ class CurrencyFormWrapper extends FormWrapper
         $form->setDefaults($values);
     }
 
-    protected function appendCurrencyControls(Form $form): void
-    {
-        NameInput::appendToForm($form, 'name')
-            ->setRequired();
-        CurrencyCodeInput::appendToForm($form, 'code')
-            ->setRequired();
-        CurrencySymbolInput::appendToForm($form, 'symbol')
-            ->setRequired();
-    }
-
     /**
      * @param SubmitButton $button
      * @throws AbortException
      */
-    protected function submitClicked(SubmitButton $button): void
+    public function submitClicked(SubmitButton $button): void
     {
         $form = $button->getForm();
         if (null === $form) {
