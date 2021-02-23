@@ -9,7 +9,6 @@ use Nette\Http\IResponse as HttpIResponse;
 use Nette\Localization\ITranslator;
 use Ticketer\Model\Database\Enums\ApplicationStateEnum;
 use Ticketer\Model\Database\Enums\GenderEnum;
-use Ticketer\Model\Database\Entities\AdditionEntity;
 use Ticketer\Model\Database\Entities\ApplicationEntity;
 use Ticketer\Model\Database\Entities\EventEntity;
 use Nette\Application\IResponse;
