@@ -95,5 +95,11 @@
         "fix": [
             "@phpcbf"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "dg/composer-frontline": true
+        }
     }
 }

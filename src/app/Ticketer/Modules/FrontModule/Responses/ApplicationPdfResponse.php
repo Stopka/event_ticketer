@@ -124,10 +124,10 @@ class ApplicationPdfResponse implements IResponse
         $pdf->setPageFormat("A4");
         $title = "Application form " . (string)$this->application->getId();
         $pdf->setDocumentTitle($title);
-        $pdf->setDocumentAuthor("ldtpardubice.cz");
+        $pdf->setDocumentAuthor("humo.cz");
         $pdf->setPageMargins("13,13,13,13,10,10");
         $mpdf = $pdf->getMPDF();
-        $mpdf->SetFooter("<a href='https://ldtpardubice.cz'>ldtpardubice.cz</a>");
+        $mpdf->SetFooter("<a href='https://humo.cz'>humo.cz</a>");
 
         return $pdf;
     }
