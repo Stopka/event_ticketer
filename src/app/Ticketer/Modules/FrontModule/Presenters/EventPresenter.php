@@ -23,7 +23,6 @@ use Ticketer\Modules\FrontModule\Templates\EventTemplate;
  */
 class EventPresenter extends BasePresenter
 {
-
     public EventDao $eventDao;
 
     public ICartFormWrapperFactory $cartFormWrapperFactory;

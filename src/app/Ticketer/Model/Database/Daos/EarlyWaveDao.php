@@ -16,7 +16,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class EarlyWaveDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return EarlyWaveEntity::class;

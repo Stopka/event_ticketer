@@ -14,7 +14,6 @@ use Ticketer\Modules\FrontModule\Templates\HomepageTemplate;
  */
 class HomepagePresenter extends BasePresenter
 {
-
     public EventDao $eventDao;
 
     public ApplicationDao $applicationDao;

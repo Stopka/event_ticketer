@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TBirthDateAttribute
 {
-
     /**
      * @ORM\Column(type="date", nullable=true)
      * @var DateTime|null

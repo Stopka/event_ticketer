@@ -6,6 +6,5 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms;
 
 interface IDelegateReservationFormWrapperFactory
 {
-
     public function create(): DelegateReservationFormWrapper;
 }

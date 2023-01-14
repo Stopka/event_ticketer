@@ -16,7 +16,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class EventPresenter extends BasePresenter
 {
-
     private IEventsGridWrapperFactory $eventsGridWrapperFactory;
 
     private IEventFromWrapperFactory $eventFormWrapperFactory;

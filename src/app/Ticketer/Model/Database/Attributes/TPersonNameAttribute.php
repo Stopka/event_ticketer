@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TPersonNameAttribute
 {
-
     /**
      * @ORM\Column(type="string", nullable=true)
      * @var string|null

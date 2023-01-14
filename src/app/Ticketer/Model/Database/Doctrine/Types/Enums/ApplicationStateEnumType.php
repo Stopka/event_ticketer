@@ -11,7 +11,6 @@ use Ticketer\Model\Database\Enums\ApplicationStateEnum;
  */
 class ApplicationStateEnumType extends IntegerEnumType
 {
-
     protected function getEnumClassName(): string
     {
         return ApplicationStateEnum::class;

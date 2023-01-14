@@ -14,7 +14,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class EarlyDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return EarlyEntity::class;

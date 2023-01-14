@@ -9,7 +9,6 @@ use Ticketer\Model\Database\Entities\ChoiceEntity;
 
 class ChoiceDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return ChoiceEntity::class;

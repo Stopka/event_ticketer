@@ -50,7 +50,7 @@ function styles(cb) {
             replace: ['../fonts', './fonts'],
         }))
         .pipe(concat('index.css'))
-        .pipe(dest('./public/build'))
+        .pipe(dest('./www/build'))
     cb()
 }
 
@@ -58,7 +58,7 @@ function fonts(cb) {
     src([
         './node_modules/font-awesome/fonts/*',
     ])
-        .pipe(dest('./public/build/fonts'))
+        .pipe(dest('./www/build/fonts'))
     cb()
 }
 

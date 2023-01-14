@@ -72,7 +72,7 @@ Přihlášku získáte po registraci na následující adrese: <br />
         $endDate = null !== $substitute->getEndDate() ? $substitute->getEndDate()->format('d.m.Y H:i:s') : null;
         $message_endDate = (null !== $endDate ? "
 <p>Místo pro vás držíme do $endDate, poté dáme šanci dalšímu náhradníkovi v pořadí.</p>" : "");
-        $message_foot = "<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz
+        $message_foot = "<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek humo.cz
 na základě uvolnění místa pro náhradníka.</em></p>";
 
         $message->setHtmlBody($message_body . $message_endDate . $message_foot);
@@ -80,7 +80,7 @@ na základě uvolnění místa pro náhradníka.</em></p>";
     }
 
     /**
-     * @return string[]
+     * @return array<string,string>
      */
     public static function getSubscribedEvents(): array
     {

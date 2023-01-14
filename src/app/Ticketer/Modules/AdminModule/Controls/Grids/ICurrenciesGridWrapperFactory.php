@@ -6,6 +6,5 @@ namespace Ticketer\Modules\AdminModule\Controls\Grids;
 
 interface ICurrenciesGridWrapperFactory
 {
-
     public function create(): CurrenciesGridWrapper;
 }

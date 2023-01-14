@@ -21,7 +21,6 @@ use Ticketer\Modules\FrontModule\Templates\EarlyTemplate;
  */
 class EarlyPresenter extends BasePresenter
 {
-
     public ICartFormWrapperFactory $cartFormWrapperFactory;
 
     public ISubstituteFormWrapperFactory $substituteFormWrapperFactory;

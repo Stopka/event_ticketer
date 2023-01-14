@@ -19,7 +19,7 @@ services:
     volumes:
       - ./src:/srv
       - composer-cache:/root/.composer
-      - ~/.config/composer/:/root/.config/composer/:ro
+      - ~/.config/composer/auth.json:/root/.config/auth.json:ro
     networks:
       - mail
   event_ticketer-mariadb:

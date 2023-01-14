@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ResolveApplicationStatesCommand extends AbstractCommand
 {
-
     private const ARG_EVENT_ID = 'eventId';
 
     private ResolveApplicationStatesHandler $resolveApplicationStatesHandler;

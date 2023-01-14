@@ -15,7 +15,6 @@ use Ticketer\Model\Database\Entities\OptionEntity;
 
 class MenuFactory extends \Ticketer\Controls\Menus\MenuFactory
 {
-
     public function create(): Menu
     {
         $menu = parent::create();

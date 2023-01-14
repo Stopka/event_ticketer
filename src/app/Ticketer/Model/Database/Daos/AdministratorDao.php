@@ -9,7 +9,6 @@ use Ticketer\Model\Database\Entities\AdministratorEntity;
 
 class AdministratorDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return AdministratorEntity::class;

@@ -11,7 +11,6 @@ use Ticketer\Model\Database\Enums\OptionAutoselectEnum;
  */
 class OptionAutoselectEnumType extends IntegerEnumType
 {
-
     protected function getEnumClassName(): string
     {
         return OptionAutoselectEnum::class;

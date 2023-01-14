@@ -23,7 +23,6 @@ use Ticketer\Responses\PdfResponse\PdfResponse;
 
 class ApplicationPresenter extends BasePresenter
 {
-
     public IApplicationsGridWrapperFactory $applicationsGridWrapperFactory;
 
     public IReserveApplicationFormWrapperFactory $reserveApplicationFormWrapperFactory;

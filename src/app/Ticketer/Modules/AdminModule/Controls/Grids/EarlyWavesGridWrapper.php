@@ -11,7 +11,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class EarlyWavesGridWrapper extends GridWrapper
 {
-
     private EarlyWaveDao $earlyWaveDao;
 
     private EventEntity $eventEntity;

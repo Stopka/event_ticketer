@@ -20,7 +20,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class EarlyPresenter extends BasePresenter
 {
-
     private EventDao $eventDao;
 
     private IEarliesGridWrapperFactory $earliesGridWrapperFactory;

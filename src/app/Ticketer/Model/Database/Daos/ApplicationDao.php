@@ -18,7 +18,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class ApplicationDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return ApplicationEntity::class;
@@ -51,15 +50,21 @@ class ApplicationDao extends EntityDao
      */
     public function countOccupiedApplications(EventEntity $event): int
     {
-        $states = ApplicationStateEnum::listOccupied();
-
         $qb = $this->getRepository()->createQueryBuilder('a')
             ->innerJoin('a.cart', 'c');
         $qb->select('COUNT(a)');
         $qb->where(
             $qb->expr()->andX(
                 $qb->expr()->eq('c.event', ':event'),
-                $qb->expr()->in('a.state', $states)
+                $qb->expr()->in(
+                    'a.state',
+                    array_map(
+                        static function (ApplicationStateEnum $state): int {
+                            return $state->getValue();
+                        },
+                        ApplicationStateEnum::listOccupied()
+                    )
+                )
             )
         );
         $qb->setParameters(
@@ -79,12 +84,19 @@ class ApplicationDao extends EntityDao
      */
     public function countIssuedApplications(EventEntity $event): int
     {
-        $states = ApplicationStateEnum::listNotIssued();
         $criteria = Criteria::create()
             ->where(
                 Criteria::expr()->andX(
                     Criteria::expr()->eq('event', $event),
-                    Criteria::expr()->notIn('state', $states)
+                    Criteria::expr()->notIn(
+                        'state',
+                        array_map(
+                            static function (ApplicationStateEnum $state): int {
+                                return $state->getValue();
+                            },
+                            ApplicationStateEnum::listNotIssued()
+                        )
+                    )
                 )
             );
 
@@ -97,13 +109,20 @@ class ApplicationDao extends EntityDao
      */
     public function countOccupiedApplicationsWithOption(OptionEntity $option): int
     {
-        $states = ApplicationStateEnum::listOccupied();
         $qb = $this->getRepository()->createQueryBuilder('a')
             ->innerJoin('a.choices', 'c');
         $qb->where(
             $qb->expr()->andX(
                 $qb->expr()->eq('c.option', ':option'),
-                $qb->expr()->in('a.state', $states)
+                $qb->expr()->in(
+                    'a.state',
+                    array_map(
+                        static function (ApplicationStateEnum $state): int {
+                            return $state->getValue();
+                        },
+                        ApplicationStateEnum::listOccupied()
+                    )
+                )
             )
         );
         $qb->setParameters(
@@ -124,13 +143,20 @@ class ApplicationDao extends EntityDao
      */
     public function countIssuedApplicationsWithOption(OptionEntity $option): int
     {
-        $states = ApplicationStateEnum::listNotIssued();
         $qb = $this->getRepository()->createQueryBuilder('a')
             ->innerJoin('a.choices', 'c');
         $qb->where(
             $qb->expr()->andX(
                 $qb->expr()->eq('c.option', ':option'),
-                $qb->expr()->notIn('a.state', $states)
+                $qb->expr()->notIn(
+                    'a.state',
+                    array_map(
+                        static function (ApplicationStateEnum $state): int {
+                            return $state->getValue();
+                        },
+                        ApplicationStateEnum::listNotIssued()
+                    )
+                )
             )
         );
         $qb->setParameters(

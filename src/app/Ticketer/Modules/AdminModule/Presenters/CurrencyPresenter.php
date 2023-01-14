@@ -16,7 +16,6 @@ use Ticketer\Model\Database\Entities\CurrencyEntity;
 
 class CurrencyPresenter extends BasePresenter
 {
-
     private ICurrenciesGridWrapperFactory $currenciesGridWrapperFactory;
 
     private ICurrencyFromWrapperFactory $currencyFormWrapperFactory;

@@ -9,7 +9,6 @@ use Ticketer\Model\Database\Enums\GenderEnum;
 
 trait TGenderAttribute
 {
-
     /**
      * @ORM\Column(type="gender_enum", nullable=true)
      * @var GenderEnum|null

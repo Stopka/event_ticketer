@@ -13,7 +13,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SendEarlyInvitesCommand extends AbstractCommand
 {
-
     private const ARG_WAVE_ID = 'waveId';
 
     /** @var EarlyWaveInviteNotifier */

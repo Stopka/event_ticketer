@@ -15,7 +15,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class OptionDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return OptionEntity::class;

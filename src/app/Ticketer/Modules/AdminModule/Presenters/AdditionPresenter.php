@@ -19,7 +19,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class AdditionPresenter extends BasePresenter
 {
-
     private EventDao $eventDao;
 
     private AdditionDao $additionDao;

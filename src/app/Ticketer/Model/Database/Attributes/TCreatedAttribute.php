@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TCreatedAttribute
 {
-
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @var DateTimeImmutable|null

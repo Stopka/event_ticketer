@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TUsernameAttribute
 {
-
     /**
      * @ORM\Column(type="string")
      * @var string

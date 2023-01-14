@@ -13,7 +13,6 @@ use Nette\Application\Responses\TextResponse;
 
 class EarlyWavePresenter extends BasePresenter
 {
-
     private EarlyWaveInviteNotifier $earlyWaveInviteNotifier;
 
     public function __construct(

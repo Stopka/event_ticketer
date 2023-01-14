@@ -14,7 +14,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class EventDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return EventEntity::class;

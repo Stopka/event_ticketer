@@ -8,7 +8,6 @@ use Ticketer\Model\Database\EntityManager;
 
 trait TDoctrineEntityManager
 {
-
     /** @var  EntityManager */
     private $entityManager;
 

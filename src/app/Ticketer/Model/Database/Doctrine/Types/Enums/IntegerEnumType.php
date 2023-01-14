@@ -27,7 +27,7 @@ abstract class IntegerEnumType extends EnumType
      */
     protected function convertEnumValue(Enum $enum): int
     {
-        return (int)$enum->getValue();
+        return $enum->getValue();
     }
 
     /**

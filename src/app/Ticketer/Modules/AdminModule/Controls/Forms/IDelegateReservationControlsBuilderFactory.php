@@ -8,6 +8,5 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 interface IDelegateReservationControlsBuilderFactory
 {
-
     public function create(EventEntity $eventEntity): DelegateReservationControlsBuilder;
 }

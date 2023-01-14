@@ -12,7 +12,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
  */
 class CronService
 {
-
     private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(EventDispatcherInterface $eventDispatcher)

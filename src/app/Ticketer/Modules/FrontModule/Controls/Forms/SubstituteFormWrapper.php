@@ -14,7 +14,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class SubstituteFormWrapper extends FormWrapper
 {
-
     /** @var  SubstituteManager */
     private $substituteManager;
 

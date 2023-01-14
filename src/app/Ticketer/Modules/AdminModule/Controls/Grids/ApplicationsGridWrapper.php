@@ -29,7 +29,6 @@ use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
  */
 class ApplicationsGridWrapper extends GridWrapper
 {
-
     public const OPERATION_DELEGATE = "delegate";
 
     private ApplicationDao $applicationDao;

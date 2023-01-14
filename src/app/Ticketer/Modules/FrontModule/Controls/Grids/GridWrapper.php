@@ -12,5 +12,4 @@ namespace Ticketer\Modules\FrontModule\Controls\Grids;
  */
 abstract class GridWrapper extends \Ticketer\Controls\Grids\GridWrapper
 {
-
 }

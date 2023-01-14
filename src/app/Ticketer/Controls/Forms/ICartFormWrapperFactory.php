@@ -6,7 +6,6 @@ namespace Ticketer\Controls\Forms;
 
 interface ICartFormWrapperFactory
 {
-
     /**
      * @param bool $admin
      * @return CartFormWrapper

@@ -19,7 +19,6 @@ use Ticketer\Model\Database\Entities\OptionEntity;
 
 class OptionPresenter extends BasePresenter
 {
-
     private OptionDao $optionDao;
 
     private AdditionDao $additionDao;

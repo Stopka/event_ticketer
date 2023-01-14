@@ -188,16 +188,15 @@ class EarlyWaveInviteNotifier implements EventSubscriberInterface
                 "<p>Dobrý den,<br/>
 Velice si vážíme Vaší podpory v minulém roce,
 a proto bychom Vám jako poděkování rádi nabídli odměnu v podobě přednostního výdeje přihlášek na
-<a href='https://ldtpardubice.cz/event/699/ldt_2021'>" . $event->getName() . "</a>.
+<a href='https://humo.cz/info-k-aktualnimu-rocniku-2023/'>" . $event->getName() . "</a>.
 Běžný výdej přihlášek započne " . $startDate->format('d. m. Y') . ",
 pro Vás ale máme přihlášky připravené již nyní. Stačí zavítat na níže uvedenou adresu,
-kde standardním způsobem vyplníte registrační formulář. Učinit tak můžete do 1. 2. 2021.<br/>
+kde standardním způsobem vyplníte registrační formulář. Učinit tak můžete do 1. 2. 2023.<br/>
 $link</p>
-<p>Tábor se bude konat v termínu <strong>18. 7. - 31. 7. 2021</strong> v areálu
-<a href='https://ldtpardubice.cz/event_place/vranovska_prehrada'>Vranovská přehrada</a>.</p>
-<p>Tým LDTPardubice</p>
+<p>Tábor se bude konat v termínu <strong>5. 8. - 12. 8. 2023</strong> v areálu <strong>Naděje</strong>.</p>
+<p>Tým Humo</p>
 
-<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz
+<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek humo.cz
 na základě otevření přednostního přístupu k přihláškám.</em></p>"
             );
         $atachmentManager = $this->getAtachmentManager($event);
@@ -206,7 +205,7 @@ na základě otevření přednostního přístupu k přihláškám.</em></p>"
     }
 
     /**
-     * @return string[]
+     * @return array<string,string>
      */
     public static function getSubscribedEvents(): array
     {

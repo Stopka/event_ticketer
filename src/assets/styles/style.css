@@ -135,14 +135,14 @@ header {
 
 #header {
     height: 88px;
-    background-color: #2980B9;
-    color: white;
+    background-color: #f2f2f2 ;
+    color: #2c3e50;
     font-size: 110%;
     font-weight: bolder;
 }
 
 #header a {
-    color: white;
+    color: #2c3e50;
     text-decoration: none;
 }
 

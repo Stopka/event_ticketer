@@ -25,7 +25,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class ReserveApplicationFormWrapper extends FormWrapper
 {
-
     public const FIELD_COUNT = "count";
 
     private ?EventEntity $event;

@@ -15,7 +15,6 @@ use Nette\Bridges\ApplicationLatte\Template;
  */
 class PdfResponse extends ContributePdfResponse
 {
-
     /** @var PdfResponseDependencies */
     private $dependencies;
 

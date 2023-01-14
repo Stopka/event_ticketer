@@ -19,7 +19,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class EarlyWavePresenter extends BasePresenter
 {
-
     private IEarlyWaveFormWrapperFactory $earlyWaveFormWrapperFactory;
 
     private IEarlyWavesGridWrapperFactory $earlyWavesGridWrapperFactory;

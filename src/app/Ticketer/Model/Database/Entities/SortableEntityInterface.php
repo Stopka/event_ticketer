@@ -6,7 +6,6 @@ namespace Ticketer\Model\Database\Entities;
 
 interface SortableEntityInterface extends EntityInterface
 {
-
     /**
      * @return int
      */

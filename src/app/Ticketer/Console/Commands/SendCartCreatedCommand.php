@@ -14,7 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SendCartCreatedCommand extends AbstractCommand
 {
-
     private const ARG_CART_ID = 'cartId';
 
     /** @var CartCreatedNotifier */

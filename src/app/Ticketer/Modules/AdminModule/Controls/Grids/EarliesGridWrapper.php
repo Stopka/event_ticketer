@@ -12,7 +12,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class EarliesGridWrapper extends GridWrapper
 {
-
     /** @var  EarlyDao */
     private EarlyDao $earlyDao;
 

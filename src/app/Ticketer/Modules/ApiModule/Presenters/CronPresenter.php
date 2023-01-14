@@ -10,7 +10,6 @@ use Nette\Application\Responses\TextResponse;
 
 class CronPresenter extends BasePresenter
 {
-
     /** @var CronService */
     public CronService $cronService;
 

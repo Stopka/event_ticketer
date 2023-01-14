@@ -70,14 +70,14 @@ class ReservationDelegatedNotifier implements EventSubscriberInterface
 Přihlášku získáte po registraci na následující adrese: <br />
 <a href='$link'>$link</a></p>
 <p>Vyplňte prosím registraci co nejdříve.</p>
-<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz
+<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek humo.cz
 na základě rezervace místa.</em></p>"
         );
         $emailService->sendMessage($message);
     }
 
     /**
-     * @return string[]
+     * @return array<string,string>
      */
     public static function getSubscribedEvents(): array
     {

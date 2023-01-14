@@ -11,7 +11,6 @@ use Ticketer\Model\Database\Enums\GenderEnum;
  */
 class GenderEnumType extends IntegerEnumType
 {
-
     protected function getEnumClassName(): string
     {
         return GenderEnum::class;

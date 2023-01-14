@@ -9,7 +9,6 @@ use Ticketer\Model\Database\Entities\InsuranceCompanyEntity;
 
 class InsuranceCompanyDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return InsuranceCompanyEntity::class;

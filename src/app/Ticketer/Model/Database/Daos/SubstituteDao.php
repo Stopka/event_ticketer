@@ -17,7 +17,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class SubstituteDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return SubstituteEntity::class;

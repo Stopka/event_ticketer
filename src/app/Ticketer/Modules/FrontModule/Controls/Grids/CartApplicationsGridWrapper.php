@@ -23,7 +23,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class CartApplicationsGridWrapper extends GridWrapper
 {
-
     /** @var  ApplicationDao */
     private $applicationDao;
 

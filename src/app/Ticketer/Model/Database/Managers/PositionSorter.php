@@ -11,7 +11,6 @@ use Ticketer\Model\Database\Entities\SortableEntityInterface;
 
 class PositionSorter
 {
-
     /** @var EntityRepository<SortableEntityInterface> */
     private $entityRepository;
 

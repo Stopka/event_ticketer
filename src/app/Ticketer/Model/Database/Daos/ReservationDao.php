@@ -10,7 +10,6 @@ use Ticketer\Model\Database\Entities\ReservationEntity;
 
 class ReservationDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return ReservationEntity::class;

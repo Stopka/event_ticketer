@@ -8,5 +8,4 @@ use Ticketer\Controls\Grids\GridWrapper as BaseGridWrapper;
 
 abstract class GridWrapper extends BaseGridWrapper
 {
-
 }

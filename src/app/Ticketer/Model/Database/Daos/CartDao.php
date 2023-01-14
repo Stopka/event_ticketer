@@ -9,7 +9,6 @@ use Ticketer\Model\Database\Entities\CartEntity;
 
 class CartDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return CartEntity::class;

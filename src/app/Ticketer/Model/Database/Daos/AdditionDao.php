@@ -15,7 +15,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class AdditionDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return AdditionEntity::class;

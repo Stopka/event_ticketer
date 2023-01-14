@@ -22,7 +22,6 @@ use Ticketer\Responses\SpreadsheetResponse\SpreadsheetResponse;
  */
 class ApplicationsExportResponse implements IResponse
 {
-
     /** @var EventEntity */
     private $eventEntity;
 

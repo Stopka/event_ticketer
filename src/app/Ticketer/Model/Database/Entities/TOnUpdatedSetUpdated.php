@@ -6,7 +6,6 @@ namespace Ticketer\Model\Database\Entities;
 
 trait TOnUpdatedSetUpdated
 {
-
     abstract protected function setUpdated();
 
     protected function onUpdatedSetUpdated()

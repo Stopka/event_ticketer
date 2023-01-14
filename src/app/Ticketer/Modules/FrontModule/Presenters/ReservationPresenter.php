@@ -19,7 +19,6 @@ use Ticketer\Modules\FrontModule\Templates\ReservationTemplate;
  */
 class ReservationPresenter extends BasePresenter
 {
-
     public ICartFormWrapperFactory $cartFormWrapperFactory;
 
     public ReservationDao $reservationDao;

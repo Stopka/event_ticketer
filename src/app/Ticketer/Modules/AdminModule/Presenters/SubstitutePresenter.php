@@ -15,7 +15,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class SubstitutePresenter extends BasePresenter
 {
-
     /** @var  ISubstitutesGridWrapperFactory */
     public ISubstitutesGridWrapperFactory $substitutesGridWrapperFactory;
 

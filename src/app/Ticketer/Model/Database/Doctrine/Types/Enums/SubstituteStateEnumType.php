@@ -11,7 +11,6 @@ use Ticketer\Model\Database\Enums\SubstituteStateEnum;
  */
 class SubstituteStateEnumType extends IntegerEnumType
 {
-
     protected function getEnumClassName(): string
     {
         return SubstituteStateEnum::class;

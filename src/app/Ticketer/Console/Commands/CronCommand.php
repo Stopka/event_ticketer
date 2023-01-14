@@ -10,7 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CronCommand extends AbstractCommand
 {
-
     private CronService $cronService;
 
     protected static $defaultName = 'cron:hourly';

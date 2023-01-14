@@ -8,5 +8,4 @@ use Ticketer\Controls\Forms\FormWrapper as BaseFormWrapper;
 
 abstract class FormWrapper extends BaseFormWrapper
 {
-
 }

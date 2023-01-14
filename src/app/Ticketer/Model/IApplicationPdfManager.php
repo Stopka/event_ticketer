@@ -9,7 +9,6 @@ use Nette\Mail\Message;
 
 interface IApplicationPdfManager
 {
-
     public function getGeneratedApplicationPdfPath(ApplicationEntity $application): string;
 
     public function addMessageAttachment(Message $message, ApplicationEntity $applicationEntity): void;

@@ -6,6 +6,5 @@ namespace Ticketer\Modules\AdminModule\Controls\Grids;
 
 interface IApplicationsGridWrapperFactory
 {
-
     public function create(): ApplicationsGridWrapper;
 }

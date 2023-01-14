@@ -6,6 +6,5 @@ namespace Ticketer\Modules\AdminModule\Controls\Forms;
 
 interface IEarlyWaveFormWrapperFactory
 {
-
     public function create(): EarlyWaveFormWrapper;
 }

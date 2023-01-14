@@ -6,7 +6,6 @@ namespace Ticketer\Modules\FrontModule\Controls\Forms;
 
 interface ISubstituteFormWrapperFactory
 {
-
     /**
      * @return SubstituteFormWrapper
      */

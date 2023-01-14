@@ -8,6 +8,5 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 interface IEventMessageAtachmentManagerFactory
 {
-
     public function create(string $namespace, EventEntity $eventEntity): EventMessageAtachmentManager;
 }

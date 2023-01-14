@@ -9,7 +9,6 @@ use JsonException;
 
 trait TInternalInfoAttribute
 {
-
     /**
      * @ORM\Column(type="text",nullable=true)
      * @var string|null

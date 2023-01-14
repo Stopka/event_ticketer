@@ -8,7 +8,6 @@ use Nette\Application\AbortException;
 
 class HomepagePresenter extends BasePresenter
 {
-
     /**
      * @throws AbortException
      */

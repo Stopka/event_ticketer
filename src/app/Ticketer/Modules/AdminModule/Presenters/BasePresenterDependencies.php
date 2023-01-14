@@ -9,7 +9,6 @@ use Ticketer\Presenters\BasePresenterDependencies as ParentPresenterDependencies
 
 class BasePresenterDependencies
 {
-
     private ParentPresenterDependencies $parentDependencies;
 
     private MenuFactory $menuFactory;

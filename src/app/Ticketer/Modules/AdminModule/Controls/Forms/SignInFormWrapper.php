@@ -17,7 +17,6 @@ use Ticketer\Model\Exceptions\AuthenticationException;
 
 class SignInFormWrapper extends FormWrapper
 {
-
     private User $user;
 
     private AdministratorManager $administratorManager;

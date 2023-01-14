@@ -27,7 +27,7 @@ abstract class StringEnumType extends EnumType
      */
     protected function convertEnumValue(Enum $enum): string
     {
-        return (string)$enum->getValue();
+        return $enum->getValue();
     }
 
     /**

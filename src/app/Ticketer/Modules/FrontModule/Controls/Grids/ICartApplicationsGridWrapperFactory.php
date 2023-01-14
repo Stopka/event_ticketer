@@ -12,7 +12,6 @@ namespace Ticketer\Modules\FrontModule\Controls\Grids;
  */
 interface ICartApplicationsGridWrapperFactory
 {
-
     /**
      * @return CartApplicationsGridWrapper
      */

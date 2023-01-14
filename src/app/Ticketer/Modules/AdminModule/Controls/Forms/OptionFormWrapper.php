@@ -21,7 +21,6 @@ use Ticketer\Modules\AdminModule\Controls\Forms\Inputs\OptionAutoselectSelect;
 
 class OptionFormWrapper extends FormWrapper
 {
-
     private OptionManager $optionManager;
 
     private ?AdditionEntity $additionEntity = null;

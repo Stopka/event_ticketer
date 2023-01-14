@@ -19,7 +19,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class DelegateReservationFormWrapper extends FormWrapper
 {
-
     private ReservationManager $reservationManager;
 
     /** @var array<ApplicationEntity> */

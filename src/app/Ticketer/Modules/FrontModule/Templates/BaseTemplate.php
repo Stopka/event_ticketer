@@ -8,5 +8,4 @@ use Ticketer\Templates\BaseTemplate as RootTemplate;
 
 class BaseTemplate extends RootTemplate
 {
-
 }

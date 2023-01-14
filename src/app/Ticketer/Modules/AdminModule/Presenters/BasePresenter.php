@@ -14,7 +14,6 @@ use Ticketer\Controls\Menus\Menu;
  */
 abstract class BasePresenter extends \Ticketer\Presenters\BasePresenter
 {
-
     private MenuFactory $menuFactory;
 
     public function __construct(BasePresenterDependencies $dependencies)

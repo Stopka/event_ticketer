@@ -7,7 +7,7 @@ namespace Ticketer\Templates\Filters;
 use DateTimeInterface;
 use Ticketer\Model\DateFormatter;
 
-class FormatTime
+class FormatTime implements FilterInterface
 {
     private DateFormatter $dateFormatter;
 
@@ -19,5 +19,10 @@ class FormatTime
     public function __invoke(DateTimeInterface $dateTime): string
     {
         return $this->dateFormatter->getTimeString($dateTime);
+    }
+
+    public function getName(): string
+    {
+        return 'formatTime';
     }
 }

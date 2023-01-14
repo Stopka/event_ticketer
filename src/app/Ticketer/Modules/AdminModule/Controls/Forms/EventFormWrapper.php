@@ -16,7 +16,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class EventFormWrapper extends FormWrapper
 {
-
     private EventManager $eventManager;
 
     private OccupancyIcons $occupancyIcons;

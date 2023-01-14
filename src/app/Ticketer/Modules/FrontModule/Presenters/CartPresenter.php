@@ -20,7 +20,6 @@ use Ticketer\Modules\FrontModule\Templates\CartTemplate;
  */
 class CartPresenter extends BasePresenter
 {
-
     public CartDao $cartDao;
 
     public ICartApplicationsGridWrapperFactory $cartApplicationsGridWrapperFactory;

@@ -16,7 +16,6 @@ use Nette\Utils\Strings;
 
 class ApplicationPdfResponse implements IResponse
 {
-
     /** @var PdfResponseFactoryInterface */
     private $pdfResponseFactory;
 
@@ -122,7 +121,7 @@ class ApplicationPdfResponse implements IResponse
         $pdf = $this->pdfResponseFactory->create($template);
         $pdf->setSaveMode($this->getSaveMode());
         $pdf->setPageFormat("A4");
-        $title = "Application form " . (string)$this->application->getId();
+        $title = "Přihláška " . (string)$this->application->getId();
         $pdf->setDocumentTitle($title);
         $pdf->setDocumentAuthor("humo.cz");
         $pdf->setPageMargins("13,13,13,13,10,10");

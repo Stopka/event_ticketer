@@ -18,7 +18,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 class AdditionsGridWrapper extends GridWrapper
 {
-
     private AdditionDao $additionDao;
 
     private EventEntity $eventEntity;

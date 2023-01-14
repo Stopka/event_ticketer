@@ -9,7 +9,6 @@ use Nette\Utils\Html;
 
 trait TRecalculateControl
 {
-
     abstract protected function getTranslator(): ITranslator;
 
     protected function createRecalculateHtml(): Html

@@ -11,7 +11,6 @@ use Ticketer\Model\Database\Entities\EventEntity;
 
 class DelegateReservationControlsBuilder
 {
-
     public const VALUE_DELEGATE_NEW = '*';
     public const CONTAINER_NAME_NEW = 'delegateNew';
     public const FIELD_DELEGATE = 'delegateTo';

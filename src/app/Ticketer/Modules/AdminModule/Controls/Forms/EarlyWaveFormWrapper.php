@@ -16,7 +16,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class EarlyWaveFormWrapper extends FormWrapper
 {
-
     private EarlyWaveManager $earlyWaveManager;
 
     private ?EventEntity $eventEntity = null;

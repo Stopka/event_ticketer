@@ -14,7 +14,6 @@ use Nette\Application\UI\ITemplate;
  */
 interface PdfResponseFactoryInterface
 {
-
     /**
      * @param ITemplate|string $source
      * @return PdfResponse

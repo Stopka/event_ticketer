@@ -38,7 +38,8 @@ RUN \
     # INSTALLATION
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        software-properties-common && \
+        software-properties-common \
+        gpg-agent && \
     add-apt-repository ppa:ondrej/php && \
     apt-get install -y --no-install-recommends \
         curl \
@@ -65,6 +66,7 @@ RUN \
         php${PHP_VERSION}-zip \
         php${PHP_VERSION}-imagick \
         php${PHP_VERSION}-phpdbg \
+        php${PHP_VERSION}-xml \
         ghostscript && \
     rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/* \
     # PHP MOD(s) ###############################################################
@@ -105,9 +107,8 @@ RUN \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     # YARN
     apt-get update && \
-    apt-get install -y --no-install-recommends \
-        gpg-agent && \
-    curl -sL https://deb.nodesource.com/setup_15.x | bash - && \
+    apt-get install -y --no-install-recommends && \
+    curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         nodejs \
@@ -120,7 +121,7 @@ RUN \
     # INSTALLATION
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        php-xdebug \
+        php${PHP_VERSION}-xdebug \
         vim \
         wget && \
     rm -rf /var/lib/apt/lists/* /var/lib/log/* /tmp/* /var/tmp/*

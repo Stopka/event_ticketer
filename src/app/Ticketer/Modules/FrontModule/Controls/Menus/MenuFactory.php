@@ -13,7 +13,6 @@ use Ticketer\Model\Database\Entities\SubstituteEntity;
 
 class MenuFactory extends \Ticketer\Controls\Menus\MenuFactory
 {
-
     public function create(): Menu
     {
         $menu = parent::create();

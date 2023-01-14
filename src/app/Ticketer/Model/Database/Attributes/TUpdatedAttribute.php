@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TUpdatedAttribute
 {
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime

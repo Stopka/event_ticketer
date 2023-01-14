@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TStartDateAttribute
 {
-
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @var DateTimeImmutable|null

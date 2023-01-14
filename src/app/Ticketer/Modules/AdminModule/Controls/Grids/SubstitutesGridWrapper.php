@@ -23,7 +23,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class SubstitutesGridWrapper extends GridWrapper
 {
-
     private SubstituteDao $substituteDao;
 
     private SubstituteManager $substituteManager;

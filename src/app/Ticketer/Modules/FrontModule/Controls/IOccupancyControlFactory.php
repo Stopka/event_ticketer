@@ -6,7 +6,6 @@ namespace Ticketer\Modules\FrontModule\Controls;
 
 interface IOccupancyControlFactory
 {
-
     /**
      * @return OccupancyControl
      */

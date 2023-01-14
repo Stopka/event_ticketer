@@ -18,7 +18,6 @@ use Ticketer\Model\Database\Entities\CartEntity;
 
 class CartPresenter extends BasePresenter
 {
-
     private CartDao $cartDao;
 
     public ICartFormWrapperFactory $cartFormFactory;

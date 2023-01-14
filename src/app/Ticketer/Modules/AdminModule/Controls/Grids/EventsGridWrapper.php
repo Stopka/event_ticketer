@@ -25,7 +25,6 @@ use Ublaboo\DataGrid\Column\Action\Confirmation\CallbackConfirmation;
  */
 class EventsGridWrapper extends GridWrapper
 {
-
     private EventDao $eventDao;
 
     private EventManager $eventManager;

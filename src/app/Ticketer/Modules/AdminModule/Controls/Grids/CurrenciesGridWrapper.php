@@ -17,7 +17,6 @@ use Ticketer\Model\Dtos\Uuid;
  */
 class CurrenciesGridWrapper extends GridWrapper
 {
-
     private CurrencyDao $currencyDao;
 
     /**

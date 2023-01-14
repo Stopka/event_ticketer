@@ -8,7 +8,6 @@ use Nette\Localization\ITranslator;
 
 trait TControlDependencies
 {
-
     abstract protected function getTranslator(): ITranslator;
 
     public function getControlDependencies(): ControlDependencies

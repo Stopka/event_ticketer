@@ -6,6 +6,5 @@ namespace Ticketer\Modules\AdminModule\Responses;
 
 interface IApplicationsExportResponseFactory
 {
-
     public function create(): ApplicationsExportResponse;
 }

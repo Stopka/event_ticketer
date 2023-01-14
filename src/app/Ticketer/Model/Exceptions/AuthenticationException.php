@@ -11,5 +11,4 @@ namespace Ticketer\Model\Exceptions;
  */
 class AuthenticationException extends TranslatedException
 {
-
 }

@@ -28,7 +28,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
  */
 class OptionsGridWrapper extends GridWrapper
 {
-
     private OptionDao $optionDao;
 
     private OptionManager $optionManager;

@@ -18,7 +18,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class AdditionFormWrapper extends FormWrapper
 {
-
     private AdditionManager $additionManager;
 
     private ?EventEntity $eventEntity = null;

@@ -12,7 +12,6 @@ use Ticketer\Modules\FrontModule\Controls\Menus\MenuFactory;
  */
 abstract class BasePresenter extends \Ticketer\Presenters\BasePresenter
 {
-
     private MenuFactory $menuFactory;
 
     /** @persistent null|string Určuje jazykovou verzi webu. */

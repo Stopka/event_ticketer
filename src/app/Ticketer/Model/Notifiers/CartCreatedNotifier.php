@@ -79,18 +79,18 @@ class CartCreatedNotifier implements EventSubscriberInterface
         $message->setHtmlBody(
             "<p>Dobrý den,</p>
 <p> Děkujeme, že jste projevili zájem o přihlášku na
-<a href='https://ldtpardubice.cz/event/729/ldt_2022'>" . $event->getName() . "</a>.
+<a href='https://humo.cz/info-k-aktualnimu-rocniku-2023/'>" . $event->getName() . "</a>.
 V příloze zasíláme přihlášku, nástupní list, posudek o zdravotni způsobilosti
 a list se základními informacemi. Bezinfekčnost, lékařský posudek
 a list s informacemi můžete v případě ztráty získat na našich
-<a href='https://ldtpardubice.cz/article/730/dokumenty_ldt_2022'>stránkách</a>.</p>
+<a href='https://humo.cz/tabor/'>stránkách</a>.</p>
 <p>Nyní je potřeba přihlášku vytisknout pro každé registrované místo, dovyplnit,
 odeslat a ke každé přihlášce zaplatit rezervační poplatek.
 Další informace jsou uvedeny přímo v přiloženém dokumentu popřípadě na našich stránkách.</p>
 <p>Aktuální stav Vašich přihlášek můžete průběžně sledovat na následující adrese: <br />
  <a href='$link'>$link</a></p>
 <p>V případě dotazu pište na <a href='mailto:ldtmpp@email.cz'>ldtmpp@email.cz</a>.</p>
-<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek ldtpardubice.cz
+<p><em>Zpráva byla vygenerována a odeslána automaticky ze stránek humo.cz
 na základě registrace přihlášky.</em></p>"
         );
         foreach ($cartEntity->getApplications() as $application) {
@@ -102,7 +102,7 @@ na základě registrace přihlášky.</em></p>"
     }
 
     /**
-     * @return string[]
+     * @return array<string,string>
      */
     public static function getSubscribedEvents(): array
     {

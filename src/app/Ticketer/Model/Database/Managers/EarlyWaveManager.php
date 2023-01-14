@@ -52,7 +52,7 @@ class EarlyWaveManager implements EventSubscriberInterface
     }
 
     /**
-     * @return string[]
+     * @return array<string,string>
      */
     public static function getSubscribedEvents(): array
     {

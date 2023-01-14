@@ -20,7 +20,6 @@ use Ticketer\Modules\AdminModule\Controls\Forms\Values\CurrencyFormValue;
 
 class CurrencyFormWrapper extends FormWrapper
 {
-
     private ?CurrencyEntity $currencyEntity = null;
 
     private CreateCurrencyByFormHandler $createHandler;

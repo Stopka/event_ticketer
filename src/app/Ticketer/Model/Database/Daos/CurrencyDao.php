@@ -13,7 +13,6 @@ use Ublaboo\DataGrid\DataSource\IDataSource;
 
 class CurrencyDao extends EntityDao
 {
-
     protected function getEntityClass(): string
     {
         return CurrencyEntity::class;
